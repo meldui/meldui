@@ -54,13 +54,13 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Tabs
 
 #### Overlay & Modal (7)
-- [ ] AlertDialog
-- [ ] Dialog
-- [ ] Drawer
-- [ ] Sheet
-- [ ] Popover
-- [ ] HoverCard
-- [ ] Tooltip
+- [x] AlertDialog
+- [x] Dialog
+- [x] Drawer
+- [x] Sheet
+- [x] Popover
+- [x] HoverCard
+- [x] Tooltip
 
 #### Feedback & Status (8)
 - [ ] Alert
