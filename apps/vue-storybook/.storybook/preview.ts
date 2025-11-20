@@ -1,7 +1,15 @@
+import { Toaster } from '@meldui/vue'
 import type { Preview } from '@storybook/vue3-vite'
 import '../src/styles/tailwind.css' // Import Tailwind CSS
+import 'vue-sonner/style.css' // Import Sonner styles
 
 const preview: Preview = {
+  decorators: [
+    (story) => ({
+      components: { story, Toaster },
+      template: '<div><story /><Toaster /></div>',
+    }),
+  ],
   parameters: {
     docs: {
       source: {

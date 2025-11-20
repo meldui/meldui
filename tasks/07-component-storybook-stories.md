@@ -63,23 +63,23 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Tooltip
 
 #### Feedback & Status (8)
-- [ ] Alert
-- [ ] Badge
-- [ ] Progress
-- [ ] Skeleton
-- [ ] Spinner
-- [ ] Stepper
-- [ ] Toast (Sonner)
-- [ ] Empty
+- [x] Alert
+- [x] Badge
+- [x] Progress
+- [x] Skeleton
+- [x] Spinner
+- [x] Stepper
+- [x] Toast (Sonner)
+- [x] Empty
 
 #### Layout & Container (8)
-- [ ] Accordion
+- [x] Accordion
 - [ ] Collapsible
 - [ ] Resizable
 - [ ] ScrollArea
 - [ ] Separator
 - [ ] Sidebar
-- [ ] AspectRatio
+- [x] AspectRatio
 - [ ] Table
 
 #### Data Display (5)
