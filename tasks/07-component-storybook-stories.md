@@ -45,13 +45,13 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Field
 
 #### Navigation & Menu (7)
-- [ ] Breadcrumb
-- [ ] NavigationMenu
-- [ ] Menubar
-- [ ] ContextMenu
-- [ ] DropdownMenu
-- [ ] Pagination
-- [ ] Tabs
+- [x] Breadcrumb
+- [x] NavigationMenu
+- [x] Menubar
+- [x] ContextMenu
+- [x] DropdownMenu
+- [x] Pagination
+- [x] Tabs
 
 #### Overlay & Modal (7)
 - [ ] AlertDialog
