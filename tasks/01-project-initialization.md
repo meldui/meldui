@@ -15,14 +15,14 @@ Create the monorepo structure using pnpm workspaces.
 ### Sub-tasks
 
 #### 1.1 Create pnpm-workspace.yaml
-- [ ] Create `pnpm-workspace.yaml` in the root directory
-- [ ] Add workspace patterns:
+- [x] Create `pnpm-workspace.yaml` in the root directory
+- [x] Add workspace patterns:
   ```yaml
   packages:
     - 'packages/*'
     - 'apps/*'
   ```
-- [ ] This tells pnpm which directories contain workspace packages
+- [x] This tells pnpm which directories contain workspace packages
 
 **Acceptance Criteria:**
 - File `pnpm-workspace.yaml` exists in root
@@ -31,10 +31,10 @@ Create the monorepo structure using pnpm workspaces.
 ---
 
 #### 1.2 Create root package.json
-- [ ] Create `package.json` in the root directory
-- [ ] Set name to "meldui" (private monorepo root)
-- [ ] Mark as private: `"private": true`
-- [ ] Add initial scripts:
+- [x] Create `package.json` in the root directory
+- [x] Set name to "meldui" (private monorepo root)
+- [x] Mark as private: `"private": true`
+- [x] Add initial scripts:
   ```json
   {
     "name": "meldui",
@@ -66,8 +66,8 @@ pnpm init
 ---
 
 #### 1.3 Create .npmrc configuration
-- [ ] Create `.npmrc` file in root directory
-- [ ] Add pnpm-specific configuration:
+- [x] Create `.npmrc` file in root directory
+- [x] Add pnpm-specific configuration:
   ```
   # Use workspaces protocol for local packages
   link-workspace-packages=true
@@ -95,12 +95,12 @@ Create base TypeScript configuration that all packages will extend.
 ### Sub-tasks
 
 #### 2.1 Install TypeScript
-- [ ] Install TypeScript as a dev dependency at the root level:
+- [x] Install TypeScript as a dev dependency at the root level:
   ```bash
   pnpm add -Dw typescript
   ```
-- [ ] The `-w` flag installs at workspace root
-- [ ] The `-D` flag installs as devDependency
+- [x] The `-w` flag installs at workspace root
+- [x] The `-D` flag installs as devDependency
 
 **Acceptance Criteria:**
 - TypeScript is listed in root package.json devDependencies
@@ -109,8 +109,8 @@ Create base TypeScript configuration that all packages will extend.
 ---
 
 #### 2.2 Create base tsconfig.json
-- [ ] Create `tsconfig.json` in root directory
-- [ ] Configure for modern TypeScript and monorepo:
+- [x] Create `tsconfig.json` in root directory
+- [x] Configure for modern TypeScript and monorepo:
   ```json
   {
     "compilerOptions": {
@@ -150,7 +150,7 @@ Set up Biome.js for linting and formatting (replaces ESLint + Prettier).
 ### Sub-tasks
 
 #### 3.1 Install Biome
-- [ ] Install Biome at workspace root:
+- [x] Install Biome at workspace root:
   ```bash
   pnpm add -Dw @biomejs/biome
   ```
@@ -161,9 +161,9 @@ Set up Biome.js for linting and formatting (replaces ESLint + Prettier).
 ---
 
 #### 3.2 Create biome.json configuration
-- [ ] Create `biome.json` in root directory
-- [ ] Copy configuration from PRD.md (see PRD section "Biome.js Configuration")
-- [ ] Key settings:
+- [x] Create `biome.json` in root directory
+- [x] Copy configuration from PRD.md (see PRD section "Biome.js Configuration")
+- [x] Key settings:
   - VCS integration enabled (git)
   - Ignore: node_modules, dist, build, .turbo, storybook-static
   - 2-space indentation
@@ -179,9 +179,9 @@ Set up Biome.js for linting and formatting (replaces ESLint + Prettier).
 ---
 
 #### 3.3 Test Biome commands
-- [ ] Run `pnpm check` to verify Biome is working
-- [ ] Run `pnpm format` to test formatting
-- [ ] Run `pnpm lint` to test linting
+- [x] Run `pnpm check` to verify Biome is working
+- [x] Run `pnpm format` to test formatting
+- [x] Run `pnpm lint` to test linting
 
 **Expected Result:**
 - Commands run without errors
@@ -196,7 +196,7 @@ Set up Turborepo for build orchestration and caching.
 ### Sub-tasks
 
 #### 4.1 Install Turborepo
-- [ ] Install Turborepo at workspace root:
+- [x] Install Turborepo at workspace root:
   ```bash
   pnpm add -Dw turbo
   ```
@@ -209,8 +209,8 @@ Set up Turborepo for build orchestration and caching.
 ---
 
 #### 4.2 Create turbo.json configuration
-- [ ] Create `turbo.json` in root directory
-- [ ] Configure build pipeline:
+- [x] Create `turbo.json` in root directory
+- [x] Configure build pipeline:
   ```json
   {
     "$schema": "https://turbo.build/schema.json",
@@ -232,7 +232,7 @@ Set up Turborepo for build orchestration and caching.
     }
   }
   ```
-- [ ] This tells Turbo:
+- [x] This tells Turbo:
   - Build packages in dependency order
   - Cache build outputs
   - Don't cache dev mode
@@ -251,7 +251,7 @@ Automatically run Biome checks before commits.
 ### Sub-tasks
 
 #### 5.1 Install Husky
-- [ ] Install Husky for git hooks:
+- [x] Install Husky for git hooks:
   ```bash
   pnpm add -Dw husky
   pnpm exec husky init
@@ -264,18 +264,18 @@ Automatically run Biome checks before commits.
 ---
 
 #### 5.2 Create pre-commit hook
-- [ ] Create `.husky/pre-commit` file:
+- [x] Create `.husky/pre-commit` file:
   ```bash
   #!/bin/sh
   . "$(dirname "$0")/_/husky.sh"
 
   pnpm check:fix
   ```
-- [ ] Make it executable:
+- [x] Make it executable:
   ```bash
   chmod +x .husky/pre-commit
   ```
-- [ ] This automatically formats and lints code before each commit
+- [x] This automatically formats and lints code before each commit
 
 **Acceptance Criteria:**
 - .husky/pre-commit exists and is executable
@@ -290,25 +290,25 @@ Set up the basic folder structure for packages and apps.
 ### Sub-tasks
 
 #### 6.1 Create packages directory
-- [ ] Create `packages/` directory in root:
+- [x] Create `packages/` directory in root:
   ```bash
   mkdir -p packages
   ```
-- [ ] This will hold all publishable library packages
+- [x] This will hold all publishable library packages
 
 ---
 
 #### 6.2 Create apps directory
-- [ ] Create `apps/` directory in root:
+- [x] Create `apps/` directory in root:
   ```bash
   mkdir -p apps
   ```
-- [ ] This will hold Storybook and other development apps
+- [x] This will hold Storybook and other development apps
 
 ---
 
 #### 6.3 Create .gitignore
-- [ ] Create `.gitignore` in root:
+- [x] Create `.gitignore` in root:
   ```
   # Dependencies
   node_modules
@@ -353,15 +353,15 @@ Set up version control.
 ### Sub-tasks
 
 #### 7.1 Initialize git
-- [ ] Initialize git repository:
+- [x] Initialize git repository:
   ```bash
   git init
   ```
-- [ ] Add all files:
+- [x] Add all files:
   ```bash
   git add .
   ```
-- [ ] Create initial commit:
+- [x] Create initial commit:
   ```bash
   git commit -m "Initial commit: Project initialization"
   ```
@@ -377,16 +377,16 @@ Set up version control.
 
 Verify all tasks are complete:
 
-- [ ] pnpm workspace is configured (pnpm-workspace.yaml exists)
-- [ ] Root package.json has scripts and is marked private
-- [ ] .npmrc is configured for pnpm
-- [ ] TypeScript is installed with base tsconfig.json
-- [ ] Biome is installed and configured (biome.json)
-- [ ] Turborepo is installed and configured (turbo.json) - optional
-- [ ] Git hooks are set up (Husky) - optional
-- [ ] Directory structure is created (packages/, apps/)
-- [ ] .gitignore is created
-- [ ] Git repository is initialized with initial commit
+- [x] pnpm workspace is configured (pnpm-workspace.yaml exists)
+- [x] Root package.json has scripts and is marked private
+- [x] .npmrc is configured for pnpm
+- [x] TypeScript is installed with base tsconfig.json
+- [x] Biome is installed and configured (biome.json)
+- [x] Turborepo is installed and configured (turbo.json) - optional
+- [x] Git hooks are set up (Husky) - optional
+- [x] Directory structure is created (packages/, apps/)
+- [x] .gitignore is created
+- [x] Git repository is initialized with initial commit
 
 **Test Commands:**
 ```bash
