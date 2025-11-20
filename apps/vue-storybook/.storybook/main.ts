@@ -21,15 +21,10 @@ const config: StorybookConfig = {
   },
 
   viteFinal: async (config) => {
-    // Add Tailwind CSS v4 Vite plugin with content configuration
+    // Add Tailwind CSS v4 Vite plugin
     return mergeConfig(config, {
       plugins: [
-        tailwindcss({
-          content: [
-            './src/**/*.{vue,js,ts,jsx,tsx,mdx}',
-            '../../packages/vue/src/**/*.{vue,js,ts,jsx,tsx}',
-          ],
-        }),
+        tailwindcss(),
         {
           name: 'resolve-file-protocol',
           async resolveId(id, importer, options) {

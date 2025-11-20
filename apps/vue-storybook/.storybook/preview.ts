@@ -3,6 +3,12 @@ import '../src/styles/tailwind.css' // Import Tailwind CSS
 
 const preview: Preview = {
   parameters: {
+    docs: {
+      source: {
+        language: 'vue',
+        type: 'code',
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

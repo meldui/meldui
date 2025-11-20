@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Configure Tailwind CSS v4 content sources */
+@source "../../packages/vue/src/**/*.{vue,ts,tsx,js,jsx}";
+@source "../**/*.{vue,ts,tsx,js,jsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

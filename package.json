@@ -11,7 +11,9 @@
     "format": "biome format --write .",
     "check": "biome check .",
     "check:fix": "biome check --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "storybook:vue": "pnpm --filter vue-storybook storybook",
+    "build:storybook:vue": "pnpm --filter vue-storybook build-storybook"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.6",

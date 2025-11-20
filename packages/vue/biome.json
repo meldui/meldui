@@ -1,8 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
   "extends": "//",
-  "files": {
-    "includes": ["**", "!src/styles/**/*.css"]
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "allowWrongLineComments": false,
+      "tailwindDirectives": true
+    }
   },
   "overrides": [
     {

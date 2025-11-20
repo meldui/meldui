@@ -1,6 +1,13 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
   "extends": "//",
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "allowWrongLineComments": false,
+      "tailwindDirectives": true
+    }
+  },
   "overrides": [
     {
       "includes": [".storybook/main.ts"],
