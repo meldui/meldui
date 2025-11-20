@@ -1,0 +1,89 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Icons" />
+
+# Icon System
+
+MeldUI uses Tabler Icons with custom defaults for size and stroke width.
+
+## Installation
+
+Icons are in a separate package:
+
+```bash
+pnpm add @meldui/tabler-vue
+```
+
+## Usage
+
+```vue
+<script setup>
+import { IconX, IconCheck, IconAlertCircle } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <!-- Default (24px, stroke 1.5) -->
+  <IconCheck />
+
+  <!-- Custom size -->
+  <IconX :size="32" />
+
+  <!-- Custom stroke width -->
+  <IconAlertCircle :stroke-width="2" />
+
+  <!-- Custom color -->
+  <IconCheck color="#22c55e" />
+</template>
+```
+
+## Default Values
+
+All icons have these defaults:
+- **Size:** 24px
+- **Stroke Width:** 1.5
+- **Color:** Inherits from `currentColor` or `--icon-color` CSS variable
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | number | 24 | Icon size in pixels |
+| `strokeWidth` | number | 1.5 | Stroke thickness |
+| `color` | string | undefined | Explicit color (otherwise uses currentColor) |
+
+## Color Inheritance
+
+Icons inherit text color by default:
+
+```vue
+<template>
+  <span class="text-red-500">
+    <IconX /> <!-- Red icon -->
+  </span>
+</template>
+```
+
+## Theme Integration
+
+Override the default icon color globally:
+
+```css
+:root {
+  --icon-color: #3b82f6; /* Blue */
+}
+```
+
+## Available Icons
+
+Browse all 5000+ icons at [tabler.io/icons](https://tabler.io/icons)
+
+Or see the [Icon Gallery](/?path=/story/icons-gallery--all-icons) story.
+
+## Icon Names
+
+Tabler icons use the `Icon` prefix:
+- `IconX` - X/close icon
+- `IconCheck` - Checkmark
+- `IconUser` - User profile
+- `IconSettings` - Settings gear
+- And 5000+ more...

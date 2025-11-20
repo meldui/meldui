@@ -29,7 +29,7 @@ Set up a new Storybook application for Vue 3.
 #### 1.2 Initialize Storybook
 - [ ] Run Storybook initialization:
   ```bash
-  npx storybook@latest init --type vue3
+  pnpm dlx storybook@latest init --type vue3
   ```
 - [ ] This will:
   - Create .storybook/ configuration directory

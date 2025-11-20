@@ -1,0 +1,79 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Installation" />
+
+# Installation Guide
+
+## Prerequisites
+
+- Node.js 18+ and pnpm
+- Vue 3.4+
+- Vite or other modern bundler
+
+## Step 1: Install Packages
+
+```bash
+pnpm add @meldui/vue @meldui/tabler-vue vue
+```
+
+## Step 2: Import Styles
+
+In your main application entry point (usually `main.ts`):
+
+```typescript
+import { createApp } from 'vue'
+import '@meldui/vue/styles' // Import MeldUI styles
+import App from './App.vue'
+
+createApp(App).mount('#app')
+```
+
+## Step 3: Use Components
+
+```vue
+<script setup lang="ts">
+import { Button, Card, CardHeader, CardTitle, CardContent } from '@meldui/vue'
+import { IconCheck } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <Card>
+    <CardHeader>
+      <CardTitle>Hello MeldUI</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Button>
+        <IconCheck :size="20" />
+        Get Started
+      </Button>
+    </CardContent>
+  </Card>
+</template>
+```
+
+## TypeScript Configuration
+
+If you're using TypeScript, ensure your `tsconfig.json` includes:
+
+```json
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["vue"]
+  }
+}
+```
+
+## Tailwind CSS (Optional)
+
+MeldUI includes compiled Tailwind styles, but if your app also uses Tailwind, you can:
+
+1. Use MeldUI's theme variables in your own Tailwind config
+2. Extend the theme with your custom values
+
+## Next Steps
+
+- Learn about [Theming](/?path=/docs/theming--docs)
+- Explore [Components](/?path=/docs/components-button--docs)
+- Check out the [Icon System](/?path=/docs/icons--docs)

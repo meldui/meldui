@@ -1,0 +1,8 @@
+/**
+ * Tailwind CSS v4 for Storybook
+ *
+ * Import all styles and theme from @meldui/vue source to ensure consistency.
+ * Using relative path to source file for monorepo development.
+ */
+
+@import "../../../../packages/vue/src/styles/index.css";

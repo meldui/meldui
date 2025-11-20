@@ -1,6 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
   "extends": "//",
+  "files": {
+    "includes": ["**", "!src/styles/**/*.css"]
+  },
   "overrides": [
     {
       "includes": ["**/*.vue"],
@@ -11,15 +14,6 @@
             "noUnusedImports": "off"
           }
         }
-      }
-    },
-    {
-      "includes": ["src/styles/**/*.css"],
-      "linter": {
-        "enabled": false
-      },
-      "formatter": {
-        "enabled": false
       }
     }
   ]
