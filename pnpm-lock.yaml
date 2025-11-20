@@ -29,9 +29,18 @@ importers:
       '@meldui/vue':
         specifier: workspace:*
         version: link:../../packages/vue
+      '@vee-validate/zod':
+        specifier: ^4.15.1
+        version: 4.15.1(vue@3.5.24(typescript@5.9.3))(zod@3.25.76)
+      vee-validate:
+        specifier: ^4.15.1
+        version: 4.15.1(vue@3.5.24(typescript@5.9.3))
       vue:
         specifier: ^3.4.0
         version: 3.5.24(typescript@5.9.3)
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@mdx-js/react':
         specifier: ^3.1.1
@@ -2761,6 +2770,9 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
@@ -3760,6 +3772,14 @@ snapshots:
     dependencies:
       '@unovis/ts': 1.6.2
       vue: 3.5.24(typescript@5.9.3)
+
+  '@vee-validate/zod@4.15.1(vue@3.5.24(typescript@5.9.3))(zod@3.25.76)':
+    dependencies:
+      type-fest: 4.41.0
+      vee-validate: 4.15.1(vue@3.5.24(typescript@5.9.3))
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - vue
 
   '@vee-validate/zod@4.15.1(vue@3.5.24(typescript@5.9.3))(zod@4.1.12)':
     dependencies:
@@ -5286,5 +5306,7 @@ snapshots:
   yallist@4.0.0: {}
 
   yaml@1.10.2: {}
+
+  zod@3.25.76: {}
 
   zod@4.1.12: {}

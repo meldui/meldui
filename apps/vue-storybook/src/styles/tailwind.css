@@ -10,3 +10,10 @@
 /* Additional content sources for Storybook stories and MDX files */
 @source "../**/*.{vue,js,ts,jsx,tsx,mdx}";
 @source "../../../../packages/vue/src/**/*.{vue,ts,tsx,js,jsx}";
+
+/* Storybook-specific: Override font to use Poppins */
+@theme {
+  --font-sans:
+    "Poppins", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+}
