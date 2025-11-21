@@ -71,11 +71,11 @@ git push origin main
 **Expected Result:** Workflows can write to repository and create PRs.
 
 ### 2.3 Verify GitHub Packages Enabled
-1. Navigate to: `https://github.com/meldui/meldui/settings`
-2. Check that "Packages" section is available
-3. No additional configuration needed (enabled by default)
+GitHub Packages is **enabled by default** for all repositories. No configuration needed.
 
-**Expected Result:** Repository can publish packages.
+**Note:** The "Packages" tab will only appear in your repository after you publish your first package.
+
+**Expected Result:** Nothing to check - GitHub Packages will work automatically.
 
 ---
 
