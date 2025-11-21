@@ -1,6 +1,6 @@
 {
   "name": "@meldui/tabler-vue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tabler Icons for Vue with MeldUI defaults",
   "type": "module",
   "main": "./dist/index.cjs",
