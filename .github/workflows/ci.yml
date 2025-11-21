@@ -45,6 +45,9 @@ jobs:
       - name: Run Biome checks (lint + format)
         run: pnpm check
 
+      - name: Build tabler-vue (required for typecheck)
+        run: pnpm --filter @meldui/tabler-vue build
+
       - name: Type check Vue package
         run: pnpm --filter @meldui/vue typecheck
 
@@ -82,7 +85,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm --filter @meldui/vue build && pnpm --filter @meldui/tabler-vue build
+        run: pnpm --filter @meldui/tabler-vue build && pnpm --filter @meldui/vue build
 
       - name: Check for build artifacts
         run: |

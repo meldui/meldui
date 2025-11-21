@@ -56,7 +56,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm --filter @meldui/vue build && pnpm --filter @meldui/tabler-vue build
+        run: pnpm --filter @meldui/tabler-vue build && pnpm --filter @meldui/vue build
 
       - name: Build Storybook
         run: pnpm --filter vue-storybook build
