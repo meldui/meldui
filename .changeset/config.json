@@ -7,7 +7,7 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["vue-storybook", "react-storybook"],
+  "ignore": ["vue-storybook"],
   "___experimentalUnsafeOptions_PLEASE_READ_THIS_README_FIRST___": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   }
