@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactiveOmit } from '@vueuse/core'
-import { Check } from 'lucide-vue-next'
+import { IconCheck } from '@meldui/tabler-vue'
 import type { ContextMenuCheckboxItemEmits, ContextMenuCheckboxItemProps } from 'reka-ui'
 import { ContextMenuCheckboxItem, ContextMenuItemIndicator, useForwardPropsEmits } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
@@ -26,7 +26,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <span class="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
       <ContextMenuItemIndicator>
         <slot name="indicator-icon">
-          <Check class="size-4" />
+          <IconCheck class="size-4" />
         </slot>
       </ContextMenuItemIndicator>
     </span>

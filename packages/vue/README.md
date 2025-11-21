@@ -4,6 +4,27 @@ MeldUI Vue 3 component library built on shadcn-vue.
 
 ## Installation
 
+MeldUI packages are published to **GitHub Packages**. You need to configure your `.npmrc` first.
+
+### 1. Configure npm to use GitHub Packages
+
+Create or edit `.npmrc` in your project root:
+
+```
+@meldui:registry=https://npm.pkg.github.com
+```
+
+Then authenticate with GitHub:
+
+```bash
+npm login --scope=@meldui --registry=https://npm.pkg.github.com
+```
+
+You'll need a GitHub Personal Access Token with `read:packages` scope.
+Create one at: https://github.com/settings/tokens
+
+### 2. Install packages
+
 ```bash
 pnpm add @meldui/vue @meldui/tabler-vue vue
 ```

@@ -1,0 +1,31 @@
+# MeldUI Package Registry Configuration
+#
+# MeldUI packages are published to GitHub Packages.
+# To install @meldui packages, you need to configure npm to use GitHub Packages
+# for the @meldui scope.
+#
+# Usage:
+# 1. Copy this file to your project root or home directory:
+#    cp .npmrc.example .npmrc
+#    OR
+#    cp .npmrc.example ~/.npmrc
+#
+# 2. If copying to home directory (~/.npmrc), uncomment the authToken line
+#    and replace YOUR_GITHUB_TOKEN with a personal access token
+#
+# 3. Create a GitHub Personal Access Token:
+#    - Go to https://github.com/settings/tokens
+#    - Click "Generate new token (classic)"
+#    - Select scope: "read:packages"
+#    - Copy the token
+#
+# 4. Replace YOUR_GITHUB_TOKEN below with your token
+
+# Configure @meldui packages to use GitHub Packages registry
+@meldui:registry=https://npm.pkg.github.com
+
+# Uncomment and add your GitHub token if using ~/.npmrc (global config)
+# //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+
+# Alternative: Use npm login instead of token
+# Run: npm login --scope=@meldui --registry=https://npm.pkg.github.com

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PanelLeft } from 'lucide-vue-next'
+import { IconLayoutSidebarLeftCollapse } from '@meldui/tabler-vue'
 import type { HTMLAttributes } from 'vue'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -21,7 +21,7 @@ const { toggleSidebar } = useSidebar()
     :class="cn('h-7 w-7', props.class)"
     @click="toggleSidebar"
   >
-    <PanelLeft />
+    <IconLayoutSidebarLeftCollapse />
     <span class="sr-only">Toggle Sidebar</span>
   </Button>
 </template>

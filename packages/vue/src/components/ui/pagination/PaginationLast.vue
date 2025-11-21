@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactiveOmit } from '@vueuse/core'
-import { ChevronRightIcon } from 'lucide-vue-next'
+import { IconChevronRight } from '@meldui/tabler-vue'
 import type { PaginationLastProps } from 'reka-ui'
 import { PaginationLast, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
@@ -32,7 +32,7 @@ const forwarded = useForwardProps(delegatedProps)
   >
     <slot>
       <span class="hidden sm:block">Last</span>
-      <ChevronRightIcon />
+      <IconChevronRight />
     </slot>
   </PaginationLast>
 </template>

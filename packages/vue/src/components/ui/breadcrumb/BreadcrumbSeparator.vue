@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ChevronRight } from 'lucide-vue-next'
+import { IconChevronRight } from '@meldui/tabler-vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
@@ -16,7 +16,7 @@ const props = defineProps<{
     :class="cn('[&>svg]:size-3.5', props.class)"
   >
     <slot>
-      <ChevronRight />
+      <IconChevronRight />
     </slot>
   </li>
 </template>
