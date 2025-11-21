@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconCheck } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { CheckboxRootEmits, CheckboxRootProps } from 'reka-ui'
 import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

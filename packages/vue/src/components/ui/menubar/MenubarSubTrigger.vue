@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconChevronRight } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { MenubarSubTriggerProps } from 'reka-ui'
 import { MenubarSubTrigger, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

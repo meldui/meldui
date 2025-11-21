@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import {
+  IconAlertOctagon,
+  IconAlertTriangle,
   IconCircleCheck,
   IconInfoCircle,
   IconLoader2,
-  IconAlertOctagon,
-  IconAlertTriangle,
   IconX,
 } from '@meldui/tabler-vue'
-import type { ToasterProps} from 'vue-sonner'
+import type { ToasterProps } from 'vue-sonner'
 import { Toaster as Sonner } from 'vue-sonner'
 import { cn } from '@/lib/utils'
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit, useVModel } from '@vueuse/core'
 import { IconChevronDown } from '@meldui/tabler-vue'
+import { reactiveOmit, useVModel } from '@vueuse/core'
 import type { AcceptableValue } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'

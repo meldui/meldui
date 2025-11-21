@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconGripVertical } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { SplitterResizeHandleEmits, SplitterResizeHandleProps } from 'reka-ui'
 import { SplitterResizeHandle, useForwardPropsEmits } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

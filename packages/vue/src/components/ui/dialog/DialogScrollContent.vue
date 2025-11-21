@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconX } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 import {
   DialogClose,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconCircle } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { MenubarRadioItemEmits, MenubarRadioItemProps } from 'reka-ui'
 import { MenubarItemIndicator, MenubarRadioItem, useForwardPropsEmits } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconSearch } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { ComboboxInputEmits, ComboboxInputProps } from 'reka-ui'
 import { ComboboxInput, useForwardPropsEmits } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

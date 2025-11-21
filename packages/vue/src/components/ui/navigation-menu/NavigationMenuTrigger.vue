@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconChevronDown } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { NavigationMenuTriggerProps } from 'reka-ui'
 import { NavigationMenuTrigger, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

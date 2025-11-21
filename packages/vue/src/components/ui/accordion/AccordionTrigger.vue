@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconChevronDown } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { AccordionTriggerProps } from 'reka-ui'
 import { AccordionHeader, AccordionTrigger } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

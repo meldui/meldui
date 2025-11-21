@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconChevronUp } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { SelectScrollUpButtonProps } from 'reka-ui'
 import { SelectScrollUpButton, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

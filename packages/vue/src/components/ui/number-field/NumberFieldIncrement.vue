@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconPlus } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { NumberFieldIncrementProps } from 'reka-ui'
 import { NumberFieldIncrement, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

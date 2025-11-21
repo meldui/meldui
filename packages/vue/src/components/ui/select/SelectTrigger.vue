@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconChevronDown } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { SelectTriggerProps } from 'reka-ui'
 import { SelectIcon, SelectTrigger, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

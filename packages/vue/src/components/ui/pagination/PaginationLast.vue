@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import { IconChevronRight } from '@meldui/tabler-vue'
+import { reactiveOmit } from '@vueuse/core'
 import type { PaginationLastProps } from 'reka-ui'
 import { PaginationLast, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
