@@ -74,30 +74,30 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 
 #### Layout & Container (8)
 - [x] Accordion
-- [ ] Collapsible
-- [ ] Resizable
-- [ ] ScrollArea
-- [ ] Separator
-- [ ] Sidebar
+- [x] Collapsible
+- [x] Resizable
+- [x] ScrollArea
+- [x] Separator
+- [x] Sidebar
 - [x] AspectRatio
-- [ ] Table
+- [x] Table
 
 #### Data Display (5)
-- [ ] Avatar
-- [ ] Calendar
+- [x] Avatar
+- [x] Calendar
 - [ ] RangeCalendar
 - [ ] Chart
-- [ ] Kbd
+- [x] Kbd
 
 #### Interactive (5)
-- [ ] ButtonGroup
-- [ ] Carousel
-- [ ] Command
-- [ ] Toggle
-- [ ] ToggleGroup
+- [x] ButtonGroup
+- [x] Carousel
+- [x] Command
+- [x] Toggle
+- [x] ToggleGroup
 
 #### Utility Components (5)
-- [ ] Combobox
+- [x] Combobox
 - [ ] Item (internal utility)
 - [ ] Portal
 - [ ] Primitive
