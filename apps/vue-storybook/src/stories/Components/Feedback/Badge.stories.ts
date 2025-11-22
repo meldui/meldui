@@ -9,8 +9,12 @@ const meta: Meta<typeof Badge> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'destructive', 'outline'],
-      description: 'Visual style variant of the badge',
+      options: ['default', 'secondary', 'destructive', 'success', 'warning', 'info', 'neutral'],
+      description: 'Color variant of the badge',
+    },
+    outline: {
+      control: 'boolean',
+      description: 'Display badge with outline style instead of filled',
     },
   },
 }
@@ -45,34 +49,83 @@ export const Destructive: Story = {
   }),
 }
 
-export const Outline: Story = {
+export const Success: Story = {
   render: () => ({
     components: { Badge },
-    template: '<Badge variant="outline">Outline</Badge>',
+    template: '<Badge variant="success">Success</Badge>',
+  }),
+}
+
+export const Warning: Story = {
+  render: () => ({
+    components: { Badge },
+    template: '<Badge variant="warning">Warning</Badge>',
+  }),
+}
+
+export const Info: Story = {
+  render: () => ({
+    components: { Badge },
+    template: '<Badge variant="info">Info</Badge>',
+  }),
+}
+
+export const Neutral: Story = {
+  render: () => ({
+    components: { Badge },
+    template: '<Badge variant="neutral">Neutral</Badge>',
   }),
 }
 
 export const WithIcon: Story = {
   render: () => ({
-    components: { Badge, IconCheck, IconStar },
+    components: { Badge, IconCheck, IconStar, IconX },
     template: `
-      <div class="flex flex-wrap gap-2">
-        <Badge variant="default">
-          <IconCheck />
-          Success
-        </Badge>
-        <Badge variant="secondary">
-          <IconStar />
-          Featured
-        </Badge>
-        <Badge variant="destructive">
-          <IconX />
-          Error
-        </Badge>
-        <Badge variant="outline">
-          <IconCheck />
-          Verified
-        </Badge>
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-wrap gap-2">
+          <Badge variant="success">
+            <IconCheck />
+            Success
+          </Badge>
+          <Badge variant="warning">
+            <IconStar />
+            Featured
+          </Badge>
+          <Badge variant="destructive">
+            <IconX />
+            Error
+          </Badge>
+          <Badge variant="info">
+            <IconCheck />
+            Info
+          </Badge>
+          <Badge variant="neutral">
+            <IconCheck />
+            Neutral
+          </Badge>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <Badge variant="success" :outline="true">
+            <IconCheck />
+            Success
+          </Badge>
+          <Badge variant="warning" :outline="true">
+            <IconStar />
+            Featured
+          </Badge>
+          <Badge variant="destructive" :outline="true">
+            <IconX />
+            Error
+          </Badge>
+          <Badge variant="info" :outline="true">
+            <IconCheck />
+            Info
+          </Badge>
+          <Badge variant="neutral" :outline="true">
+            <IconCheck />
+            Neutral
+          </Badge>
+        </div>
       </div>
     `,
   }),
@@ -86,7 +139,27 @@ export const AllVariants: Story = {
         <Badge variant="default">Default</Badge>
         <Badge variant="secondary">Secondary</Badge>
         <Badge variant="destructive">Destructive</Badge>
-        <Badge variant="outline">Outline</Badge>
+        <Badge variant="success">Success</Badge>
+        <Badge variant="warning">Warning</Badge>
+        <Badge variant="info">Info</Badge>
+        <Badge variant="neutral">Neutral</Badge>
+      </div>
+    `,
+  }),
+}
+
+export const OutlineVariants: Story = {
+  render: () => ({
+    components: { Badge },
+    template: `
+      <div class="flex flex-wrap gap-2">
+        <Badge variant="default" :outline="true">Default</Badge>
+        <Badge variant="secondary" :outline="true">Secondary</Badge>
+        <Badge variant="destructive" :outline="true">Destructive</Badge>
+        <Badge variant="success" :outline="true">Success</Badge>
+        <Badge variant="warning" :outline="true">Warning</Badge>
+        <Badge variant="info" :outline="true">Info</Badge>
+        <Badge variant="neutral" :outline="true">Neutral</Badge>
       </div>
     `,
   }),
@@ -100,7 +173,7 @@ export const AsLink: Story = {
         <Badge as="a" href="#" variant="default">Link Badge</Badge>
         <Badge as="a" href="#" variant="secondary">Link Secondary</Badge>
         <Badge as="a" href="#" variant="destructive">Link Destructive</Badge>
-        <Badge as="a" href="#" variant="outline">Link Outline</Badge>
+        <Badge as="a" href="#" variant="default" :outline="true">Link Outline</Badge>
       </div>
     `,
   }),
@@ -110,11 +183,21 @@ export const StatusBadges: Story = {
   render: () => ({
     components: { Badge },
     template: `
-      <div class="flex flex-wrap gap-2">
-        <Badge variant="default">Active</Badge>
-        <Badge variant="secondary">Pending</Badge>
-        <Badge variant="destructive">Failed</Badge>
-        <Badge variant="outline">Draft</Badge>
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-wrap gap-2">
+          <Badge variant="success">Active</Badge>
+          <Badge variant="warning">Pending</Badge>
+          <Badge variant="destructive">Failed</Badge>
+          <Badge variant="info">In Progress</Badge>
+          <Badge variant="neutral">Draft</Badge>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <Badge variant="success" :outline="true">Active</Badge>
+          <Badge variant="warning" :outline="true">Pending</Badge>
+          <Badge variant="destructive" :outline="true">Failed</Badge>
+          <Badge variant="info" :outline="true">In Progress</Badge>
+          <Badge variant="neutral" :outline="true">Draft</Badge>
+        </div>
       </div>
     `,
   }),
@@ -139,7 +222,7 @@ export const NotificationBadges: Story = {
         </div>
         <div class="flex items-center justify-between p-4 border rounded-lg">
           <span class="font-medium">Updates</span>
-          <Badge variant="outline">5</Badge>
+          <Badge variant="neutral" :outline="true">5</Badge>
         </div>
       </div>
     `,
@@ -157,7 +240,7 @@ export const InlineText: Story = {
           that shows how badges can be used within text content. You can also use
           <Badge variant="secondary">multiple</Badge>
           badges in the same
-          <Badge variant="outline">paragraph</Badge>.
+          <Badge variant="neutral" :outline="true">paragraph</Badge>.
         </p>
       </div>
     `,
@@ -172,7 +255,7 @@ export const LongText: Story = {
         <Badge variant="default">This is a longer badge text</Badge>
         <Badge variant="secondary">Feature: Multi-line badge support</Badge>
         <Badge variant="destructive">Error: Connection timeout</Badge>
-        <Badge variant="outline">Status: Waiting for approval</Badge>
+        <Badge variant="neutral" :outline="true">Status: Waiting for approval</Badge>
       </div>
     `,
   }),
@@ -219,7 +302,7 @@ export const WithIconButton: Story = {
             <IconX class="size-3" />
           </button>
         </Badge>
-        <Badge variant="outline">
+        <Badge variant="neutral" :outline="true">
           Tag
           <button
             @click="handleRemove('Tag')"

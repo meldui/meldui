@@ -9,7 +9,17 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      options: [
+        'default',
+        'destructive',
+        'success',
+        'warning',
+        'info',
+        'outline',
+        'secondary',
+        'ghost',
+        'link',
+      ],
     },
     size: {
       control: 'select',
@@ -36,6 +46,9 @@ export const Variants: Story = {
         <Button variant="default">Default</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="destructive">Destructive</Button>
+        <Button variant="success">Success</Button>
+        <Button variant="warning">Warning</Button>
+        <Button variant="info">Info</Button>
         <Button variant="outline">Outline</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="link">Link</Button>
@@ -89,6 +102,40 @@ export const IconOnly: Story = {
         <Button size="icon" variant="ghost">
           <IconLoader :size="20" />
         </Button>
+      </div>
+    `,
+  }),
+}
+
+export const SemanticColors: Story = {
+  render: () => ({
+    components: { Button, IconCheck, IconX },
+    template: `
+      <div class="flex flex-col gap-4">
+        <div class="flex gap-3 flex-wrap">
+          <Button variant="success">
+            <IconCheck />
+            Success Action
+          </Button>
+          <Button variant="warning">Warning Action</Button>
+          <Button variant="info">Info Action</Button>
+          <Button variant="destructive">
+            <IconX />
+            Delete
+          </Button>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <Button variant="success" size="sm">Small Success</Button>
+          <Button variant="warning" size="sm">Small Warning</Button>
+          <Button variant="info" size="sm">Small Info</Button>
+          <Button variant="destructive" size="sm">Small Destructive</Button>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <Button variant="success" size="lg">Large Success</Button>
+          <Button variant="warning" size="lg">Large Warning</Button>
+          <Button variant="info" size="lg">Large Info</Button>
+          <Button variant="destructive" size="lg">Large Destructive</Button>
+        </div>
       </div>
     `,
   }),
