@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
-import type { ComputedRef } from 'vue'
+import type { ComputedRef, HTMLAttributes } from 'vue'
 import { computed, inject, unref } from 'vue'
 import { cn } from '@/lib/utils'
 

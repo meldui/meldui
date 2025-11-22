@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { SVGAttributes } from 'vue'
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef, Ref, SVGAttributes } from 'vue'
 import { computed, inject, unref } from 'vue'
 import { cn } from '@/lib/utils'
 

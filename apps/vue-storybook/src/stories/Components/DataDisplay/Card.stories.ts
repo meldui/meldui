@@ -1,3 +1,4 @@
+import { IconBell, IconHeart, IconShare, IconStar, IconUser } from '@meldui/tabler-vue'
 import {
   Badge,
   Button,
@@ -12,7 +13,6 @@ import {
   Label,
   Separator,
 } from '@meldui/vue'
-import { IconBell, IconHeart, IconShare, IconStar, IconUser } from '@meldui/tabler-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 const meta: Meta<typeof Card> = {
