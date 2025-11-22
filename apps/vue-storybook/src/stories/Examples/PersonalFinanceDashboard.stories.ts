@@ -286,9 +286,27 @@ export const FullApplication: Story = {
       ]
 
       const accounts = [
-        { name: 'Investment Account', type: 'Brokerage', balance: 365267.5, institution: 'Vanguard', accountNumber: '****3421' },
-        { name: 'Retirement (401k)', type: 'Retirement', balance: 98000.0, institution: 'Fidelity', accountNumber: '****7890' },
-        { name: 'Savings', type: 'Cash', balance: 24382.82, institution: 'Chase', accountNumber: '****1234' },
+        {
+          name: 'Investment Account',
+          type: 'Brokerage',
+          balance: 365267.5,
+          institution: 'Vanguard',
+          accountNumber: '****3421',
+        },
+        {
+          name: 'Retirement (401k)',
+          type: 'Retirement',
+          balance: 98000.0,
+          institution: 'Fidelity',
+          accountNumber: '****7890',
+        },
+        {
+          name: 'Savings',
+          type: 'Cash',
+          balance: 24382.82,
+          institution: 'Chase',
+          accountNumber: '****1234',
+        },
       ]
 
       const cards = [
