@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { PrimitiveProps } from "reka-ui";
 import { IconChecks, IconCopy } from "@meldui/tabler-vue";
+import type { PrimitiveProps } from "reka-ui";
 import type { HTMLAttributes } from "vue";
-import { Button } from "@/components/ui/button";
 import type { ButtonVariants } from "@/components/ui/button";
-import ClipboardCopy from "./ClipboardCopy.vue";
+import { Button } from "@/components/ui/button";
 import type { ClipboardCopyProps } from "./ClipboardCopy.vue";
+import ClipboardCopy from "./ClipboardCopy.vue";
 import CopyIdle from "./CopyIdle.vue";
 import CopySuccess from "./CopySuccess.vue";
 
@@ -29,6 +29,12 @@ export interface ClipboardCopyButtonProps
      */
     copiedLabel?: string;
     /**
+     * Variant to use when copied
+     * Set to undefined to keep the same variant
+     * @default 'success'
+     */
+    copiedVariant?: ButtonVariants["variant"];
+    /**
      * Show icons
      * @default true
      */
@@ -41,6 +47,7 @@ const props = withDefaults(defineProps<ClipboardCopyButtonProps>(), {
     copiedDuration: 2000,
     label: "Copy",
     copiedLabel: "Copied!",
+    copiedVariant: "success",
     showIcon: true,
 });
 
@@ -57,9 +64,10 @@ const emit = defineEmits<{
         :copied-duration="props.copiedDuration"
         @success="emit('success')"
         @error="emit('error', $event)"
+        v-slot="{ isCopied }"
     >
         <Button
-            :variant="props.variant"
+            :variant="isCopied && props.copiedVariant ? props.copiedVariant : props.variant"
             :size="props.size"
             :class="props.class"
         >

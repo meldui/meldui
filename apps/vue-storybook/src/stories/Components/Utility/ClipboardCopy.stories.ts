@@ -1,13 +1,7 @@
-import {
-  ClipboardCopy,
-  ClipboardCopyButton,
-  CopyIdle,
-  CopySuccess,
-} from '@meldui/vue'
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { IconCheck, IconCopy, IconKey } from '@meldui/tabler-vue'
+import { Button, ClipboardCopy, ClipboardCopyButton, CopyIdle, CopySuccess } from '@meldui/vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
-import { Button } from '@meldui/vue'
 
 const meta: Meta<typeof ClipboardCopyButton> = {
   title: 'Components/Utility/ClipboardCopy',
@@ -28,13 +22,13 @@ const meta: Meta<typeof ClipboardCopyButton> = {
     },
     variant: {
       control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      options: ['default', 'destructive', 'success', 'warning', 'info', 'outline', 'secondary', 'ghost', 'link'],
       description: 'Button variant',
       defaultValue: 'outline',
     },
     size: {
       control: 'select',
-      options: ['default', 'sm', 'lg', 'icon'],
+      options: ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg'],
       description: 'Button size',
       defaultValue: 'default',
     },
@@ -52,6 +46,12 @@ const meta: Meta<typeof ClipboardCopyButton> = {
       control: 'text',
       description: 'Custom label for success state',
       defaultValue: 'Copied!',
+    },
+    copiedVariant: {
+      control: 'select',
+      options: ['default', 'destructive', 'success', 'warning', 'info', 'outline', 'secondary', 'ghost', 'link'],
+      description: 'Variant to use when copied (set to undefined to keep the same variant)',
+      defaultValue: 'success',
     },
     showIcon: {
       control: 'boolean',
@@ -84,6 +84,35 @@ export const Variants: Story = {
         <ClipboardCopyButton text="Ghost variant" variant="ghost" />
         <ClipboardCopyButton text="Destructive variant" variant="destructive" />
         <ClipboardCopyButton text="Link variant" variant="link" />
+      </div>
+    `,
+  }),
+}
+
+export const CopiedVariants: Story = {
+  render: () => ({
+    components: { ClipboardCopyButton },
+    template: `
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <p class="text-sm text-muted-foreground">Default (changes to success variant when copied):</p>
+          <ClipboardCopyButton text="Copied text" />
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm text-muted-foreground">Custom copied variant (changes to destructive):</p>
+          <ClipboardCopyButton text="Copied text" copied-variant="destructive" />
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm text-muted-foreground">Custom copied variant (changes to default):</p>
+          <ClipboardCopyButton text="Copied text" variant="outline" copied-variant="default" />
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm text-muted-foreground">No variant change (set to undefined):</p>
+          <ClipboardCopyButton text="Copied text" :copied-variant="undefined" />
+        </div>
       </div>
     `,
   }),
