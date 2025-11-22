@@ -8,6 +8,8 @@
 // Import styles to be bundled
 import './styles/index.css'
 
+// Re-export types from dependencies
+export type { ClassValue } from 'clsx'
 // Export UI components
 export * from './components/ui/accordion'
 export * from './components/ui/alert'
@@ -71,11 +73,9 @@ export * from './components/ui/textarea'
 export * from './components/ui/toggle'
 export * from './components/ui/toggle-group'
 export * from './components/ui/tooltip'
+
+// Export composite components
+export * from './composites/clipboard-copy'
+export * from './composites/relative-time'
 // Export utility functions
 export { cn } from './lib/utils'
-
-// Export composite components (none yet, but ready for future)
-// export { default as Example } from './composites/Example.vue'
-
-// Re-export types from dependencies
-export type { ClassValue } from 'clsx'
