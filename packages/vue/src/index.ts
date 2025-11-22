@@ -76,6 +76,7 @@ export * from './components/ui/tooltip'
 
 // Export composite components
 export * from './composites/clipboard-copy'
+export * from './composites/multi-select'
 export * from './composites/relative-time'
 // Export utility functions
 export { cn } from './lib/utils'
