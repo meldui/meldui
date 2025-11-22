@@ -3,7 +3,7 @@ import { Button } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
+  title: 'Components/Interactive/Button',
   component: Button,
   tags: ['autodocs'],
   argTypes: {

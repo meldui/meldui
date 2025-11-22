@@ -20,6 +20,14 @@ const config: StorybookConfig = {
     options: {},
   },
 
+  docs: {
+    defaultName: 'Documentation',
+  },
+
+  core: {
+    disableTelemetry: true,
+  },
+
   viteFinal: async (config) => {
     // Add Tailwind CSS v4 Vite plugin
     return mergeConfig(config, {
