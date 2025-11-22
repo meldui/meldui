@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { CommandEmpty } from '@/components/ui/command'
-import { useCommand } from '@/components/ui/command'
+import { CommandEmpty, useCommand } from '@/components/ui/command'
 import type { MultiSelectOption } from './index'
 
 const props = defineProps<{
@@ -11,9 +10,7 @@ const props = defineProps<{
   createLabel: (value: string) => string
 }>()
 
-const emit = defineEmits<{
-  (e: 'create', value: string): void
-}>()
+const emit = defineEmits<(e: 'create', value: string) => void>()
 
 const { filterState } = useCommand()
 
@@ -32,9 +29,7 @@ const showCreateOption = computed(() => {
   // Don't show if already exists in options (case-insensitive check on both value and label)
   const lowerSearch = trimmedValue.toLowerCase()
   return !props.normalizedOptions.some(
-    (opt) =>
-      opt.value.toLowerCase() === lowerSearch ||
-      opt.label.toLowerCase() === lowerSearch,
+    (opt) => opt.value.toLowerCase() === lowerSearch || opt.label.toLowerCase() === lowerSearch,
   )
 })
 

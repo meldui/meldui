@@ -1,4 +1,13 @@
-import { Button, Field, FieldContent, FieldDescription, FieldError, FieldLabel, Label, MultiSelect } from '@meldui/vue'
+import {
+  Button,
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  Label,
+  MultiSelect,
+} from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
 
@@ -504,14 +513,7 @@ export const Controlled: Story = {
     components: { Button, Label, MultiSelect },
     setup() {
       const selected = ref<string[]>(['TypeScript', 'Vue.js'])
-      const options = [
-        'JavaScript',
-        'TypeScript',
-        'Vue.js',
-        'React',
-        'Angular',
-        'Svelte',
-      ]
+      const options = ['JavaScript', 'TypeScript', 'Vue.js', 'React', 'Angular', 'Svelte']
 
       const addRandom = () => {
         const available = options.filter((opt) => !selected.value.includes(opt))

@@ -1,165 +1,154 @@
 <script setup lang="ts">
-import { IconCheck, IconChevronDown, IconX } from "@meldui/tabler-vue";
-import { computed, ref, watch } from "vue";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { IconCheck, IconChevronDown, IconX } from '@meldui/tabler-vue'
+import { computed, ref, watch } from 'vue'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-} from "@/components/ui/command";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import MultiSelectCreateOption from "@/composites/multi-select/MultiSelectCreateOption.vue";
-import type {
-    MultiSelectEmits,
-    MultiSelectOption,
-    MultiSelectProps,
-} from "./index";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import MultiSelectCreateOption from '@/composites/multi-select/MultiSelectCreateOption.vue'
+import { cn } from '@/lib/utils'
+import type { MultiSelectEmits, MultiSelectOption, MultiSelectProps } from './index'
 
 const props = withDefaults(defineProps<MultiSelectProps>(), {
-    modelValue: () => [],
-    placeholder: "Select items...",
-    searchPlaceholder: "Search...",
-    emptyText: "No results found",
-    disabled: false,
-    creatable: false,
-    createLabel: (value: string) => `Create "${value}"`,
-});
+  modelValue: () => [],
+  placeholder: 'Select items...',
+  searchPlaceholder: 'Search...',
+  emptyText: 'No results found',
+  disabled: false,
+  creatable: false,
+  createLabel: (value: string) => `Create "${value}"`,
+})
 
-const emit = defineEmits<MultiSelectEmits>();
+const emit = defineEmits<MultiSelectEmits>()
 
-const open = ref(false);
+const open = ref(false)
 
 // Watch for popover close to reset search
 watch(open, (isOpen) => {
-    if (!isOpen) {
-        // Command will reset internally
-    }
-});
+  if (!isOpen) {
+    // Command will reset internally
+  }
+})
 
 // Normalize options to consistent format
 const normalizedOptions = computed(() => {
-    const result: MultiSelectOption[] = [];
+  const result: MultiSelectOption[] = []
 
-    if (props.options) {
-        props.options.forEach((opt) => {
-            if (typeof opt === "string") {
-                result.push({ value: opt, label: opt });
-            } else {
-                result.push(opt);
-            }
-        });
-    }
+  if (props.options) {
+    props.options.forEach((opt) => {
+      if (typeof opt === 'string') {
+        result.push({ value: opt, label: opt })
+      } else {
+        result.push(opt)
+      }
+    })
+  }
 
-    if (props.groups) {
-        props.groups.forEach((group) => {
-            group.options.forEach((opt) => {
-                if (typeof opt === "string") {
-                    result.push({ value: opt, label: opt });
-                } else {
-                    result.push(opt);
-                }
-            });
-        });
-    }
+  if (props.groups) {
+    props.groups.forEach((group) => {
+      group.options.forEach((opt) => {
+        if (typeof opt === 'string') {
+          result.push({ value: opt, label: opt })
+        } else {
+          result.push(opt)
+        }
+      })
+    })
+  }
 
-    return result;
-});
+  return result
+})
 
 // Get label for a value
 const getLabel = (value: string): string => {
-    const option = normalizedOptions.value.find((opt) => opt.value === value);
-    return option?.label ?? value;
-};
+  const option = normalizedOptions.value.find((opt) => opt.value === value)
+  return option?.label ?? value
+}
 
 // Check if value is selected
 const isSelected = (value: string): boolean => {
-    return props.modelValue?.includes(value) ?? false;
-};
+  return props.modelValue?.includes(value) ?? false
+}
 
 // Toggle selection
 const toggleSelection = (value: string) => {
-    const currentValues = props.modelValue ?? [];
+  const currentValues = props.modelValue ?? []
 
-    if (isSelected(value)) {
-        emit(
-            "update:modelValue",
-            currentValues.filter((v) => v !== value),
-        );
-    } else {
-        // Check max limit
-        if (props.max !== undefined && currentValues.length >= props.max) {
-            return;
-        }
-        emit("update:modelValue", [...currentValues, value]);
+  if (isSelected(value)) {
+    emit(
+      'update:modelValue',
+      currentValues.filter((v) => v !== value),
+    )
+  } else {
+    // Check max limit
+    if (props.max !== undefined && currentValues.length >= props.max) {
+      return
     }
-};
+    emit('update:modelValue', [...currentValues, value])
+  }
+}
 
 // Remove a value
 const removeValue = (value: string) => {
-    const currentValues = props.modelValue ?? [];
-    emit(
-        "update:modelValue",
-        currentValues.filter((v) => v !== value),
-    );
-};
+  const currentValues = props.modelValue ?? []
+  emit(
+    'update:modelValue',
+    currentValues.filter((v) => v !== value),
+  )
+}
 
 // Clear all selections
 const clearAll = () => {
-    emit("update:modelValue", []);
-};
+  emit('update:modelValue', [])
+}
 
 // Create new option
 const handleCreateOption = (value: string) => {
-    const trimmed = value.trim();
-    if (!trimmed || !props.creatable) return;
+  const trimmed = value.trim()
+  if (!trimmed || !props.creatable) return
 
-    // Check if already selected (prevent duplicates)
-    if (props.modelValue?.includes(trimmed)) {
-        return;
-    }
+  // Check if already selected (prevent duplicates)
+  if (props.modelValue?.includes(trimmed)) {
+    return
+  }
 
-    // Check if exists in predefined options - if so, toggle it
-    if (normalizedOptions.value.some((opt) => opt.value === trimmed)) {
-        toggleSelection(trimmed);
-    } else {
-        // Add as new value
-        if (
-            props.max !== undefined &&
-            (props.modelValue?.length ?? 0) >= props.max
-        ) {
-            return;
-        }
-        emit("update:modelValue", [...(props.modelValue ?? []), trimmed]);
+  // Check if exists in predefined options - if so, toggle it
+  if (normalizedOptions.value.some((opt) => opt.value === trimmed)) {
+    toggleSelection(trimmed)
+  } else {
+    // Add as new value
+    if (props.max !== undefined && (props.modelValue?.length ?? 0) >= props.max) {
+      return
     }
-};
+    emit('update:modelValue', [...(props.modelValue ?? []), trimmed])
+  }
+}
 
 // Visible badges
 const visibleBadges = computed(() => {
-    const values = props.modelValue ?? [];
-    if (props.maxDisplay !== undefined && values.length > props.maxDisplay) {
-        return values.slice(0, props.maxDisplay);
-    }
-    return values;
-});
+  const values = props.modelValue ?? []
+  if (props.maxDisplay !== undefined && values.length > props.maxDisplay) {
+    return values.slice(0, props.maxDisplay)
+  }
+  return values
+})
 
 // Remaining count
 const remainingCount = computed(() => {
-    const values = props.modelValue ?? [];
-    if (props.maxDisplay !== undefined && values.length > props.maxDisplay) {
-        return values.length - props.maxDisplay;
-    }
-    return 0;
-});
+  const values = props.modelValue ?? []
+  if (props.maxDisplay !== undefined && values.length > props.maxDisplay) {
+    return values.length - props.maxDisplay
+  }
+  return 0
+})
 </script>
 
 <template>
