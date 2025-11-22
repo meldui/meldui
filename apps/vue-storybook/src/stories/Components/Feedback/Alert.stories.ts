@@ -1,4 +1,4 @@
-import { IconAlertCircle, IconCheck, IconInfoCircle } from '@meldui/tabler-vue'
+import { IconAlertCircle, IconAlertTriangle, IconCheck, IconInfoCircle } from '@meldui/tabler-vue'
 import { Alert, AlertDescription, AlertTitle } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -9,7 +9,7 @@ const meta: Meta<typeof Alert> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive'],
+      options: ['default', 'destructive', 'success', 'warning', 'info', 'neutral'],
       description: 'Visual style variant of the alert',
     },
   },
@@ -66,11 +66,56 @@ export const Success: Story = {
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, IconCheck },
     template: `
-      <Alert style="max-width: 600px;">
+      <Alert variant="success" style="max-width: 600px;">
         <IconCheck />
         <AlertTitle>Success</AlertTitle>
         <AlertDescription>
           Your changes have been saved successfully.
+        </AlertDescription>
+      </Alert>
+    `,
+  }),
+}
+
+export const Warning: Story = {
+  render: () => ({
+    components: { Alert, AlertTitle, AlertDescription, IconAlertTriangle },
+    template: `
+      <Alert variant="warning" style="max-width: 600px;">
+        <IconAlertTriangle />
+        <AlertTitle>Warning</AlertTitle>
+        <AlertDescription>
+          This action cannot be undone. Please proceed with caution.
+        </AlertDescription>
+      </Alert>
+    `,
+  }),
+}
+
+export const Info: Story = {
+  render: () => ({
+    components: { Alert, AlertTitle, AlertDescription, IconInfoCircle },
+    template: `
+      <Alert variant="info" style="max-width: 600px;">
+        <IconInfoCircle />
+        <AlertTitle>Information</AlertTitle>
+        <AlertDescription>
+          New features are available. Check out what's new in the release notes.
+        </AlertDescription>
+      </Alert>
+    `,
+  }),
+}
+
+export const Neutral: Story = {
+  render: () => ({
+    components: { Alert, AlertTitle, AlertDescription, IconInfoCircle },
+    template: `
+      <Alert variant="neutral" style="max-width: 600px;">
+        <IconInfoCircle />
+        <AlertTitle>Note</AlertTitle>
+        <AlertDescription>
+          This is a neutral alert for general information.
         </AlertDescription>
       </Alert>
     `,
@@ -105,7 +150,7 @@ export const DescriptionOnly: Story = {
 
 export const AllVariants: Story = {
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, IconInfoCircle, IconAlertCircle },
+    components: { Alert, AlertTitle, AlertDescription, IconInfoCircle, IconAlertCircle, IconCheck, IconAlertTriangle },
     template: `
       <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px;">
         <Alert>
@@ -120,7 +165,39 @@ export const AllVariants: Story = {
           <IconAlertCircle />
           <AlertTitle>Destructive Alert</AlertTitle>
           <AlertDescription>
-            This is the destructive alert variant for errors and warnings.
+            This is the destructive alert variant for errors.
+          </AlertDescription>
+        </Alert>
+
+        <Alert variant="success">
+          <IconCheck />
+          <AlertTitle>Success Alert</AlertTitle>
+          <AlertDescription>
+            This is the success alert variant for positive feedback.
+          </AlertDescription>
+        </Alert>
+
+        <Alert variant="warning">
+          <IconAlertTriangle />
+          <AlertTitle>Warning Alert</AlertTitle>
+          <AlertDescription>
+            This is the warning alert variant for cautions.
+          </AlertDescription>
+        </Alert>
+
+        <Alert variant="info">
+          <IconInfoCircle />
+          <AlertTitle>Info Alert</AlertTitle>
+          <AlertDescription>
+            This is the info alert variant for informational messages.
+          </AlertDescription>
+        </Alert>
+
+        <Alert variant="neutral">
+          <IconInfoCircle />
+          <AlertTitle>Neutral Alert</AlertTitle>
+          <AlertDescription>
+            This is the neutral alert variant for general messages.
           </AlertDescription>
         </Alert>
       </div>

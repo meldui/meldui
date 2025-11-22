@@ -15,6 +15,11 @@ const meta: Meta<typeof Progress> = {
       control: 'number',
       description: 'Maximum progress value',
     },
+    variant: {
+      control: 'select',
+      options: ['default', 'destructive', 'success', 'warning', 'info', 'neutral'],
+      description: 'Color variant of the progress bar',
+    },
   },
 }
 
@@ -52,6 +57,115 @@ export const Complete: Story = {
   render: () => ({
     components: { Progress },
     template: '<Progress :model-value="100" class="w-[400px]" />',
+  }),
+}
+
+export const Destructive: Story = {
+  render: () => ({
+    components: { Progress },
+    template: `
+      <div class="w-[400px]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Error Rate</span>
+          <span class="text-sm text-muted-foreground">85%</span>
+        </div>
+        <Progress variant="destructive" :model-value="85" />
+      </div>
+    `,
+  }),
+}
+
+export const Success: Story = {
+  render: () => ({
+    components: { Progress },
+    template: `
+      <div class="w-[400px]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Upload Complete</span>
+          <span class="text-sm text-muted-foreground">100%</span>
+        </div>
+        <Progress variant="success" :model-value="100" />
+      </div>
+    `,
+  }),
+}
+
+export const Warning: Story = {
+  render: () => ({
+    components: { Progress },
+    template: `
+      <div class="w-[400px]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Storage Space</span>
+          <span class="text-sm text-muted-foreground">78%</span>
+        </div>
+        <Progress variant="warning" :model-value="78" />
+      </div>
+    `,
+  }),
+}
+
+export const Info: Story = {
+  render: () => ({
+    components: { Progress },
+    template: `
+      <div class="w-[400px]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Download Progress</span>
+          <span class="text-sm text-muted-foreground">45%</span>
+        </div>
+        <Progress variant="info" :model-value="45" />
+      </div>
+    `,
+  }),
+}
+
+export const Neutral: Story = {
+  render: () => ({
+    components: { Progress },
+    template: `
+      <div class="w-[400px]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Processing</span>
+          <span class="text-sm text-muted-foreground">60%</span>
+        </div>
+        <Progress variant="neutral" :model-value="60" />
+      </div>
+    `,
+  }),
+}
+
+export const AllVariants: Story = {
+  render: () => ({
+    components: { Progress },
+    template: `
+      <div class="flex flex-col gap-6 w-[400px]">
+        <div>
+          <div class="text-sm font-medium mb-2">Default</div>
+          <Progress :model-value="60" />
+        </div>
+        <div>
+          <div class="text-sm font-medium mb-2">Destructive</div>
+          <Progress variant="destructive" :model-value="85" />
+        </div>
+        <div>
+          <div class="text-sm font-medium mb-2">Success</div>
+          <Progress variant="success" :model-value="100" />
+        </div>
+        <div>
+          <div class="text-sm font-medium mb-2">Warning</div>
+          <Progress variant="warning" :model-value="75" />
+        </div>
+        <div>
+          <div class="text-sm font-medium mb-2">Info</div>
+          <Progress variant="info" :model-value="45" />
+        </div>
+        <div>
+          <div class="text-sm font-medium mb-2">Neutral</div>
+          <Progress variant="neutral" :model-value="50" />
+        </div>
+      </div>
+    `,
   }),
 }
 
@@ -217,28 +331,28 @@ export const MultipleProgress: Story = {
             <span class="text-sm font-medium">CPU Usage</span>
             <span class="text-sm text-muted-foreground">45%</span>
           </div>
-          <Progress :model-value="45" />
+          <Progress variant="info" :model-value="45" />
         </div>
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium">Memory</span>
             <span class="text-sm text-muted-foreground">72%</span>
           </div>
-          <Progress :model-value="72" />
+          <Progress variant="warning" :model-value="72" />
         </div>
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium">Storage</span>
             <span class="text-sm text-muted-foreground">88%</span>
           </div>
-          <Progress :model-value="88" />
+          <Progress variant="destructive" :model-value="88" />
         </div>
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium">Network</span>
             <span class="text-sm text-muted-foreground">23%</span>
           </div>
-          <Progress :model-value="23" />
+          <Progress variant="success" :model-value="23" />
         </div>
       </div>
     `,

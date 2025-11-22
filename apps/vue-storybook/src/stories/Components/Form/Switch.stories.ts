@@ -15,6 +15,11 @@ const meta: Meta<typeof Switch> = {
       control: 'boolean',
       description: 'Whether the switch is disabled',
     },
+    variant: {
+      control: 'select',
+      options: ['default', 'destructive', 'success', 'warning', 'info', 'neutral'],
+      description: 'Color variant of the switch',
+    },
   },
   parameters: {
     docs: {
@@ -117,6 +122,131 @@ export const Disabled: Story = {
         <div class="flex items-center gap-2">
           <Switch id="disabled-on" :checked="true" disabled />
           <Label for="disabled-on" class="cursor-not-allowed">Disabled (On)</Label>
+        </div>
+      </div>
+    `,
+  }),
+}
+
+export const Destructive: Story = {
+  render: () => ({
+    components: { Label, Switch },
+    setup() {
+      const enabled = ref(true)
+      return { enabled }
+    },
+    template: `
+      <div class="flex items-center gap-2">
+        <Switch id="destructive" variant="destructive" v-model="enabled" />
+        <Label for="destructive" class="cursor-pointer">Delete mode</Label>
+      </div>
+    `,
+  }),
+}
+
+export const Success: Story = {
+  render: () => ({
+    components: { Label, Switch },
+    setup() {
+      const enabled = ref(true)
+      return { enabled }
+    },
+    template: `
+      <div class="flex items-center gap-2">
+        <Switch id="success" variant="success" v-model="enabled" />
+        <Label for="success" class="cursor-pointer">Auto-save enabled</Label>
+      </div>
+    `,
+  }),
+}
+
+export const Warning: Story = {
+  render: () => ({
+    components: { Label, Switch },
+    setup() {
+      const enabled = ref(true)
+      return { enabled }
+    },
+    template: `
+      <div class="flex items-center gap-2">
+        <Switch id="warning" variant="warning" v-model="enabled" />
+        <Label for="warning" class="cursor-pointer">Experimental features</Label>
+      </div>
+    `,
+  }),
+}
+
+export const Info: Story = {
+  render: () => ({
+    components: { Label, Switch },
+    setup() {
+      const enabled = ref(true)
+      return { enabled }
+    },
+    template: `
+      <div class="flex items-center gap-2">
+        <Switch id="info" variant="info" v-model="enabled" />
+        <Label for="info" class="cursor-pointer">Show tooltips</Label>
+      </div>
+    `,
+  }),
+}
+
+export const Neutral: Story = {
+  render: () => ({
+    components: { Label, Switch },
+    setup() {
+      const enabled = ref(true)
+      return { enabled }
+    },
+    template: `
+      <div class="flex items-center gap-2">
+        <Switch id="neutral" variant="neutral" v-model="enabled" />
+        <Label for="neutral" class="cursor-pointer">Compact mode</Label>
+      </div>
+    `,
+  }),
+}
+
+export const AllVariants: Story = {
+  render: () => ({
+    components: { Label, Switch },
+    setup() {
+      const settings = ref({
+        default: true,
+        destructive: true,
+        success: true,
+        warning: true,
+        info: true,
+        neutral: true,
+      })
+      return { settings }
+    },
+    template: `
+      <div class="flex flex-col gap-4 max-w-sm">
+        <div class="flex items-center justify-between">
+          <Label for="var-default" class="cursor-pointer">Default</Label>
+          <Switch id="var-default" v-model="settings.default" />
+        </div>
+        <div class="flex items-center justify-between">
+          <Label for="var-destructive" class="cursor-pointer">Destructive</Label>
+          <Switch id="var-destructive" variant="destructive" v-model="settings.destructive" />
+        </div>
+        <div class="flex items-center justify-between">
+          <Label for="var-success" class="cursor-pointer">Success</Label>
+          <Switch id="var-success" variant="success" v-model="settings.success" />
+        </div>
+        <div class="flex items-center justify-between">
+          <Label for="var-warning" class="cursor-pointer">Warning</Label>
+          <Switch id="var-warning" variant="warning" v-model="settings.warning" />
+        </div>
+        <div class="flex items-center justify-between">
+          <Label for="var-info" class="cursor-pointer">Info</Label>
+          <Switch id="var-info" variant="info" v-model="settings.info" />
+        </div>
+        <div class="flex items-center justify-between">
+          <Label for="var-neutral" class="cursor-pointer">Neutral</Label>
+          <Switch id="var-neutral" variant="neutral" v-model="settings.neutral" />
         </div>
       </div>
     `,

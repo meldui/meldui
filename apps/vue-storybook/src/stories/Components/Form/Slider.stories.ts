@@ -28,6 +28,11 @@ const meta: Meta<typeof Slider> = {
       options: ['horizontal', 'vertical'],
       description: 'Orientation of the slider',
     },
+    variant: {
+      control: 'select',
+      options: ['default', 'destructive', 'success', 'warning', 'info', 'neutral'],
+      description: 'Color variant of the slider',
+    },
   },
   parameters: {
     docs: {
@@ -217,6 +222,146 @@ export const Disabled: Story = {
   }),
 }
 
+export const Destructive: Story = {
+  render: () => ({
+    components: { Label, Slider },
+    setup() {
+      const value = ref([85])
+      return { value }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-sm">
+        <div class="flex items-center justify-between">
+          <Label>CPU Temperature</Label>
+          <span class="text-sm text-muted-foreground">{{ value[0] }}°C</span>
+        </div>
+        <Slider variant="destructive" v-model="value" :max="100" :step="1" />
+      </div>
+    `,
+  }),
+}
+
+export const Success: Story = {
+  render: () => ({
+    components: { Label, Slider },
+    setup() {
+      const value = ref([95])
+      return { value }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-sm">
+        <div class="flex items-center justify-between">
+          <Label>Battery Health</Label>
+          <span class="text-sm text-muted-foreground">{{ value[0] }}%</span>
+        </div>
+        <Slider variant="success" v-model="value" :max="100" :step="1" />
+      </div>
+    `,
+  }),
+}
+
+export const Warning: Story = {
+  render: () => ({
+    components: { Label, Slider },
+    setup() {
+      const value = ref([75])
+      return { value }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-sm">
+        <div class="flex items-center justify-between">
+          <Label>Disk Usage</Label>
+          <span class="text-sm text-muted-foreground">{{ value[0] }}%</span>
+        </div>
+        <Slider variant="warning" v-model="value" :max="100" :step="1" />
+      </div>
+    `,
+  }),
+}
+
+export const Info: Story = {
+  render: () => ({
+    components: { Label, Slider },
+    setup() {
+      const value = ref([60])
+      return { value }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-sm">
+        <div class="flex items-center justify-between">
+          <Label>Bandwidth Usage</Label>
+          <span class="text-sm text-muted-foreground">{{ value[0] }}%</span>
+        </div>
+        <Slider variant="info" v-model="value" :max="100" :step="1" />
+      </div>
+    `,
+  }),
+}
+
+export const Neutral: Story = {
+  render: () => ({
+    components: { Label, Slider },
+    setup() {
+      const value = ref([50])
+      return { value }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-sm">
+        <div class="flex items-center justify-between">
+          <Label>Opacity</Label>
+          <span class="text-sm text-muted-foreground">{{ value[0] }}%</span>
+        </div>
+        <Slider variant="neutral" v-model="value" :max="100" :step="1" />
+      </div>
+    `,
+  }),
+}
+
+export const AllVariants: Story = {
+  render: () => ({
+    components: { Label, Slider },
+    setup() {
+      const values = ref({
+        default: [60],
+        destructive: [85],
+        success: [95],
+        warning: [75],
+        info: [60],
+        neutral: [50],
+      })
+      return { values }
+    },
+    template: `
+      <div class="flex flex-col gap-6 max-w-sm">
+        <div class="flex flex-col gap-2">
+          <div class="text-sm font-medium">Default</div>
+          <Slider v-model="values.default" :max="100" :step="1" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="text-sm font-medium">Destructive</div>
+          <Slider variant="destructive" v-model="values.destructive" :max="100" :step="1" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="text-sm font-medium">Success</div>
+          <Slider variant="success" v-model="values.success" :max="100" :step="1" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="text-sm font-medium">Warning</div>
+          <Slider variant="warning" v-model="values.warning" :max="100" :step="1" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="text-sm font-medium">Info</div>
+          <Slider variant="info" v-model="values.info" :max="100" :step="1" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="text-sm font-medium">Neutral</div>
+          <Slider variant="neutral" v-model="values.neutral" :max="100" :step="1" />
+        </div>
+      </div>
+    `,
+  }),
+}
+
 export const VerticalOrientation: Story = {
   render: () => ({
     components: { Label, Slider },
@@ -348,38 +493,47 @@ export const MultipleSliders: Story = {
     components: { Label, Slider },
     setup() {
       const settings = ref({
-        brightness: [70],
-        contrast: [50],
-        saturation: [60],
+        cpu: [85],
+        memory: [72],
+        storage: [45],
+        network: [30],
       })
       return { settings }
     },
     template: `
       <div class="flex flex-col gap-6 max-w-md p-6 border rounded-lg">
-        <h3 class="text-lg font-semibold">Image Settings</h3>
+        <h3 class="text-lg font-semibold">System Resources</h3>
 
         <div class="flex flex-col gap-2">
           <div class="flex items-center justify-between">
-            <Label>Brightness</Label>
-            <span class="text-sm text-muted-foreground">{{ settings.brightness[0] }}%</span>
+            <Label>CPU Usage</Label>
+            <span class="text-sm text-muted-foreground">{{ settings.cpu[0] }}%</span>
           </div>
-          <Slider v-model="settings.brightness" :max="100" :step="1" />
+          <Slider variant="destructive" v-model="settings.cpu" :max="100" :step="1" />
         </div>
 
         <div class="flex flex-col gap-2">
           <div class="flex items-center justify-between">
-            <Label>Contrast</Label>
-            <span class="text-sm text-muted-foreground">{{ settings.contrast[0] }}%</span>
+            <Label>Memory</Label>
+            <span class="text-sm text-muted-foreground">{{ settings.memory[0] }}%</span>
           </div>
-          <Slider v-model="settings.contrast" :max="100" :step="1" />
+          <Slider variant="warning" v-model="settings.memory" :max="100" :step="1" />
         </div>
 
         <div class="flex flex-col gap-2">
           <div class="flex items-center justify-between">
-            <Label>Saturation</Label>
-            <span class="text-sm text-muted-foreground">{{ settings.saturation[0] }}%</span>
+            <Label>Storage</Label>
+            <span class="text-sm text-muted-foreground">{{ settings.storage[0] }}%</span>
           </div>
-          <Slider v-model="settings.saturation" :max="100" :step="1" />
+          <Slider variant="info" v-model="settings.storage" :max="100" :step="1" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <Label>Network</Label>
+            <span class="text-sm text-muted-foreground">{{ settings.network[0] }}%</span>
+          </div>
+          <Slider variant="success" v-model="settings.network" :max="100" :step="1" />
         </div>
       </div>
     `,
