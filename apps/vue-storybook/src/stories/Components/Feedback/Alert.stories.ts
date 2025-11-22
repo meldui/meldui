@@ -150,7 +150,15 @@ export const DescriptionOnly: Story = {
 
 export const AllVariants: Story = {
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, IconInfoCircle, IconAlertCircle, IconCheck, IconAlertTriangle },
+    components: {
+      Alert,
+      AlertTitle,
+      AlertDescription,
+      IconInfoCircle,
+      IconAlertCircle,
+      IconCheck,
+      IconAlertTriangle,
+    },
     template: `
       <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px;">
         <Alert>

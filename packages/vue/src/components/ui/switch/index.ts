@@ -27,7 +27,8 @@ export const switchVariants = {
     {
       variants: {
         variant: {
-          default: 'dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground',
+          default:
+            'dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground',
           destructive:
             'dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-white',
           success: 'dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-white',

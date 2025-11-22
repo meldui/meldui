@@ -7,7 +7,9 @@ import { cn } from '@/lib/utils'
 import type { SliderVariants } from '.'
 import { sliderVariants } from '.'
 
-const props = defineProps<SliderRootProps & { class?: HTMLAttributes['class']; variant?: SliderVariants['variant'] }>()
+const props = defineProps<
+  SliderRootProps & { class?: HTMLAttributes['class']; variant?: SliderVariants['variant'] }
+>()
 const emits = defineEmits<SliderRootEmits>()
 
 const delegatedProps = reactiveOmit(props, 'class', 'variant')

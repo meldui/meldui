@@ -7,7 +7,9 @@ import { cn } from '@/lib/utils'
 import type { SwitchVariants } from '.'
 import { switchVariants } from '.'
 
-const props = defineProps<SwitchRootProps & { class?: HTMLAttributes['class']; variant?: SwitchVariants['variant'] }>()
+const props = defineProps<
+  SwitchRootProps & { class?: HTMLAttributes['class']; variant?: SwitchVariants['variant'] }
+>()
 
 const emits = defineEmits<SwitchRootEmits>()
 

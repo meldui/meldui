@@ -8,7 +8,9 @@ import type { ProgressVariants } from '.'
 import { progressVariants } from '.'
 
 const props = withDefaults(
-  defineProps<ProgressRootProps & { class?: HTMLAttributes['class']; variant?: ProgressVariants['variant'] }>(),
+  defineProps<
+    ProgressRootProps & { class?: HTMLAttributes['class']; variant?: ProgressVariants['variant'] }
+  >(),
   {
     modelValue: 0,
   },
