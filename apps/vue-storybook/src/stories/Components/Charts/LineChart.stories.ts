@@ -1,17 +1,17 @@
-import { MeldLineChart } from '@meldui/charts-vue'
 import type { MeldChartConfig } from '@meldui/charts-vue'
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { ref } from 'vue'
+import { MeldLineChart } from '@meldui/charts-vue'
+import { IconRefresh, IconTrendingDown, IconTrendingUp } from '@meldui/tabler-vue'
 import {
+  Badge,
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  Badge,
-  Button,
 } from '@meldui/vue'
-import { IconTrendingUp, IconTrendingDown, IconRefresh } from '@meldui/tabler-vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { ref } from 'vue'
 
 const meta: Meta<typeof MeldLineChart> = {
   title: 'Components/Charts/LineChart',
@@ -238,7 +238,16 @@ export const InteractiveDemo: Story = {
 
 export const WithCard: Story = {
   render: () => ({
-    components: { MeldLineChart, Card, CardHeader, CardTitle, CardDescription, CardContent, Badge, IconTrendingUp },
+    components: {
+      MeldLineChart,
+      Card,
+      CardHeader,
+      CardTitle,
+      CardDescription,
+      CardContent,
+      Badge,
+      IconTrendingUp,
+    },
     setup() {
       const config: MeldChartConfig = {
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
@@ -296,9 +305,7 @@ export const DashboardLayout: Story = {
       }
 
       const usersConfig: MeldChartConfig = {
-        series: [
-          { name: 'Active Users', data: [120, 140, 135, 150, 149, 160, 175] },
-        ],
+        series: [{ name: 'Active Users', data: [120, 140, 135, 150, 149, 160, 175] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         },
@@ -308,9 +315,7 @@ export const DashboardLayout: Story = {
       }
 
       const conversionConfig: MeldChartConfig = {
-        series: [
-          { name: 'Conversions', data: [5, 8, 6, 9, 7, 10, 12] },
-        ],
+        series: [{ name: 'Conversions', data: [5, 8, 6, 9, 7, 10, 12] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         },
@@ -422,7 +427,7 @@ export const AnalyticsDashboard: Story = {
         setTimeout(() => {
           config.value = {
             ...config.value,
-            series: config.value.series.map(s => ({
+            series: config.value.series.map((s) => ({
               ...s,
               data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 2000 + 400)),
             })),

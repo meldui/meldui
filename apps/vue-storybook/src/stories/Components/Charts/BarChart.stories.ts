@@ -1,17 +1,17 @@
-import { MeldBarChart } from '@meldui/charts-vue'
 import type { MeldChartConfig } from '@meldui/charts-vue'
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { MeldBarChart } from '@meldui/charts-vue'
+import { IconPackage, IconShoppingCart, IconUsers } from '@meldui/tabler-vue'
 import {
+  Badge,
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  Badge,
-  Button,
   Separator,
 } from '@meldui/vue'
-import { IconShoppingCart, IconUsers, IconPackage } from '@meldui/tabler-vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 const meta: Meta<typeof MeldBarChart> = {
   title: 'Components/Charts/BarChart',
@@ -235,7 +235,16 @@ export const LargeDataset: Story = {
 
 export const SalesCard: Story = {
   render: () => ({
-    components: { MeldBarChart, Card, CardHeader, CardTitle, CardDescription, CardContent, Badge, IconShoppingCart },
+    components: {
+      MeldBarChart,
+      Card,
+      CardHeader,
+      CardTitle,
+      CardDescription,
+      CardContent,
+      Badge,
+      IconShoppingCart,
+    },
     setup() {
       const config: MeldChartConfig = {
         series: [{ name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }],

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue'
+import { transformToEChartsOption } from '../adapters/echarts/transformer'
 import { useChartBase } from '../composables/useChartBase'
 import { useChartResize } from '../composables/useChartResize'
 import { useChartTheme } from '../composables/useChartTheme'
-import { transformToEChartsOption } from '../adapters/echarts/transformer'
-import MeldChartSkeleton from './MeldChartSkeleton.vue'
 import type { MeldAreaChartProps } from '../types'
+import MeldChartSkeleton from './MeldChartSkeleton.vue'
 
 const props = withDefaults(defineProps<MeldAreaChartProps>(), {
   height: 350,

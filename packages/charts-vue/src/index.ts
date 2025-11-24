@@ -5,13 +5,12 @@
 // PUBLIC API - Components
 // ============================================================================
 
+export { default as MeldAreaChart } from './components/MeldAreaChart.vue'
+export { default as MeldBarChart } from './components/MeldBarChart.vue'
 // Loading skeleton component
 export { default as MeldChartSkeleton } from './components/MeldChartSkeleton.vue'
-
 // Core chart components (Phase 2)
 export { default as MeldLineChart } from './components/MeldLineChart.vue'
-export { default as MeldBarChart } from './components/MeldBarChart.vue'
-export { default as MeldAreaChart } from './components/MeldAreaChart.vue'
 export { default as MeldPieChart } from './components/MeldPieChart.vue'
 
 // Additional chart components (will be added in later phases)
@@ -54,8 +53,8 @@ export type {
 // PUBLIC API - Color Palettes
 // ============================================================================
 
-export { generateColors, PALETTES, MAX_RECOMMENDED_SERIES } from './config/palettes'
 export type { Palette } from './config/palettes'
+export { generateColors, MAX_RECOMMENDED_SERIES, PALETTES } from './config/palettes'
 
 // ============================================================================
 // INTERNAL ONLY - NOT EXPORTED

@@ -1,5 +1,5 @@
-import { MeldPieChart } from '@meldui/charts-vue'
 import type { MeldChartConfig } from '@meldui/charts-vue'
+import { MeldPieChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 const meta: Meta<typeof MeldPieChart> = {

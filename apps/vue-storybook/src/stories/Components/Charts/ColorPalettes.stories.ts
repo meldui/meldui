@@ -1,8 +1,7 @@
-import { MeldLineChart, MeldBarChart } from '@meldui/charts-vue'
 import type { MeldChartConfig, PaletteName } from '@meldui/charts-vue'
-import { PALETTES, generateColors } from '@meldui/charts-vue'
+import { generateColors, MeldBarChart, MeldLineChart, PALETTES } from '@meldui/charts-vue'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@meldui/vue'
 
 const meta: Meta = {
   title: 'Components/Charts/Color Palettes',
