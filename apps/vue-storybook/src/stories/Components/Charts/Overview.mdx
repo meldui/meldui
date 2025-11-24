@@ -1,0 +1,343 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Components/Charts/Overview" />
+
+# Charts Overview
+
+MeldUI Charts provides a comprehensive set of data visualization components built on Apache ECharts, with a clean API that abstracts away library-specific complexity.
+
+## Available Chart Types
+
+### Line Charts
+
+Perfect for showing trends over time or continuous data.
+
+```vue
+<MeldLineChart :config="config" />
+```
+
+**Use cases:**
+- Time-series data (stock prices, temperature, traffic)
+- Trend analysis and forecasting
+- Comparing multiple metrics over time
+
+**Key features:**
+- Smooth or straight lines
+- Multiple series support
+- Area fill options
+- Custom markers and annotations
+
+[View Line Chart Examples →](/story/components-charts-linechart--default)
+
+---
+
+### Bar Charts
+
+Ideal for comparing discrete categories or showing rankings.
+
+```vue
+<MeldBarChart :config="config" />
+```
+
+**Use cases:**
+- Category comparisons (sales by region, product rankings)
+- Vertical or horizontal orientations
+- Grouped or stacked bars
+- Survey results and ratings
+
+**Key features:**
+- Vertical or horizontal orientation
+- Grouped or stacked bars
+- Custom bar widths and spacing
+- Label customization
+
+[View Bar Chart Examples →](/story/components-charts-barchart--default)
+
+---
+
+### Area Charts
+
+Similar to line charts but with filled areas, emphasizing volume and magnitude.
+
+```vue
+<MeldAreaChart :config="config" />
+```
+
+**Use cases:**
+- Cumulative data (total sales, user growth)
+- Stacked area charts for part-to-whole relationships
+- Emphasizing magnitude of change
+
+**Key features:**
+- Filled areas under lines
+- Stacked area support
+- Gradient fills
+- Transparency controls
+
+[View Area Chart Examples →](/story/components-charts-areachart--default)
+
+---
+
+### Pie & Donut Charts
+
+Show part-to-whole relationships and proportional data.
+
+```vue
+<MeldPieChart :config="config" />
+<MeldDonutChart :config="config" />
+```
+
+**Use cases:**
+- Market share distribution
+- Budget allocation
+- Survey response percentages
+- Device/browser usage statistics
+
+**Key features:**
+- Percentage or value labels
+- Custom colors per segment
+- Interactive legends
+- Center label (donut charts)
+
+[View Pie Chart Examples →](/story/components-charts-piechart--default)
+[View Donut Chart Examples →](/story/components-charts-donutchart--default)
+
+---
+
+### Scatter Charts
+
+Display relationships between two variables, revealing correlations and patterns.
+
+```vue
+<MeldScatterChart :config="config" />
+```
+
+**Use cases:**
+- Correlation analysis
+- Data point distribution
+- Outlier detection
+- Bubble charts (with size dimension)
+
+**Key features:**
+- Multiple series with different colors
+- Point sizes and shapes
+- Regression lines
+- Zoom and brush selection
+
+[View Scatter Chart Examples →](/story/components-charts-scatterchart--default)
+
+---
+
+### Radar Charts
+
+Compare multiple variables across different categories using a radial layout.
+
+```vue
+<MeldRadarChart :config="config" />
+```
+
+**Use cases:**
+- Multi-dimensional comparisons
+- Performance metrics
+- Skill assessments
+- Feature comparisons
+
+**Key features:**
+- Multiple series overlay
+- Custom axis ranges
+- Area fill options
+- Circular or polygon shapes
+
+[View Radar Chart Examples →](/story/components-charts-radarchart--default)
+
+---
+
+### Heatmap Charts
+
+Visualize data density and patterns using color gradients in a matrix format.
+
+```vue
+<MeldHeatmapChart :config="config" />
+```
+
+**Use cases:**
+- Correlation matrices
+- Time-of-day patterns
+- Geographic data visualization
+- Calendar heatmaps
+
+**Key features:**
+- Custom color scales
+- Automatic gradient generation
+- Label overlays
+- Interactive tooltips
+
+[View Heatmap Chart Examples →](/story/components-charts-heatmapchart--default)
+
+---
+
+### Mixed Charts
+
+Combine multiple chart types in a single visualization for complex data storytelling.
+
+```vue
+<MeldMixedChart :config="config" />
+```
+
+**Use cases:**
+- Dual-axis charts (e.g., revenue + profit margin)
+- Combining bar and line charts
+- Multiple metrics with different scales
+- Complex dashboards
+
+**Key features:**
+- Multiple chart types in one
+- Independent Y-axes
+- Custom styling per series
+- Legend integration
+
+[View Mixed Chart Examples →](/story/components-charts-mixedchart--default)
+
+---
+
+## Smart Wrapper Component
+
+For dynamic chart types based on runtime data:
+
+```vue
+<MeldChart :type="chartType" :config="config" />
+```
+
+This component lazy-loads the appropriate chart type, useful when:
+- Chart type is determined by user selection
+- Building chart configuration UIs
+- Reducing initial bundle size through code-splitting
+
+[View Dynamic Chart Examples →](/story/components-charts-meldchart--default)
+
+---
+
+## Common Configuration
+
+All chart types share a consistent configuration API:
+
+```typescript
+interface MeldChartConfig {
+  series: ChartSeries[]        // Data series
+  xAxis?: ChartAxis            // X-axis configuration
+  yAxis?: ChartAxis            // Y-axis configuration
+  legend?: ChartLegend         // Legend settings
+  tooltip?: ChartTooltip       // Tooltip customization
+  grid?: ChartGrid             // Grid lines
+  stroke?: ChartStroke         // Line styling
+  colors?: string[] | string   // Color palette
+  stacked?: boolean            // Stack series
+  horizontal?: boolean         // Horizontal orientation
+  advanced?: Record<string, any> // Escape hatch
+}
+```
+
+### Basic Example
+
+```vue
+<script setup lang="ts">
+import { MeldLineChart } from '@meldui/charts-vue'
+import type { MeldChartConfig } from '@meldui/charts-vue'
+
+const config: MeldChartConfig = {
+  series: [
+    { name: 'Sales', data: [30, 40, 35, 50, 49, 60, 70] },
+    { name: 'Revenue', data: [20, 30, 25, 40, 39, 50, 60] }
+  ],
+  xAxis: {
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  legend: {
+    position: 'bottom'
+  },
+  stroke: {
+    curve: 'smooth',
+    width: 3
+  }
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" title="Weekly Performance" />
+</template>
+```
+
+## Props Available to All Charts
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `config` | `MeldChartConfig` | required | Chart configuration |
+| `height` | `number \| string` | `350` | Chart height in pixels or CSS units |
+| `width` | `number \| string` | `'100%'` | Chart width in pixels or CSS units |
+| `title` | `string` | - | Optional chart title |
+| `loading` | `boolean` | `false` | Show loading skeleton |
+
+## Features Included
+
+### ✅ Automatic Theme Integration
+Charts automatically use your Tailwind CSS colors and respect dark mode.
+
+### ✅ Responsive by Default
+Charts automatically resize when their container changes size—no manual handling needed.
+
+### ✅ SSR Compatible
+Works seamlessly with Nuxt and other SSR frameworks with zero configuration.
+
+### ✅ TypeScript First
+Full type definitions with IntelliSense for all configuration options.
+
+### ✅ Accessible
+WCAG 2.1 AA compliant with proper ARIA labels and keyboard navigation.
+
+### ✅ Loading States
+Built-in skeleton loaders for smooth data loading experiences.
+
+## Choosing the Right Chart
+
+| Data Type | Recommended Charts |
+|-----------|-------------------|
+| Time series data | Line, Area |
+| Categories comparison | Bar, Column |
+| Part-to-whole | Pie, Donut |
+| Correlation/distribution | Scatter |
+| Multi-dimensional | Radar |
+| Matrix data | Heatmap |
+| Multiple metrics | Mixed |
+
+## Performance Tips
+
+1. **Use specific imports** for better tree-shaking:
+   ```typescript
+   // ✅ Good
+   import { MeldLineChart } from '@meldui/charts-vue'
+
+   // ❌ Avoid
+   import { MeldChart } from '@meldui/charts-vue'
+   ```
+
+2. **Limit data points** for large datasets:
+   - Aggregate data before rendering
+   - Use data sampling for dense datasets
+   - Consider pagination for time-series
+
+3. **Disable animations** for many charts:
+   ```typescript
+   config: { animations: false }
+   ```
+
+4. **Use loading states** during data fetching:
+   ```vue
+   <MeldLineChart :config="config" :loading="isLoading" />
+   ```
+
+## Next Steps
+
+- [Installation Guide](/story/components-charts-installation--docs) - Set up charts in your project
+- [Theme Customization](/story/components-charts-theme-customization--docs) - Customize colors and styling
+- [Advanced Configuration](/story/components-charts-advancedconfiguration--default) - Power user features
+- [Analytics Dashboard Example](/story/examples-analytics-dashboard--full-dashboard) - See charts in action

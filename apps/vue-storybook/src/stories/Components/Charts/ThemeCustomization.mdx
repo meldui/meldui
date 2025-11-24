@@ -1,0 +1,416 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Components/Charts/Theme Customization" />
+
+# Theme Customization
+
+MeldUI Charts automatically integrate with your design system, respecting Tailwind CSS v4 colors and dark mode. This guide shows you how to customize chart appearance.
+
+## Automatic Theme Integration
+
+Charts automatically use colors from your Tailwind CSS configuration:
+
+```vue
+<script setup>
+import { MeldLineChart } from '@meldui/charts-vue'
+
+const config = {
+  series: [
+    { name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }
+  ],
+  xAxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
+  // No color specified - uses theme colors automatically
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" />
+</template>
+```
+
+The chart will automatically use:
+- **Primary color** from `--color-primary`
+- **Text colors** from `--color-foreground`
+- **Border colors** from `--color-border`
+- **Background colors** from `--color-background`
+
+## Dark Mode Support
+
+Dark mode is automatically detected and applied:
+
+```vue
+<!-- Charts automatically adapt to dark mode -->
+<template>
+  <MeldLineChart :config="config" />
+</template>
+```
+
+**How it works:**
+1. Charts detect the `.dark` class on `<html>`
+2. Colors, borders, and text automatically adjust
+3. Grid lines use appropriate opacity for each mode
+4. Tooltips have proper contrast
+
+**No configuration needed!**
+
+## Custom Color Palettes
+
+### Built-in Palettes
+
+MeldUI Charts includes several built-in color palettes:
+
+```typescript
+import { MeldLineChart } from '@meldui/charts-vue'
+
+const config = {
+  series: [
+    { name: 'Series 1', data: [30, 40, 45] },
+    { name: 'Series 2', data: [20, 30, 35] },
+    { name: 'Series 3', data: [10, 20, 25] }
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  colors: 'ocean' // Built-in palette
+}
+```
+
+**Available palettes:**
+- `'default'` - Blue, green, orange, red, purple, pink, cyan
+- `'ocean'` - Blue and teal shades
+- `'sunset'` - Warm oranges and reds
+- `'forest'` - Green and earth tones
+- `'berry'` - Purple and pink hues
+- `'monochrome'` - Grayscale variations
+
+[View Color Palette Examples →](/story/components-charts-colorpalettes--all-palettes)
+
+### Custom Colors Array
+
+Provide your own color array for complete control:
+
+```typescript
+const config = {
+  series: [
+    { name: 'Product A', data: [30, 40, 45] },
+    { name: 'Product B', data: [20, 30, 35] },
+    { name: 'Product C', data: [10, 20, 25] }
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  colors: ['#3b82f6', '#10b981', '#f59e0b'] // Custom hex colors
+}
+```
+
+**Supported formats:**
+- Hex: `'#3b82f6'`
+- RGB: `'rgb(59, 130, 246)'`
+- HSL: `'hsl(217, 91%, 60%)'`
+- CSS variables: `'var(--color-primary)'`
+
+### Per-Series Colors
+
+Override color for individual series:
+
+```typescript
+const config = {
+  series: [
+    {
+      name: 'Revenue',
+      data: [30, 40, 45],
+      color: '#10b981' // Green for revenue
+    },
+    {
+      name: 'Expenses',
+      data: [20, 30, 35],
+      color: '#ef4444' // Red for expenses
+    }
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+}
+```
+
+## Customizing Chart Elements
+
+### Grid Lines
+
+Control grid appearance:
+
+```typescript
+const config = {
+  series: [{ name: 'Data', data: [30, 40, 45] }],
+  xAxis: { categories: ['A', 'B', 'C'] },
+  grid: {
+    show: true,
+    strokeDashArray: 4 // Dashed grid lines
+  }
+}
+```
+
+### Stroke Styling
+
+Customize line and area chart strokes:
+
+```typescript
+const config = {
+  series: [
+    { name: 'Sales', data: [30, 40, 45] }
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  stroke: {
+    width: 4,           // Line thickness
+    curve: 'smooth',    // 'smooth' | 'straight' | 'stepline'
+    dashArray: 5        // Dashed line (5px dash)
+  }
+}
+```
+
+### Legend Styling
+
+Position and customize the legend:
+
+```typescript
+const config = {
+  series: [
+    { name: 'Series A', data: [30, 40, 45] },
+    { name: 'Series B', data: [20, 30, 35] }
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  legend: {
+    show: true,
+    position: 'bottom',  // 'top' | 'bottom' | 'left' | 'right'
+    align: 'center'      // 'left' | 'center' | 'right'
+  }
+}
+```
+
+### Tooltips
+
+Customize tooltip appearance and content:
+
+```typescript
+const config = {
+  series: [{ name: 'Revenue', data: [30, 40, 45] }],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  tooltip: {
+    enabled: true,
+    shared: true, // Show all series in one tooltip
+    formatter: (value, seriesName, dataPointIndex) => {
+      return `${seriesName}: $${value}k`
+    }
+  }
+}
+```
+
+## Using Tailwind CSS Variables
+
+Reference your design system colors directly:
+
+```typescript
+const config = {
+  series: [
+    {
+      name: 'Primary Metric',
+      data: [30, 40, 45],
+      color: 'hsl(var(--primary))' // Use Tailwind color
+    },
+    {
+      name: 'Secondary Metric',
+      data: [20, 30, 35],
+      color: 'hsl(var(--secondary))'
+    }
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+}
+```
+
+This ensures charts always match your brand colors, even if the theme changes.
+
+## Advanced Theming with Escape Hatch
+
+For complete control, use the `advanced` configuration:
+
+```typescript
+const config = {
+  series: [{ name: 'Data', data: [30, 40, 45, 50] }],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3', 'Q4'] },
+  advanced: {
+    // Direct ECharts configuration
+    itemStyle: {
+      borderRadius: [10, 10, 0, 0], // Rounded bar tops
+      shadowBlur: 10,
+      shadowColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    emphasis: {
+      itemStyle: {
+        shadowBlur: 20,
+        shadowColor: 'rgba(0, 0, 0, 0.8)'
+      }
+    }
+  }
+}
+```
+
+[View Advanced Configuration Examples →](/story/components-charts-advancedconfiguration--default)
+
+## Dark Mode Customization
+
+Override dark mode colors specifically:
+
+```css
+/* global.css */
+.dark {
+  --chart-grid-color: rgba(255, 255, 255, 0.1);
+  --chart-text-color: rgba(255, 255, 255, 0.9);
+  --chart-border-color: rgba(255, 255, 255, 0.2);
+}
+```
+
+Then reference in charts:
+
+```typescript
+const config = {
+  series: [{ name: 'Data', data: [30, 40, 45] }],
+  xAxis: { categories: ['A', 'B', 'C'] },
+  advanced: {
+    xAxis: {
+      axisLine: {
+        lineStyle: {
+          color: 'var(--chart-border-color)'
+        }
+      }
+    }
+  }
+}
+```
+
+## Responsive Colors
+
+Use different colors for different screen sizes:
+
+```vue
+<script setup>
+import { computed } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
+
+const isMobile = useMediaQuery('(max-width: 768px)')
+
+const config = computed(() => ({
+  series: [
+    { name: 'Data', data: [30, 40, 45] }
+  ],
+  xAxis: { categories: ['A', 'B', 'C'] },
+  colors: isMobile.value
+    ? ['#3b82f6'] // Single color on mobile
+    : ['#3b82f6', '#10b981', '#f59e0b'] // Multiple on desktop
+}))
+</script>
+
+<template>
+  <MeldLineChart :config="config" />
+</template>
+```
+
+## Accessibility Considerations
+
+When customizing colors, ensure:
+
+1. **Sufficient Contrast** - WCAG 2.1 AA requires 4.5:1 contrast ratio
+2. **Don't rely on color alone** - Use patterns, labels, or icons
+3. **Test in dark mode** - Verify colors work in both themes
+
+**Good color contrast examples:**
+```typescript
+// ✅ Good contrast
+colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+
+// ❌ Poor contrast (too similar)
+colors: ['#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe']
+```
+
+## Best Practices
+
+### 1. Use Semantic Colors
+
+```typescript
+// ✅ Good - Semantic meaning
+const config = {
+  series: [
+    { name: 'Success', data: [30], color: '#10b981' }, // Green
+    { name: 'Warning', data: [20], color: '#f59e0b' }, // Orange
+    { name: 'Error', data: [10], color: '#ef4444' }    // Red
+  ]
+}
+```
+
+### 2. Limit Color Count
+
+```typescript
+// ✅ Good - 3-5 colors
+colors: ['#3b82f6', '#10b981', '#f59e0b']
+
+// ❌ Avoid - Too many colors are confusing
+colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+         '#ec4899', '#06b6d4', '#14b8a6', '#84cc16']
+```
+
+### 3. Consistent Palette
+
+Use the same color for the same metric across all charts:
+
+```typescript
+// Revenue is always blue across all charts
+const REVENUE_COLOR = '#3b82f6'
+
+const lineConfig = {
+  series: [{ name: 'Revenue', data: [30, 40], color: REVENUE_COLOR }]
+}
+
+const barConfig = {
+  series: [{ name: 'Revenue', data: [50, 60], color: REVENUE_COLOR }]
+}
+```
+
+### 4. Respect User Preferences
+
+```typescript
+// Detect system color scheme preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+```
+
+## Examples
+
+### Brand Colors Dashboard
+
+```typescript
+const BRAND_COLORS = {
+  primary: '#3b82f6',
+  secondary: '#8b5cf6',
+  accent: '#f59e0b',
+  success: '#10b981',
+  danger: '#ef4444'
+}
+
+const config = {
+  series: [
+    { name: 'Primary', data: [30, 40, 45], color: BRAND_COLORS.primary },
+    { name: 'Secondary', data: [20, 30, 35], color: BRAND_COLORS.secondary }
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+}
+```
+
+### Traffic Light Pattern
+
+```typescript
+const config = {
+  series: [
+    { name: 'Good', data: [70], color: '#10b981' },   // Green
+    { name: 'Warning', data: [20], color: '#f59e0b' }, // Yellow
+    { name: 'Critical', data: [10], color: '#ef4444' } // Red
+  ]
+}
+```
+
+## Next Steps
+
+- [Advanced Configuration](/story/components-charts-advancedconfiguration--default) - ECharts escape hatch
+- [Color Palette Gallery](/story/components-charts-colorpalettes--all-palettes) - Browse all palettes
+- [Analytics Dashboard](/story/examples-analytics-dashboard--full-dashboard) - See theming in action

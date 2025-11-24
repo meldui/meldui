@@ -1,0 +1,176 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Components/Charts/Installation" />
+
+# Installing Charts
+
+MeldUI Charts is a **separate package** from the core `@meldui/vue` library. This keeps your bundle size optimized—only install charts if you need them.
+
+## Quick Start
+
+### 1. Install the Package
+
+Charts require `@meldui/vue` as a peer dependency:
+
+```bash
+# Using pnpm (recommended)
+pnpm add @meldui/vue @meldui/charts-vue
+
+# Using npm
+npm install @meldui/vue @meldui/charts-vue
+
+# Using yarn
+yarn add @meldui/vue @meldui/charts-vue
+```
+
+### 2. Import and Use
+
+```vue
+<script setup lang="ts">
+import { MeldLineChart } from '@meldui/charts-vue'
+import type { MeldChartConfig } from '@meldui/charts-vue'
+
+const config: MeldChartConfig = {
+  series: [
+    { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }
+  ],
+  xAxis: {
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  }
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" title="Weekly Revenue" />
+</template>
+```
+
+That's it! The chart will automatically integrate with your MeldUI theme.
+
+## What Gets Installed
+
+When you install `@meldui/charts-vue`, these dependencies are automatically included:
+
+- **echarts** (~50-100KB per chart type with tree-shaking)
+- **vue-echarts** (Official Vue 3 integration)
+
+Your bundler (Vite/Webpack) will automatically tree-shake unused chart types, keeping your bundle small.
+
+## Why a Separate Package?
+
+Following the same pattern as `@meldui/tabler-vue` (our icon package), charts are separate because:
+
+1. **Optional Dependency** - Only install if you need data visualization
+2. **Smaller Core Bundle** - Keep `@meldui/vue` lightweight for apps without charts
+3. **Independent Versioning** - Chart updates don't require core component updates
+4. **Better Tree-Shaking** - Import only the chart types you use
+
+## TypeScript Support
+
+Full TypeScript support is included out of the box:
+
+```typescript
+import type {
+  MeldChartConfig,
+  ChartSeries,
+  ChartAxis,
+  MeldLineChartProps
+} from '@meldui/charts-vue'
+
+// Full IntelliSense and type checking
+const config: MeldChartConfig = {
+  series: [{ name: 'Sales', data: [10, 20, 30] }],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+}
+```
+
+## SSR Compatibility
+
+Charts work seamlessly with Nuxt and other SSR frameworks:
+
+```vue
+<!-- nuxt.config.ts - No special configuration needed! -->
+<template>
+  <!-- Charts automatically detect SSR and defer initialization -->
+  <MeldLineChart :config="config" />
+</template>
+```
+
+During SSR:
+- A loading skeleton renders (no layout shift)
+- Chart initializes after hydration in the browser
+- No "window is not defined" errors
+
+## Bundle Size
+
+With proper tree-shaking (automatic in Vite), typical bundle sizes:
+
+| Usage | Bundle Size (Gzipped) |
+|-------|----------------------|
+| Single chart type (e.g., `MeldLineChart`) | ~70-90 KB |
+| 2-3 chart types | ~85-110 KB |
+| 5 different chart types | ~120-150 KB |
+| Full dashboard (10+ charts) | ~150-200 KB |
+
+**Tip:** Import specific chart components (not `MeldChart`) for best tree-shaking:
+
+```typescript
+// ✅ Good - Tree-shakeable
+import { MeldLineChart, MeldBarChart } from '@meldui/charts-vue'
+
+// ❌ Avoid - Bundles dynamic loader
+import { MeldChart } from '@meldui/charts-vue'
+```
+
+## Next Steps
+
+- [Charts Overview](/story/components-charts-overview--docs) - Explore all chart types
+- [Theme Customization](/story/components-charts-theme-customization--docs) - Customize colors
+- [Advanced Configuration](/story/components-charts-advancedconfiguration--default) - Power user features
+
+## Troubleshooting
+
+### Peer Dependency Warning
+
+If you see a peer dependency warning, make sure `@meldui/vue` is installed:
+
+```bash
+pnpm add @meldui/vue
+```
+
+### Charts Not Rendering in SSR
+
+Make sure you're using `onMounted` for any chart configuration that depends on browser APIs:
+
+```vue
+<script setup>
+import { onMounted, ref } from 'vue'
+
+const config = ref(null)
+
+onMounted(() => {
+  // Browser-only code here
+  config.value = { /* ... */ }
+})
+</script>
+```
+
+### Large Bundle Size
+
+Ensure your bundler supports tree-shaking:
+
+```typescript
+// vite.config.ts
+export default {
+  build: {
+    minify: 'terser',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'charts': ['@meldui/charts-vue']
+        }
+      }
+    }
+  }
+}
+```

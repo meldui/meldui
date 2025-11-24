@@ -1270,12 +1270,12 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Create Storybook story for `MeldMixedChart`
 
 ### Phase 5: Storybook Documentation
-- [ ] Installation guide (MDX) - emphasize separate package
-- [ ] Charts overview (MDX)
-- [ ] Advanced configuration examples story
-- [ ] Theme customization guide (MDX)
-- [ ] Dashboard example showcases
-- [ ] ECharts escape hatch examples (advanced config)
+- [x] Installation guide (MDX) - emphasize separate package
+- [x] Charts overview (MDX)
+- [x] Advanced configuration examples story
+- [x] Theme customization guide (MDX)
+- [x] Dashboard example showcases
+- [x] ECharts escape hatch examples (advanced config)
 
 ### Phase 6: Testing & Polish
 - [ ] Unit tests for transformer
