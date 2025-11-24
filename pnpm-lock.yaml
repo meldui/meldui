@@ -102,6 +102,9 @@ importers:
 
   packages/charts-vue:
     dependencies:
+      '@meldui/vue':
+        specifier: workspace:*
+        version: link:../vue
       echarts:
         specifier: ^6.0.0
         version: 6.0.0

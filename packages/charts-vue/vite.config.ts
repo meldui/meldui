@@ -22,12 +22,14 @@ export default defineConfig({
       // External dependencies that shouldn't be bundled
       external: [
         'vue',
+        '@meldui/vue', // Externalize @meldui/vue (peer dependency)
         /^echarts/, // Externalize echarts for better tree-shaking
         /^vue-echarts/, // Externalize vue-echarts
       ],
       output: {
         globals: {
           vue: 'Vue',
+          '@meldui/vue': 'MeldUIVue',
           echarts: 'echarts',
         },
       },

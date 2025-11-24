@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { Skeleton, cn } from '@meldui/vue'
 import type { MeldChartSkeletonProps } from '../types'
 
 const props = withDefaults(defineProps<MeldChartSkeletonProps>(), {
@@ -15,41 +16,51 @@ const computedHeight = computed(() =>
 const computedWidth = computed(() =>
   typeof props.width === 'number' ? `${props.width}px` : props.width,
 )
+
+// Generate random bar heights for visual variety
+const barHeights = computed(() =>
+  Array.from({ length: 7 }, () => `${Math.random() * 60 + 20}%`),
+)
 </script>
 
 <template>
   <div
     class="meld-chart-skeleton"
-    :class="{ 'animate-pulse': animated }"
     :style="{ height: computedHeight, width: computedWidth }"
     role="status"
     aria-label="Loading chart"
   >
     <!-- Visual structure matching chart layout -->
     <div class="skeleton-header">
-      <div class="skeleton-title" />
+      <Skeleton :class="cn('h-5 w-[120px]', !animated && 'animate-none')" />
       <div class="skeleton-legend">
-        <div class="skeleton-legend-item" />
-        <div class="skeleton-legend-item" />
-        <div class="skeleton-legend-item" />
+        <Skeleton
+          v-for="i in 3"
+          :key="i"
+          :class="cn('h-4 w-[60px]', !animated && 'animate-none')"
+        />
       </div>
     </div>
 
     <div class="skeleton-chart-area">
       <!-- Fake chart bars/lines -->
       <div class="skeleton-bars">
-        <div
-          v-for="i in 7"
+        <Skeleton
+          v-for="(height, i) in barHeights"
           :key="i"
-          class="skeleton-bar"
-          :style="{ height: `${Math.random() * 60 + 20}%` }"
+          :class="cn('flex-1 rounded-t-md', !animated && 'animate-none')"
+          :style="{ height }"
         />
       </div>
     </div>
 
     <div class="skeleton-footer">
       <div class="skeleton-axis-labels">
-        <div v-for="i in 7" :key="i" class="skeleton-label" />
+        <Skeleton
+          v-for="i in 7"
+          :key="i"
+          :class="cn('h-3 flex-1', !animated && 'animate-none')"
+        />
       </div>
     </div>
 
@@ -62,8 +73,8 @@ const computedWidth = computed(() =>
 .meld-chart-skeleton {
   display: flex;
   flex-direction: column;
-  background: var(--color-muted, #f9fafb);
-  border: 1px solid var(--color-border, #e5e7eb);
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
   border-radius: 0.5rem;
   padding: 1.5rem;
   overflow: hidden;
@@ -76,23 +87,9 @@ const computedWidth = computed(() =>
   margin-bottom: 1.5rem;
 }
 
-.skeleton-title {
-  width: 120px;
-  height: 20px;
-  background: var(--color-muted-foreground, #d1d5db);
-  border-radius: 0.25rem;
-}
-
 .skeleton-legend {
   display: flex;
   gap: 1rem;
-}
-
-.skeleton-legend-item {
-  width: 60px;
-  height: 16px;
-  background: var(--color-muted-foreground, #d1d5db);
-  border-radius: 0.25rem;
 }
 
 .skeleton-chart-area {
@@ -113,13 +110,6 @@ const computedWidth = computed(() =>
   gap: 0.5rem;
 }
 
-.skeleton-bar {
-  flex: 1;
-  background: var(--color-muted-foreground, #d1d5db);
-  border-radius: 0.25rem 0.25rem 0 0;
-  transition: height 0.3s ease;
-}
-
 .skeleton-footer {
   margin-top: 1rem;
 }
@@ -128,27 +118,6 @@ const computedWidth = computed(() =>
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
-}
-
-.skeleton-label {
-  flex: 1;
-  height: 12px;
-  background: var(--color-muted-foreground, #d1d5db);
-  border-radius: 0.25rem;
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
 }
 
 .sr-only {
@@ -161,18 +130,5 @@ const computedWidth = computed(() =>
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
-}
-
-/* Dark mode support */
-.dark .meld-chart-skeleton {
-  background: var(--color-muted, #1f2937);
-  border-color: var(--color-border, #374151);
-}
-
-.dark .skeleton-title,
-.dark .skeleton-legend-item,
-.dark .skeleton-bar,
-.dark .skeleton-label {
-  background: var(--color-muted-foreground, #4b5563);
 }
 </style>

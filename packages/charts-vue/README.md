@@ -9,6 +9,7 @@ A library-agnostic chart component package that provides a consistent API for da
 ## Features
 
 - **Library-agnostic API** - Users interact with MeldUI's API, not ECharts directly
+- **Design system integration** - Reuses `@meldui/vue` components for consistent UI
 - **Apache 2.0 Licensed** - No commercial restrictions or redistribution limitations
 - **Excellent tree-shaking** - ~70-150 KB for typical usage (1-5 chart types)
 - **Multiple chart types** - Line, Bar, Area, Pie, Donut, Scatter, Radar, Heatmap, Mixed
@@ -21,11 +22,14 @@ A library-agnostic chart component package that provides a consistent API for da
 ## Installation
 
 ```bash
-pnpm add @meldui/charts-vue
+# @meldui/vue and vue are peer dependencies
+pnpm add @meldui/vue @meldui/charts-vue
 
-# Peer dependencies (if not already installed)
+# If not already installed, add Vue
 pnpm add vue
 ```
+
+**Note:** `@meldui/charts-vue` has `@meldui/vue` as a peer dependency. Charts internally reuse components from the main MeldUI package (such as `Skeleton`, `Card`, `Badge`) to maintain design consistency across your application.
 
 ## Basic Usage
 

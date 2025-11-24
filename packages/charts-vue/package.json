@@ -37,6 +37,7 @@
     "vue-echarts": "^8.0.1"
   },
   "peerDependencies": {
+    "@meldui/vue": "workspace:*",
     "vue": "^3.4.0"
   },
   "devDependencies": {

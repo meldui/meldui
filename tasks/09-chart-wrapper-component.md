@@ -19,7 +19,7 @@ Create a dedicated chart component package (`@meldui/charts-vue`) that provides 
 | **MVP Library** | **Apache ECharts (~50-100KB per chart)** | **Apache 2.0 license (no restrictions), excellent tree-shaking, 20+ chart types** |
 | **Licensing** | **Apache 2.0 (free redistribution)** | **No commercial restrictions, no OEM license needed, production-ready** |
 | **API Design** | Abstraction + escape hatch | Clean for 80% of cases, flexible for complex dashboards |
-| **Peer Dependencies** | Vue only | ECharts is regular dependency (auto-installed) |
+| **Peer Dependencies** | Vue + @meldui/vue | Charts reuse UI components from @meldui/vue (Skeleton, Card, etc.) for consistency |
 | **Tree-Shaking** | Per-chart-type + ECharts modules | Import only chart types AND components you use |
 | **SSR Strategy** | Deferred init + skeleton | Works in Nuxt/SSG out of the box |
 | **Theming** | Auto Tailwind CSS v4 integration | Respects design system colors and dark mode |
@@ -31,11 +31,12 @@ Create a dedicated chart component package (`@meldui/charts-vue`) that provides 
 
 1. **Consistent API** - Users interact with one unified MeldUI chart API regardless of underlying library
 2. **Optional Dependency** - Charts are separate from core components, only installed when needed
-3. **Swappable Implementation** - Can replace ApexCharts with Chart.js internally without breaking user code
-4. **Design System Integration** - Automatic theme integration with Tailwind CSS v4, dark mode support, and MeldUI design tokens
-5. **Independent Versioning** - Chart updates don't force core component updates
-6. **Dashboard-Ready** - Primary use case is data dashboards requiring complex, feature-rich charts
-7. **Complete Abstraction** - Users never know or choose which library is used internally
+3. **Internal Component Reusability** - Charts reuse existing `@meldui/vue` components (Skeleton, Card, Badge, Button) for consistency and reduced code duplication
+4. **Swappable Implementation** - Can replace ECharts with Chart.js internally without breaking user code
+5. **Design System Integration** - Automatic theme integration with Tailwind CSS v4, dark mode support, and MeldUI design tokens
+6. **Independent Versioning** - Chart updates don't force core component updates
+7. **Dashboard-Ready** - Primary use case is data dashboards requiring complex, feature-rich charts
+8. **Complete Abstraction** - Users never know or choose which library is used internally
 
 ## Goals
 
@@ -95,15 +96,14 @@ packages/
 ### Installation
 
 ```bash
-# Core components only
-pnpm add @meldui/vue
-
-# Add charts when needed
+# Charts package requires @meldui/vue as peer dependency
 pnpm add @meldui/vue @meldui/charts-vue
 
-# Full setup
+# Full setup with icons
 pnpm add @meldui/vue @meldui/charts-vue @meldui/tabler-vue
 ```
+
+**Note:** `@meldui/charts-vue` has `@meldui/vue` as a peer dependency. Charts internally reuse components from the main package (Skeleton, Card, etc.) to maintain design consistency.
 
 ### Usage (User Never Sees Library Implementation)
 
@@ -1227,6 +1227,17 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Build `MeldChartSkeleton.vue` component
 - [x] Create `index.ts` with public exports (components + types only, NO adapters)
 
+### Phase 1.5: MeldUI Vue Integration (Internal Component Reusability)
+- [x] Add `@meldui/vue` as peer dependency in `package.json`
+- [x] Update `vite.config.ts` to externalize `@meldui/vue` in build
+- [x] Refactor `MeldChartSkeleton.vue` to use `Skeleton` component from `@meldui/vue`
+- [x] Import and use `cn` utility from `@meldui/vue` instead of local implementation
+- [x] Test that skeleton component renders correctly with MeldUI styles
+- [x] Verify build succeeds with peer dependency
+- [x] Update installation instructions in README.md
+
+**Rationale:** Charts should reuse components from `@meldui/vue` (Skeleton, Card, Badge, Button, etc.) to maintain design consistency and promote internal reusability. This ensures charts feel native to the MeldUI design system and reduces code duplication.
+
 ### Phase 2: Core Chart Components (MVP)
 - [ ] `MeldLineChart.vue`
 - [ ] Create Storybook story for `MeldLineChart`
@@ -1295,6 +1306,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
     "vue-echarts": "^8.0.1"
   },
   "peerDependencies": {
+    "@meldui/vue": "workspace:*",
     "vue": "^3.3.0"
   },
   "devDependencies": {
@@ -1306,6 +1318,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 ```
 
 **Important Notes:**
+- **@meldui/vue** is a **peer dependency** - charts reuse components (Skeleton, Card, etc.) from the main package
 - **Apache ECharts** is a **regular dependency** (not peer) - users don't need to install it separately
 - **vue-echarts** provides official Vue 3 integration with TypeScript support
 - ECharts types (`EChartsOption`) are **only used internally** in the adapter layer, never exposed in public API
@@ -1314,10 +1327,10 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 
 **User Installation:**
 ```bash
-# Users only install these
+# Users install these (@meldui/vue is a peer dependency)
 pnpm add @meldui/vue @meldui/charts-vue
 
-# Auto-installed as dependencies:
+# Auto-installed as regular dependencies:
 # - echarts@^6.0.0
 # - vue-echarts@^8.0.1
 ```
@@ -1341,18 +1354,19 @@ pnpm add @meldui/vue @meldui/charts-vue
 1. ✅ **Separate Package** - Charts live in `@meldui/charts-vue`, following `@meldui/tabler-vue` pattern
 2. ✅ **Zero Library Exposure** - Public API has no `EChartsOption` or any library-specific types
 3. ✅ **Optional Dependency** - Charts are opt-in, not bundled with core `@meldui/vue`
-4. ✅ **Apache 2.0 Licensed** - Free redistribution, no commercial restrictions, production-ready
-5. ✅ **Excellent Tree-Shaking** - ECharts modules are tree-shakeable (~70-150 KB typical usage)
-6. ✅ **SSR Compatible** - Works in Nuxt without configuration
-7. ✅ **Theme Integration** - Automatically uses Tailwind CSS v4 colors
-8. ✅ **TypeScript Safety** - Full type definitions with IntelliSense
-9. ✅ **80/20 API** - Simple configs cover 80% of cases, escape hatch covers 20%
-10. ✅ **Performance** - Chart initialization < 100ms, smooth animations
-11. ✅ **Auto Resize** - Charts automatically resize on container changes without manual intervention
-12. ✅ **Loading States** - Skeleton component provides smooth loading experience with zero layout shift
-13. ✅ **Documentation** - Comprehensive Storybook examples for all chart types
-14. ✅ **Accessibility** - WCAG 2.1 AA compliant (color contrast, keyboard nav, ARIA labels)
-15. ✅ **Bundle Size** - **~70-150 KB** for most use cases (excellent tree-shaking)
+4. ✅ **Internal Component Reusability** - Charts reuse `@meldui/vue` components (Skeleton, Card, etc.) for design consistency
+5. ✅ **Apache 2.0 Licensed** - Free redistribution, no commercial restrictions, production-ready
+6. ✅ **Excellent Tree-Shaking** - ECharts modules are tree-shakeable (~70-150 KB typical usage)
+7. ✅ **SSR Compatible** - Works in Nuxt without configuration
+8. ✅ **Theme Integration** - Automatically uses Tailwind CSS v4 colors
+9. ✅ **TypeScript Safety** - Full type definitions with IntelliSense
+10. ✅ **80/20 API** - Simple configs cover 80% of cases, escape hatch covers 20%
+11. ✅ **Performance** - Chart initialization < 100ms, smooth animations
+12. ✅ **Auto Resize** - Charts automatically resize on container changes without manual intervention
+13. ✅ **Loading States** - Skeleton component provides smooth loading experience with zero layout shift
+14. ✅ **Documentation** - Comprehensive Storybook examples for all chart types
+15. ✅ **Accessibility** - WCAG 2.1 AA compliant (color contrast, keyboard nav, ARIA labels)
+16. ✅ **Bundle Size** - **~70-150 KB** for most use cases (excellent tree-shaking)
 
 ## Future Enhancements (Post-MVP)
 
