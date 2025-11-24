@@ -86,7 +86,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm --filter @meldui/tabler-vue build && pnpm --filter @meldui/vue build
+        run: pnpm --filter @meldui/tabler-vue build && pnpm --filter @meldui/vue build && pnpm --filter @meldui/charts-vue build
 
       - name: Check for build artifacts
         run: |
@@ -94,4 +94,6 @@ jobs:
           test -f packages/vue/dist/index.cjs || exit 1
           test -f packages/tabler-vue/dist/index.mjs || exit 1
           test -f packages/tabler-vue/dist/index.cjs || exit 1
+          test -f packages/charts-vue/dist/index.mjs || exit 1
+          test -f packages/charts-vue/dist/index.cjs || exit 1
           echo "✅ All build artifacts present"
