@@ -301,8 +301,8 @@ interface MeldChartConfig {
 
   /**
    * Advanced configuration (escape hatch)
-   * Accepts raw ApexCharts options for edge cases
-   * See: https://apexcharts.com/docs/options/
+   * Accepts raw ECharts options for edge cases
+   * See: https://echarts.apache.org/en/option.html
    */
   advanced?: Record<string, any>
 }
@@ -391,27 +391,19 @@ const advancedConfig: MeldChartConfig = {
   xAxis: {
     categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   },
-  // Direct ApexCharts config for edge cases
+  // Direct ECharts config for edge cases
   advanced: {
-    annotations: {
-      points: [{
-        x: 'Wed',
-        y: 45,
-        marker: {
-          size: 8,
-          fillColor: '#fff',
-          strokeColor: 'red'
-        },
-        label: {
-          text: 'Target'
+    markPoint: {
+      data: [{
+        name: 'Target',
+        coord: ['Wed', 45],
+        itemStyle: {
+          color: 'red'
         }
       }]
     },
-    plotOptions: {
-      bar: {
-        borderRadius: 10,
-        borderRadiusApplication: 'end'
-      }
+    itemStyle: {
+      borderRadius: [10, 10, 0, 0]
     }
   }
 }
@@ -441,7 +433,7 @@ const chartType = ref<ChartType>('line')
 ## SSR Support Strategy
 
 ### Challenge
-ApexCharts requires browser APIs (`window`, `document`) and cannot execute in Node.js SSR environment.
+ECharts requires browser APIs (`window`, `document`) and cannot execute in Node.js SSR environment.
 
 ### Solution
 
@@ -453,7 +445,7 @@ ApexCharts requires browser APIs (`window`, `document`) and cannot execute in No
 2. **Deferred Initialization**
    - Skip chart rendering during SSR
    - Initialize only in `onMounted()` lifecycle hook
-   - Use dynamic imports to avoid bundling ApexCharts in SSR
+   - Use dynamic imports to avoid bundling ECharts in SSR
 
 3. **Placeholder Rendering**
    ```vue
@@ -490,10 +482,10 @@ ApexCharts requires browser APIs (`window`, `document`) and cannot execute in No
        if (!chartRef.value) return
 
        // Dynamic import (not bundled in SSR)
-       const ApexCharts = (await import('apexcharts')).default
+       const echarts = await import('echarts')
 
-       chartInstance.value = new ApexCharts(chartRef.value, options)
-       await chartInstance.value.render()
+       chartInstance.value = echarts.init(chartRef.value)
+       chartInstance.value.setOption(options)
 
        chartReady.value = true
      }
@@ -546,7 +538,7 @@ export function useChartTheme() {
     }
   })
 
-  // Generate theme options for ApexCharts
+  // Generate theme options for ECharts
   const chartThemeConfig = computed(() => ({
     mode: isDark.value ? 'dark' : 'light',
     palette: Object.values(themeColors.value)
@@ -648,8 +640,8 @@ const { containerWidth } = useChartResize(containerRef, chartInstance)
 // Watch for config changes and update chart
 watch(() => props.config, (newConfig) => {
   if (chartInstance.value) {
-    const apexOptions = transformToApexOptions(newConfig, chartThemeConfig.value)
-    chartInstance.value.updateOptions(apexOptions)
+    const echartsOptions = transformToEChartsOption(newConfig, chartThemeConfig.value)
+    chartInstance.value.setOption(echartsOptions)
   }
 }, { deep: true })
 </script>
@@ -980,8 +972,8 @@ export const SKELETON_VARIANTS = {
    </template>
    ```
 
-3. **Lazy ApexCharts Import**
-   - Only import ApexCharts when chart mounts
+3. **Lazy ECharts Import**
+   - Only import ECharts when chart mounts
    - Not bundled during SSR builds
    - Shared across all chart types (single import in browser)
 
@@ -1226,51 +1218,60 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Configure build scripts in root package.json
 
 ### Phase 1: Foundation (MVP)
-- [ ] Install dependencies (`echarts@^6.0.0`, `vue-echarts@^8.0.1`)
-- [ ] Create library-agnostic type definitions (`types.ts`)
-- [ ] Build base composables (`useChartBase`, `useChartTheme`, `useChartResize`)
-- [ ] Create ECharts transformer adapter (`adapters/echarts/transformer.ts`)
-- [ ] Create ECharts registry for tree-shaking (`adapters/echarts/registry.ts`)
-- [ ] Set up defaults configuration
-- [ ] Build `MeldChartSkeleton.vue` component
-- [ ] Create `index.ts` with public exports (components + types only, NO adapters)
+- [x] Install dependencies (`echarts@^6.0.0`, `vue-echarts@^8.0.1`)
+- [x] Create library-agnostic type definitions (`types.ts`)
+- [x] Build base composables (`useChartBase`, `useChartTheme`, `useChartResize`)
+- [x] Create ECharts transformer adapter (`adapters/echarts/transformer.ts`)
+- [x] Create ECharts registry for tree-shaking (`adapters/echarts/registry.ts`)
+- [x] Set up defaults configuration
+- [x] Build `MeldChartSkeleton.vue` component
+- [x] Create `index.ts` with public exports (components + types only, NO adapters)
 
 ### Phase 2: Core Chart Components (MVP)
 - [ ] `MeldLineChart.vue`
+- [ ] Create Storybook story for `MeldLineChart`
 - [ ] `MeldBarChart.vue`
+- [ ] Create Storybook story for `MeldBarChart`
 - [ ] `MeldAreaChart.vue`
+- [ ] Create Storybook story for `MeldAreaChart`
 - [ ] `MeldPieChart.vue`
+- [ ] Create Storybook story for `MeldPieChart`
 - [ ] Integrate SSR support, skeleton loader, and automatic resizing in all components
 - [ ] Test imports from `@meldui/charts-vue`
 
 ### Phase 3: Smart Wrapper
 - [ ] `MeldChart.vue` with dynamic imports
+- [ ] Create Storybook story for `MeldChart` (dynamic type switching)
 - [ ] Loading states and error handling
 - [ ] Test automatic resizing across all chart types
 - [ ] Verify tree-shaking works correctly
 
 ### Phase 4: Additional Chart Types
 - [ ] `MeldDonutChart.vue`
+- [ ] Create Storybook story for `MeldDonutChart`
 - [ ] `MeldScatterChart.vue`
+- [ ] Create Storybook story for `MeldScatterChart`
 - [ ] `MeldRadarChart.vue`
+- [ ] Create Storybook story for `MeldRadarChart`
 - [ ] `MeldHeatmapChart.vue`
+- [ ] Create Storybook story for `MeldHeatmapChart`
 - [ ] `MeldMixedChart.vue`
+- [ ] Create Storybook story for `MeldMixedChart`
 
 ### Phase 5: Storybook Documentation
 - [ ] Installation guide (MDX) - emphasize separate package
 - [ ] Charts overview (MDX)
-- [ ] Interactive stories for each chart type
-- [ ] Advanced configuration examples
-- [ ] Theme customization guide
+- [ ] Advanced configuration examples story
+- [ ] Theme customization guide (MDX)
 - [ ] Dashboard example showcases
-- [ ] Migration guide from direct ApexCharts usage
+- [ ] ECharts escape hatch examples (advanced config)
 
 ### Phase 6: Testing & Polish
 - [ ] Unit tests for transformer
 - [ ] Integration tests for SSR
 - [ ] Accessibility audit (WCAG 2.1 AA)
 - [ ] Performance optimization
-- [ ] Bundle size analysis (verify ~300KB target)
+- [ ] Bundle size analysis (verify ~70-150KB for typical usage with tree-shaking)
 - [ ] Test installation workflow
 - [ ] Test with example consumer app
 
