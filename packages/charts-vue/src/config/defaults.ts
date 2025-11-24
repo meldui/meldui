@@ -1,5 +1,5 @@
 // Default ECharts configuration
-import type { EChartsOption } from 'echarts'
+import type { EChartsOption } from "echarts";
 
 /**
  * Minimal sensible defaults for all charts
@@ -8,7 +8,7 @@ import type { EChartsOption } from 'echarts'
 export const CHART_DEFAULTS: EChartsOption = {
   // Inherit font family from Tailwind
   textStyle: {
-    fontFamily: 'inherit',
+    fontFamily: "inherit",
   },
 
   // Minimal toolbar by default
@@ -24,47 +24,51 @@ export const CHART_DEFAULTS: EChartsOption = {
   // Smooth animations
   animation: true,
   animationDuration: 400,
-  animationEasing: 'cubicOut',
+  animationEasing: "cubicOut",
 
   // Transparent background
-  backgroundColor: 'transparent',
+  backgroundColor: "transparent",
 
   // Grid configuration
   grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '3%',
-    top: '10%',
+    left: "3%",
+    right: "4%",
+    bottom: "3%",
+    top: "10%",
     containLabel: true,
-    borderColor: 'var(--color-border, #e5e7eb)',
-    show: true,
+    show: false,
   },
 
   // Tooltip configuration
   tooltip: {
-    trigger: 'axis',
+    trigger: "axis",
+    backgroundColor: "hsl(var(--popover))",
+    borderColor: "hsl(var(--border))",
+    borderWidth: 1,
     axisPointer: {
-      type: 'line',
+      type: "line",
       lineStyle: {
-        color: 'var(--color-border, #e5e7eb)',
+        color: "hsl(var(--border))",
         width: 1,
-        type: 'dashed',
+        type: "dashed",
       },
     },
     textStyle: {
+      color: "hsl(var(--popover-foreground))",
       fontSize: 14,
-      fontFamily: 'inherit',
+      fontFamily: "inherit",
     },
   },
 
   // Legend configuration
   legend: {
     show: true,
-    top: 0,
-    left: 'left',
+    top: 10,
+    left: "center",
     textStyle: {
+      color: "hsl(var(--foreground))",
       fontSize: 14,
-      fontFamily: 'inherit',
+      fontFamily: "inherit",
     },
   },
 
@@ -72,12 +76,12 @@ export const CHART_DEFAULTS: EChartsOption = {
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: 'var(--color-border, #e5e7eb)',
+        color: "hsl(var(--border))",
       },
     },
     axisLabel: {
-      color: 'var(--color-foreground, #374151)',
-      fontFamily: 'inherit',
+      color: "hsl(var(--foreground))",
+      fontFamily: "inherit",
     },
   },
 
@@ -87,14 +91,14 @@ export const CHART_DEFAULTS: EChartsOption = {
       show: false,
     },
     axisLabel: {
-      color: 'var(--color-foreground, #374151)',
-      fontFamily: 'inherit',
+      color: "hsl(var(--foreground))",
+      fontFamily: "inherit",
     },
     splitLine: {
       lineStyle: {
-        color: 'var(--color-border, #e5e7eb)',
-        type: 'dashed',
+        color: "hsl(var(--border))",
+        type: "dashed",
       },
     },
   },
-}
+};

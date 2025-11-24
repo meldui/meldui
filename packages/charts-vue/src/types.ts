@@ -13,6 +13,19 @@ export type ChartType =
   | 'heatmap'
   | 'mixed'
 
+/** Available color palette names */
+export type PaletteName =
+  | 'default'
+  | 'vibrant'
+  | 'pastel'
+  | 'monochrome'
+  | 'earth'
+  | 'ocean'
+  | 'sunset'
+  | 'corporate'
+  | 'neon'
+  | 'accessible'
+
 /** Chart data series */
 export interface ChartSeries {
   /** Series name (shown in legend and tooltip) */
@@ -121,8 +134,8 @@ export interface MeldChartConfig {
   /** Stroke configuration */
   stroke?: ChartStroke
 
-  /** Series colors (auto = use theme colors) */
-  colors?: 'auto' | string[]
+  /** Series colors (auto = use theme colors, palette name, or custom array) */
+  colors?: 'auto' | PaletteName | string[]
 
   /** Enable/disable animations */
   animations?: boolean
@@ -192,4 +205,7 @@ export interface MeldChartSkeletonProps {
 
   /** Show animated pulse effect */
   animated?: boolean
+
+  /** Chart type to render appropriate skeleton */
+  type?: ChartType
 }

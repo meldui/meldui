@@ -7,6 +7,7 @@ const props = withDefaults(defineProps<MeldChartSkeletonProps>(), {
   height: 350,
   width: '100%',
   animated: true,
+  type: 'bar',
 })
 
 const computedHeight = computed(() =>
@@ -17,47 +18,52 @@ const computedWidth = computed(() =>
   typeof props.width === 'number' ? `${props.width}px` : props.width,
 )
 
-// Generate random bar heights for visual variety
-const barHeights = computed(() => Array.from({ length: 7 }, () => `${Math.random() * 60 + 20}%`))
+// Generate random bar heights for visual variety (static per render)
+const barHeights = Array.from({ length: 7 }, () => Math.floor(Math.random() * 60 + 20))
 </script>
 
 <template>
   <div
-    class="meld-chart-skeleton"
+    :class="cn('flex flex-col border border-border rounded-lg p-6 overflow-hidden bg-background')"
     :style="{ height: computedHeight, width: computedWidth }"
     role="status"
     aria-label="Loading chart"
   >
-    <!-- Visual structure matching chart layout -->
-    <div class="skeleton-header">
-      <Skeleton :class="cn('h-5 w-[120px]', !animated && 'animate-none')" />
-      <div class="skeleton-legend">
+    <!-- Header with title and legend -->
+    <div class="flex justify-between items-center mb-6 shrink-0">
+      <Skeleton :class="cn('h-5 w-[120px] rounded-md', !animated && 'animate-none')" />
+      <div class="flex gap-4">
         <Skeleton
           v-for="i in 3"
           :key="i"
-          :class="cn('h-4 w-[60px]', !animated && 'animate-none')"
+          :class="cn('h-4 w-[60px] rounded-md', !animated && 'animate-none')"
         />
       </div>
     </div>
 
-    <div class="skeleton-chart-area">
-      <!-- Fake chart bars/lines -->
-      <div class="skeleton-bars">
-        <Skeleton
+    <!-- Main chart area with bars -->
+    <div class="flex-1 flex items-end justify-center py-8 min-h-[200px]">
+      <div class="flex items-end justify-evenly w-full h-full gap-4">
+        <div
           v-for="(height, i) in barHeights"
           :key="i"
-          :class="cn('flex-1 rounded-t-md', !animated && 'animate-none')"
-          :style="{ height }"
-        />
+          class="flex-1 flex items-stretch min-w-0"
+          :style="{ height: `${height}%` }"
+        >
+          <Skeleton
+            :class="cn('w-full h-full rounded-t-md', !animated && 'animate-none')"
+          />
+        </div>
       </div>
     </div>
 
-    <div class="skeleton-footer">
-      <div class="skeleton-axis-labels">
+    <!-- Footer with axis labels -->
+    <div class="mt-4 shrink-0">
+      <div class="flex justify-between items-center gap-4">
         <Skeleton
           v-for="i in 7"
           :key="i"
-          :class="cn('h-3 flex-1', !animated && 'animate-none')"
+          :class="cn('h-3 w-full rounded-sm', !animated && 'animate-none')"
         />
       </div>
     </div>
@@ -66,67 +72,3 @@ const barHeights = computed(() => Array.from({ length: 7 }, () => `${Math.random
     <span class="sr-only">Loading chart data...</span>
   </div>
 </template>
-
-<style scoped>
-.meld-chart-skeleton {
-  display: flex;
-  flex-direction: column;
-  background: hsl(var(--muted));
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  overflow: hidden;
-}
-
-.skeleton-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.skeleton-legend {
-  display: flex;
-  gap: 1rem;
-}
-
-.skeleton-chart-area {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 1rem 0;
-  min-height: 200px;
-}
-
-.skeleton-bars {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 100%;
-  gap: 0.5rem;
-}
-
-.skeleton-footer {
-  margin-top: 1rem;
-}
-
-.skeleton-axis-labels {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-</style>

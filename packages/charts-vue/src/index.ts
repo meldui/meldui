@@ -8,12 +8,14 @@
 // Loading skeleton component
 export { default as MeldChartSkeleton } from './components/MeldChartSkeleton.vue'
 
-// Chart components will be added in Phase 2
+// Core chart components (Phase 2)
+export { default as MeldLineChart } from './components/MeldLineChart.vue'
+export { default as MeldBarChart } from './components/MeldBarChart.vue'
+export { default as MeldAreaChart } from './components/MeldAreaChart.vue'
+export { default as MeldPieChart } from './components/MeldPieChart.vue'
+
+// Additional chart components (will be added in later phases)
 // export { default as MeldChart } from './components/MeldChart.vue'
-// export { default as MeldLineChart } from './components/MeldLineChart.vue'
-// export { default as MeldBarChart } from './components/MeldBarChart.vue'
-// export { default as MeldAreaChart } from './components/MeldAreaChart.vue'
-// export { default as MeldPieChart } from './components/MeldPieChart.vue'
 // export { default as MeldDonutChart } from './components/MeldDonutChart.vue'
 // export { default as MeldScatterChart } from './components/MeldScatterChart.vue'
 // export { default as MeldRadarChart } from './components/MeldRadarChart.vue'
@@ -45,12 +47,20 @@ export type {
   MeldPieChartProps,
   MeldRadarChartProps,
   MeldScatterChartProps,
+  PaletteName,
 } from './types'
+
+// ============================================================================
+// PUBLIC API - Color Palettes
+// ============================================================================
+
+export { generateColors, PALETTES, MAX_RECOMMENDED_SERIES } from './config/palettes'
+export type { Palette } from './config/palettes'
 
 // ============================================================================
 // INTERNAL ONLY - NOT EXPORTED
 // ============================================================================
 // - adapters/echarts/* (transformer, registry, etc.)
 // - composables/* (useChartBase, useChartTheme, useChartResize)
-// - config/* (defaults, presets)
+// - config/defaults (default chart configuration)
 // These are implementation details and should never be exposed to users

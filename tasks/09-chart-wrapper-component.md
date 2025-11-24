@@ -1239,16 +1239,16 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 **Rationale:** Charts should reuse components from `@meldui/vue` (Skeleton, Card, Badge, Button, etc.) to maintain design consistency and promote internal reusability. This ensures charts feel native to the MeldUI design system and reduces code duplication.
 
 ### Phase 2: Core Chart Components (MVP)
-- [ ] `MeldLineChart.vue`
-- [ ] Create Storybook story for `MeldLineChart`
-- [ ] `MeldBarChart.vue`
-- [ ] Create Storybook story for `MeldBarChart`
-- [ ] `MeldAreaChart.vue`
-- [ ] Create Storybook story for `MeldAreaChart`
-- [ ] `MeldPieChart.vue`
-- [ ] Create Storybook story for `MeldPieChart`
-- [ ] Integrate SSR support, skeleton loader, and automatic resizing in all components
-- [ ] Test imports from `@meldui/charts-vue`
+- [x] `MeldLineChart.vue`
+- [x] Create Storybook story for `MeldLineChart`
+- [x] `MeldBarChart.vue`
+- [x] Create Storybook story for `MeldBarChart`
+- [x] `MeldAreaChart.vue`
+- [x] Create Storybook story for `MeldAreaChart`
+- [x] `MeldPieChart.vue`
+- [x] Create Storybook story for `MeldPieChart`
+- [x] Integrate SSR support, skeleton loader, and automatic resizing in all components
+- [x] Test imports from `@meldui/charts-vue`
 
 ### Phase 3: Smart Wrapper
 - [ ] `MeldChart.vue` with dynamic imports
