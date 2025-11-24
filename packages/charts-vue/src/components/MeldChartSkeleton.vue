@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { cn, Skeleton } from '@meldui/vue'
 import { computed } from 'vue'
-import { Skeleton, cn } from '@meldui/vue'
 import type { MeldChartSkeletonProps } from '../types'
 
 const props = withDefaults(defineProps<MeldChartSkeletonProps>(), {
@@ -18,9 +18,7 @@ const computedWidth = computed(() =>
 )
 
 // Generate random bar heights for visual variety
-const barHeights = computed(() =>
-  Array.from({ length: 7 }, () => `${Math.random() * 60 + 20}%`),
-)
+const barHeights = computed(() => Array.from({ length: 7 }, () => `${Math.random() * 60 + 20}%`))
 </script>
 
 <template>
