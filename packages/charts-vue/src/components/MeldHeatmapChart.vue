@@ -4,10 +4,10 @@ import { transformToEChartsOption } from '../adapters/echarts/transformer'
 import { useChartBase } from '../composables/useChartBase'
 import { useChartResize } from '../composables/useChartResize'
 import { useChartTheme } from '../composables/useChartTheme'
-import type { MeldAreaChartProps } from '../types'
+import type { MeldHeatmapChartProps } from '../types'
 import MeldChartSkeleton from './MeldChartSkeleton.vue'
 
-const props = withDefaults(defineProps<MeldAreaChartProps>(), {
+const props = withDefaults(defineProps<MeldHeatmapChartProps>(), {
   height: 350,
   width: '100%',
   loading: false,
@@ -27,7 +27,7 @@ const computedWidth = computed(() =>
 
 // Transform config to ECharts options
 const echartsOptions = computed(() =>
-  transformToEChartsOption(props.config, chartThemeConfig.value, 'area'),
+  transformToEChartsOption(props.config, chartThemeConfig.value, 'heatmap'),
 )
 
 // Initialize chart on mount
@@ -42,7 +42,7 @@ watch(
   () => props.config,
   (newConfig) => {
     if (chartInstance.value) {
-      const newOptions = transformToEChartsOption(newConfig, chartThemeConfig.value, 'area')
+      const newOptions = transformToEChartsOption(newConfig, chartThemeConfig.value, 'heatmap')
       updateChart(newOptions)
     }
   },
@@ -54,7 +54,7 @@ watch(
   () => chartThemeConfig.value,
   (newTheme) => {
     if (chartInstance.value) {
-      const newOptions = transformToEChartsOption(props.config, newTheme, 'area')
+      const newOptions = transformToEChartsOption(props.config, newTheme, 'heatmap')
       updateChart(newOptions)
     }
   },
@@ -66,23 +66,23 @@ useChartResize(chartRef, chartInstance)
 </script>
 
 <template>
-    <div
-        class="relative overflow-hidden border border-border rounded-lg"
-        :style="{ height: computedHeight, width: computedWidth }"
-    >
-        <!-- Show skeleton during SSR, loading, or initialization -->
-        <MeldChartSkeleton
-            v-if="!chartReady || loading"
-            :height="height"
-            :width="width"
-            type="area"
-        />
+  <div
+    class="relative overflow-hidden border border-border rounded-lg"
+    :style="{ height: computedHeight, width: computedWidth }"
+  >
+    <!-- Show skeleton during SSR, loading, or initialization -->
+    <MeldChartSkeleton
+      v-if="!chartReady || loading"
+      :height="height"
+      :width="width"
+      type="line"
+    />
 
-        <!-- Chart container -->
-        <div
-            ref="chartRef"
-            class="h-full w-full transition-opacity duration-300"
-            :class="{ 'opacity-0': !chartReady || loading }"
-        />
-    </div>
+    <!-- Chart container -->
+    <div
+      ref="chartRef"
+      class="h-full w-full transition-opacity duration-300"
+      :class="{ 'opacity-0': !chartReady || loading }"
+    />
+  </div>
 </template>

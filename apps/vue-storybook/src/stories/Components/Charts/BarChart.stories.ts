@@ -402,3 +402,83 @@ export const EcommerceDashboard: Story = {
     `,
   }),
 }
+
+export const DualAxisBarWithLine: Story = {
+  render: () => ({
+    components: { MeldBarChart },
+    setup() {
+      const config: MeldChartConfig = {
+        series: [
+          { name: 'Sales (Left)', data: [120, 200, 150, 180, 220, 190, 250] },
+          { name: 'Target (Right)', data: [180, 220, 200, 240, 260, 230, 280] },
+        ],
+        xAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        },
+        legend: {
+          position: 'top',
+        },
+        // Use advanced config for dual Y-axes
+        advanced: {
+          yAxis: [
+            {
+              type: 'value',
+              name: 'Sales ($K)',
+              position: 'left',
+              axisLabel: {
+                formatter: '${value}',
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 14,
+              },
+              nameTextStyle: {
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 12,
+              },
+              splitLine: {
+                lineStyle: {
+                  color: 'rgba(128, 128, 128, 0.25)',
+                  type: 'dashed',
+                },
+              },
+            },
+            {
+              type: 'value',
+              name: 'Target ($K)',
+              position: 'right',
+              axisLabel: {
+                formatter: '${value}',
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 14,
+              },
+              nameTextStyle: {
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 12,
+              },
+              splitLine: {
+                show: false, // Hide second axis grid lines
+              },
+            },
+          ],
+          series: [
+            {
+              name: 'Sales (Left)',
+              data: [120, 200, 150, 180, 220, 190, 250],
+              type: 'bar',
+              yAxisIndex: 0,
+            },
+            {
+              name: 'Target (Right)',
+              data: [180, 220, 200, 240, 260, 230, 280],
+              type: 'bar',
+              yAxisIndex: 1,
+            },
+          ],
+        },
+      }
+      return { config }
+    },
+    template: `
+      <MeldBarChart :config="config" title="Sales vs Target (Dual Y-Axis)" />
+    `,
+  }),
+}

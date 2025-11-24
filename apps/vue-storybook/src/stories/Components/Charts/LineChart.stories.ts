@@ -459,3 +459,92 @@ export const AnalyticsDashboard: Story = {
     `,
   }),
 }
+
+export const DualAxisTemperatureAndHumidity: Story = {
+  render: () => ({
+    components: { MeldLineChart },
+    setup() {
+      const config: MeldChartConfig = {
+        series: [
+          {
+            name: 'Temperature',
+            data: [22, 24, 26, 28, 30, 29, 27],
+          },
+          {
+            name: 'Humidity',
+            data: [45, 50, 48, 52, 55, 58, 54],
+          },
+        ],
+        xAxis: {
+          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        },
+        stroke: { curve: 'smooth' },
+        legend: {
+          position: 'top',
+        },
+        // Use advanced config for dual Y-axes
+        advanced: {
+          yAxis: [
+            {
+              type: 'value',
+              name: 'Temperature (°C)',
+              position: 'left',
+              axisLabel: {
+                formatter: '{value}°C',
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 14,
+              },
+              nameTextStyle: {
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 12,
+              },
+              splitLine: {
+                lineStyle: {
+                  color: 'rgba(128, 128, 128, 0.25)',
+                  type: 'dashed',
+                },
+              },
+            },
+            {
+              type: 'value',
+              name: 'Humidity (%)',
+              position: 'right',
+              axisLabel: {
+                formatter: '{value}%',
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 14,
+              },
+              nameTextStyle: {
+                color: 'hsl(var(--muted-foreground))',
+                fontSize: 12,
+              },
+              splitLine: {
+                show: false, // Hide second axis grid lines
+              },
+            },
+          ],
+          series: [
+            {
+              name: 'Temperature',
+              data: [22, 24, 26, 28, 30, 29, 27],
+              type: 'line',
+              smooth: true,
+              yAxisIndex: 0,
+            },
+            {
+              name: 'Humidity',
+              data: [45, 50, 48, 52, 55, 58, 54],
+              type: 'line',
+              smooth: true,
+              yAxisIndex: 1,
+            },
+          ],
+        },
+      }
+      return { config }
+    },
+    template: `
+      <MeldLineChart :config="config" title="Temperature & Humidity Monitor" />
+    `,
+  }),
+}

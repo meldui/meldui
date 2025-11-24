@@ -8,6 +8,7 @@ import type { EChartsOption } from 'echarts'
 export const CHART_DEFAULTS: EChartsOption = {
   // Inherit font family from Tailwind
   textStyle: {
+    fontSize: 16,
     fontFamily: 'inherit',
   },
 
@@ -58,6 +59,16 @@ export const CHART_DEFAULTS: EChartsOption = {
       fontSize: 14,
       fontFamily: 'inherit',
     },
+    // Ensure tooltip text is always visible
+    extraCssText: 'box-shadow: 0 2px 8px rgba(0,0,0,0.15);',
+  },
+
+  // Emphasis/hover state configuration
+  emphasis: {
+    focus: 'series',
+    blurScope: 'coordinateSystem',
+    // Disable default color changes on hover - we handle this per series
+    disabled: false,
   },
 
   // Legend configuration
@@ -76,28 +87,34 @@ export const CHART_DEFAULTS: EChartsOption = {
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: 'hsl(var(--border))',
+        color: 'rgba(128, 128, 128, 0.30)', // Subtle light gray with 30% opacity
       },
     },
     axisLabel: {
-      color: 'hsl(var(--foreground))',
+      color: 'hsl(var(--muted-foreground))',
       fontFamily: 'inherit',
+      fontSize: 14,
     },
   },
 
   // Y-axis styling
   yAxis: {
     axisLine: {
-      show: false,
+      show: true,
+      lineStyle: {
+        color: 'rgba(128, 128, 128, 0.30)', // Subtle light gray with 30% opacity
+      },
     },
     axisLabel: {
-      color: 'hsl(var(--foreground))',
+      color: 'hsl(var(--muted-foreground))',
       fontFamily: 'inherit',
+      fontSize: 14,
     },
     splitLine: {
       lineStyle: {
-        color: 'hsl(var(--border))',
+        color: 'rgba(128, 128, 128, 0.25)', // Very subtle grid lines with 25% opacity
         type: 'dashed',
+        width: 1,
       },
     },
   },

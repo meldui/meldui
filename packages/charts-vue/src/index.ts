@@ -7,19 +7,19 @@
 
 export { default as MeldAreaChart } from './components/MeldAreaChart.vue'
 export { default as MeldBarChart } from './components/MeldBarChart.vue'
+// Smart wrapper with dynamic imports (Phase 3)
+export { default as MeldChart } from './components/MeldChart.vue'
 // Loading skeleton component
 export { default as MeldChartSkeleton } from './components/MeldChartSkeleton.vue'
+// Additional chart components (Phase 4)
+export { default as MeldDonutChart } from './components/MeldDonutChart.vue'
+export { default as MeldHeatmapChart } from './components/MeldHeatmapChart.vue'
 // Core chart components (Phase 2)
 export { default as MeldLineChart } from './components/MeldLineChart.vue'
+export { default as MeldMixedChart } from './components/MeldMixedChart.vue'
 export { default as MeldPieChart } from './components/MeldPieChart.vue'
-
-// Additional chart components (will be added in later phases)
-// export { default as MeldChart } from './components/MeldChart.vue'
-// export { default as MeldDonutChart } from './components/MeldDonutChart.vue'
-// export { default as MeldScatterChart } from './components/MeldScatterChart.vue'
-// export { default as MeldRadarChart } from './components/MeldRadarChart.vue'
-// export { default as MeldHeatmapChart } from './components/MeldHeatmapChart.vue'
-// export { default as MeldMixedChart } from './components/MeldMixedChart.vue'
+export { default as MeldRadarChart } from './components/MeldRadarChart.vue'
+export { default as MeldScatterChart } from './components/MeldScatterChart.vue'
 
 // ============================================================================
 // PUBLIC API - Types

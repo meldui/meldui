@@ -1251,23 +1251,23 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Test imports from `@meldui/charts-vue`
 
 ### Phase 3: Smart Wrapper
-- [ ] `MeldChart.vue` with dynamic imports
-- [ ] Create Storybook story for `MeldChart` (dynamic type switching)
-- [ ] Loading states and error handling
-- [ ] Test automatic resizing across all chart types
-- [ ] Verify tree-shaking works correctly
+- [x] `MeldChart.vue` with dynamic imports
+- [x] Create Storybook story for `MeldChart` (dynamic type switching)
+- [x] Loading states and error handling
+- [x] Test automatic resizing across all chart types
+- [x] Verify tree-shaking works correctly
 
 ### Phase 4: Additional Chart Types
-- [ ] `MeldDonutChart.vue`
-- [ ] Create Storybook story for `MeldDonutChart`
-- [ ] `MeldScatterChart.vue`
-- [ ] Create Storybook story for `MeldScatterChart`
-- [ ] `MeldRadarChart.vue`
-- [ ] Create Storybook story for `MeldRadarChart`
-- [ ] `MeldHeatmapChart.vue`
-- [ ] Create Storybook story for `MeldHeatmapChart`
-- [ ] `MeldMixedChart.vue`
-- [ ] Create Storybook story for `MeldMixedChart`
+- [x] `MeldDonutChart.vue`
+- [x] Create Storybook story for `MeldDonutChart`
+- [x] `MeldScatterChart.vue`
+- [x] Create Storybook story for `MeldScatterChart`
+- [x] `MeldRadarChart.vue`
+- [x] Create Storybook story for `MeldRadarChart`
+- [x] `MeldHeatmapChart.vue`
+- [x] Create Storybook story for `MeldHeatmapChart`
+- [x] `MeldMixedChart.vue`
+- [x] Create Storybook story for `MeldMixedChart`
 
 ### Phase 5: Storybook Documentation
 - [ ] Installation guide (MDX) - emphasize separate package
