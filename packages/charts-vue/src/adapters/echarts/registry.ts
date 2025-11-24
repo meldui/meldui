@@ -1,39 +1,37 @@
 // ECharts component registry for tree-shaking
 // Only import and register the chart types and components you need
 
-import * as echarts from 'echarts/core'
-
 // Import chart types (tree-shakeable)
 import {
-  LineChart,
   BarChart,
-  PieChart,
-  ScatterChart,
-  RadarChart,
-  HeatmapChart,
-  type LineSeriesOption,
   type BarSeriesOption,
-  type PieSeriesOption,
-  type ScatterSeriesOption,
-  type RadarSeriesOption,
+  HeatmapChart,
   type HeatmapSeriesOption,
+  LineChart,
+  type LineSeriesOption,
+  PieChart,
+  type PieSeriesOption,
+  RadarChart,
+  type RadarSeriesOption,
+  ScatterChart,
+  type ScatterSeriesOption,
 } from 'echarts/charts'
-
 // Import components (tree-shakeable)
 import {
-  GridComponent,
-  TooltipComponent,
-  LegendComponent,
-  TitleComponent,
-  ToolboxComponent,
   DataZoomComponent,
-  type GridComponentOption,
-  type TooltipComponentOption,
-  type LegendComponentOption,
-  type TitleComponentOption,
-  type ToolboxComponentOption,
   type DataZoomComponentOption,
+  GridComponent,
+  type GridComponentOption,
+  LegendComponent,
+  type LegendComponentOption,
+  TitleComponent,
+  type TitleComponentOption,
+  ToolboxComponent,
+  type ToolboxComponentOption,
+  TooltipComponent,
+  type TooltipComponentOption,
 } from 'echarts/components'
+import * as echarts from 'echarts/core'
 
 // Import renderers
 import { CanvasRenderer } from 'echarts/renderers'
@@ -55,14 +53,7 @@ export type ECOption = echarts.ComposeOption<
 >
 
 // Register chart types
-echarts.use([
-  LineChart,
-  BarChart,
-  PieChart,
-  ScatterChart,
-  RadarChart,
-  HeatmapChart,
-])
+echarts.use([LineChart, BarChart, PieChart, ScatterChart, RadarChart, HeatmapChart])
 
 // Register components
 echarts.use([

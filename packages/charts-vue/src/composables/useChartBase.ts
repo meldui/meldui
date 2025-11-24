@@ -1,6 +1,7 @@
 // Base composable for chart lifecycle management
-import { ref, shallowRef, onUnmounted, nextTick } from 'vue'
-import type { EChartsType, EChartsOption } from 'echarts'
+
+import type { EChartsOption, EChartsType } from 'echarts'
+import { nextTick, onUnmounted, ref, shallowRef } from 'vue'
 
 export function useChartBase() {
   const chartRef = ref<HTMLElement | null>(null)

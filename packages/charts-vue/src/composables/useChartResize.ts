@@ -1,6 +1,7 @@
 // Chart resize composable using ResizeObserver
-import { ref, onMounted, onUnmounted, type Ref } from 'vue'
+
 import type { EChartsType } from 'echarts'
+import { onMounted, onUnmounted, type Ref, ref } from 'vue'
 
 /**
  * Automatic chart resizing using ResizeObserver API

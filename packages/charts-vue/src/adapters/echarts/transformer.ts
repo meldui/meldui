@@ -1,7 +1,7 @@
 // Transforms MeldChartConfig to ECharts options
 import type { EChartsOption } from 'echarts'
-import type { MeldChartConfig } from '../../types'
 import { CHART_DEFAULTS } from '../../config/defaults'
+import type { MeldChartConfig } from '../../types'
 
 /**
  * Deep merge utility for combining objects
@@ -26,7 +26,16 @@ function deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>)
 export function transformToEChartsOption(
   config: MeldChartConfig,
   themeConfig: { mode: 'light' | 'dark'; palette: string[] },
-  chartType: 'line' | 'bar' | 'area' | 'pie' | 'donut' | 'scatter' | 'radar' | 'heatmap' | 'mixed' = 'line',
+  chartType:
+    | 'line'
+    | 'bar'
+    | 'area'
+    | 'pie'
+    | 'donut'
+    | 'scatter'
+    | 'radar'
+    | 'heatmap'
+    | 'mixed' = 'line',
 ): EChartsOption {
   const {
     series,
@@ -113,7 +122,8 @@ export function transformToEChartsOption(
     // Transform x-axis
     xAxis: xAxis
       ? {
-          type: xAxis.type === 'datetime' ? 'time' : xAxis.type === 'numeric' ? 'value' : 'category',
+          type:
+            xAxis.type === 'datetime' ? 'time' : xAxis.type === 'numeric' ? 'value' : 'category',
           data: xAxis.categories,
           name: xAxis.title,
           min: xAxis.min,
@@ -131,7 +141,14 @@ export function transformToEChartsOption(
     // Transform y-axis
     yAxis: yAxis
       ? {
-          type: yAxis.type === 'datetime' ? 'time' : yAxis.type === 'numeric' ? 'value' : yAxis.type === 'category' ? 'category' : 'value',
+          type:
+            yAxis.type === 'datetime'
+              ? 'time'
+              : yAxis.type === 'numeric'
+                ? 'value'
+                : yAxis.type === 'category'
+                  ? 'category'
+                  : 'value',
           name: yAxis.title,
           min: yAxis.min,
           max: yAxis.max,
