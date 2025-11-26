@@ -20,6 +20,11 @@ const meta: Meta<typeof Tabs> = {
   component: Tabs,
   tags: ['autodocs'],
   argTypes: {
+    variant: {
+      control: 'select',
+      options: ['line', 'pill'],
+      description: 'Visual style variant of the tabs (line = underline, pill = background)',
+    },
     defaultValue: {
       control: 'text',
       description: 'The default active tab value',
@@ -278,6 +283,102 @@ export const DisabledTab: Story = {
         </TabsContent>
         <TabsContent value="premium">
           <p class="text-sm py-4">Upgrade to premium to access this content.</p>
+        </TabsContent>
+      </Tabs>
+    `,
+  }),
+}
+
+export const Variants: Story = {
+  render: () => ({
+    components: { Tabs, TabsContent, TabsList, TabsTrigger },
+    template: `
+      <div class="flex flex-col gap-8">
+        <div>
+          <p class="text-sm font-medium mb-3">Line (default)</p>
+          <Tabs variant="line" default-value="account" class="w-[400px]">
+            <TabsList>
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="password">Password</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            </TabsList>
+            <TabsContent value="account">
+              <p class="text-sm text-muted-foreground py-4">Manage your account settings and preferences.</p>
+            </TabsContent>
+            <TabsContent value="password">
+              <p class="text-sm text-muted-foreground py-4">Update your password and security settings.</p>
+            </TabsContent>
+            <TabsContent value="settings">
+              <p class="text-sm text-muted-foreground py-4">Configure your application settings.</p>
+            </TabsContent>
+          </Tabs>
+        </div>
+        <div>
+          <p class="text-sm font-medium mb-3">Pill</p>
+          <Tabs variant="pill" default-value="account" class="w-[400px]">
+            <TabsList>
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="password">Password</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            </TabsList>
+            <TabsContent value="account">
+              <p class="text-sm text-muted-foreground py-4">Manage your account settings and preferences.</p>
+            </TabsContent>
+            <TabsContent value="password">
+              <p class="text-sm text-muted-foreground py-4">Update your password and security settings.</p>
+            </TabsContent>
+            <TabsContent value="settings">
+              <p class="text-sm text-muted-foreground py-4">Configure your application settings.</p>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    `,
+  }),
+}
+
+export const PillVariant: Story = {
+  render: () => ({
+    components: { Tabs, TabsContent, TabsList, TabsTrigger },
+    template: `
+      <Tabs variant="pill" default-value="overview" class="w-full">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview" class="mt-6">
+          <div class="flex flex-col gap-4">
+            <h3 class="text-lg font-semibold">Overview</h3>
+            <p class="text-sm text-muted-foreground">
+              View a summary of your account activity and key metrics.
+            </p>
+          </div>
+        </TabsContent>
+        <TabsContent value="analytics" class="mt-6">
+          <div class="flex flex-col gap-4">
+            <h3 class="text-lg font-semibold">Analytics</h3>
+            <p class="text-sm text-muted-foreground">
+              Detailed analytics and insights about your usage patterns.
+            </p>
+          </div>
+        </TabsContent>
+        <TabsContent value="reports" class="mt-6">
+          <div class="flex flex-col gap-4">
+            <h3 class="text-lg font-semibold">Reports</h3>
+            <p class="text-sm text-muted-foreground">
+              Generate and download comprehensive reports.
+            </p>
+          </div>
+        </TabsContent>
+        <TabsContent value="notifications" class="mt-6">
+          <div class="flex flex-col gap-4">
+            <h3 class="text-lg font-semibold">Notifications</h3>
+            <p class="text-sm text-muted-foreground">
+              Manage your notification preferences and settings.
+            </p>
+          </div>
         </TabsContent>
       </Tabs>
     `,

@@ -3,13 +3,22 @@ import { reactiveOmit } from '@vueuse/core'
 import type { TabsRootEmits, TabsRootProps } from 'reka-ui'
 import { TabsRoot, useForwardPropsEmits } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
+import { provide, toRef } from 'vue'
 import { cn } from '@/lib/utils'
+import { TABS_VARIANT_KEY, type TabsVariant } from '.'
 
-const props = defineProps<TabsRootProps & { class?: HTMLAttributes['class'] }>()
+const props = withDefaults(
+  defineProps<TabsRootProps & { class?: HTMLAttributes['class']; variant?: TabsVariant }>(),
+  {
+    variant: 'line',
+  },
+)
 const emits = defineEmits<TabsRootEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+const delegatedProps = reactiveOmit(props, 'class', 'variant')
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+provide(TABS_VARIANT_KEY, toRef(() => props.variant))
 </script>
 
 <template>
