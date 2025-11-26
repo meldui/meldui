@@ -31,22 +31,22 @@ export type {
   CartesianChartConfigBase,
   // Shared types
   ChartAxis,
+  // Event types
+  ChartBrushSelectEvent,
+  ChartClickEvent,
   ChartConfigBase,
   ChartDataLabels,
+  ChartDataZoomEvent,
+  ChartEmits,
   ChartGrid,
+  ChartHoverEvent,
   ChartLegend,
+  ChartLegendSelectEvent,
+  ChartMouseOutEvent,
   ChartSeries,
   ChartStroke,
   ChartTooltip,
   ChartType,
-  // Event types
-  ChartBrushSelectEvent,
-  ChartClickEvent,
-  ChartDataZoomEvent,
-  ChartEmits,
-  ChartHoverEvent,
-  ChartLegendSelectEvent,
-  ChartMouseOutEvent,
   // Chart-specific configuration types (recommended)
   MeldAreaChartConfig,
   // Component props

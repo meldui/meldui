@@ -186,9 +186,7 @@ function normalizeValue(
 /**
  * Normalize component type string
  */
-function normalizeComponentType(
-  type?: string,
-): 'series' | 'markPoint' | 'markLine' | 'markArea' {
+function normalizeComponentType(type?: string): 'series' | 'markPoint' | 'markLine' | 'markArea' {
   switch (type) {
     case 'markPoint':
       return 'markPoint'
