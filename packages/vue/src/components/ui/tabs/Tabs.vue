@@ -18,7 +18,10 @@ const emits = defineEmits<TabsRootEmits>()
 const delegatedProps = reactiveOmit(props, 'class', 'variant')
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-provide(TABS_VARIANT_KEY, toRef(() => props.variant))
+provide(
+  TABS_VARIANT_KEY,
+  toRef(() => props.variant),
+)
 </script>
 
 <template>
