@@ -57,9 +57,7 @@ export const Default: Story = {
         { value: 'remix', label: 'Remix' },
         { value: 'astro', label: 'Astro' },
       ]
-      const selectedFramework = computed(() =>
-        frameworks.find((f) => f.value === value.value),
-      )
+      const selectedFramework = computed(() => frameworks.find((f) => f.value === value.value))
       return { open, value, frameworks, selectedFramework }
     },
     template: `
@@ -132,9 +130,7 @@ export const WithSelection: Story = {
         { value: 'svelte', label: 'Svelte' },
         { value: 'solid', label: 'Solid' },
       ]
-      const selectedFramework = computed(() =>
-        frameworks.find((f) => f.value === value.value),
-      )
+      const selectedFramework = computed(() => frameworks.find((f) => f.value === value.value))
       return { open, value, frameworks, selectedFramework }
     },
     template: `
@@ -215,9 +211,7 @@ export const WithGroups: Story = {
         { value: 'spinach', label: 'Spinach' },
       ]
       const allItems = [...fruits, ...vegetables]
-      const selectedItem = computed(() =>
-        allItems.find((item) => item.value === value.value),
-      )
+      const selectedItem = computed(() => allItems.find((item) => item.value === value.value))
       return { open, value, fruits, vegetables, selectedItem }
     },
     template: `
@@ -312,9 +306,7 @@ export const CountrySelector: Story = {
         { value: 'jp', label: 'Japan' },
         { value: 'cn', label: 'China' },
       ]
-      const selectedCountry = computed(() =>
-        countries.find((c) => c.value === value.value),
-      )
+      const selectedCountry = computed(() => countries.find((c) => c.value === value.value))
       return { open, value, countries, selectedCountry }
     },
     template: `
@@ -392,9 +384,7 @@ export const ProgrammingLanguages: Story = {
         { value: 'swift', label: 'Swift' },
         { value: 'kotlin', label: 'Kotlin' },
       ]
-      const selectedLang = computed(() =>
-        languages.find((l) => l.value === value.value),
-      )
+      const selectedLang = computed(() => languages.find((l) => l.value === value.value))
       return { open, value, languages, selectedLang }
     },
     template: `
@@ -468,9 +458,7 @@ export const WithDescriptions: Story = {
         { value: 'pro', label: 'Pro', description: 'For professionals' },
         { value: 'enterprise', label: 'Enterprise', description: 'For organizations' },
       ]
-      const selectedPlan = computed(() =>
-        plans.find((p) => p.value === value.value),
-      )
+      const selectedPlan = computed(() => plans.find((p) => p.value === value.value))
       return { open, value, plans, selectedPlan }
     },
     template: `
@@ -546,9 +534,7 @@ export const EmailSuggestions: Story = {
         { value: 'alice', label: 'alice.jones@example.com' },
         { value: 'charlie', label: 'charlie.brown@example.com' },
       ]
-      const selectedEmail = computed(() =>
-        emails.find((e) => e.value === value.value),
-      )
+      const selectedEmail = computed(() => emails.find((e) => e.value === value.value))
       return { open, value, emails, selectedEmail }
     },
     template: `
@@ -621,9 +607,7 @@ export const LongList: Story = {
         value: `item-${i + 1}`,
         label: `Item ${i + 1}`,
       }))
-      const selectedItem = computed(() =>
-        items.find((item) => item.value === value.value),
-      )
+      const selectedItem = computed(() => items.find((item) => item.value === value.value))
       return { open, value, items, selectedItem }
     },
     template: `
@@ -699,9 +683,7 @@ export const InCard: Story = {
         { value: 'pink', label: 'Pink' },
         { value: 'brown', label: 'Brown' },
       ]
-      const selectedColor = computed(() =>
-        colors.find((c) => c.value === value.value),
-      )
+      const selectedColor = computed(() => colors.find((c) => c.value === value.value))
       return { open, value, colors, selectedColor }
     },
     template: `
