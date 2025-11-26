@@ -26,7 +26,9 @@ export { default as MeldScatterChart } from './components/MeldScatterChart.vue'
 // ============================================================================
 
 export type {
+  // Shared types
   ChartAxis,
+  ChartConfigBase,
   ChartDataLabels,
   ChartGrid,
   ChartLegend,
@@ -34,10 +36,28 @@ export type {
   ChartStroke,
   ChartTooltip,
   ChartType,
+  PaletteName,
+
+  // Chart-specific configuration types (recommended)
+  MeldAreaChartConfig,
+  MeldBarChartConfig,
+  MeldDonutChartConfig,
+  MeldHeatmapChartConfig,
+  MeldLineChartConfig,
+  MeldMixedChartConfig,
+  MeldPieChartConfig,
+  MeldRadarChartConfig,
+  MeldScatterChartConfig,
+  MixedChartSeries,
+
+  // Utility types
+  AnyChartConfig,
+  CartesianChartConfigBase,
+  MeldDynamicChartConfig,
+
+  // Component props
   MeldAreaChartProps,
   MeldBarChartProps,
-  MeldChartBaseProps,
-  MeldChartConfig,
   MeldChartProps,
   MeldChartSkeletonProps,
   MeldDonutChartProps,
@@ -47,7 +67,12 @@ export type {
   MeldPieChartProps,
   MeldRadarChartProps,
   MeldScatterChartProps,
-  PaletteName,
+
+  // Legacy types (deprecated, for backwards compatibility)
+  /** @deprecated Use chart-specific config types instead */
+  MeldChartBaseProps,
+  /** @deprecated Use chart-specific config types instead */
+  MeldChartConfig,
 } from './types'
 
 // ============================================================================

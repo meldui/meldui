@@ -217,23 +217,38 @@ This component lazy-loads the appropriate chart type, useful when:
 
 ---
 
-## Common Configuration
+## Chart-Specific Configuration Types
 
-All chart types share a consistent configuration API:
+Each chart type has its own configuration interface that only includes relevant options:
 
 ```typescript
-interface MeldChartConfig {
-  series: ChartSeries[]        // Data series
-  xAxis?: ChartAxis            // X-axis configuration
-  yAxis?: ChartAxis            // Y-axis configuration
-  legend?: ChartLegend         // Legend settings
-  tooltip?: ChartTooltip       // Tooltip customization
-  grid?: ChartGrid             // Grid lines
-  stroke?: ChartStroke         // Line styling
-  colors?: string[] | string   // Color palette
-  stacked?: boolean            // Stack series
-  horizontal?: boolean         // Horizontal orientation
-  advanced?: Record<string, any> // Escape hatch
+// For line charts - includes stroke options
+interface MeldLineChartConfig {
+  series: ChartSeries[]
+  xAxis?: ChartAxis
+  yAxis?: ChartAxis
+  stroke?: ChartStroke    // Line styling
+  showPoints?: boolean    // Show data points
+  // ... other relevant options
+}
+
+// For bar charts - includes bar-specific options
+interface MeldBarChartConfig {
+  series: ChartSeries[]
+  xAxis?: ChartAxis
+  yAxis?: ChartAxis
+  horizontal?: boolean    // Horizontal orientation
+  stacked?: boolean       // Stack bars
+  barWidth?: number | string
+  // ... other relevant options
+}
+
+// For pie/donut charts - no axis options
+interface MeldPieChartConfig {
+  series: ChartSeries[]
+  showLabels?: boolean
+  labelPosition?: 'inside' | 'outside'
+  // ... other relevant options
 }
 ```
 
@@ -242,9 +257,9 @@ interface MeldChartConfig {
 ```vue
 <script setup lang="ts">
 import { MeldLineChart } from '@meldui/charts-vue'
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
 
-const config: MeldChartConfig = {
+const config: MeldLineChartConfig = {
   series: [
     { name: 'Sales', data: [30, 40, 35, 50, 49, 60, 70] },
     { name: 'Revenue', data: [20, 30, 25, 40, 39, 50, 60] }
@@ -271,7 +286,7 @@ const config: MeldChartConfig = {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `config` | `MeldChartConfig` | required | Chart configuration |
+| `config` | `Meld[Type]ChartConfig` | required | Chart configuration (e.g., `MeldLineChartConfig`, `MeldBarChartConfig`) |
 | `height` | `number \| string` | `350` | Chart height in pixels or CSS units |
 | `width` | `number \| string` | `'100%'` | Chart width in pixels or CSS units |
 | `title` | `string` | - | Optional chart title |

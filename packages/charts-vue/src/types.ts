@@ -26,6 +26,10 @@ export type PaletteName =
   | 'neon'
   | 'accessible'
 
+// ============================================
+// SHARED TYPES
+// ============================================
+
 /** Chart data series */
 export interface ChartSeries {
   /** Series name (shown in legend and tooltip) */
@@ -123,7 +127,335 @@ export interface ChartDataLabels {
   formatter?: (value: number) => string
 }
 
-/** Main chart configuration interface */
+// ============================================
+// BASE CONFIG INTERFACE
+// ============================================
+
+/**
+ * Shared base configuration for all chart types.
+ * Contains properties common to all charts.
+ */
+export interface ChartConfigBase {
+  /** Chart data series */
+  series: ChartSeries[]
+
+  /** Legend configuration */
+  legend?: ChartLegend
+
+  /** Tooltip configuration */
+  tooltip?: ChartTooltip
+
+  /** Series colors (auto = use theme colors, palette name, or custom array) */
+  colors?: 'auto' | PaletteName | string[]
+
+  /** Enable/disable animations */
+  animations?: boolean
+
+  /**
+   * Advanced configuration (escape hatch)
+   * Accepts raw ECharts options for edge cases
+   * Type is intentionally generic to avoid exposing ECharts types
+   */
+  advanced?: Record<string, unknown>
+}
+
+// ============================================
+// CARTESIAN CHART BASE (charts with axes)
+// ============================================
+
+/**
+ * Base configuration for charts with X/Y axes.
+ * Extends ChartConfigBase with axis and grid properties.
+ */
+export interface CartesianChartConfigBase extends ChartConfigBase {
+  /** X-axis configuration */
+  xAxis?: ChartAxis
+
+  /** Y-axis configuration */
+  yAxis?: ChartAxis
+
+  /** Grid lines configuration */
+  grid?: ChartGrid
+
+  /** Show/hide toolbar (zoom, download, etc.) */
+  toolbar?: boolean
+
+  /** Enable zoom functionality */
+  zoom?: boolean
+}
+
+// ============================================
+// BAR CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for bar charts.
+ * Only includes options relevant to bar charts.
+ */
+export interface MeldBarChartConfig extends CartesianChartConfigBase {
+  /** Horizontal bar orientation */
+  horizontal?: boolean
+
+  /** Stack bars */
+  stacked?: boolean
+
+  /** Show values on bars */
+  dataLabels?: ChartDataLabels
+
+  /** Bar width (number in pixels or percentage string like '60%') */
+  barWidth?: number | string
+
+  /** Gap between bars in same category (percentage string like '30%') */
+  barGap?: string
+}
+
+// ============================================
+// LINE CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for line charts.
+ * Only includes options relevant to line charts.
+ */
+export interface MeldLineChartConfig extends CartesianChartConfigBase {
+  /** Line stroke configuration */
+  stroke?: ChartStroke
+
+  /** Show data points on line */
+  showPoints?: boolean
+
+  /** Size of data points */
+  pointSize?: number
+
+  /** Show values on data points */
+  dataLabels?: ChartDataLabels
+}
+
+// ============================================
+// AREA CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for area charts.
+ * Only includes options relevant to area charts.
+ */
+export interface MeldAreaChartConfig extends CartesianChartConfigBase {
+  /** Line stroke configuration */
+  stroke?: ChartStroke
+
+  /** Stack areas */
+  stacked?: boolean
+
+  /** Fill opacity (0-1) */
+  fillOpacity?: number
+
+  /** Show data points on line */
+  showPoints?: boolean
+
+  /** Size of data points */
+  pointSize?: number
+
+  /** Show values on data points */
+  dataLabels?: ChartDataLabels
+}
+
+// ============================================
+// PIE CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for pie charts.
+ * Minimal, focused options for circular charts.
+ */
+export interface MeldPieChartConfig extends ChartConfigBase {
+  /** Show labels on slices */
+  showLabels?: boolean
+
+  /** Label position */
+  labelPosition?: 'inside' | 'outside'
+
+  /** Starting angle in degrees */
+  startAngle?: number
+
+  /** Radius as percentage (e.g., '75%') or pixels */
+  radius?: string | number
+
+  /** Show values on slices */
+  dataLabels?: ChartDataLabels
+}
+
+// ============================================
+// DONUT CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for donut charts.
+ * Extends pie chart with inner radius (the hole).
+ */
+export interface MeldDonutChartConfig extends ChartConfigBase {
+  /** Show labels on slices */
+  showLabels?: boolean
+
+  /** Label position */
+  labelPosition?: 'inside' | 'outside'
+
+  /** Starting angle in degrees */
+  startAngle?: number
+
+  /** Outer radius as percentage (e.g., '75%') or pixels */
+  radius?: string | number
+
+  /** Inner radius (creates the hole), e.g., '40%' or 50 */
+  innerRadius?: string | number
+
+  /** Center label content */
+  centerLabel?: {
+    show?: boolean
+    title?: string
+    value?: string | number
+  }
+
+  /** Show values on slices */
+  dataLabels?: ChartDataLabels
+}
+
+// ============================================
+// RADAR CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for radar charts.
+ * Unique configuration for spider/radar visualizations.
+ */
+export interface MeldRadarChartConfig extends ChartConfigBase {
+  /** Radar indicators (categories with optional max) */
+  indicators?: Array<{ name: string; max?: number }>
+
+  /** Shape of the radar */
+  shape?: 'polygon' | 'circle'
+
+  /** Fill the radar area */
+  fillArea?: boolean
+
+  /** Fill opacity when fillArea is true */
+  fillOpacity?: number
+
+  /** Show axis labels */
+  showAxisLabels?: boolean
+
+  /** X-axis configuration (used for indicator names) */
+  xAxis?: ChartAxis
+
+  /** Y-axis configuration (used for max values) */
+  yAxis?: ChartAxis
+
+  /** Grid configuration (used for axis line visibility) */
+  grid?: ChartGrid
+}
+
+// ============================================
+// HEATMAP CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for heatmap charts.
+ * Grid-based visualization with color intensity.
+ */
+export interface MeldHeatmapChartConfig extends CartesianChartConfigBase {
+  /** Color range configuration */
+  colorRange?: {
+    min?: number
+    max?: number
+    colors?: string[] // Gradient colors
+  }
+
+  /** Show values in cells */
+  showValues?: boolean
+
+  /** Cell border configuration */
+  cellBorder?: {
+    show?: boolean
+    color?: string
+    width?: number
+  }
+
+  /** Show values on cells */
+  dataLabels?: ChartDataLabels
+}
+
+// ============================================
+// SCATTER CHART CONFIG
+// ============================================
+
+/**
+ * Configuration for scatter charts.
+ * Point-based visualization for correlation data.
+ */
+export interface MeldScatterChartConfig extends CartesianChartConfigBase {
+  /** Point size (fixed number) */
+  pointSize?: number
+
+  /** Point shape */
+  pointShape?: 'circle' | 'rect' | 'triangle' | 'diamond'
+
+  /** Show values on points */
+  dataLabels?: ChartDataLabels
+}
+
+// ============================================
+// MIXED CHART CONFIG
+// ============================================
+
+/** Series configuration for mixed charts with type specification */
+export interface MixedChartSeries extends ChartSeries {
+  /** Chart type for this series */
+  type: 'line' | 'bar' | 'area'
+
+  /** Which Y-axis to use (0 = primary, 1 = secondary) */
+  yAxisIndex?: 0 | 1
+}
+
+/**
+ * Configuration for mixed charts.
+ * Combines multiple chart types (line, bar, area).
+ */
+export interface MeldMixedChartConfig extends CartesianChartConfigBase {
+  /** Mixed chart series with type specification */
+  series: MixedChartSeries[]
+
+  /** Secondary Y-axis for dual-axis charts */
+  yAxis2?: ChartAxis
+
+  /** Line stroke configuration (applies to line/area series) */
+  stroke?: ChartStroke
+
+  /** Stack bars/areas of the same type */
+  stacked?: boolean
+
+  /** Show values on data points */
+  dataLabels?: ChartDataLabels
+}
+
+// ============================================
+// UNIFIED CONFIG TYPE (for internal use and backwards compatibility)
+// ============================================
+
+/**
+ * Unified chart configuration interface.
+ * Contains all possible options across all chart types.
+ * Used internally for transformation and backwards compatibility.
+ *
+ * @deprecated For better TypeScript support, use chart-specific config types:
+ * - MeldBarChartConfig
+ * - MeldLineChartConfig
+ * - MeldAreaChartConfig
+ * - MeldPieChartConfig
+ * - MeldDonutChartConfig
+ * - MeldRadarChartConfig
+ * - MeldHeatmapChartConfig
+ * - MeldScatterChartConfig
+ * - MeldMixedChartConfig
+ */
 export interface MeldChartConfig {
   /** Chart data series */
   series: ChartSeries[]
@@ -172,14 +504,49 @@ export interface MeldChartConfig {
    * Accepts raw ECharts options for edge cases
    * Type is intentionally generic to avoid exposing ECharts types
    */
-  advanced?: Record<string, any>
+  advanced?: Record<string, unknown>
 }
 
-/** Base props for all chart components */
-export interface MeldChartBaseProps {
-  /** Chart configuration */
-  config: MeldChartConfig
+// ============================================
+// TYPE UNION FOR DYNAMIC CHART COMPONENT
+// ============================================
 
+/**
+ * Discriminated union for the dynamic MeldChart component.
+ * TypeScript will enforce that the config type matches the chart type.
+ */
+export type MeldDynamicChartConfig =
+  | { type: 'bar'; config: MeldBarChartConfig }
+  | { type: 'line'; config: MeldLineChartConfig }
+  | { type: 'area'; config: MeldAreaChartConfig }
+  | { type: 'pie'; config: MeldPieChartConfig }
+  | { type: 'donut'; config: MeldDonutChartConfig }
+  | { type: 'radar'; config: MeldRadarChartConfig }
+  | { type: 'heatmap'; config: MeldHeatmapChartConfig }
+  | { type: 'scatter'; config: MeldScatterChartConfig }
+  | { type: 'mixed'; config: MeldMixedChartConfig }
+
+/**
+ * Union type of all chart-specific configurations.
+ * Useful for functions that accept any chart config.
+ */
+export type AnyChartConfig =
+  | MeldBarChartConfig
+  | MeldLineChartConfig
+  | MeldAreaChartConfig
+  | MeldPieChartConfig
+  | MeldDonutChartConfig
+  | MeldRadarChartConfig
+  | MeldHeatmapChartConfig
+  | MeldScatterChartConfig
+  | MeldMixedChartConfig
+
+// ============================================
+// COMPONENT PROPS
+// ============================================
+
+/** Base props shared by all chart components */
+interface ChartComponentPropsBase {
   /** Chart height */
   height?: number | string // Default: 350
 
@@ -193,22 +560,79 @@ export interface MeldChartBaseProps {
   loading?: boolean
 }
 
-/** Props for MeldChart (dynamic type) */
-export interface MeldChartProps extends MeldChartBaseProps {
-  /** Chart type (dynamically loaded) */
-  type: ChartType
+/** Props for MeldBarChart */
+export interface MeldBarChartProps extends ChartComponentPropsBase {
+  /** Bar chart configuration */
+  config: MeldBarChartConfig
 }
 
-/** Props for specific chart types (extends base) */
-export interface MeldLineChartProps extends MeldChartBaseProps {}
-export interface MeldBarChartProps extends MeldChartBaseProps {}
-export interface MeldAreaChartProps extends MeldChartBaseProps {}
-export interface MeldPieChartProps extends MeldChartBaseProps {}
-export interface MeldDonutChartProps extends MeldChartBaseProps {}
-export interface MeldScatterChartProps extends MeldChartBaseProps {}
-export interface MeldRadarChartProps extends MeldChartBaseProps {}
-export interface MeldHeatmapChartProps extends MeldChartBaseProps {}
-export interface MeldMixedChartProps extends MeldChartBaseProps {}
+/** Props for MeldLineChart */
+export interface MeldLineChartProps extends ChartComponentPropsBase {
+  /** Line chart configuration */
+  config: MeldLineChartConfig
+}
+
+/** Props for MeldAreaChart */
+export interface MeldAreaChartProps extends ChartComponentPropsBase {
+  /** Area chart configuration */
+  config: MeldAreaChartConfig
+}
+
+/** Props for MeldPieChart */
+export interface MeldPieChartProps extends ChartComponentPropsBase {
+  /** Pie chart configuration */
+  config: MeldPieChartConfig
+}
+
+/** Props for MeldDonutChart */
+export interface MeldDonutChartProps extends ChartComponentPropsBase {
+  /** Donut chart configuration */
+  config: MeldDonutChartConfig
+}
+
+/** Props for MeldRadarChart */
+export interface MeldRadarChartProps extends ChartComponentPropsBase {
+  /** Radar chart configuration */
+  config: MeldRadarChartConfig
+}
+
+/** Props for MeldHeatmapChart */
+export interface MeldHeatmapChartProps extends ChartComponentPropsBase {
+  /** Heatmap chart configuration */
+  config: MeldHeatmapChartConfig
+}
+
+/** Props for MeldScatterChart */
+export interface MeldScatterChartProps extends ChartComponentPropsBase {
+  /** Scatter chart configuration */
+  config: MeldScatterChartConfig
+}
+
+/** Props for MeldMixedChart */
+export interface MeldMixedChartProps extends ChartComponentPropsBase {
+  /** Mixed chart configuration */
+  config: MeldMixedChartConfig
+}
+
+/**
+ * @deprecated Use chart-specific props instead (MeldBarChartProps, MeldLineChartProps, etc.)
+ */
+export interface MeldChartBaseProps extends ChartComponentPropsBase {
+  /** Chart configuration */
+  config: MeldChartConfig
+}
+
+/** Props for MeldChart (dynamic type) */
+export interface MeldChartProps extends ChartComponentPropsBase {
+  /** Chart type (dynamically loaded) */
+  type: ChartType
+
+  /**
+   * Chart configuration.
+   * For best TypeScript support, ensure config matches the type.
+   */
+  config: AnyChartConfig
+}
 
 /** Props for skeleton component */
 export interface MeldChartSkeletonProps {

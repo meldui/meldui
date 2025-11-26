@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldScatterChartConfig } from '@meldui/charts-vue'
 import { MeldScatterChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -23,7 +23,7 @@ export const Default: Story = {
   render: () => ({
     components: { MeldScatterChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Dataset 1',
@@ -59,7 +59,7 @@ export const MultipleSeries: Story = {
   render: () => ({
     components: { MeldScatterChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Group A',
@@ -127,7 +127,7 @@ export const HeightVsWeight: Story = {
         return data
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Measurements',
@@ -161,7 +161,7 @@ export const SalesAnalysis: Story = {
   render: () => ({
     components: { MeldScatterChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Q1',
@@ -240,7 +240,7 @@ export const LargeDataset: Story = {
         return data
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Data Points',
@@ -268,7 +268,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldScatterChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Data',
@@ -298,7 +298,7 @@ export const DifferentSizes: Story = {
   render: () => ({
     components: { MeldScatterChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Data',

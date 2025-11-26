@@ -1,4 +1,4 @@
-import type { MeldChartConfig, PaletteName } from '@meldui/charts-vue'
+import type { MeldBarChartConfig, MeldLineChartConfig, PaletteName } from '@meldui/charts-vue'
 import { generateColors, MeldBarChart, MeldLineChart, PALETTES } from '@meldui/charts-vue'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
@@ -36,7 +36,7 @@ export const AllPalettes: Story = {
   render: () => ({
     components: { MeldLineChart, Card, CardHeader, CardTitle, CardDescription, CardContent },
     setup() {
-      const configs: Record<PaletteName, MeldChartConfig> = {} as any
+      const configs: Record<PaletteName, MeldLineChartConfig> = {} as any
 
       // Generate config for each palette
       paletteNames.forEach((paletteName) => {
@@ -88,7 +88,7 @@ export const PaletteComparison: Story = {
   render: () => ({
     components: { MeldBarChart, Card, CardHeader, CardTitle, CardContent },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Q1', data: [30, 45, 60, 55, 50] },
           { name: 'Q2', data: [40, 50, 70, 65, 60] },
@@ -179,7 +179,7 @@ export const UsageExample: Story = {
   render: () => ({
     components: { MeldLineChart, Card, CardHeader, CardTitle, CardDescription, CardContent },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] },
           { name: 'Expenses', data: [20, 30, 35, 40, 39, 50, 60] },
@@ -205,7 +205,7 @@ export const UsageExample: Story = {
 
           <div class="mt-6 p-4 bg-muted rounded-lg">
             <p class="text-sm font-semibold mb-2">Usage:</p>
-            <pre class="text-xs"><code>const config: MeldChartConfig = {
+            <pre class="text-xs"><code>const config: MeldBarChartConfig = {
   series: [...],
   colors: 'ocean' // Simply pass the palette name!
 }</code></pre>
@@ -281,7 +281,7 @@ export const DynamicSeriesCount: Story = {
   render: () => ({
     components: { MeldBarChart, Card, CardHeader, CardTitle, CardContent },
     setup() {
-      const generateConfig = (count: number): MeldChartConfig => ({
+      const generateConfig = (count: number): MeldBarChartConfig => ({
         series: Array.from({ length: count }, (_, i) => ({
           name: `Series ${i + 1}`,
           data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 100)),

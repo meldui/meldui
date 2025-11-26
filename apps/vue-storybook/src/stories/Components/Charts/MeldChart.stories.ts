@@ -1,4 +1,4 @@
-import type { ChartType, MeldChartConfig } from '@meldui/charts-vue'
+import type { AnyChartConfig, ChartType } from '@meldui/charts-vue'
 import { MeldChart } from '@meldui/charts-vue'
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
@@ -26,7 +26,7 @@ export const DynamicType: Story = {
     components: { MeldChart, Button },
     setup() {
       const chartType = ref<ChartType>('line')
-      const config: MeldChartConfig = {
+      const config: AnyChartConfig = {
         series: [
           { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] },
           { name: 'Expenses', data: [20, 30, 35, 40, 39, 50, 60] },
@@ -100,7 +100,7 @@ export const UserSelectionDashboard: Story = {
       const primaryChartType = ref<ChartType>('line')
       const secondaryChartType = ref<ChartType>('bar')
 
-      const revenueConfig: MeldChartConfig = {
+      const revenueConfig: AnyChartConfig = {
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -109,7 +109,7 @@ export const UserSelectionDashboard: Story = {
         legend: { show: false },
       }
 
-      const salesConfig: MeldChartConfig = {
+      const salesConfig: AnyChartConfig = {
         series: [
           { name: 'Online', data: [30, 40, 45, 50, 49, 60, 70] },
           { name: 'In-Store', data: [20, 25, 30, 35, 32, 40, 45] },
@@ -196,7 +196,7 @@ export const LazyLoadingDemo: Story = {
     setup() {
       const showChart = ref(false)
       const chartType = ref<ChartType>('line')
-      const config: MeldChartConfig = {
+      const config: AnyChartConfig = {
         series: [{ name: 'Data', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -244,7 +244,7 @@ export const UnsupportedType: Story = {
   render: () => ({
     components: { MeldChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: AnyChartConfig = {
         series: [{ name: 'Data', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -275,7 +275,7 @@ export const WithDifferentSizes: Story = {
     components: { MeldChart },
     setup() {
       const chartType = ref<ChartType>('line')
-      const config: MeldChartConfig = {
+      const config: AnyChartConfig = {
         series: [{ name: 'Data', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],

@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldBarChartConfig, MeldLineChartConfig, MeldPieChartConfig } from '@meldui/charts-vue'
 import { MeldBarChart, MeldLineChart, MeldPieChart } from '@meldui/charts-vue'
 import {
   IconCalendar,
@@ -47,14 +47,14 @@ export default meta
 type Story = StoryObj<typeof MeldBarChart>
 
 // Shared config for examples
-const salesConfig: MeldChartConfig = {
+const salesConfig: MeldBarChartConfig = {
   series: [{ name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }],
   xAxis: {
     categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   },
 }
 
-const multiSeriesConfig: MeldChartConfig = {
+const multiSeriesConfig: MeldBarChartConfig = {
   series: [
     { name: 'Revenue', data: [120, 200, 150, 180, 220, 190, 250] },
     { name: 'Expenses', data: [80, 120, 90, 110, 140, 100, 160] },
@@ -245,7 +245,7 @@ export const PieChartWithSummary: Story = {
   render: () => ({
     components: { MeldPieChart, Badge },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Desktop', data: [65] },
           { name: 'Mobile', data: [25] },

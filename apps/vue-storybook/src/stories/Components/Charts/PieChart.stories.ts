@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldPieChartConfig } from '@meldui/charts-vue'
 import { MeldPieChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -23,7 +23,7 @@ export const Default: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'Desktop', data: [44] },
           { name: 'Mobile', data: [55] },
@@ -45,7 +45,7 @@ export const MarketShare: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'Chrome', data: [65.52] },
           { name: 'Safari', data: [18.33] },
@@ -70,7 +70,7 @@ export const WithCustomColors: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'Completed', data: [65] },
           { name: 'In Progress', data: [25] },
@@ -93,7 +93,7 @@ export const SimpleTwoSlices: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'Pass', data: [85] },
           { name: 'Fail', data: [15] },
@@ -115,7 +115,7 @@ export const ManySlices: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'Electronics', data: [18] },
           { name: 'Clothing', data: [22] },
@@ -142,7 +142,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'A', data: [44] },
           { name: 'B', data: [55] },
@@ -161,7 +161,7 @@ export const RevenueDistribution: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'North America', data: [42.5] },
           { name: 'Europe', data: [28.3] },
@@ -185,7 +185,7 @@ export const BudgetAllocation: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'Marketing', data: [30] },
           { name: 'Development', data: [40] },
@@ -210,7 +210,7 @@ export const DifferentSizes: Story = {
   render: () => ({
     components: { MeldPieChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldPieChartConfig = {
         series: [
           { name: 'A', data: [44] },
           { name: 'B', data: [55] },

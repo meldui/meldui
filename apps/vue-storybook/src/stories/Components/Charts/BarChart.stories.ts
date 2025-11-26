@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldBarChartConfig } from '@meldui/charts-vue'
 import { MeldBarChart } from '@meldui/charts-vue'
 import { IconPackage, IconShoppingCart, IconUsers } from '@meldui/tabler-vue'
 import {
@@ -34,7 +34,7 @@ export const Default: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [{ name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -52,7 +52,7 @@ export const MultipleSeries: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Product A', data: [30, 40, 45, 50, 49, 60, 70] },
           { name: 'Product B', data: [20, 30, 35, 40, 39, 50, 60] },
@@ -77,7 +77,7 @@ export const StackedBar: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Desktop', data: [44, 55, 57, 56, 61, 58, 63] },
           { name: 'Mobile', data: [76, 85, 101, 98, 87, 105, 91] },
@@ -103,7 +103,7 @@ export const HorizontalBar: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [{ name: 'Score', data: [85, 72, 68, 91, 78, 88, 94] }],
         xAxis: {
           categories: ['Math', 'Science', 'English', 'History', 'Art', 'Music', 'PE'],
@@ -122,7 +122,7 @@ export const WithDataLabels: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [{ name: 'Revenue', data: [120, 200, 150, 180, 220, 190, 250] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -144,7 +144,7 @@ export const WithFormattedDataLabels: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [{ name: 'Sales', data: [1200, 2500, 1800, 3200, 2800, 3500, 4100] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -167,7 +167,7 @@ export const HorizontalWithDataLabels: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [{ name: 'Score', data: [85, 72, 68, 91, 78] }],
         xAxis: {
           categories: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
@@ -190,7 +190,7 @@ export const WithCustomColors: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Q1', data: [30, 45, 60] },
           { name: 'Q2', data: [40, 50, 70] },
@@ -217,7 +217,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [{ name: 'Data', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -235,7 +235,7 @@ export const SmallDataset: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Yes', data: [45] },
           { name: 'No', data: [38] },
@@ -275,7 +275,7 @@ export const LargeDataset: Story = {
         'Nov',
         'Dec',
       ]
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           {
             name: '2023',
@@ -314,7 +314,7 @@ export const SalesCard: Story = {
       IconShoppingCart,
     },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [{ name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -378,7 +378,7 @@ export const EcommerceDashboard: Story = {
       IconPackage,
     },
     setup() {
-      const salesConfig: MeldChartConfig = {
+      const salesConfig: MeldBarChartConfig = {
         series: [
           { name: 'Online', data: [30, 40, 45, 50, 49, 60, 70] },
           { name: 'In-Store', data: [20, 25, 30, 35, 32, 40, 45] },
@@ -392,7 +392,7 @@ export const EcommerceDashboard: Story = {
         },
       }
 
-      const categoriesConfig: MeldChartConfig = {
+      const categoriesConfig: MeldBarChartConfig = {
         series: [{ name: 'Orders', data: [85, 72, 68, 91, 78, 88, 94] }],
         xAxis: {
           categories: ['Electronics', 'Clothing', 'Food', 'Books', 'Toys', 'Sports', 'Beauty'],
@@ -475,7 +475,7 @@ export const DualAxisBarWithLine: Story = {
   render: () => ({
     components: { MeldBarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           { name: 'Sales (Left)', data: [120, 200, 150, 180, 220, 190, 250] },
           { name: 'Target (Right)', data: [180, 220, 200, 240, 260, 230, 280] },

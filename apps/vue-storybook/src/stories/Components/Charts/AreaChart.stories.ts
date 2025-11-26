@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldAreaChartConfig } from '@meldui/charts-vue'
 import { MeldAreaChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -23,7 +23,7 @@ export const Default: Story = {
   render: () => ({
     components: { MeldAreaChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [{ name: 'Users', data: [100, 150, 200, 250, 300, 350, 400] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -41,7 +41,7 @@ export const MultipleSeries: Story = {
   render: () => ({
     components: { MeldAreaChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [
           { name: 'Desktop', data: [100, 120, 150, 180, 200, 220, 250] },
           { name: 'Mobile', data: [50, 70, 90, 110, 130, 150, 180] },
@@ -66,7 +66,7 @@ export const StackedArea: Story = {
   render: () => ({
     components: { MeldAreaChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [
           { name: 'Organic', data: [120, 132, 151, 134, 190, 230, 210] },
           { name: 'Direct', data: [85, 91, 94, 99, 103, 109, 115] },
@@ -93,7 +93,7 @@ export const SmoothArea: Story = {
   render: () => ({
     components: { MeldAreaChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [
           { name: 'Temperature', data: [18, 21, 24, 27, 25, 22, 20] },
           { name: 'Humidity', data: [55, 60, 65, 68, 63, 58, 56] },
@@ -118,7 +118,7 @@ export const WithCustomColors: Story = {
   render: () => ({
     components: { MeldAreaChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [
           { name: 'Series A', data: [30, 40, 35, 50, 49, 60, 70] },
           { name: 'Series B', data: [20, 30, 45, 40, 39, 50, 55] },
@@ -140,7 +140,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldAreaChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [{ name: 'Data', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -172,7 +172,7 @@ export const TimeSeriesData: Story = {
         'Nov',
         'Dec',
       ]
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [
           {
             name: '2023 Revenue',
@@ -205,7 +205,7 @@ export const SingleDataPoint: Story = {
   render: () => ({
     components: { MeldAreaChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldAreaChartConfig = {
         series: [{ name: 'Value', data: [100] }],
         xAxis: {
           categories: ['Today'],

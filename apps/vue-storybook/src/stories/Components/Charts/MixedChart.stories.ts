@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldMixedChartConfig } from '@meldui/charts-vue'
 import { MeldMixedChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -23,7 +23,7 @@ export const LineAndBar: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Revenue',
@@ -55,7 +55,7 @@ export const AreaAndLine: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Total Users',
@@ -88,7 +88,7 @@ export const TripleCombo: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Sales',
@@ -126,7 +126,7 @@ export const FinancialDashboard: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Revenue',
@@ -177,7 +177,7 @@ export const WeatherData: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Temperature (°C)',
@@ -218,7 +218,7 @@ export const EcommerceMetrics: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Orders',
@@ -256,7 +256,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Bar',
@@ -285,7 +285,7 @@ export const DifferentSizes: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Sales',
@@ -330,7 +330,7 @@ export const DualAxisBarAndLine: Story = {
   render: () => ({
     components: { MeldMixedChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldMixedChartConfig = {
         series: [
           {
             name: 'Revenue',

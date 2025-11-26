@@ -28,9 +28,9 @@ yarn add @meldui/vue @meldui/charts-vue
 ```vue
 <script setup lang="ts">
 import { MeldLineChart } from '@meldui/charts-vue'
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
 
-const config: MeldChartConfig = {
+const config: MeldLineChartConfig = {
   series: [
     { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }
   ],
@@ -67,20 +67,40 @@ Following the same pattern as `@meldui/tabler-vue` (our icon package), charts ar
 
 ## TypeScript Support
 
-Full TypeScript support is included out of the box:
+Full TypeScript support is included out of the box. Each chart type has its own configuration interface:
 
 ```typescript
 import type {
-  MeldChartConfig,
+  // Chart-specific config types (recommended)
+  MeldLineChartConfig,
+  MeldBarChartConfig,
+  MeldPieChartConfig,
+  MeldDonutChartConfig,
+  MeldAreaChartConfig,
+  MeldRadarChartConfig,
+  MeldHeatmapChartConfig,
+  MeldScatterChartConfig,
+  MeldMixedChartConfig,
+
+  // Shared types
   ChartSeries,
   ChartAxis,
-  MeldLineChartProps
+  ChartLegend,
 } from '@meldui/charts-vue'
 
-// Full IntelliSense and type checking
-const config: MeldChartConfig = {
+// Full IntelliSense - only shows relevant options for line charts
+const lineConfig: MeldLineChartConfig = {
   series: [{ name: 'Sales', data: [10, 20, 30] }],
-  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  stroke: { curve: 'smooth' }  // Line-specific option
+}
+
+// Bar chart config - shows bar-relevant options only
+const barConfig: MeldBarChartConfig = {
+  series: [{ name: 'Revenue', data: [100, 200, 150] }],
+  xAxis: { categories: ['2022', '2023', '2024'] },
+  horizontal: true,  // Bar-specific option
+  stacked: true
 }
 ```
 

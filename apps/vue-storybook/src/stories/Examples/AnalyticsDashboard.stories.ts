@@ -1,4 +1,12 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type {
+  MeldAreaChartConfig,
+  MeldBarChartConfig,
+  MeldDonutChartConfig,
+  MeldLineChartConfig,
+  MeldMixedChartConfig,
+  MeldPieChartConfig,
+  MeldRadarChartConfig,
+} from '@meldui/charts-vue'
 import {
   MeldAreaChart,
   MeldBarChart,
@@ -197,7 +205,7 @@ export const FullDashboard: Story = {
       }
 
       // Traffic Overview - Line Chart
-      const trafficOverviewConfig: MeldChartConfig = {
+      const trafficOverviewConfig: MeldLineChartConfig = {
         series: [
           {
             name: 'Page Views',
@@ -225,7 +233,7 @@ export const FullDashboard: Story = {
       }
 
       // User Sessions - Area Chart
-      const userSessionsConfig: MeldChartConfig = {
+      const userSessionsConfig: MeldAreaChartConfig = {
         series: [
           {
             name: 'Active Sessions',
@@ -245,7 +253,7 @@ export const FullDashboard: Story = {
       }
 
       // Top Pages - Bar Chart
-      const topPagesConfig: MeldChartConfig = {
+      const topPagesConfig: MeldBarChartConfig = {
         series: [
           {
             name: 'Page Views',
@@ -262,7 +270,7 @@ export const FullDashboard: Story = {
       }
 
       // Traffic Sources - Donut Chart
-      const trafficSourcesConfig: MeldChartConfig = {
+      const trafficSourcesConfig: MeldDonutChartConfig = {
         series: [
           { name: 'Organic Search', data: 42 },
           { name: 'Direct', data: 28 },
@@ -276,7 +284,7 @@ export const FullDashboard: Story = {
       }
 
       // Device Distribution - Pie Chart
-      const deviceDistributionConfig: MeldChartConfig = {
+      const deviceDistributionConfig: MeldPieChartConfig = {
         series: [
           { name: 'Desktop', data: 52 },
           { name: 'Mobile', data: 38 },
@@ -289,7 +297,7 @@ export const FullDashboard: Story = {
       }
 
       // Conversion Funnel - Bar Chart (horizontal)
-      const conversionFunnelConfig: MeldChartConfig = {
+      const conversionFunnelConfig: MeldBarChartConfig = {
         series: [
           {
             name: 'Users',
@@ -307,7 +315,7 @@ export const FullDashboard: Story = {
       }
 
       // Performance Metrics - Mixed Chart
-      const performanceMetricsConfig: MeldChartConfig = {
+      const performanceMetricsConfig: MeldMixedChartConfig = {
         series: [
           {
             name: 'Page Load Time',
@@ -329,7 +337,7 @@ export const FullDashboard: Story = {
       }
 
       // User Engagement - Radar Chart
-      const userEngagementConfig: MeldChartConfig = {
+      const userEngagementConfig: MeldRadarChartConfig = {
         series: [
           {
             name: 'This Week',
@@ -356,7 +364,7 @@ export const FullDashboard: Story = {
       }
 
       // Hourly Activity - Area Chart
-      const hourlyActivityConfig: MeldChartConfig = {
+      const hourlyActivityConfig: MeldAreaChartConfig = {
         series: [
           {
             name: 'Active Users',

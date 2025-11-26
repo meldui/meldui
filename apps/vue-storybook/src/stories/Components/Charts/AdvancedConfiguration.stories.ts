@@ -1,4 +1,8 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type {
+  MeldBarChartConfig,
+  MeldLineChartConfig,
+  MeldScatterChartConfig,
+} from '@meldui/charts-vue'
 import { MeldBarChart, MeldLineChart, MeldScatterChart } from '@meldui/charts-vue'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
@@ -32,7 +36,7 @@ export const Default: Story = {
     },
     setup() {
       // Example 1: Mark Points and Mark Lines
-      const markPointConfig: MeldChartConfig = {
+      const markPointConfig: MeldLineChartConfig = {
         series: [
           {
             name: 'Temperature',
@@ -89,7 +93,7 @@ export const Default: Story = {
       }
 
       // Example 2: Custom Item Styles
-      const customStyleConfig: MeldChartConfig = {
+      const customStyleConfig: MeldBarChartConfig = {
         series: [
           {
             name: 'Sales',
@@ -121,7 +125,7 @@ export const Default: Story = {
       }
 
       // Example 3: Background with Visual Map
-      const visualMapConfig: MeldChartConfig = {
+      const visualMapConfig: MeldBarChartConfig = {
         series: [
           {
             name: 'Score',
@@ -178,7 +182,7 @@ export const Default: Story = {
       }
 
       // Example 4: Regression Line
-      const regressionConfig: MeldChartConfig = {
+      const regressionConfig: MeldScatterChartConfig = {
         series: [
           {
             name: 'Data Points',
@@ -237,7 +241,7 @@ export const Default: Story = {
       }
 
       // Example 5: Custom Tooltip with HTML
-      const customTooltipConfig: MeldChartConfig = {
+      const customTooltipConfig: MeldLineChartConfig = {
         series: [
           {
             name: 'Revenue',
@@ -292,7 +296,7 @@ export const Default: Story = {
       }
 
       // Example 6: Data Zoom
-      const dataZoomConfig: MeldChartConfig = {
+      const dataZoomConfig: MeldLineChartConfig = {
         series: [
           {
             name: 'Visits',
@@ -555,7 +559,7 @@ export const GradientFills: Story = {
   render: () => ({
     components: { MeldBarChart, Card, CardHeader, CardTitle, CardDescription, CardContent },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldBarChartConfig = {
         series: [
           {
             name: 'Sales',

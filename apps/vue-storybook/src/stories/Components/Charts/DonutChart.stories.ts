@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldDonutChartConfig } from '@meldui/charts-vue'
 import { MeldDonutChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -23,7 +23,7 @@ export const Default: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'Desktop', data: [44] },
           { name: 'Mobile', data: [55] },
@@ -45,7 +45,7 @@ export const BrowserShare: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'Chrome', data: [65.52] },
           { name: 'Safari', data: [18.33] },
@@ -71,7 +71,7 @@ export const ProjectStatus: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'Completed', data: [45] },
           { name: 'In Progress', data: [30] },
@@ -95,7 +95,7 @@ export const RevenueByRegion: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'North America', data: [42.5] },
           { name: 'Europe', data: [28.3] },
@@ -120,7 +120,7 @@ export const SimpleTwoSegments: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'Achieved', data: [75] },
           { name: 'Remaining', data: [25] },
@@ -142,7 +142,7 @@ export const ExpenseBreakdown: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'Salaries', data: [45] },
           { name: 'Infrastructure', data: [25] },
@@ -167,7 +167,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'A', data: [44] },
           { name: 'B', data: [55] },
@@ -186,7 +186,7 @@ export const DifferentSizes: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'A', data: [44] },
           { name: 'B', data: [55] },
@@ -221,7 +221,7 @@ export const CustomerSegmentation: Story = {
   render: () => ({
     components: { MeldDonutChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldDonutChartConfig = {
         series: [
           { name: 'Enterprise', data: [35] },
           { name: 'Mid-Market', data: [30] },

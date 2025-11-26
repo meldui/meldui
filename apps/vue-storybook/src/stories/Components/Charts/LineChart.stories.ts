@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
 import { MeldLineChart } from '@meldui/charts-vue'
 import { IconRefresh, IconTrendingDown, IconTrendingUp } from '@meldui/tabler-vue'
 import {
@@ -34,7 +34,7 @@ export const Default: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -52,7 +52,7 @@ export const MultipleSeries: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [
           { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] },
           { name: 'Expenses', data: [20, 30, 35, 40, 39, 50, 60] },
@@ -77,7 +77,7 @@ export const SmoothCurve: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [
           { name: 'Temperature', data: [18, 22, 25, 28, 30, 29, 26] },
           { name: 'Humidity', data: [65, 70, 68, 72, 75, 73, 70] },
@@ -102,7 +102,7 @@ export const WithCustomColors: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [
           { name: 'Series A', data: [30, 40, 35, 50, 49, 60, 70] },
           { name: 'Series B', data: [20, 30, 45, 40, 39, 50, 55] },
@@ -124,7 +124,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [{ name: 'Data', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -142,7 +142,7 @@ export const DifferentSizes: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -173,7 +173,7 @@ export const Responsive: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -197,7 +197,7 @@ export const InteractiveDemo: Story = {
     components: { MeldLineChart },
     setup() {
       const isLoading = ref(false)
-      const config = ref<MeldChartConfig>({
+      const config = ref<MeldLineChartConfig>({
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -249,7 +249,7 @@ export const WithCard: Story = {
       IconTrendingUp,
     },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -295,7 +295,7 @@ export const DashboardLayout: Story = {
       IconRefresh,
     },
     setup() {
-      const revenueConfig: MeldChartConfig = {
+      const revenueConfig: MeldLineChartConfig = {
         series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -304,7 +304,7 @@ export const DashboardLayout: Story = {
         legend: { show: false },
       }
 
-      const usersConfig: MeldChartConfig = {
+      const usersConfig: MeldLineChartConfig = {
         series: [{ name: 'Active Users', data: [120, 140, 135, 150, 149, 160, 175] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -314,7 +314,7 @@ export const DashboardLayout: Story = {
         legend: { show: false },
       }
 
-      const conversionConfig: MeldChartConfig = {
+      const conversionConfig: MeldLineChartConfig = {
         series: [{ name: 'Conversions', data: [5, 8, 6, 9, 7, 10, 12] }],
         xAxis: {
           categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -407,7 +407,7 @@ export const AnalyticsDashboard: Story = {
     },
     setup() {
       const isLoading = ref(false)
-      const config = ref<MeldChartConfig>({
+      const config = ref<MeldLineChartConfig>({
         series: [
           { name: 'Page Views', data: [1200, 1400, 1350, 1600, 1550, 1800, 2000] },
           { name: 'Sessions', data: [800, 900, 850, 1000, 950, 1100, 1200] },
@@ -464,7 +464,7 @@ export const DualAxisTemperatureAndHumidity: Story = {
   render: () => ({
     components: { MeldLineChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldLineChartConfig = {
         series: [
           {
             name: 'Temperature',

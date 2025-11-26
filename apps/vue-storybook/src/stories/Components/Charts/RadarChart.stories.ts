@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldRadarChartConfig } from '@meldui/charts-vue'
 import { MeldRadarChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -23,7 +23,7 @@ export const Default: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Product A',
@@ -49,7 +49,7 @@ export const Comparison: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Product A',
@@ -83,7 +83,7 @@ export const SkillsAssessment: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Candidate A',
@@ -121,7 +121,7 @@ export const TeamPerformance: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Team Alpha',
@@ -159,7 +159,7 @@ export const NutritionalValue: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Apple',
@@ -197,7 +197,7 @@ export const BusinessMetrics: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Q1 2024',
@@ -240,7 +240,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Data',
@@ -266,7 +266,7 @@ export const DifferentSizes: Story = {
   render: () => ({
     components: { MeldRadarChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldRadarChartConfig = {
         series: [
           {
             name: 'Series',

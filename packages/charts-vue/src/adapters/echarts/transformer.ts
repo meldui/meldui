@@ -2,7 +2,7 @@
 import type { EChartsOption } from 'echarts'
 import { CHART_DEFAULTS } from '../../config/defaults'
 import { MAX_RECOMMENDED_SERIES } from '../../config/palettes'
-import type { ChartType, MeldChartConfig } from '../../types'
+import type { AnyChartConfig, ChartType, MeldChartConfig } from '../../types'
 import { buildGrid } from './builders/gridBuilder'
 import { buildLegend } from './builders/legendBuilder'
 import { buildTooltip } from './builders/tooltipBuilder'
@@ -12,9 +12,31 @@ import { deepMerge } from './utils/deepMerge'
 import { transformSeries } from './utils/seriesTransformer'
 
 /**
+ * Internal config type that normalizes all chart configs to a common shape.
+ * Used internally by the transformer for property access.
+ */
+type NormalizedConfig = {
+  series: MeldChartConfig['series']
+  xAxis?: MeldChartConfig['xAxis']
+  yAxis?: MeldChartConfig['yAxis']
+  legend?: MeldChartConfig['legend']
+  tooltip?: MeldChartConfig['tooltip']
+  grid?: MeldChartConfig['grid']
+  stroke?: MeldChartConfig['stroke']
+  colors?: MeldChartConfig['colors']
+  animations?: MeldChartConfig['animations']
+  toolbar?: MeldChartConfig['toolbar']
+  zoom?: MeldChartConfig['zoom']
+  stacked?: MeldChartConfig['stacked']
+  horizontal?: MeldChartConfig['horizontal']
+  dataLabels?: MeldChartConfig['dataLabels']
+  advanced?: MeldChartConfig['advanced']
+}
+
+/**
  * Build radar chart specific configuration
  */
-function buildRadarConfig(config: MeldChartConfig): any {
+function buildRadarConfig(config: NormalizedConfig): any {
   const { xAxis, yAxis, grid } = config
 
   // Determine if axis lines should be shown (default to true unless grid.show is explicitly false)
@@ -79,13 +101,23 @@ function buildHeatmapConfig(resolvedColors: string[]): any {
 }
 
 /**
- * Transform MeldChartConfig to ECharts options
+ * Transform chart configuration to ECharts options.
+ *
+ * Accepts both chart-specific configs (MeldBarChartConfig, MeldLineChartConfig, etc.)
+ * and the legacy unified MeldChartConfig for backwards compatibility.
+ *
+ * @param config - Chart configuration (specific or unified type)
+ * @param themeConfig - Theme configuration with mode and palette
+ * @param chartType - The type of chart to render
+ * @returns ECharts option object
  */
 export function transformToEChartsOption(
-  config: MeldChartConfig,
+  config: AnyChartConfig | MeldChartConfig,
   themeConfig: { mode: 'light' | 'dark'; palette: string[] },
   chartType: ChartType = 'line',
 ): EChartsOption {
+  // Normalize config to internal type for property access
+  // This allows us to safely access properties that may not exist on all config types
   const {
     series,
     xAxis,
@@ -102,7 +134,7 @@ export function transformToEChartsOption(
     horizontal,
     dataLabels,
     advanced,
-  } = config
+  } = config as NormalizedConfig
 
   // Warn if too many series
   if (series.length > MAX_RECOMMENDED_SERIES) {
@@ -191,7 +223,7 @@ export function transformToEChartsOption(
     animation: animations ?? true,
 
     // Radar chart specific configuration
-    ...(chartType === 'radar' && buildRadarConfig(config)),
+    ...(chartType === 'radar' && buildRadarConfig({ xAxis, yAxis, grid, series })),
 
     // Heatmap specific configuration - visualMap is required for heatmaps
     ...(chartType === 'heatmap' && buildHeatmapConfig(resolvedColors)),

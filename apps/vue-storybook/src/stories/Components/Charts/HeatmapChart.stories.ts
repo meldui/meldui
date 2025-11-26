@@ -1,4 +1,4 @@
-import type { MeldChartConfig } from '@meldui/charts-vue'
+import type { MeldHeatmapChartConfig } from '@meldui/charts-vue'
 import { MeldHeatmapChart } from '@meldui/charts-vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
@@ -33,7 +33,7 @@ export const Default: Story = {
         }
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldHeatmapChartConfig = {
         series: [
           {
             name: 'Activity',
@@ -102,7 +102,7 @@ export const WebsiteTraffic: Story = {
         return data
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldHeatmapChartConfig = {
         series: [
           {
             name: 'Visits',
@@ -153,7 +153,7 @@ export const SalesHeatmap: Story = {
         }
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldHeatmapChartConfig = {
         series: [
           {
             name: 'Sales',
@@ -191,7 +191,7 @@ export const PerformanceMatrix: Story = {
         }
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldHeatmapChartConfig = {
         series: [
           {
             name: 'Usage %',
@@ -233,7 +233,7 @@ export const CorrelationMatrix: Story = {
         }
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldHeatmapChartConfig = {
         series: [
           {
             name: 'Correlation',
@@ -260,7 +260,7 @@ export const Loading: Story = {
   render: () => ({
     components: { MeldHeatmapChart },
     setup() {
-      const config: MeldChartConfig = {
+      const config: MeldHeatmapChartConfig = {
         series: [
           {
             name: 'Data',
@@ -300,7 +300,7 @@ export const DifferentSizes: Story = {
         }
       }
 
-      const config: MeldChartConfig = {
+      const config: MeldHeatmapChartConfig = {
         series: [
           {
             name: 'Activity',
