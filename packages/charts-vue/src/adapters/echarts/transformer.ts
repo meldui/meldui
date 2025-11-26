@@ -15,10 +15,39 @@ import { type ChartType, transformSeries } from './utils/seriesTransformer'
  * Build radar chart specific configuration
  */
 function buildRadarConfig(config: MeldChartConfig): any {
-  const { xAxis, yAxis } = config
+  const { xAxis, yAxis, grid } = config
+
+  // Determine if axis lines should be shown (default to true unless grid.show is explicitly false)
+  const showAxisLines = grid?.show !== false
+
   return {
     radar: {
       indicator: xAxis?.categories?.map((cat) => ({ name: cat, max: yAxis?.max })) || [],
+      // Spoke lines from center to each indicator
+      axisLine: {
+        show: showAxisLines,
+        lineStyle: {
+          color: 'rgba(128, 128, 128, 0.30)',
+        },
+      },
+      // Concentric polygon/circle lines
+      splitLine: {
+        show: showAxisLines,
+        lineStyle: {
+          color: 'rgba(128, 128, 128, 0.25)',
+          type: 'dashed',
+          width: 1,
+        },
+      },
+      // Fill between split lines
+      splitArea: {
+        show: false,
+      },
+      // Indicator name styling
+      axisName: {
+        color: 'hsl(var(--muted-foreground))',
+        fontSize: 14,
+      },
     },
   }
 }
@@ -71,6 +100,7 @@ export function transformToEChartsOption(
     zoom,
     stacked,
     horizontal,
+    dataLabels,
     advanced,
   } = config
 
@@ -93,12 +123,27 @@ export function transformToEChartsOption(
     stacked,
     stroke,
     horizontal,
+    dataLabels,
   )
 
-  // Start with defaults (exclude legend - we'll set it explicitly)
-  const { legend: _defaultLegend, ...defaultsWithoutLegend } = CHART_DEFAULTS as any
+  // Determine if this is a non-Cartesian chart (doesn't use xAxis/yAxis/grid)
+  const isNonCartesian = chartType === 'radar' || chartType === 'pie' || chartType === 'donut'
 
-  // Build axes normally first
+  // Start with defaults, excluding properties not applicable to this chart type
+  const {
+    legend: _defaultLegend,
+    xAxis: _defaultXAxis,
+    yAxis: _defaultYAxis,
+    grid: _defaultGrid,
+    ...coreDefaults
+  } = CHART_DEFAULTS as any
+
+  // For Cartesian charts, include the axis/grid defaults; for non-Cartesian, exclude them
+  const defaultsWithoutLegend = isNonCartesian
+    ? coreDefaults
+    : { ...coreDefaults, xAxis: _defaultXAxis, yAxis: _defaultYAxis, grid: _defaultGrid }
+
+  // Build axes normally first (only used for Cartesian charts)
   const builtXAxis = buildXAxis(xAxis, chartType, horizontal)
   const builtYAxis = buildYAxis(yAxis, chartType, horizontal)
 
@@ -117,8 +162,10 @@ export function transformToEChartsOption(
 
     // Transform axes - swap for horizontal bar charts
     // For horizontal charts: categories (from xAxis config) go on Y-axis, values on X-axis
-    xAxis: horizontal ? builtYAxis : builtXAxis,
-    yAxis: horizontal ? builtXAxis : builtYAxis,
+    ...(!isNonCartesian && {
+      xAxis: horizontal ? builtYAxis : builtXAxis,
+      yAxis: horizontal ? builtXAxis : builtYAxis,
+    }),
 
     // Transform legend
     legend: buildLegend(legend),
@@ -127,7 +174,9 @@ export function transformToEChartsOption(
     tooltip: buildTooltip(tooltip, chartType),
 
     // Transform grid - adjust spacing for legend position
-    grid: buildGrid(grid, legend, chartType),
+    ...(!isNonCartesian && {
+      grid: buildGrid(grid, legend, chartType),
+    }),
 
     // Toolbox configuration
     toolbox: {

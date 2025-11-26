@@ -1,4 +1,4 @@
-import type { ChartSeries, ChartStroke } from '../../../types'
+import type { ChartDataLabels, ChartSeries, ChartStroke } from '../../../types'
 
 export type ChartType =
   | 'line'
@@ -156,6 +156,38 @@ function transformHeatmapData(baseSeries: any): void {
 }
 
 /**
+ * Apply data labels configuration
+ */
+function applyDataLabels(baseSeries: any, dataLabels: ChartDataLabels, horizontal?: boolean): void {
+  type LabelPosition = 'top' | 'inside' | 'bottom' | 'left' | 'right'
+
+  // Map position for horizontal bar charts
+  let position: LabelPosition = dataLabels.position || 'top'
+  if (horizontal && baseSeries.type === 'bar') {
+    // For horizontal bars, swap top/bottom with right/left
+    const positionMap: Record<LabelPosition, LabelPosition> = {
+      top: 'right',
+      bottom: 'left',
+      left: 'bottom',
+      right: 'top',
+      inside: 'inside',
+    }
+    position = positionMap[position]
+  }
+
+  baseSeries.label = {
+    ...baseSeries.label,
+    show: dataLabels.show ?? true,
+    position,
+    formatter: dataLabels.formatter
+      ? (params: any) => dataLabels.formatter!(params.value)
+      : undefined,
+    fontSize: 12,
+    fontFamily: 'inherit',
+  }
+}
+
+/**
  * Transform series data for cartesian charts (line, bar, area, scatter, etc.)
  */
 function transformCartesianSeries(
@@ -164,6 +196,7 @@ function transformCartesianSeries(
   stacked: boolean | undefined,
   stroke: ChartStroke | undefined,
   horizontal: boolean | undefined,
+  dataLabels: ChartDataLabels | undefined,
 ): any[] {
   return series.map((s) => {
     const seriesType = s.type || (chartType === 'area' ? 'line' : chartType)
@@ -232,6 +265,11 @@ function transformCartesianSeries(
       transformHeatmapData(baseSeries)
     }
 
+    // Apply data labels configuration
+    if (dataLabels) {
+      applyDataLabels(baseSeries, dataLabels, horizontal)
+    }
+
     return baseSeries
   })
 }
@@ -246,6 +284,7 @@ export function transformSeries(
   stacked: boolean | undefined,
   stroke: ChartStroke | undefined,
   horizontal: boolean | undefined,
+  dataLabels: ChartDataLabels | undefined,
 ): any[] {
   // Special handling for pie/donut charts
   if (chartType === 'pie' || chartType === 'donut') {
@@ -253,5 +292,5 @@ export function transformSeries(
   }
 
   // Cartesian and other chart types
-  return transformCartesianSeries(series, chartType, stacked, stroke, horizontal)
+  return transformCartesianSeries(series, chartType, stacked, stroke, horizontal, dataLabels)
 }

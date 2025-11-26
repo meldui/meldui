@@ -118,6 +118,74 @@ export const HorizontalBar: Story = {
   }),
 }
 
+export const WithDataLabels: Story = {
+  render: () => ({
+    components: { MeldBarChart },
+    setup() {
+      const config: MeldChartConfig = {
+        series: [{ name: 'Revenue', data: [120, 200, 150, 180, 220, 190, 250] }],
+        xAxis: {
+          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        },
+        dataLabels: {
+          show: true,
+          position: 'top',
+        },
+      }
+      return { config }
+    },
+    template: `
+      <MeldBarChart :config="config" title="Revenue with Data Labels" />
+    `,
+  }),
+}
+
+export const WithFormattedDataLabels: Story = {
+  render: () => ({
+    components: { MeldBarChart },
+    setup() {
+      const config: MeldChartConfig = {
+        series: [{ name: 'Sales', data: [1200, 2500, 1800, 3200, 2800, 3500, 4100] }],
+        xAxis: {
+          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        },
+        dataLabels: {
+          show: true,
+          position: 'top',
+          formatter: (value: number) => `$${(value / 1000).toFixed(1)}k`,
+        },
+      }
+      return { config }
+    },
+    template: `
+      <MeldBarChart :config="config" title="Sales with Formatted Labels" />
+    `,
+  }),
+}
+
+export const HorizontalWithDataLabels: Story = {
+  render: () => ({
+    components: { MeldBarChart },
+    setup() {
+      const config: MeldChartConfig = {
+        series: [{ name: 'Score', data: [85, 72, 68, 91, 78] }],
+        xAxis: {
+          categories: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+        },
+        horizontal: true,
+        dataLabels: {
+          show: true,
+          position: 'top', // Will be mapped to 'right' for horizontal bars
+        },
+      }
+      return { config }
+    },
+    template: `
+      <MeldBarChart :config="config" title="Horizontal Bars with Labels" />
+    `,
+  }),
+}
+
 export const WithCustomColors: Story = {
   render: () => ({
     components: { MeldBarChart },

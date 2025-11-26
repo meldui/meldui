@@ -111,6 +111,18 @@ export interface ChartStroke {
   dashArray?: number | number[]
 }
 
+/** Data labels configuration (show values on chart elements) */
+export interface ChartDataLabels {
+  /** Show/hide data labels */
+  show?: boolean
+
+  /** Label position relative to the data point */
+  position?: 'top' | 'inside' | 'bottom' | 'left' | 'right'
+
+  /** Custom formatter for label values */
+  formatter?: (value: number) => string
+}
+
 /** Main chart configuration interface */
 export interface MeldChartConfig {
   /** Chart data series */
@@ -133,6 +145,9 @@ export interface MeldChartConfig {
 
   /** Stroke configuration */
   stroke?: ChartStroke
+
+  /** Data labels configuration (show values on chart elements) */
+  dataLabels?: ChartDataLabels
 
   /** Series colors (auto = use theme colors, palette name, or custom array) */
   colors?: 'auto' | PaletteName | string[]

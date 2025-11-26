@@ -18,11 +18,16 @@ export function buildTooltip(tooltip: ChartTooltip | undefined, chartType: Chart
     }
   }
 
-  // Default tooltip configuration
+  // Default tooltip configuration based on chart type
+  // Non-Cartesian charts (radar, pie, donut) and heatmaps use 'item' trigger
+  const useItemTrigger =
+    chartType === 'radar' ||
+    chartType === 'pie' ||
+    chartType === 'donut' ||
+    chartType === 'heatmap'
+
   return {
     show: true,
-    // Heatmaps and pie charts use item trigger, others use axis
-    trigger:
-      chartType === 'heatmap' || chartType === 'pie' || chartType === 'donut' ? 'item' : 'axis',
+    trigger: useItemTrigger ? 'item' : 'axis',
   }
 }

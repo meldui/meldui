@@ -27,6 +27,7 @@ export { default as MeldScatterChart } from './components/MeldScatterChart.vue'
 
 export type {
   ChartAxis,
+  ChartDataLabels,
   ChartGrid,
   ChartLegend,
   ChartSeries,
