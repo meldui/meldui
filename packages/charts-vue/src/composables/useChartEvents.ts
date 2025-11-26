@@ -227,37 +227,37 @@ export function useChartEvents(chartInstance: ShallowRef<EChartsType | null>, em
     if (listenersAttached) return
 
     // Click event
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
     instance.on('click', (params: any) => {
       emit('click', normalizeClickEvent(params as EChartsEventParams))
     })
 
     // Hover event (mouseover)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
     instance.on('mouseover', (params: any) => {
       emit('hover', normalizeHoverEvent(params as EChartsEventParams))
     })
 
     // Mouseout event
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
     instance.on('mouseout', (params: any) => {
       emit('mouseout', normalizeMouseOutEvent(params as EChartsEventParams))
     })
 
     // Legend selection change
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
     instance.on('legendselectchanged', (params: any) => {
       emit('legendSelect', normalizeLegendEvent(params as EChartsLegendParams))
     })
 
     // Data zoom change
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
     instance.on('datazoom', (params: any) => {
       emit('dataZoom', normalizeDataZoomEvent(params as EChartsDataZoomParams))
     })
 
     // Brush selection (if brush tool is enabled)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
     instance.on('brushselected', (params: any) => {
       emit('brushSelect', normalizeBrushEvent(params as EChartsBrushParams))
     })

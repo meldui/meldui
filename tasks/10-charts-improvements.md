@@ -1248,12 +1248,13 @@ const isCartesianType = computed(() =>
 - [x] Update all Storybook stories
 - [x] Write migration guide documentation
 
-### Phase 3: Event System (High Priority)
-- [ ] Define event types in `types.ts`
-- [ ] Create event normalization utilities
-- [ ] Update `useChartBase.ts` with event handling
-- [ ] Add event props to all chart components
-- [ ] Update Storybook with event examples
+### Phase 3: Event System (High Priority) - COMPLETED
+- [x] Define event types in `types.ts`
+- [x] Create event normalization utilities (`useChartEvents.ts` composable)
+- [x] Update all chart components with event emits
+- [x] Forward events in dynamic `MeldChart` component
+- [x] Export new types from `index.ts`
+- [x] Create Storybook story with event examples
 
 ### Phase 4: Code Quality (Medium Priority)
 - [ ] Create `createChartSetup` factory composable
