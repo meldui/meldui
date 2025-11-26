@@ -648,3 +648,165 @@ export interface MeldChartSkeletonProps {
   /** Chart type to render appropriate skeleton */
   type?: ChartType
 }
+
+// ============================================
+// CHART EVENTS
+// ============================================
+
+/**
+ * Event fired when a data point or series is clicked.
+ * Contains normalized information about the clicked element.
+ */
+export interface ChartClickEvent {
+  /** Name of the series that was clicked */
+  seriesName: string
+
+  /** Index of the data point in the series */
+  dataIndex: number
+
+  /** Value at the clicked point (number for single value, tuple for scatter/heatmap) */
+  value: number | [number, number] | [string | number, string | number, number]
+
+  /** Category name (x-axis label) if applicable */
+  name: string
+
+  /** Type of component that was clicked */
+  componentType: 'series' | 'markPoint' | 'markLine' | 'markArea'
+
+  /** Index of the series in the chart */
+  seriesIndex: number
+
+  /** Raw ECharts event data (for advanced use cases) */
+  raw: unknown
+}
+
+/**
+ * Event fired when hovering over a data point.
+ * Contains normalized information about the hovered element.
+ */
+export interface ChartHoverEvent {
+  /** Name of the series being hovered */
+  seriesName: string
+
+  /** Index of the data point in the series */
+  dataIndex: number
+
+  /** Value at the hovered point */
+  value: number | [number, number] | [string | number, string | number, number]
+
+  /** Category name (x-axis label) if applicable */
+  name: string
+
+  /** Index of the series in the chart */
+  seriesIndex: number
+
+  /** Raw ECharts event data (for advanced use cases) */
+  raw: unknown
+}
+
+/**
+ * Event fired when mouse leaves a data point.
+ */
+export interface ChartMouseOutEvent {
+  /** Name of the series that was left */
+  seriesName: string
+
+  /** Index of the data point that was left */
+  dataIndex: number
+
+  /** Index of the series in the chart */
+  seriesIndex: number
+
+  /** Raw ECharts event data (for advanced use cases) */
+  raw: unknown
+}
+
+/**
+ * Event fired when legend selection changes.
+ * Contains the current selection state of all series.
+ */
+export interface ChartLegendSelectEvent {
+  /** Name of the legend item that triggered the change */
+  name: string
+
+  /** Current selection state of all series */
+  selected: Record<string, boolean>
+
+  /** Raw ECharts event data (for advanced use cases) */
+  raw: unknown
+}
+
+/**
+ * Event fired when data zoom (range selection) changes.
+ * Contains the current zoom range.
+ */
+export interface ChartDataZoomEvent {
+  /** Start percentage of the zoom range (0-100) */
+  start: number
+
+  /** End percentage of the zoom range (0-100) */
+  end: number
+
+  /** Start value (actual data value) if available */
+  startValue?: number | string
+
+  /** End value (actual data value) if available */
+  endValue?: number | string
+
+  /** Raw ECharts event data (for advanced use cases) */
+  raw: unknown
+}
+
+/**
+ * Event fired when brush selection is made.
+ * Contains the selected data points.
+ */
+export interface ChartBrushSelectEvent {
+  /** Areas that were brushed */
+  areas: Array<{
+    /** Brush type */
+    brushType: 'rect' | 'polygon' | 'lineX' | 'lineY'
+
+    /** Coordinate range */
+    coordRange: number[][]
+
+    /** Index range of selected items */
+    coordRanges?: number[][][]
+  }>
+
+  /** Batch of selected data per series */
+  batch: Array<{
+    /** Series index */
+    seriesIndex: number
+
+    /** Selected data indices */
+    dataIndex: number[]
+  }>
+
+  /** Raw ECharts event data (for advanced use cases) */
+  raw: unknown
+}
+
+/**
+ * Map of all chart events for type-safe emit definitions.
+ * Used with Vue's defineEmits for proper typing.
+ */
+export interface ChartEmits {
+  /** Fired when a data point is clicked */
+  (e: 'click', event: ChartClickEvent): void
+
+  /** Fired when hovering over a data point */
+  (e: 'hover', event: ChartHoverEvent): void
+
+  /** Fired when mouse leaves a data point */
+  (e: 'mouseout', event: ChartMouseOutEvent): void
+
+  /** Fired when legend selection changes */
+  (e: 'legendSelect', event: ChartLegendSelectEvent): void
+
+  /** Fired when data zoom changes */
+  (e: 'dataZoom', event: ChartDataZoomEvent): void
+
+  /** Fired when brush selection is made */
+  (e: 'brushSelect', event: ChartBrushSelectEvent): void
+}

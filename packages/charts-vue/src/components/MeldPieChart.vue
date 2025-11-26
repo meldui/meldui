@@ -2,9 +2,10 @@
 import { computed, onMounted, watch } from 'vue'
 import { transformToEChartsOption } from '../adapters/echarts/transformer'
 import { useChartBase } from '../composables/useChartBase'
+import { useChartEvents } from '../composables/useChartEvents'
 import { useChartResize } from '../composables/useChartResize'
 import { useChartTheme } from '../composables/useChartTheme'
-import type { MeldPieChartProps } from '../types'
+import type { ChartEmits, MeldPieChartProps } from '../types'
 import MeldChartSkeleton from './MeldChartSkeleton.vue'
 
 const props = withDefaults(defineProps<MeldPieChartProps>(), {
@@ -13,8 +14,13 @@ const props = withDefaults(defineProps<MeldPieChartProps>(), {
   loading: false,
 })
 
+const emit = defineEmits<ChartEmits>()
+
 const { chartRef, chartInstance, chartReady, isSSR, initChart, updateChart } = useChartBase()
 const { chartThemeConfig } = useChartTheme()
+
+// Setup event handlers
+useChartEvents(chartInstance, emit)
 
 // Compute chart dimensions
 const computedHeight = computed(() =>

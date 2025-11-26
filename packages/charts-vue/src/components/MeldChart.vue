@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import type { MeldChartProps } from '../types'
+import type { ChartEmits, MeldChartProps } from '../types'
 import MeldChartSkeleton from './MeldChartSkeleton.vue'
 
 const props = defineProps<MeldChartProps>()
+const emit = defineEmits<ChartEmits>()
 
 // Dynamically load chart component based on type
 const ChartComponent = computed(() => {
@@ -46,6 +47,12 @@ const isUnsupported = computed(() => {
           :is="ChartComponent"
           v-if="ChartComponent && !isUnsupported"
           v-bind="$props"
+          @click="(e) => emit('click', e)"
+          @hover="(e) => emit('hover', e)"
+          @mouseout="(e) => emit('mouseout', e)"
+          @legend-select="(e) => emit('legendSelect', e)"
+          @data-zoom="(e) => emit('dataZoom', e)"
+          @brush-select="(e) => emit('brushSelect', e)"
         >
           <!-- Pass through slots to child chart component -->
           <template #header>

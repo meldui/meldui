@@ -39,6 +39,14 @@ export type {
   ChartStroke,
   ChartTooltip,
   ChartType,
+  // Event types
+  ChartBrushSelectEvent,
+  ChartClickEvent,
+  ChartDataZoomEvent,
+  ChartEmits,
+  ChartHoverEvent,
+  ChartLegendSelectEvent,
+  ChartMouseOutEvent,
   // Chart-specific configuration types (recommended)
   MeldAreaChartConfig,
   // Component props
