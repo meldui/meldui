@@ -21,10 +21,7 @@ export function buildTooltip(tooltip: ChartTooltip | undefined, chartType: Chart
   // Default tooltip configuration based on chart type
   // Non-Cartesian charts (radar, pie, donut) and heatmaps use 'item' trigger
   const useItemTrigger =
-    chartType === 'radar' ||
-    chartType === 'pie' ||
-    chartType === 'donut' ||
-    chartType === 'heatmap'
+    chartType === 'radar' || chartType === 'pie' || chartType === 'donut' || chartType === 'heatmap'
 
   return {
     show: true,
