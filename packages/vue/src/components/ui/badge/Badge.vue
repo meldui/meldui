@@ -9,19 +9,20 @@ import { badgeVariants } from '.'
 
 const props = defineProps<
   PrimitiveProps & {
+    shape?: BadgeVariants['shape']
     variant?: BadgeVariants['variant']
     outline?: BadgeVariants['outline']
     class?: HTMLAttributes['class']
   }
 >()
 
-const delegatedProps = reactiveOmit(props, 'class', 'variant', 'outline')
+const delegatedProps = reactiveOmit(props, 'class', 'shape', 'variant', 'outline')
 </script>
 
 <template>
   <Primitive
     data-slot="badge"
-    :class="cn(badgeVariants({ variant, outline }), props.class)"
+    :class="cn(badgeVariants({ shape, variant, outline }), props.class)"
     v-bind="delegatedProps"
   >
     <slot />

@@ -7,6 +7,11 @@ const meta: Meta<typeof Badge> = {
   component: Badge,
   tags: ['autodocs'],
   argTypes: {
+    shape: {
+      control: 'select',
+      options: ['pill', 'tag'],
+      description: 'Shape of the badge (pill = rounded-full, tag = rounded-md)',
+    },
     variant: {
       control: 'select',
       options: ['default', 'secondary', 'destructive', 'success', 'warning', 'info', 'neutral'],
@@ -31,6 +36,7 @@ export const Default: Story = {
     template: '<Badge v-bind="args">Badge</Badge>',
   }),
   args: {
+    shape: 'pill',
     variant: 'default',
   },
 }
@@ -143,6 +149,43 @@ export const AllVariants: Story = {
         <Badge variant="warning">Warning</Badge>
         <Badge variant="info">Info</Badge>
         <Badge variant="neutral">Neutral</Badge>
+      </div>
+    `,
+  }),
+}
+
+export const Shapes: Story = {
+  render: () => ({
+    components: { Badge },
+    template: `
+      <div class="flex flex-col gap-4">
+        <div>
+          <p class="text-sm font-medium mb-2">Pill (default)</p>
+          <div class="flex flex-wrap gap-2">
+            <Badge shape="pill" variant="default">Default</Badge>
+            <Badge shape="pill" variant="success">Success</Badge>
+            <Badge shape="pill" variant="destructive">Error</Badge>
+            <Badge shape="pill" variant="default" :outline="true">Outline</Badge>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-medium mb-2">Tag</p>
+          <div class="flex flex-wrap gap-2">
+            <Badge shape="tag" variant="default">JavaScript</Badge>
+            <Badge shape="tag" variant="success">Vue</Badge>
+            <Badge shape="tag" variant="info">TypeScript</Badge>
+            <Badge shape="tag" variant="neutral">React</Badge>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-medium mb-2">Tag (outline)</p>
+          <div class="flex flex-wrap gap-2">
+            <Badge shape="tag" variant="default" :outline="true">JavaScript</Badge>
+            <Badge shape="tag" variant="success" :outline="true">Vue</Badge>
+            <Badge shape="tag" variant="info" :outline="true">TypeScript</Badge>
+            <Badge shape="tag" variant="neutral" :outline="true">React</Badge>
+          </div>
+        </div>
       </div>
     `,
   }),
