@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { IconSearch } from '@meldui/tabler-vue'
-import { reactiveOmit } from '@vueuse/core'
-import type { ComboboxInputEmits, ComboboxInputProps } from 'reka-ui'
-import { ComboboxInput, useForwardPropsEmits } from 'reka-ui'
+import type { ComboboxInputProps } from 'reka-ui'
+import { ComboboxInput } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { cn } from '@/lib/utils'
 
 defineOptions({
@@ -16,11 +16,10 @@ const props = defineProps<
   }
 >()
 
-const emits = defineEmits<ComboboxInputEmits>()
-
-const delegatedProps = reactiveOmit(props, 'class')
-
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+const delegatedProps = computed(() => {
+  const { class: _, ...rest } = props
+  return rest
+})
 </script>
 
 <template>
@@ -35,8 +34,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         'placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
         props.class,
       )"
-
-      v-bind="{ ...$attrs, ...forwarded }"
+      v-bind="{ ...delegatedProps, ...$attrs }"
     >
       <slot />
     </ComboboxInput>
