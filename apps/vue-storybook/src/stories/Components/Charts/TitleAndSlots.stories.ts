@@ -8,7 +8,15 @@ import {
   IconRefresh,
   IconShare,
 } from '@meldui/tabler-vue'
-import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@meldui/vue'
+import {
+  Badge,
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
 
