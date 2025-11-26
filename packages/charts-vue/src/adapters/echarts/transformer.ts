@@ -1,5 +1,4 @@
 // Transforms MeldChartConfig to ECharts options
-import type { EChartsOption } from 'echarts'
 import { CHART_DEFAULTS } from '../../config/defaults'
 import { MAX_RECOMMENDED_SERIES } from '../../config/palettes'
 import type { AnyChartConfig, ChartType, MeldChartConfig } from '../../types'
@@ -115,7 +114,7 @@ export function transformToEChartsOption(
   config: AnyChartConfig | MeldChartConfig,
   themeConfig: { mode: 'light' | 'dark'; palette: string[] },
   chartType: ChartType = 'line',
-): EChartsOption {
+) {
   // Normalize config to internal type for property access
   // This allows us to safely access properties that may not exist on all config types
   const {
@@ -180,7 +179,7 @@ export function transformToEChartsOption(
   const builtYAxis = buildYAxis(yAxis, chartType, horizontal)
 
   // Build the main ECharts option
-  const echartsOption: EChartsOption = {
+  const echartsOption = {
     ...defaultsWithoutLegend,
 
     // Apply dark mode

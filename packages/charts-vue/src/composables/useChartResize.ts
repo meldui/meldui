@@ -1,6 +1,6 @@
 // Chart resize composable using ResizeObserver
 
-import type { EChartsType } from 'echarts'
+import type { EChartsType } from 'echarts/core'
 import { onMounted, onUnmounted, type Ref, ref } from 'vue'
 
 /**

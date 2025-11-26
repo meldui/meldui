@@ -519,9 +519,14 @@ export function transformToEChartsOption(
 
 ---
 
-## Improvement 4: Code Duplication Across Chart Components (MEDIUM PRIORITY)
+## Improvement 4: Code Duplication Across Chart Components (MEDIUM PRIORITY) - SKIPPED
 
-> **Note:** This improvement pairs well with Improvement 3 (Chart-Specific Configs). When implementing chart-specific configs, the factory pattern can be updated to accept the specific config type for each chart.
+> **Decision:** After review, this improvement was **intentionally skipped**. While there is code duplication across chart components, the current approach is preferred because:
+> 1. Logic is already extracted into composables (`useChartBase`, `useChartEvents`, `useChartResize`, `useChartTheme`)
+> 2. Each component is self-contained and easy to understand
+> 3. Vue SFCs don't work well with JavaScript factories for template logic
+> 4. The "duplicated" boilerplate is stable and rarely changes
+> 5. Explicit code is easier to debug than abstracted factories
 
 ### Problem
 
@@ -744,7 +749,9 @@ The `title` prop serves as default content for the `header` slot:
 
 ---
 
-## Improvement 7: Deep Watch Performance (MEDIUM PRIORITY)
+## Improvement 7: Deep Watch Performance (MEDIUM PRIORITY) - COMPLETED
+
+> **Implementation:** Removed `{ deep: true }` from all chart component watches. Consolidated two separate watches into a single watch on `[() => props.config, chartThemeConfig]`. Users should replace config objects entirely (standard Vue reactive pattern) rather than mutating nested properties.
 
 ### Problem
 
@@ -799,7 +806,9 @@ defineExpose({ refresh })
 
 ---
 
-## Improvement 8: No Chart Instance Exposure (MEDIUM PRIORITY)
+## Improvement 8: No Chart Instance Exposure (MEDIUM PRIORITY) - SKIPPED
+
+> **Decision:** Skipped for v1. Charts are controlled entirely through props, keeping the API surface minimal and predictable. Can be revisited in a future version if users need direct instance access for advanced operations.
 
 ### Problem
 
@@ -840,7 +849,9 @@ defineExpose({
 
 ---
 
-## Improvement 9: Accessibility Enhancements (MEDIUM PRIORITY)
+## Improvement 9: Accessibility Enhancements (MEDIUM PRIORITY) - PARTIAL
+
+> **Implementation:** Added `role="img"` and `:aria-label` attributes to all chart canvas containers. Added `ariaLabel` prop to `ChartComponentPropsBase`. Auto-generated aria labels include chart type, title (if provided), and series names. Data table and keyboard navigation deferred.
 
 ### Problem
 
@@ -907,7 +918,9 @@ interface MeldChartBaseProps {
 
 ---
 
-## Improvement 10: Bundle Size Optimization (MEDIUM PRIORITY)
+## Improvement 10: Bundle Size Optimization (MEDIUM PRIORITY) - COMPLETED
+
+> **Implementation:** Updated `useChartBase.ts` to dynamically import from the modular `registry.ts` instead of the full echarts bundle. Added missing `VisualMapComponent` and `RadarComponent` to the registry. Updated type imports across `useChartEvents.ts` and `useChartResize.ts` to use `echarts/core`.
 
 ### Problem
 
@@ -1118,7 +1131,9 @@ function buildHeatmapConfig(config: MeldChartConfig, resolvedColors: string[]): 
 
 ---
 
-## Improvement 13: Unused Loading Functions (LOW PRIORITY)
+## Improvement 13: Unused Loading Functions (LOW PRIORITY) - COMPLETED
+
+> **Implementation:** Removed `showLoading` and `hideLoading` functions from `useChartBase.ts`. Skeletons are the preferred approach for initial load. ECharts loading can be added later for data refresh scenarios if needed.
 
 ### Problem
 
@@ -1172,7 +1187,14 @@ watch(
 
 ---
 
-## Improvement 14: Chart-Type-Specific Skeletons (LOW PRIORITY)
+## Improvement 14: Chart-Type-Specific Skeletons (LOW PRIORITY) - COMPLETED
+
+> **Implementation:** Updated `MeldChartSkeleton.vue` to render distinct skeleton shapes based on chart type:
+> - **Cartesian** (bar, line, area, heatmap, mixed): Animated bars with axis labels
+> - **Pie**: Circular skeleton with segment divider lines (SVG overlay)
+> - **Donut**: Ring skeleton (circle with center hole cut out via bg-background) with segment lines
+> - **Radar**: Simple circular skeleton (simplified from initial hexagon design)
+> - **Scatter**: Grid lines with scattered dots of varying sizes (30-120px)
 
 ### Problem
 
@@ -1256,29 +1278,31 @@ const isCartesianType = computed(() =>
 - [x] Export new types from `index.ts`
 - [x] Create Storybook story with event examples
 
-### Phase 4: Code Quality (Medium Priority)
-- [ ] Create `createChartSetup` factory composable
-- [ ] Refactor all chart components to use factory
-- [ ] Remove deep watch in favor of config hash or document pattern
-- [ ] Add `defineExpose` for chart instance access
+### Phase 4: Code Quality (Medium Priority) - COMPLETED
+- [x] ~~Create `createChartSetup` factory composable~~ - **SKIPPED**: Current approach is simpler. Logic is already in composables (`useChartBase`, `useChartEvents`, `useChartResize`, `useChartTheme`). The remaining boilerplate in each component is stable and explicit. Factory would add abstraction without meaningful benefit.
+- [x] ~~Refactor all chart components to use factory~~ - **SKIPPED**: See above.
+- [x] Remove deep watch in favor of documented pattern - **DONE**: Consolidated two deep watches into single shallow watch on `[() => props.config, chartThemeConfig]`. Users should replace config objects, not mutate nested properties (standard Vue pattern).
+- [x] ~~Add `defineExpose` for chart instance access~~ - **SKIPPED**: For v1, charts are controlled entirely through props. Keeps API surface minimal. Can be added later if needed.
 
-### Phase 5: Performance (Medium Priority)
-- [ ] Create modular ECharts registry
-- [ ] Update chart initialization to use registry
-- [ ] Verify bundle size reduction
-- [ ] Add bundle analysis to CI
+### Phase 5: Performance (Medium Priority) - COMPLETED
+- [x] Create modular ECharts registry - Added `VisualMapComponent` and `RadarComponent` to existing registry
+- [x] Update chart initialization to use registry - Updated `useChartBase.ts` to import from registry instead of full echarts
+- [x] Update type imports across composables - Changed `echarts` to `echarts/core` in `useChartEvents.ts`, `useChartResize.ts`
+- [x] Verify bundle works correctly
+- [ ] Add bundle analysis to CI - Deferred (optional enhancement)
 
-### Phase 6: Accessibility (Medium Priority)
-- [ ] Add ARIA attributes to chart containers
-- [ ] Create accessible data table component
-- [ ] Add keyboard navigation support
-- [ ] Test with screen readers
+### Phase 6: Accessibility (Medium Priority) - PARTIAL
+- [x] Add ARIA attributes to chart containers - Added `role="img"` and `aria-label` to all chart components with auto-generated descriptions
+- [x] Add `ariaLabel` prop to `ChartComponentPropsBase` for custom labels
+- [ ] Create accessible data table component - Deferred
+- [ ] Add keyboard navigation support - Deferred
+- [ ] Test with screen readers - Deferred
 
-### Phase 7: Polish (Low Priority)
-- [ ] Add config validation utilities
-- [ ] Make heatmap min/max configurable
-- [ ] Remove or utilize unused loading functions
-- [ ] Implement chart-type-specific skeletons
+### Phase 7: Polish (Low Priority) - PARTIAL
+- [ ] Add config validation utilities - Deferred
+- [ ] Make heatmap min/max configurable - Deferred
+- [x] Remove unused loading functions - Removed `showLoading`/`hideLoading` from `useChartBase.ts`. Skeletons preferred for initial load.
+- [x] Implement chart-type-specific skeletons - Added distinct skeletons for: Cartesian (animated bars + axis labels), Pie (circle + SVG segments), Donut (ring with center hole), Radar (circular), Scatter (grid + varied dots 30-120px)
 
 ---
 

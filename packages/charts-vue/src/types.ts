@@ -558,6 +558,9 @@ interface ChartComponentPropsBase {
 
   /** Show loading skeleton */
   loading?: boolean
+
+  /** Accessible label for screen readers. If not provided, a default description is generated. */
+  ariaLabel?: string
 }
 
 /** Props for MeldBarChart */

@@ -1,7 +1,8 @@
 // Base composable for chart lifecycle management
 
-import type { EChartsOption, EChartsType } from 'echarts'
+import type { EChartsType } from 'echarts/core'
 import { nextTick, onUnmounted, ref, shallowRef } from 'vue'
+import type { ECOption } from '../adapters/echarts/registry'
 
 export function useChartBase() {
   const chartRef = ref<HTMLElement | null>(null)
@@ -13,7 +14,7 @@ export function useChartBase() {
    * Initialize chart with ECharts options
    * Handles SSR gracefully by skipping initialization
    */
-  const initChart = async (options: EChartsOption) => {
+  const initChart = async (options: ECOption) => {
     // Skip initialization during SSR
     if (isSSR) return
 
@@ -23,8 +24,8 @@ export function useChartBase() {
     if (!chartRef.value) return
 
     try {
-      // Dynamic import to avoid bundling during SSR
-      const echarts = await import('echarts')
+      // Dynamic import of optimized echarts bundle (tree-shaken)
+      const { echarts } = await import('../adapters/echarts/registry')
 
       // Initialize chart instance
       chartInstance.value = echarts.init(chartRef.value)
@@ -39,7 +40,7 @@ export function useChartBase() {
   /**
    * Update chart options
    */
-  const updateChart = (options: EChartsOption, notMerge = false) => {
+  const updateChart = (options: ECOption, notMerge = false) => {
     if (!chartInstance.value) return
 
     try {
@@ -63,22 +64,6 @@ export function useChartBase() {
   }
 
   /**
-   * Show loading animation
-   */
-  const showLoading = () => {
-    if (!chartInstance.value) return
-    chartInstance.value.showLoading()
-  }
-
-  /**
-   * Hide loading animation
-   */
-  const hideLoading = () => {
-    if (!chartInstance.value) return
-    chartInstance.value.hideLoading()
-  }
-
-  /**
    * Cleanup chart instance on unmount
    */
   onUnmounted(() => {
@@ -96,7 +81,5 @@ export function useChartBase() {
     initChart,
     updateChart,
     resizeChart,
-    showLoading,
-    hideLoading,
   }
 }

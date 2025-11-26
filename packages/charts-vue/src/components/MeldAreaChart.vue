@@ -31,6 +31,15 @@ const computedWidth = computed(() =>
   typeof props.width === 'number' ? `${props.width}px` : props.width,
 )
 
+// Generate accessible label for screen readers
+const computedAriaLabel = computed(() => {
+  if (props.ariaLabel) return props.ariaLabel
+  const seriesNames = props.config.series.map((s) => s.name).join(', ')
+  return props.title
+    ? `Area chart: ${props.title}. Data series: ${seriesNames}`
+    : `Area chart with data series: ${seriesNames}`
+})
+
 // Transform config to ECharts options
 const echartsOptions = computed(() =>
   transformToEChartsOption(props.config, chartThemeConfig.value, 'area'),
@@ -43,29 +52,13 @@ onMounted(async () => {
   }
 })
 
-// Watch for config changes and update chart
-watch(
-  () => props.config,
-  (newConfig) => {
-    if (chartInstance.value) {
-      const newOptions = transformToEChartsOption(newConfig, chartThemeConfig.value, 'area')
-      updateChart(newOptions)
-    }
-  },
-  { deep: true },
-)
-
-// Watch for theme changes
-watch(
-  () => chartThemeConfig.value,
-  (newTheme) => {
-    if (chartInstance.value) {
-      const newOptions = transformToEChartsOption(props.config, newTheme, 'area')
-      updateChart(newOptions)
-    }
-  },
-  { deep: true },
-)
+// Watch for config or theme changes and update chart
+// Note: No deep watch - users should replace config object, not mutate nested properties
+watch([() => props.config, chartThemeConfig], () => {
+  if (chartInstance.value) {
+    updateChart(echartsOptions.value)
+  }
+})
 
 // Setup automatic resizing
 useChartResize(chartRef, chartInstance)
@@ -99,6 +92,8 @@ useChartResize(chartRef, chartInstance)
       <!-- Chart canvas -->
       <div
         ref="chartRef"
+        role="img"
+        :aria-label="computedAriaLabel"
         class="h-full w-full transition-opacity duration-300"
         :class="{ 'opacity-0': !chartReady || loading }"
       />

@@ -24,12 +24,16 @@ import {
   type GridComponentOption,
   LegendComponent,
   type LegendComponentOption,
+  RadarComponent,
+  type RadarComponentOption,
   TitleComponent,
   type TitleComponentOption,
   ToolboxComponent,
   type ToolboxComponentOption,
   TooltipComponent,
   type TooltipComponentOption,
+  VisualMapComponent,
+  type VisualMapComponentOption,
 } from 'echarts/components'
 import * as echarts from 'echarts/core'
 
@@ -50,6 +54,8 @@ export type ECOption = echarts.ComposeOption<
   | TitleComponentOption
   | ToolboxComponentOption
   | DataZoomComponentOption
+  | VisualMapComponentOption
+  | RadarComponentOption
 >
 
 // Register chart types
@@ -63,6 +69,8 @@ echarts.use([
   TitleComponent,
   ToolboxComponent,
   DataZoomComponent,
+  VisualMapComponent,
+  RadarComponent,
   CanvasRenderer,
 ])
 

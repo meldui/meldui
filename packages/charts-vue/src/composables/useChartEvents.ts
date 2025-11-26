@@ -1,7 +1,7 @@
 // Composable for handling chart events with normalized API
 // Converts ECharts event format to MeldUI's normalized event types
 
-import type { EChartsType } from 'echarts'
+import type { EChartsType } from 'echarts/core'
 import type { ShallowRef } from 'vue'
 import { onUnmounted, watch } from 'vue'
 import type {
