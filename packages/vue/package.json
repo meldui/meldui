@@ -37,6 +37,7 @@
     "check:fix": "biome check --write ."
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.9",
     "@internationalized/date": "^3.10.0",
     "@tanstack/vue-table": "^8.21.3",
     "@unovis/vue": "^1.6.2",
