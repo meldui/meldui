@@ -1,4 +1,8 @@
-import type { MeldBarChartConfig, MeldLineChartConfig, MeldPieChartConfig } from '@meldui/charts-vue'
+import type {
+  MeldBarChartConfig,
+  MeldLineChartConfig,
+  MeldPieChartConfig,
+} from '@meldui/charts-vue'
 import { MeldBarChart, MeldLineChart, MeldPieChart } from '@meldui/charts-vue'
 import {
   IconCalendar,

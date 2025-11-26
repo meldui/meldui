@@ -26,6 +26,9 @@ export { default as MeldScatterChart } from './components/MeldScatterChart.vue'
 // ============================================================================
 
 export type {
+  // Utility types
+  AnyChartConfig,
+  CartesianChartConfigBase,
   // Shared types
   ChartAxis,
   ChartConfigBase,
@@ -36,43 +39,36 @@ export type {
   ChartStroke,
   ChartTooltip,
   ChartType,
-  PaletteName,
-
   // Chart-specific configuration types (recommended)
   MeldAreaChartConfig,
-  MeldBarChartConfig,
-  MeldDonutChartConfig,
-  MeldHeatmapChartConfig,
-  MeldLineChartConfig,
-  MeldMixedChartConfig,
-  MeldPieChartConfig,
-  MeldRadarChartConfig,
-  MeldScatterChartConfig,
-  MixedChartSeries,
-
-  // Utility types
-  AnyChartConfig,
-  CartesianChartConfigBase,
-  MeldDynamicChartConfig,
-
   // Component props
   MeldAreaChartProps,
+  MeldBarChartConfig,
   MeldBarChartProps,
-  MeldChartProps,
-  MeldChartSkeletonProps,
-  MeldDonutChartProps,
-  MeldHeatmapChartProps,
-  MeldLineChartProps,
-  MeldMixedChartProps,
-  MeldPieChartProps,
-  MeldRadarChartProps,
-  MeldScatterChartProps,
-
   // Legacy types (deprecated, for backwards compatibility)
   /** @deprecated Use chart-specific config types instead */
   MeldChartBaseProps,
   /** @deprecated Use chart-specific config types instead */
   MeldChartConfig,
+  MeldChartProps,
+  MeldChartSkeletonProps,
+  MeldDonutChartConfig,
+  MeldDonutChartProps,
+  MeldDynamicChartConfig,
+  MeldHeatmapChartConfig,
+  MeldHeatmapChartProps,
+  MeldLineChartConfig,
+  MeldLineChartProps,
+  MeldMixedChartConfig,
+  MeldMixedChartProps,
+  MeldPieChartConfig,
+  MeldPieChartProps,
+  MeldRadarChartConfig,
+  MeldRadarChartProps,
+  MeldScatterChartConfig,
+  MeldScatterChartProps,
+  MixedChartSeries,
+  PaletteName,
 } from './types'
 
 // ============================================================================
