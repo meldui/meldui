@@ -2,14 +2,14 @@
 import type { EChartsOption } from 'echarts'
 import { CHART_DEFAULTS } from '../../config/defaults'
 import { MAX_RECOMMENDED_SERIES } from '../../config/palettes'
-import type { MeldChartConfig } from '../../types'
+import type { ChartType, MeldChartConfig } from '../../types'
 import { buildGrid } from './builders/gridBuilder'
 import { buildLegend } from './builders/legendBuilder'
 import { buildTooltip } from './builders/tooltipBuilder'
 import { buildXAxis, buildYAxis } from './utils/axisBuilder'
 import { resolveColors } from './utils/colorResolver'
 import { deepMerge } from './utils/deepMerge'
-import { type ChartType, transformSeries } from './utils/seriesTransformer'
+import { transformSeries } from './utils/seriesTransformer'
 
 /**
  * Build radar chart specific configuration

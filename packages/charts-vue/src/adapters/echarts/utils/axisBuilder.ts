@@ -1,6 +1,5 @@
 import { CHART_DEFAULTS } from '../../../config/defaults'
-import type { ChartAxis } from '../../../types'
-import type { ChartType } from './seriesTransformer'
+import type { ChartAxis, ChartType } from '../../../types'
 
 /**
  * Build X-axis configuration

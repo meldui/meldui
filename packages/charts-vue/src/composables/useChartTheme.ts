@@ -1,5 +1,5 @@
 // Theme integration composable
-import { computed, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 
 // Default color palette (fallback for SSR)
 const DEFAULT_COLORS = {
@@ -16,6 +16,9 @@ export function useChartTheme() {
   // Detect dark mode
   const isDark = ref(false)
 
+  // Track observer for cleanup
+  let observer: MutationObserver | null = null
+
   // Update dark mode detection
   const updateDarkMode = () => {
     if (typeof document === 'undefined') {
@@ -30,17 +33,20 @@ export function useChartTheme() {
 
   // Watch for theme changes (if MutationObserver is available)
   if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
-    const observer = new MutationObserver(updateDarkMode)
+    observer = new MutationObserver(updateDarkMode)
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     })
-
-    // Cleanup observer on unmount handled by Vue
-    if (typeof window !== 'undefined') {
-      window.addEventListener('beforeunload', () => observer.disconnect())
-    }
   }
+
+  // Cleanup observer on component unmount
+  onUnmounted(() => {
+    if (observer) {
+      observer.disconnect()
+      observer = null
+    }
+  })
 
   // Extract Tailwind CSS v4 theme colors
   const themeColors = computed(() => {

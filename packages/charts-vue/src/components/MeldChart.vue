@@ -46,7 +46,15 @@ const isUnsupported = computed(() => {
           :is="ChartComponent"
           v-if="ChartComponent && !isUnsupported"
           v-bind="$props"
-        />
+        >
+          <!-- Pass through slots to child chart component -->
+          <template #header>
+            <slot name="header" />
+          </template>
+          <template #footer>
+            <slot name="footer" />
+          </template>
+        </component>
         <div
           v-else-if="isUnsupported"
           class="flex items-center justify-center p-8 text-muted-foreground"

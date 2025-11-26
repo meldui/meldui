@@ -66,23 +66,39 @@ useChartResize(chartRef, chartInstance)
 </script>
 
 <template>
-  <div
-    class="relative overflow-hidden border border-border rounded-lg"
-    :style="{ height: computedHeight, width: computedWidth }"
-  >
-    <!-- Show skeleton during SSR, loading, or initialization -->
-    <MeldChartSkeleton
-      v-if="!chartReady || loading"
-      :height="height"
-      :width="width"
-      type="line"
-    />
+  <div class="flex flex-col" :style="{ width: computedWidth }">
+    <!-- Header slot for title, actions, etc. -->
+    <slot name="header">
+      <h3
+        v-if="title"
+        class="text-base font-semibold text-foreground mb-2 px-1"
+      >
+        {{ title }}
+      </h3>
+    </slot>
 
     <!-- Chart container -->
     <div
-      ref="chartRef"
-      class="h-full w-full transition-opacity duration-300"
-      :class="{ 'opacity-0': !chartReady || loading }"
-    />
+      class="relative overflow-hidden border border-border rounded-lg"
+      :style="{ height: computedHeight }"
+    >
+      <!-- Show skeleton during SSR, loading, or initialization -->
+      <MeldChartSkeleton
+        v-if="!chartReady || loading"
+        :height="height"
+        :width="width"
+        type="heatmap"
+      />
+
+      <!-- Chart canvas -->
+      <div
+        ref="chartRef"
+        class="h-full w-full transition-opacity duration-300"
+        :class="{ 'opacity-0': !chartReady || loading }"
+      />
+    </div>
+
+    <!-- Footer slot for legends, captions, etc. -->
+    <slot name="footer" />
   </div>
 </template>

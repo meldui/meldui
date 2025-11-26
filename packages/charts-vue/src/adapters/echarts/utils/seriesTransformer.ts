@@ -1,15 +1,4 @@
-import type { ChartDataLabels, ChartSeries, ChartStroke } from '../../../types'
-
-export type ChartType =
-  | 'line'
-  | 'bar'
-  | 'area'
-  | 'pie'
-  | 'donut'
-  | 'scatter'
-  | 'radar'
-  | 'heatmap'
-  | 'mixed'
+import type { ChartDataLabels, ChartSeries, ChartStroke, ChartType } from '../../../types'
 
 /** Default border radius for bar charts (top corners rounded) */
 const BAR_BORDER_RADIUS = 2

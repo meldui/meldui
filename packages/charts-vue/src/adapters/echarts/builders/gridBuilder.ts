@@ -1,6 +1,5 @@
 import { CHART_DEFAULTS } from '../../../config/defaults'
-import type { ChartGrid, ChartLegend } from '../../../types'
-import type { ChartType } from '../utils/seriesTransformer'
+import type { ChartGrid, ChartLegend, ChartType } from '../../../types'
 
 /**
  * Build grid configuration

@@ -1,5 +1,4 @@
-import type { ChartTooltip } from '../../../types'
-import type { ChartType } from '../utils/seriesTransformer'
+import type { ChartTooltip, ChartType } from '../../../types'
 
 /**
  * Build tooltip configuration
