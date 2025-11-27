@@ -1,5 +1,13 @@
 # @meldui/vue
 
+## 0.1.2
+
+### Patch Changes
+
+- 4aa7815: Added more components
+- Updated dependencies [4aa7815]
+  - @meldui/tabler-vue@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
