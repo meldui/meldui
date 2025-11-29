@@ -20,8 +20,8 @@ const headerClass = computed(() =>
       timeline.orientation.value === 'vertical' &&
       timelineItem.isAlternateRight.value &&
       'flex-row-reverse',
-    props.class
-  )
+    props.class,
+  ),
 )
 </script>
 

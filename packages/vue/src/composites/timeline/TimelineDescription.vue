@@ -12,12 +12,7 @@ if (!timelineItem) {
   throw new Error('TimelineDescription must be used within a TimelineItem component')
 }
 
-const descriptionClass = computed(() =>
-  cn(
-    'mt-1 text-sm text-muted-foreground',
-    props.class
-  )
-)
+const descriptionClass = computed(() => cn('mt-1 text-sm text-muted-foreground', props.class))
 </script>
 
 <template>

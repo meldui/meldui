@@ -8,6 +8,7 @@ const props = withDefaults(defineProps<TimelineRootProps>(), {
   orientation: 'vertical',
   variant: 'default',
   activeIndex: -1,
+  contentPosition: 'end',
 })
 
 // Track registered items
@@ -29,17 +30,14 @@ provide(TIMELINE_INJECTION_KEY, {
   orientation: toRef(() => props.orientation),
   variant: toRef(() => props.variant),
   activeIndex: toRef(() => props.activeIndex),
+  contentPosition: toRef(() => props.contentPosition),
   registerItem,
   unregisterItem,
   totalItems: itemCount,
 })
 
 const rootClass = computed(() =>
-  cn(
-    'flex',
-    props.orientation === 'vertical' ? 'flex-col' : 'flex-row',
-    props.class
-  )
+  cn('flex', props.orientation === 'vertical' ? 'flex-col' : 'flex-row', props.class),
 )
 </script>
 

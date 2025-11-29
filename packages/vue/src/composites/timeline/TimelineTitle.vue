@@ -16,8 +16,8 @@ const titleClass = computed(() =>
   cn(
     'text-sm font-medium leading-none',
     timelineItem.status.value === 'pending' && 'text-muted-foreground',
-    props.class
-  )
+    props.class,
+  ),
 )
 </script>
 

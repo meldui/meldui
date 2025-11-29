@@ -40,8 +40,8 @@ const dotClass = computed(() =>
     ],
     // When has slot content, just provide container styles
     hasSlotContent.value && 'border-0 bg-transparent',
-    props.class
-  )
+    props.class,
+  ),
 )
 </script>
 

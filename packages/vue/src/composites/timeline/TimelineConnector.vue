@@ -36,8 +36,8 @@ const connectorClass = computed(() =>
     isCompleted.value ? 'bg-primary' : 'bg-muted-foreground/30',
     // Hide if last item
     timelineItem.isLast.value && 'invisible',
-    props.class
-  )
+    props.class,
+  ),
 )
 </script>
 

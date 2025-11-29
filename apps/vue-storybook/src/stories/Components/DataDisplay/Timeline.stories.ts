@@ -50,7 +50,14 @@ const meta: Meta<typeof Timeline> = {
     },
     activeIndex: {
       control: 'number',
-      description: 'Index of the currently active item (0-based). Items before are completed, after are pending.',
+      description:
+        'Index of the currently active item (0-based). Items before are completed, after are pending.',
+    },
+    contentPosition: {
+      control: 'select',
+      options: ['start', 'end'],
+      description:
+        'Position of content relative to the separator. start=left/top, end=right/bottom (default).',
     },
   },
 }
@@ -395,6 +402,82 @@ export const AlternateVariant: Story = {
               <TimelineTime date-time="2024-05-01">May 2024</TimelineTime>
             </TimelineHeader>
             <TimelineDescription>Public release and deployment.</TimelineDescription>
+          </TimelineContent>
+        </TimelineItem>
+      </Timeline>
+    `,
+  }),
+}
+
+export const ContentOnLeft: Story = {
+  render: () => ({
+    components: {
+      Timeline,
+      TimelineItem,
+      TimelineSeparator,
+      TimelineDot,
+      TimelineConnector,
+      TimelineContent,
+      TimelineHeader,
+      TimelineTitle,
+      TimelineDescription,
+      TimelineTime,
+    },
+    template: `
+      <Timeline content-position="start" :active-index="1" class="max-w-md ml-auto">
+        <TimelineItem>
+          <TimelineSeparator>
+            <TimelineDot />
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <TimelineHeader>
+              <TimelineTitle>Order Placed</TimelineTitle>
+              <TimelineTime date-time="2024-01-15">Jan 15</TimelineTime>
+            </TimelineHeader>
+            <TimelineDescription>Your order has been confirmed.</TimelineDescription>
+          </TimelineContent>
+        </TimelineItem>
+
+        <TimelineItem>
+          <TimelineSeparator>
+            <TimelineDot />
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <TimelineHeader>
+              <TimelineTitle>Processing</TimelineTitle>
+              <TimelineTime date-time="2024-01-16">Jan 16</TimelineTime>
+            </TimelineHeader>
+            <TimelineDescription>Order is being processed.</TimelineDescription>
+          </TimelineContent>
+        </TimelineItem>
+
+        <TimelineItem>
+          <TimelineSeparator>
+            <TimelineDot />
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <TimelineHeader>
+              <TimelineTitle>Shipped</TimelineTitle>
+              <TimelineTime date-time="2024-01-17">Jan 17</TimelineTime>
+            </TimelineHeader>
+            <TimelineDescription>Package is on its way.</TimelineDescription>
+          </TimelineContent>
+        </TimelineItem>
+
+        <TimelineItem>
+          <TimelineSeparator>
+            <TimelineDot />
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <TimelineHeader>
+              <TimelineTitle>Delivered</TimelineTitle>
+              <TimelineTime date-time="2024-01-18">Jan 18</TimelineTime>
+            </TimelineHeader>
+            <TimelineDescription>Package delivered.</TimelineDescription>
           </TimelineContent>
         </TimelineItem>
       </Timeline>

@@ -12,12 +12,7 @@ if (!timelineItem) {
   throw new Error('TimelineTime must be used within a TimelineItem component')
 }
 
-const timeClass = computed(() =>
-  cn(
-    'text-xs text-muted-foreground',
-    props.class
-  )
-)
+const timeClass = computed(() => cn('text-xs text-muted-foreground', props.class))
 </script>
 
 <template>

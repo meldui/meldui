@@ -28,8 +28,8 @@ const separatorClass = computed(() =>
     isAlternate.value && isVertical.value && 'col-start-2 row-start-1 self-stretch',
     // In alternate horizontal layout, span all columns and stretch
     isAlternate.value && !isVertical.value && 'row-start-2 col-span-full w-full',
-    props.class
-  )
+    props.class,
+  ),
 )
 </script>
 

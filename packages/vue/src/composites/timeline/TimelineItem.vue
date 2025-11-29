@@ -49,20 +49,24 @@ provide(TIMELINE_ITEM_INJECTION_KEY, {
 
 const isVertical = computed(() => timeline.orientation.value === 'vertical')
 const isAlternate = computed(() => timeline.variant.value === 'alternate')
+const isContentStart = computed(() => timeline.contentPosition.value === 'start')
 
 const itemClass = computed(() =>
   cn(
     'group relative',
-    // Default vertical layout
-    isVertical.value && !isAlternate.value && 'flex gap-3',
+    // Default vertical layout - use flex-row-reverse when content should be on left (start)
+    isVertical.value &&
+      !isAlternate.value && ['flex gap-3', isContentStart.value && 'flex-row-reverse'],
     // Default horizontal layout - flex-1 to grow, align content to start
     !isVertical.value && !isAlternate.value && 'flex flex-1 flex-col items-start gap-3',
     // Alternate vertical layout - use grid for proper two-column layout
     isVertical.value && isAlternate.value && 'grid grid-cols-[1fr_auto_1fr] gap-x-3',
     // Alternate horizontal layout - flex-1 to grow and fill space
-    !isVertical.value && isAlternate.value && 'flex-1 grid grid-rows-[1fr_auto_1fr] gap-y-3 justify-items-center',
-    props.class
-  )
+    !isVertical.value &&
+      isAlternate.value &&
+      'flex-1 grid grid-rows-[1fr_auto_1fr] gap-y-3 justify-items-center',
+    props.class,
+  ),
 )
 </script>
 
@@ -73,6 +77,7 @@ const itemClass = computed(() =>
     :data-status="status"
     :data-orientation="timeline.orientation.value"
     :data-variant="timeline.variant.value"
+    :data-content-position="timeline.contentPosition.value"
     :data-alternate-right="isAlternateRight ? '' : undefined"
     data-slot="timeline-item"
     :class="itemClass"
