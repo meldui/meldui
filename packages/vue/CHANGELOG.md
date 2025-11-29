@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.3
+
+### Patch Changes
+
+- c669843: Added Timeline component
+
 ## 0.1.2
 
 ### Patch Changes
