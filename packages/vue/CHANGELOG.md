@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.5
+
+### Patch Changes
+
+- 664d40c: Fix peer dependency warnings
+
 ## 0.1.4
 
 ### Patch Changes
