@@ -1,5 +1,11 @@
 # @meldui/tabler-vue
 
+## 0.1.4
+
+### Patch Changes
+
+- eb8b29b: Modified the build of the css and the theming of the package.
+
 ## 0.1.3
 
 ### Patch Changes
