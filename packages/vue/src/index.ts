@@ -78,6 +78,7 @@ export * from './components/ui/tooltip'
 // Export composite components
 export * from './composites/avatar-group'
 export * from './composites/clipboard-copy'
+export * from './composites/data-table'
 export * from './composites/mention'
 export * from './composites/multi-select'
 export * from './composites/relative-time'
