@@ -4,7 +4,7 @@
  */
 export const ICON_DEFAULTS = {
   size: 24, // 24px base size
-  strokeWidth: 1.5, // Medium stroke weight
+  stroke: 1.5, // Stroke weight (Tabler default is 2)
 } as const
 
 export type IconDefaults = typeof ICON_DEFAULTS

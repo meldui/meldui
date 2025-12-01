@@ -26,7 +26,7 @@ This is a pnpm workspace monorepo with two main directories:
   - Build target: ESM + CJS with TypeScript definitions
 
 - `packages/tabler-vue/` - @meldui/tabler-vue (Tabler Icons for Vue)
-  - Re-exports all Tabler icons with custom defaults (size: 24, strokeWidth: 1.5)
+  - Re-exports all Tabler icons with custom defaults (size: 24, stroke: 1.5)
   - `src/index.ts` - Auto-generated icon exports
   - `src/wrapper.ts` - Icon wrapper with defaults
   - `src/defaults.ts` - Icon default configuration
@@ -146,8 +146,8 @@ The icon system uses **dedicated icon packages** that wrap Tabler Icons with cus
 Configured in `packages/tabler-vue/src/defaults.ts`:
 ```typescript
 export const ICON_DEFAULTS = {
-  size: 24,           // 24px base size
-  strokeWidth: 1.5,   // Medium stroke weight
+  size: 24,     // 24px base size
+  stroke: 1.5,  // Stroke weight (Tabler default is 2)
 } as const
 ```
 
@@ -160,13 +160,16 @@ export const ICON_DEFAULTS = {
 <!-- Override size -->
 <IconCross :size="32" />
 
-<!-- Override stroke width -->
-<IconCross :stroke-width="2" />
+<!-- Override stroke -->
+<IconCross :stroke="2" />
 
-<!-- Color inherits from text color -->
+<!-- Color inherits from text color (use Tailwind classes) -->
 <span class="text-red-500">
   <IconCross /> <!-- Red icon -->
 </span>
+
+<!-- Or directly on the icon -->
+<IconCross class="text-blue-500" />
 ```
 
 ### Syncing with Tabler Updates
@@ -183,8 +186,8 @@ pnpm generate-icons  # Runs scripts/generate.ts
 
 - **Perfect tree-shaking** - Explicit imports, only used icons bundled
 - **No package bloat** - Icons not bundled in @meldui/vue
-- **Customizable defaults** - Change size/strokeWidth in one place
-- **Theme integration** - CSS variables for colors (--icon-color)
+- **Customizable defaults** - Change size/stroke in one place
+- **CSS color inheritance** - Icons use `currentColor`, works with Tailwind classes
 - **Easy updates** - Run generation script when syncing
 - **Extensible** - Can add other icon libraries later
 
@@ -353,7 +356,7 @@ import { IconCross, IconUser, IconSettings } from '@meldui/tabler-vue'
   <div>
     <IconCross />
     <IconUser :size="32" />
-    <IconSettings :stroke-width="2" class="text-blue-500" />
+    <IconSettings :stroke="2" class="text-blue-500" />
   </div>
 </template>
 ```
@@ -387,8 +390,8 @@ export { default as IconMyLogo } from './custom/IconMyLogo.vue'
 Edit `packages/tabler-vue/src/defaults.ts`:
 ```typescript
 export const ICON_DEFAULTS = {
-  size: 20,         // Change from 24 to 20
-  strokeWidth: 2,   // Change from 1.5 to 2
+  size: 20,     // Change from 24 to 20
+  stroke: 2,    // Change from 1.5 to 2
 } as const
 ```
 

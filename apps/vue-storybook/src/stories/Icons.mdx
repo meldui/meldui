@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # Icon System
 
-MeldUI uses Tabler Icons with custom defaults for size and stroke width.
+MeldUI uses Tabler Icons with custom defaults for size and stroke.
 
 ## Installation
 
@@ -28,11 +28,11 @@ import { IconX, IconCheck, IconAlertCircle } from '@meldui/tabler-vue'
   <!-- Custom size -->
   <IconX :size="32" />
 
-  <!-- Custom stroke width -->
-  <IconAlertCircle :stroke-width="2" />
+  <!-- Custom stroke -->
+  <IconAlertCircle :stroke="2" />
 
-  <!-- Custom color -->
-  <IconCheck color="#22c55e" />
+  <!-- Color via Tailwind class -->
+  <IconCheck class="text-green-500" />
 </template>
 ```
 
@@ -40,37 +40,29 @@ import { IconX, IconCheck, IconAlertCircle } from '@meldui/tabler-vue'
 
 All icons have these defaults:
 - **Size:** 24px
-- **Stroke Width:** 1.5
-- **Color:** Inherits from `currentColor` or `--icon-color` CSS variable
+- **Stroke:** 1.5 (Tabler default is 2)
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `size` | number | 24 | Icon size in pixels |
-| `strokeWidth` | number | 1.5 | Stroke thickness |
-| `color` | string | undefined | Explicit color (otherwise uses currentColor) |
+| `stroke` | number | 1.5 | Stroke thickness |
 
-## Color Inheritance
+## Color
 
-Icons inherit text color by default:
+Icons use `currentColor` and inherit from the parent's text color. Control color using Tailwind classes:
 
 ```vue
 <template>
+  <!-- Via parent -->
   <span class="text-red-500">
     <IconX /> <!-- Red icon -->
   </span>
+
+  <!-- Directly on icon -->
+  <IconCheck class="text-green-500" />
 </template>
-```
-
-## Theme Integration
-
-Override the default icon color globally:
-
-```css
-:root {
-  --icon-color: #3b82f6; /* Blue */
-}
 ```
 
 ## Available Icons
