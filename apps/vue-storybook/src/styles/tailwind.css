@@ -1,17 +1,22 @@
 /**
  * Tailwind CSS v4 for Storybook
  *
- * Import all styles and theme from @meldui/vue source to ensure consistency.
- * Using relative path to source file for monorepo development.
+ * This mirrors how consumers would set up their CSS:
+ * 1. Import Tailwind
+ * 2. Import MeldUI theme
+ * 3. Add content sources
+ * 4. Override as needed
  */
 
-@import "../../../../packages/vue/src/styles/index.css";
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../../../../packages/vue/src/themes/default.css";
 
-/* Additional content sources for Storybook stories and MDX files */
+/* Content sources for Storybook stories and MeldUI components */
 @source "../**/*.{vue,js,ts,jsx,tsx,mdx}";
 @source "../../../../packages/vue/src/**/*.{vue,ts,tsx,js,jsx}";
 
-/* Storybook-specific: Override font to use Poppins */
+/* Storybook-specific: Override font to use Manrope */
 @theme inline {
   --font-sans:
     "Manrope", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",

@@ -228,7 +228,7 @@ Each package's `package.json` must have correct `exports` field for proper modul
 
 ### Installation
 ```bash
-pnpm add tailwindcss@next @tailwindcss/vite@next
+pnpm add tailwindcss @tailwindcss/vite
 ```
 
 ### Configuration Pattern

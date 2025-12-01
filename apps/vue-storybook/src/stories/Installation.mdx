@@ -8,27 +8,63 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 - Node.js 18+ and pnpm
 - Vue 3.4+
-- Vite or other modern bundler
+- Vite with Tailwind CSS v4
 
 ## Step 1: Install Packages
 
 ```bash
 pnpm add @meldui/vue @meldui/tabler-vue vue
+pnpm add -D tailwindcss @tailwindcss/vite
 ```
 
-## Step 2: Import Styles
+## Step 2: Configure Vite
 
-In your main application entry point (usually `main.ts`):
+Add the Tailwind CSS plugin to your `vite.config.ts`:
+
+```typescript
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [vue(), tailwindcss()],
+})
+```
+
+## Step 3: Set Up CSS
+
+Create or update your main CSS file (e.g., `src/app.css`):
+
+```css
+/* Import Tailwind CSS */
+@import "tailwindcss";
+
+/* Import MeldUI theme */
+@import "@meldui/vue/themes/default";
+
+/* Tell Tailwind where to find classes */
+@source "../src/**/*.{vue,ts,js}";
+@source "../node_modules/@meldui/vue/dist/*.mjs";
+
+/* Optional: Override theme variables */
+:root {
+  --primary: oklch(0.6 0.2 260);
+}
+```
+
+## Step 4: Import CSS in Your App
+
+In your `main.ts`:
 
 ```typescript
 import { createApp } from 'vue'
-import '@meldui/vue/styles' // Import MeldUI styles
+import './app.css' // Import your CSS
 import App from './App.vue'
 
 createApp(App).mount('#app')
 ```
 
-## Step 3: Use Components
+## Step 5: Use Components
 
 ```vue
 <script setup lang="ts">
@@ -53,7 +89,7 @@ import { IconCheck } from '@meldui/tabler-vue'
 
 ## TypeScript Configuration
 
-If you're using TypeScript, ensure your `tsconfig.json` includes:
+Ensure your `tsconfig.json` includes:
 
 ```json
 {
@@ -64,13 +100,6 @@ If you're using TypeScript, ensure your `tsconfig.json` includes:
   }
 }
 ```
-
-## Tailwind CSS (Optional)
-
-MeldUI includes compiled Tailwind styles, but if your app also uses Tailwind, you can:
-
-1. Use MeldUI's theme variables in your own Tailwind config
-2. Extend the theme with your custom values
 
 ## Next Steps
 
