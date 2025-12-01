@@ -176,12 +176,12 @@ importers:
       '@tanstack/vue-table':
         specifier: ^8.21.3
         version: 8.21.3(vue@3.5.24(typescript@5.9.3))
+      '@unovis/ts':
+        specifier: ^1.6.2
+        version: 1.6.2
       '@unovis/vue':
         specifier: ^1.6.2
         version: 1.6.2(@unovis/ts@1.6.2)(vue@3.5.24(typescript@5.9.3))
-      '@vee-validate/zod':
-        specifier: ^4.15.1
-        version: 4.15.1(vue@3.5.24(typescript@5.9.3))(zod@4.1.12)
       '@vueuse/core':
         specifier: ^14.0.0
         version: 14.0.0(vue@3.5.24(typescript@5.9.3))
@@ -242,9 +242,6 @@ importers:
       vue-sonner:
         specifier: ^2.0.9
         version: 2.0.9
-      zod:
-        specifier: ^4.1.12
-        version: 4.1.12
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.0.0-alpha.0
@@ -3151,9 +3148,6 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.1.12:
-    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
-
   zrender@6.0.0:
     resolution: {integrity: sha512-41dFXEEXuJpNecuUQq6JlbybmnHaqqpGlbH1yxnA5V9MMP4SbohSVZsJIwz+zdjQXSSlR1Vc34EgH1zxyTDvhg==}
 
@@ -4340,14 +4334,6 @@ snapshots:
       type-fest: 4.41.0
       vee-validate: 4.15.1(vue@3.5.24(typescript@5.9.3))
       zod: 3.25.76
-    transitivePeerDependencies:
-      - vue
-
-  '@vee-validate/zod@4.15.1(vue@3.5.24(typescript@5.9.3))(zod@4.1.12)':
-    dependencies:
-      type-fest: 4.41.0
-      vee-validate: 4.15.1(vue@3.5.24(typescript@5.9.3))
-      zod: 4.1.12
     transitivePeerDependencies:
       - vue
 
@@ -6089,8 +6075,6 @@ snapshots:
   yaml@1.10.2: {}
 
   zod@3.25.76: {}
-
-  zod@4.1.12: {}
 
   zrender@6.0.0:
     dependencies:
