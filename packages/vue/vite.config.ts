@@ -44,7 +44,6 @@ export default defineConfig({
         /^@tabler\/icons-vue/, // Exclude all @tabler/icons-vue imports
         /^radix-vue/, // Exclude radix-vue
         /^@vueuse\//, // Exclude vueuse
-        /^lucide-vue-next/, // Exclude lucide icons
         /^@tanstack\//, // Exclude tanstack
         /^@unovis\//, // Exclude unovis (chart library)
         /^@internationalized\//, // Exclude internationalized

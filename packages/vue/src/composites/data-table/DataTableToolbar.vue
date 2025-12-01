@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TData">
 import { IconPinnedOff, IconSearch, IconX } from '@meldui/tabler-vue'
 import type { Table } from '@tanstack/vue-table'
 import { computed, onUnmounted, ref, watchEffect } from 'vue'

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TData, TValue">
 import type { DateValue } from '@internationalized/date'
 import { IconX } from '@meldui/tabler-vue'
 import type { Column } from '@tanstack/vue-table'

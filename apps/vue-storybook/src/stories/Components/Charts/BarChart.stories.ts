@@ -3,7 +3,6 @@ import { MeldBarChart } from '@meldui/charts-vue'
 import { IconPackage, IconShoppingCart, IconUsers } from '@meldui/tabler-vue'
 import {
   Badge,
-  Button,
   Card,
   CardContent,
   CardDescription,
@@ -494,7 +493,7 @@ export const DualAxisBarWithLine: Story = {
               name: 'Sales ($K)',
               position: 'left',
               axisLabel: {
-                formatter: '${value}',
+                formatter: (value: number) => `$${value}`,
                 color: 'hsl(var(--muted-foreground))',
                 fontSize: 14,
               },
@@ -514,7 +513,7 @@ export const DualAxisBarWithLine: Story = {
               name: 'Target ($K)',
               position: 'right',
               axisLabel: {
-                formatter: '${value}',
+                formatter: (value: number) => `$${value}`,
                 color: 'hsl(var(--muted-foreground))',
                 fontSize: 14,
               },

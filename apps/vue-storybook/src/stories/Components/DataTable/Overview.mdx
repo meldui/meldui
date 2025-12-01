@@ -1,0 +1,301 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Components/DataTable/Overview" />
+
+# DataTable
+
+A powerful, feature-rich data table component designed for server-side operations with comprehensive filtering, sorting, pagination, row selection, and column pinning capabilities.
+
+## Features
+
+- **Server-Side Operations**: Built for server-side pagination, sorting, and filtering
+- **Multiple Filter Types**: Text, select, multiselect, number, range, boolean, date, and daterange filters
+- **Row Selection**: Single and bulk row selection with customizable bulk actions
+- **Column Pinning**: Pin columns to left or right for better data visibility
+- **Advanced Filter Mode**: Enable operator selection for complex filtering logic
+- **Customizable**: Full control over column definitions, cell rendering, and styling
+
+## Installation
+
+The DataTable is included in `@meldui/vue`. Ensure you have the required peer dependencies:
+
+```bash
+pnpm add @meldui/vue @tanstack/vue-table
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref, computed, h } from 'vue'
+import { DataTable, DataTableColumnHeader } from '@meldui/vue'
+import type { ColumnDef } from '@tanstack/vue-table'
+
+interface User {
+  id: string
+  name: string
+  email: string
+}
+
+const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: 'name',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Name' }),
+  },
+  {
+    accessorKey: 'email',
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Email' }),
+  },
+]
+
+const users = ref<User[]>([])
+const pageCount = ref(1)
+
+const handleServerSideChange = (params) => {
+  // Fetch data from server with params.sorting, params.filters, params.pagination
+  console.log('Server params:', params)
+}
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="users"
+    :page-count="pageCount"
+    :on-server-side-change="handleServerSideChange"
+  />
+</template>
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>columns</code></td>
+      <td><code>ColumnDef&lt;TData&gt;[]</code></td>
+      <td>Required</td>
+      <td>Column definitions from @tanstack/vue-table</td>
+    </tr>
+    <tr>
+      <td><code>data</code></td>
+      <td><code>TData[]</code></td>
+      <td>Required</td>
+      <td>Array of data to display</td>
+    </tr>
+    <tr>
+      <td><code>pageCount</code></td>
+      <td><code>number</code></td>
+      <td>Required</td>
+      <td>Total number of pages (server-side)</td>
+    </tr>
+    <tr>
+      <td><code>onServerSideChange</code></td>
+      <td><code>Function</code></td>
+      <td>Required</td>
+      <td>Callback when table state changes</td>
+    </tr>
+    <tr>
+      <td><code>enableRowSelection</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable row selection checkboxes</td>
+    </tr>
+    <tr>
+      <td><code>defaultPerPage</code></td>
+      <td><code>number</code></td>
+      <td><code>10</code></td>
+      <td>Default page size</td>
+    </tr>
+    <tr>
+      <td><code>pageSizeOptions</code></td>
+      <td><code>number[]</code></td>
+      <td><code>[10,20,30,40,50]</code></td>
+      <td>Available page sizes</td>
+    </tr>
+    <tr>
+      <td><code>filterFields</code></td>
+      <td><code>DataTableFilterField[]</code></td>
+      <td><code>[]</code></td>
+      <td>Filter configurations</td>
+    </tr>
+    <tr>
+      <td><code>searchColumn</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>Column to use for search input</td>
+    </tr>
+    <tr>
+      <td><code>searchPlaceholder</code></td>
+      <td><code>string</code></td>
+      <td><code>'Search...'</code></td>
+      <td>Placeholder for search input</td>
+    </tr>
+    <tr>
+      <td><code>showToolbar</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Show/hide toolbar</td>
+    </tr>
+    <tr>
+      <td><code>showPagination</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Show/hide pagination</td>
+    </tr>
+    <tr>
+      <td><code>showSelectedCount</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show selected row count</td>
+    </tr>
+    <tr>
+      <td><code>bulkSelectOptions</code></td>
+      <td><code>BulkActionOption[]</code></td>
+      <td>-</td>
+      <td>Bulk action buttons</td>
+    </tr>
+    <tr>
+      <td><code>emptyMessage</code></td>
+      <td><code>string</code></td>
+      <td><code>'No results found.'</code></td>
+      <td>Empty state message</td>
+    </tr>
+    <tr>
+      <td><code>advancedMode</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable advanced filter operators</td>
+    </tr>
+    <tr>
+      <td><code>defaultPinning</code></td>
+      <td><code>ColumnPinningState</code></td>
+      <td>-</td>
+      <td>Default pinned columns</td>
+    </tr>
+    <tr>
+      <td><code>enableColumnPinning</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable column pinning</td>
+    </tr>
+    <tr>
+      <td><code>maxHeight</code></td>
+      <td><code>string</code></td>
+      <td><code>'600px'</code></td>
+      <td>Maximum table height</td>
+    </tr>
+  </tbody>
+</table>
+
+## Filter Types
+
+### Simple Mode (default)
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Value Format</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>text</code></td>
+      <td>Text input</td>
+      <td><code>string[]</code></td>
+    </tr>
+    <tr>
+      <td><code>select</code></td>
+      <td>Single dropdown</td>
+      <td><code>string</code></td>
+    </tr>
+    <tr>
+      <td><code>multiselect</code></td>
+      <td>Multi checkbox</td>
+      <td><code>string[]</code></td>
+    </tr>
+    <tr>
+      <td><code>number</code></td>
+      <td>Number input</td>
+      <td><code>number[]</code></td>
+    </tr>
+    <tr>
+      <td><code>range</code></td>
+      <td>Range slider</td>
+      <td><code>{'{start, end}[]'}</code></td>
+    </tr>
+    <tr>
+      <td><code>boolean</code></td>
+      <td>Toggle switch</td>
+      <td><code>boolean</code></td>
+    </tr>
+    <tr>
+      <td><code>date</code></td>
+      <td>Date picker</td>
+      <td><code>DateValue[]</code></td>
+    </tr>
+    <tr>
+      <td><code>daterange</code></td>
+      <td>Date range</td>
+      <td><code>{'{start, end}[]'}</code></td>
+    </tr>
+  </tbody>
+</table>
+
+### Advanced Mode
+
+In advanced mode (`advancedMode: true`), each filter shows an operator selector.
+
+**Available Operators:**
+
+- **Text**: contains, equals, startsWith, endsWith, notContains, isEmpty, isNotEmpty
+- **Number**: equals, greaterThan, lessThan, between, isEmpty, isNotEmpty
+- **Date**: is, isBefore, isAfter, isBetween, isEmpty, isNotEmpty
+- **Select**: is, isAnyOf, isNot, isEmpty, isNotEmpty
+- **Boolean**: is, isEmpty, isNotEmpty
+
+## Exposed Methods
+
+Access via template ref:
+
+```vue
+<template>
+  <DataTable ref="tableRef" ... />
+</template>
+
+<script setup>
+const tableRef = ref()
+
+// Access methods
+tableRef.value.resetFilters()
+tableRef.value.resetSorting()
+tableRef.value.resetSelection()
+tableRef.value.resetAll()
+
+// Access state
+const selected = tableRef.value.selectedRows
+const hasSelection = tableRef.value.hasSelection
+</script>
+```
+
+## Story Navigation
+
+Explore the following stories for detailed examples:
+
+- **Basic** - Simple table, search, pagination, and sorting
+- **Filters** - All filter types with examples
+- **Selection** - Row selection and bulk actions
+- **Column Pinning** - Pinning columns left/right
+- **Advanced Filters** - Operator-based filtering
+- **Events** - Event handling and callbacks
+- **Full Example** - Complete implementation

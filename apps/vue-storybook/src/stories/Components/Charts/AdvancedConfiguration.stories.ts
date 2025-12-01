@@ -7,6 +7,14 @@ import { MeldBarChart, MeldLineChart, MeldScatterChart } from '@meldui/charts-vu
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
+// ECharts tooltip param type for formatter
+interface TooltipParam {
+  axisValueLabel: string
+  color: string
+  value: number
+  seriesName: string
+}
+
 const meta: Meta = {
   title: 'Components/Charts/AdvancedConfiguration',
   parameters: {
@@ -265,11 +273,11 @@ export const Default: Story = {
               color: '#fff',
               fontSize: 14,
             },
-            formatter: (params: any) => {
+            formatter: (params: TooltipParam[]) => {
               let tooltip = `<div style="padding: 8px;">`
               tooltip += `<div style="font-weight: bold; margin-bottom: 8px;">${params[0].axisValueLabel}</div>`
 
-              params.forEach((param: any) => {
+              params.forEach((param: TooltipParam) => {
                 const color = param.color
                 const value = param.value
                 const name = param.seriesName

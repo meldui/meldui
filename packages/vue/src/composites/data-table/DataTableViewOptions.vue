@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TData">
 import { IconSettings2 } from '@meldui/tabler-vue'
 import type { Column, Table } from '@tanstack/vue-table'
 import { ref, watchEffect } from 'vue'

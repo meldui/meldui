@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TData">
 import {
   type ColumnDef,
   type ColumnFiltersState,

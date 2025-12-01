@@ -360,7 +360,7 @@ export const DualAxisBarAndLine: Story = {
               name: 'Revenue ($K)',
               position: 'left',
               axisLabel: {
-                formatter: '${value}',
+                formatter: (value: number) => `$${value}`,
                 color: 'hsl(var(--muted-foreground))',
                 fontSize: 14,
               },

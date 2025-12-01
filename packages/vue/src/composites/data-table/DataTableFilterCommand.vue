@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TData">
 import { IconFilter } from '@meldui/tabler-vue'
 import { ref } from 'vue'
 import { Button } from '@/components/ui/button'

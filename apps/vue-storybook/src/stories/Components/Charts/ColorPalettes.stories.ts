@@ -36,7 +36,7 @@ export const AllPalettes: Story = {
   render: () => ({
     components: { MeldLineChart, Card, CardHeader, CardTitle, CardDescription, CardContent },
     setup() {
-      const configs: Record<PaletteName, MeldLineChartConfig> = {} as any
+      const configs: Partial<Record<PaletteName, MeldLineChartConfig>> = {}
 
       // Generate config for each palette
       paletteNames.forEach((paletteName) => {

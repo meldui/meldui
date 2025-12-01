@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TData">
 import type { Table } from '@tanstack/vue-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'

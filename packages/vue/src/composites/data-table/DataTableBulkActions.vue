@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TData">
 import { IconStack2, IconX } from '@meldui/tabler-vue'
 import type { Table } from '@tanstack/vue-table'
 import { computed } from 'vue'

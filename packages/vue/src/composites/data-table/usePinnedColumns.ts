@@ -132,7 +132,9 @@ export function usePinnedColumns<TData>(tableInstance: Ref<Table<TData>>) {
 
     // Observe all table cells for size changes
     const cells = tableRef.value.querySelectorAll('th, td')
-    cells.forEach((cell) => resizeObserver!.observe(cell))
+    cells.forEach((cell) => {
+      resizeObserver!.observe(cell)
+    })
   }
 
   /**
