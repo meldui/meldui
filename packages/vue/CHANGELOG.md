@@ -1,5 +1,12 @@
 # @meldui/vue
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [b93cc92]
+  - @meldui/tabler-vue@0.1.3
+
 ## 0.1.3
 
 ### Patch Changes

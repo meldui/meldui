@@ -1,5 +1,11 @@
 # @meldui/tabler-vue
 
+## 0.1.3
+
+### Patch Changes
+
+- b93cc92: Fixed generation of types in tabler-vue and also, fixed the default stroke.
+
 ## 0.1.2
 
 ### Patch Changes
