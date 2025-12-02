@@ -238,6 +238,7 @@ export function useTableKeyboard<TData>(
       return
     }
     isFocused.value = false
+    focusedRowIndex.value = -1
     updateFocusIndicators()
   }
 

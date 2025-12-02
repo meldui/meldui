@@ -200,8 +200,26 @@
 /* Focused row styling */
 [data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] {
   background-color: var(--accent);
-  outline: 1px solid var(--primary);
+  outline: 1px solid var(--ring);
   outline-offset: -1px;
+}
+
+/* Keyboard focused row - pinned cells need matching background and borders */
+[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-left,
+[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-right {
+  background-color: var(--accent);
+  border-top: 1px solid var(--ring);
+  border-bottom: 1px solid var(--ring);
+}
+
+/* First pinned-left cell needs left border */
+[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-left:first-child {
+  border-left: 1px solid var(--ring);
+}
+
+/* Last pinned-right cell needs right border */
+[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-right:last-child {
+  border-right: 1px solid var(--ring);
 }
 
 /* ==========================================================================
