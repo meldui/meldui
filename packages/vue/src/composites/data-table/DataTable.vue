@@ -558,18 +558,10 @@ defineExpose({
 /*
  * DataTable Styles
  *
- * NOTE: Column pinning styles are in @meldui/vue/themes/default.css
+ * NOTE: Most styles are in @meldui/vue/themes/default.css using global selectors.
  * They use global selectors (.table-container .pinned-left, etc.) because
  * Vue scoped CSS with :deep() doesn't reliably apply to nested child components.
- *
- * Override --dt-* CSS variables to customize appearance.
  */
-
-/* Table container */
-.table-container {
-    border-color: var(--dt-border-color);
-    border-radius: var(--dt-border-radius);
-}
 
 /* Disable inner Table.vue overflow - scrolling happens on .table-container */
 :deep([data-slot="table-container"]) {
@@ -578,44 +570,35 @@ defineExpose({
 
 /* Loading state overlay effect */
 .table-container[data-loading="true"] {
-    opacity: var(--dt-loading-opacity);
+    opacity: 0.6;
     pointer-events: none;
 }
 
-/* Density styles are handled in default.css using [data-density] descendant selectors.
-   This approach is necessary because Vue scoped styles don't properly inherit CSS custom
-   properties that are set on ancestor elements via attribute selectors like [data-density="compact"].
-   All other CSS variables used here are defined in :root, so they work fine with :deep(). */
-
-/* Column resize handle styles are in @meldui/vue/themes/default.css
-   They use global selectors (.table-container .resize-handle) because
-   Vue scoped CSS doesn't reliably apply to dynamically rendered elements. */
-
 /* Expanded row styles */
 :deep(.expanded-row) {
-    background-color: var(--dt-expanded-row-bg);
+    background-color: var(--muted);
 }
 
 :deep(.expanded-row td) {
-    border-top: 1px solid var(--dt-expanded-row-border);
+    border-top: 1px solid var(--border);
 }
 
 .expanded-row-content {
-    padding: var(--dt-expanded-content-padding);
+    padding: 1rem;
 }
 
 /* Footer styles - sticky positioning */
 :deep(.table-footer) {
     position: sticky;
     bottom: 0;
-    z-index: var(--dt-z-footer);
+    z-index: 14;
 }
 
 :deep(.table-footer td) {
-    background-color: var(--dt-footer-bg);
-    border-top: 1px solid var(--dt-footer-border);
-    color: var(--dt-footer-text);
-    font-weight: var(--dt-footer-font-weight);
+    background-color: var(--muted);
+    border-top: 1px solid var(--border);
+    color: var(--foreground);
+    font-weight: 500;
 }
 
 /* Column resizing - use fixed table layout for consistent resizing */

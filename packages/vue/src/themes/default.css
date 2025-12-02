@@ -139,69 +139,14 @@
 
 /**
  * DataTable CSS Custom Properties
- * Override these to customize DataTable appearance
+ * Minimal configuration - uses Tailwind classes for most styling
  */
 :root {
-  /* Header */
-  --dt-header-bg: var(--muted);
-  --dt-header-text: var(--foreground);
-  --dt-header-border: var(--border);
-
-  /* Body */
-  --dt-row-bg: var(--background);
-  --dt-row-hover-bg: var(--accent);
-  --dt-row-selected-bg: var(--muted);
-  --dt-cell-text: var(--foreground);
-
-  /* Borders */
-  --dt-border-color: var(--border);
-  --dt-border-radius: var(--radius);
-
-  /* Pinning */
-  --dt-pinned-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --dt-pinned-border: var(--border);
-
-  /* States */
-  --dt-loading-opacity: 0.6;
-  --dt-empty-text: var(--muted-foreground);
-
-  /* Z-index layers */
-  --dt-z-body: 1;
-  --dt-z-pinned: 10;
-  --dt-z-header: 15;
-  --dt-z-header-pinned: 20;
-
   /* Density - Default (comfortable) */
   --dt-cell-padding-y: 0.5rem;
   --dt-cell-padding-x: 0.75rem;
   --dt-font-size: 0.875rem;
   --dt-line-height: 1.5;
-
-  /* Column Resizing */
-  --dt-resize-handle-width: 1px;
-  --dt-resize-handle-bg: var(--border);
-  --dt-resize-handle-hover-bg: var(--muted-foreground);
-  --dt-resize-handle-active-bg: var(--ring);
-
-  /* Keyboard Navigation */
-  --dt-focus-ring-color: var(--ring);
-  --dt-focus-ring-width: 2px;
-  --dt-focus-ring-offset: 2px;
-  --dt-row-focused-bg: var(--accent);
-  --dt-row-focused-outline: var(--primary);
-
-  /* Row Expansion */
-  --dt-expanded-row-bg: var(--muted);
-  --dt-expanded-row-border: var(--border);
-  --dt-expanded-content-padding: 1rem;
-
-  /* Footer */
-  --dt-footer-bg: var(--muted);
-  --dt-footer-text: var(--foreground);
-  --dt-footer-border: var(--border);
-  --dt-footer-font-weight: 500;
-  --dt-z-footer: 14;
-  --dt-z-footer-pinned: 19;
 }
 
 /* DataTable Density Variants */
@@ -239,26 +184,23 @@
   min-height: 2.5rem;
 }
 
-.dark {
-  /* DataTable dark mode overrides (if needed) */
-  --dt-pinned-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
+/* Dark mode handled via Tailwind's dark: variant */
 
 /* DataTable Keyboard Navigation */
 [data-keyboard-navigation]:focus {
-  outline: var(--dt-focus-ring-width) solid var(--dt-focus-ring-color);
-  outline-offset: var(--dt-focus-ring-offset);
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 [data-keyboard-navigation]:focus-visible {
-  outline: var(--dt-focus-ring-width) solid var(--dt-focus-ring-color);
-  outline-offset: var(--dt-focus-ring-offset);
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 /* Focused row styling */
 [data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] {
-  background-color: var(--dt-row-focused-bg);
-  outline: 1px solid var(--dt-row-focused-outline);
+  background-color: var(--accent);
+  outline: 1px solid var(--primary);
   outline-offset: -1px;
 }
 
@@ -270,24 +212,29 @@
 .table-container table {
   border-collapse: separate;
   border-spacing: 0;
-  background-color: var(--dt-row-bg);
+  background-color: var(--background);
+}
+
+/* Row borders - applied to cells since border-collapse: separate doesn't support tr borders */
+.table-container tbody td {
+  border-bottom: 1px solid var(--border);
 }
 
 /* Sticky header for vertical scroll */
 .table-container thead th {
   position: sticky;
   top: 0;
-  z-index: var(--dt-z-header);
-  background-color: var(--dt-header-bg);
-  color: var(--dt-header-text);
-  border-bottom: 1px solid var(--dt-header-border);
+  z-index: 15;
+  background-color: var(--muted);
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Base pinned column styles - sticky positioning */
 .table-container .pinned-left,
 .table-container .pinned-right {
   position: sticky;
-  z-index: var(--dt-z-pinned);
+  z-index: 10;
 }
 
 .table-container .pinned-left {
@@ -301,36 +248,36 @@
 /* Pinned header cells need higher z-index */
 .table-container thead th.pinned-left,
 .table-container thead th.pinned-right {
-  z-index: var(--dt-z-header-pinned);
+  z-index: 20;
 }
 
 /* Pinned body cells need solid background to hide scrolling content */
 .table-container tbody td.pinned-left,
 .table-container tbody td.pinned-right {
-  background-color: var(--dt-row-bg);
+  background-color: var(--background);
 }
 
 /* Hover state for pinned cells */
 .table-container tbody tr:hover td.pinned-left,
 .table-container tbody tr:hover td.pinned-right {
-  background-color: var(--dt-row-hover-bg);
+  background-color: var(--accent);
 }
 
 /* Selected state for pinned cells */
 .table-container tbody tr[data-state="selected"] td.pinned-left,
 .table-container tbody tr[data-state="selected"] td.pinned-right {
-  background-color: var(--dt-row-selected-bg);
+  background-color: var(--muted);
 }
 
 /* Border separator for last left-pinned column */
 .table-container .pinned-left-last {
-  border-right: 1px solid var(--dt-pinned-border);
+  border-right: 1px solid var(--border);
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
 }
 
 /* Border separator for first right-pinned column */
 .table-container .pinned-right-first {
-  border-left: 1px solid var(--dt-pinned-border);
+  border-left: 1px solid var(--border);
   box-shadow: -2px 0 4px rgba(0, 0, 0, 0.06);
 }
 
@@ -346,8 +293,8 @@
 /* Footer pinned columns */
 .table-container tfoot td.pinned-left,
 .table-container tfoot td.pinned-right {
-  background-color: var(--dt-footer-bg);
-  z-index: var(--dt-z-footer-pinned);
+  background-color: var(--muted);
+  z-index: 19;
 }
 
 /* ==========================================================================
@@ -360,20 +307,20 @@
   right: 0;
   top: 0;
   height: 100%;
-  width: var(--dt-resize-handle-width);
+  width: 1px;
   cursor: col-resize;
   user-select: none;
   touch-action: none;
-  background-color: var(--dt-resize-handle-bg);
+  background-color: var(--border);
   transition: background-color 0.15s ease;
 }
 
 .table-container .resize-handle:hover {
-  background-color: var(--dt-resize-handle-hover-bg);
+  background-color: var(--muted-foreground);
 }
 
 .table-container .resize-handle[data-resizing] {
-  background-color: var(--dt-resize-handle-active-bg);
+  background-color: var(--ring);
 }
 
 /* Column resizing - use fixed table layout for consistent resizing */
