@@ -3,7 +3,7 @@ import { IconX } from '@meldui/tabler-vue'
 import type { Column } from '@tanstack/vue-table'
 import { type Component, computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import type { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
