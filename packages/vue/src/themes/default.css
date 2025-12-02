@@ -136,3 +136,128 @@
     @apply bg-background text-foreground;
   }
 }
+
+/**
+ * DataTable CSS Custom Properties
+ * Override these to customize DataTable appearance
+ */
+:root {
+  /* Header */
+  --dt-header-bg: var(--muted);
+  --dt-header-text: var(--foreground);
+  --dt-header-border: var(--border);
+
+  /* Body */
+  --dt-row-bg: var(--background);
+  --dt-row-hover-bg: var(--accent);
+  --dt-row-selected-bg: var(--muted);
+  --dt-cell-text: var(--foreground);
+
+  /* Borders */
+  --dt-border-color: var(--border);
+  --dt-border-radius: var(--radius);
+
+  /* Pinning */
+  --dt-pinned-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --dt-pinned-border: var(--border);
+
+  /* States */
+  --dt-loading-opacity: 0.6;
+  --dt-empty-text: var(--muted-foreground);
+
+  /* Z-index layers */
+  --dt-z-body: 1;
+  --dt-z-pinned: 10;
+  --dt-z-header: 15;
+  --dt-z-header-pinned: 20;
+
+  /* Density - Default (comfortable) */
+  --dt-cell-padding-y: 0.5rem;
+  --dt-cell-padding-x: 0.75rem;
+  --dt-font-size: 0.875rem;
+  --dt-line-height: 1.5;
+
+  /* Column Resizing */
+  --dt-resize-handle-width: 4px;
+  --dt-resize-handle-bg: transparent;
+  --dt-resize-handle-hover-bg: var(--primary);
+  --dt-resize-handle-active-bg: var(--primary);
+
+  /* Keyboard Navigation */
+  --dt-focus-ring-color: var(--ring);
+  --dt-focus-ring-width: 2px;
+  --dt-focus-ring-offset: 2px;
+  --dt-row-focused-bg: var(--accent);
+  --dt-row-focused-outline: var(--primary);
+
+  /* Row Expansion */
+  --dt-expanded-row-bg: var(--muted);
+  --dt-expanded-row-border: var(--border);
+  --dt-expanded-content-padding: 1rem;
+
+  /* Footer */
+  --dt-footer-bg: var(--muted);
+  --dt-footer-text: var(--foreground);
+  --dt-footer-border: var(--border);
+  --dt-footer-font-weight: 500;
+  --dt-z-footer: 14;
+  --dt-z-footer-pinned: 19;
+}
+
+/* DataTable Density Variants */
+[data-density="compact"] {
+  --dt-cell-padding-y: 0.25rem;
+  --dt-cell-padding-x: 0.5rem;
+  --dt-font-size: 0.75rem;
+  --dt-line-height: 1.25;
+}
+
+[data-density="comfortable"] {
+  --dt-cell-padding-y: 0.5rem;
+  --dt-cell-padding-x: 0.75rem;
+  --dt-font-size: 0.875rem;
+  --dt-line-height: 1.5;
+}
+
+[data-density="spacious"] {
+  --dt-cell-padding-y: 0.75rem;
+  --dt-cell-padding-x: 1rem;
+  --dt-font-size: 0.875rem;
+  --dt-line-height: 1.75;
+}
+
+/* DataTable Cell Styles - Applied via data-density attribute on container */
+[data-density] th[data-slot="table-head"],
+[data-density] td[data-slot="table-cell"] {
+  padding: var(--dt-cell-padding-y) var(--dt-cell-padding-x);
+  font-size: var(--dt-font-size);
+  line-height: var(--dt-line-height);
+}
+
+[data-density] th[data-slot="table-head"] {
+  height: auto;
+  min-height: 2.5rem;
+}
+
+.dark {
+  /* DataTable dark mode overrides (if needed) */
+  --dt-pinned-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* DataTable Keyboard Navigation */
+[data-keyboard-navigation]:focus {
+  outline: var(--dt-focus-ring-width) solid var(--dt-focus-ring-color);
+  outline-offset: var(--dt-focus-ring-offset);
+}
+
+[data-keyboard-navigation]:focus-visible {
+  outline: var(--dt-focus-ring-width) solid var(--dt-focus-ring-color);
+  outline-offset: var(--dt-focus-ring-offset);
+}
+
+/* Focused row styling */
+[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] {
+  background-color: var(--dt-row-focused-bg);
+  outline: 1px solid var(--dt-row-focused-outline);
+  outline-offset: -1px;
+}

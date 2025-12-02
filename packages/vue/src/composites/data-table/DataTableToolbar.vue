@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TData">
-import { IconPinnedOff, IconSearch, IconX } from '@meldui/tabler-vue'
+import { IconLoader2, IconPinnedOff, IconRefresh, IconSearch, IconX } from '@meldui/tabler-vue'
 import type { Table } from '@tanstack/vue-table'
 import { computed, onUnmounted, ref, watchEffect } from 'vue'
 import { Button } from '@/components/ui/button'
@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import DataTableBulkActions from './DataTableBulkActions.vue'
 import DataTableFilterCommand from './DataTableFilterCommand.vue'
 import DataTableViewOptions from './DataTableViewOptions.vue'
+import { createPluginMap, isBuiltInFilterType, type RegisteredFilterPlugin } from './filterPlugins'
 import BooleanFilter from './filters/BooleanFilter.vue'
 import DateFilter from './filters/DateFilter.vue'
 import DateRangeFilter from './filters/DateRangeFilter.vue'
@@ -33,19 +34,43 @@ import type { DataTableFilterField } from './useDataTable'
 interface Props {
   table: Table<TData>
   filterFields?: DataTableFilterField<TData>[]
+  filterPlugins?: RegisteredFilterPlugin[]
   searchPlaceholder?: string
   searchColumn?: string
   bulkSelectOptions?: BulkActionOption<TData>[]
 
   // Advanced mode (static - never changes)
   advancedMode?: boolean
+
+  // Loading state
+  loading?: boolean
+
+  // Refresh button
+  showRefreshButton?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   searchPlaceholder: 'Search...',
   filterFields: () => [],
+  filterPlugins: () => [],
   advancedMode: false,
+  loading: false,
+  showRefreshButton: false,
 })
+
+// Create plugin map for quick lookup
+const pluginMap = computed(() => createPluginMap(props.filterPlugins ?? []))
+
+// Helper to get plugin for a filter type
+const getPlugin = (type: string) => pluginMap.value.get(type)
+
+// Helper to check if filter type is from a plugin
+const isPluginFilter = (type: string) => !isBuiltInFilterType(type) && pluginMap.value.has(type)
+
+// Emits
+const emit = defineEmits<{
+  refresh: []
+}>()
 
 // Filter instance type
 interface FilterInstance<TData = unknown> {
@@ -99,13 +124,19 @@ const handleSearchInput = (value: string | number) => {
 /**
  * Check if filter type supports multi-instance in current mode
  */
-function supportsMultiInstance(filterType: FilterType, advancedMode: boolean): boolean {
+function supportsMultiInstance(filterType: string, advancedMode: boolean): boolean {
   if (advancedMode) {
     // In advanced mode, all types support multi-instance
     return true
   }
 
-  // In simple mode, only these types support multi-instance
+  // Check if it's a plugin filter with explicit multi-instance support
+  const plugin = getPlugin(filterType)
+  if (plugin) {
+    return plugin.supportsMultiInstance ?? false
+  }
+
+  // In simple mode, only these built-in types support multi-instance
   return (
     filterType === 'text' ||
     filterType === 'number' ||
@@ -294,15 +325,24 @@ onUnmounted(() => {
 <template>
     <div class="flex flex-wrap justify-between gap-2">
         <div class="flex flex-1 items-center flex-wrap gap-2">
+            <!-- Toolbar Start Slot -->
+            <slot name="toolbar-start" :table="table" />
+
             <!-- Search Input -->
             <div v-if="searchColumn" class="relative">
+                <IconLoader2
+                    v-if="loading"
+                    class="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground animate-spin"
+                />
                 <IconSearch
+                    v-else
                     class="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                 />
                 <Input
                     :model-value="searchInputValue"
                     @update:model-value="handleSearchInput"
                     :placeholder="searchPlaceholder"
+                    :disabled="loading"
                     class="h-8 w-[150px] pl-8 lg:w-[250px]"
                 />
             </div>
@@ -514,6 +554,34 @@ onUnmounted(() => {
                     @remove="removeFilterInstance(instance.instanceId)"
                     @close="handleInstanceClose(instance.instanceId)"
                 />
+
+                <!-- Plugin Filter (custom filter types) -->
+                <component
+                    v-else-if="isPluginFilter(instance.field.type)"
+                    :is="getPlugin(instance.field.type)?.component"
+                    :column="table.getColumn(instance.fieldId)"
+                    :title="instance.field.label"
+                    :placeholder="instance.field.placeholder"
+                    :icon="instance.field.icon"
+                    :default-open="instance.autoOpen"
+                    :open-trigger="instance.openTrigger"
+                    :advanced-mode="advancedMode"
+                    :default-operator="instance.field.defaultOperator"
+                    :available-operators="
+                        instance.field.availableOperators ??
+                        getPlugin(instance.field.type)?.operators
+                    "
+                    v-bind="instance.field"
+                    @value-change="
+                        (value: unknown) =>
+                            handleInstanceValueChange(
+                                instance.instanceId,
+                                value as FilterValue | undefined,
+                            )
+                    "
+                    @remove="removeFilterInstance(instance.instanceId)"
+                    @close="handleInstanceClose(instance.instanceId)"
+                />
             </template>
 
             <!-- Filter Command Button -->
@@ -521,6 +589,7 @@ onUnmounted(() => {
                 v-if="filterFields.length > 0"
                 :filter-fields="filterFields"
                 :active-filter-count="filterInstances.length"
+                :disabled="loading"
                 @add-filter="addFilter"
             />
 
@@ -530,6 +599,7 @@ onUnmounted(() => {
                 variant="outline"
                 size="sm"
                 class="h-8"
+                :disabled="loading"
                 @click="resetFilters"
             >
                 <IconX class="mr-1 h-4 w-4" />
@@ -555,6 +625,21 @@ onUnmounted(() => {
             >
                 <IconPinnedOff class="h-4 w-4" />
             </Button>
+
+            <!-- Refresh Button -->
+            <Button
+                v-if="showRefreshButton"
+                variant="outline"
+                size="sm"
+                class="h-8"
+                :disabled="loading"
+                @click="emit('refresh')"
+            >
+                <IconRefresh class="h-4 w-4" :class="{ 'animate-spin': loading }" />
+            </Button>
+
+            <!-- Toolbar End Slot -->
+            <slot name="toolbar-end" :table="table" />
 
             <!-- View Options -->
             <DataTableViewOptions :table="table" />

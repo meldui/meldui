@@ -21,6 +21,16 @@ Follow these task lists in order:
 5. **[05-publishing-setup.md](./05-publishing-setup.md)** - Configure versioning and publishing
 6. **[06-react-package-future.md](./06-react-package-future.md)** - Future React implementation (optional)
 
+### Component-Specific Tasks
+
+7. **[07-component-storybook-stories.md](./07-component-storybook-stories.md)** - Component documentation
+8. **[08-github-deployment.md](./08-github-deployment.md)** - GitHub Pages deployment
+9. **[09-chart-wrapper-component.md](./09-chart-wrapper-component.md)** - Chart component
+10. **[10-charts-improvements.md](./10-charts-improvements.md)** - Chart enhancements
+11. **[11-file-upload-component.md](./11-file-upload-component.md)** - File upload component
+12. **[12-mention-component.md](./12-mention-component.md)** - Mention component
+13. **[13-datatable-improvements.md](./13-datatable-improvements.md)** - DataTable enhancements (slots, loading/error states, column helpers, keyboard navigation, etc.)
+
 ## How to Use These Task Lists
 
 1. **Read the entire task list** before starting a phase

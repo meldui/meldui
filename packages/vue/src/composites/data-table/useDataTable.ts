@@ -2,9 +2,14 @@ import {
   type ColumnDef,
   type ColumnFiltersState,
   type ColumnPinningState,
+  type ColumnResizeMode,
+  type ColumnSizingState,
+  type ExpandedState,
   getCoreRowModel,
+  getExpandedRowModel,
   type OnChangeFn,
   type PaginationState,
+  type Row,
   type RowSelectionState,
   type SortingState,
   useVueTable,
@@ -25,7 +30,12 @@ export interface DataTableFilterField<TData> {
   id: keyof TData
   label: string
   placeholder?: string
-  type: FilterType // All 8 types in simple mode, only base types in advanced mode
+  /**
+   * Filter type - can be a built-in type or a custom plugin type string
+   * Built-in types: text, number, date, select, boolean, multiselect, range, daterange
+   * Custom types: any string registered via filterPlugins
+   */
+  type: FilterType | (string & {}) // All 8 built-in types OR custom plugin type
   options?: FilterOption[] // For select/multiselect
   icon?: Component
 
@@ -41,6 +51,9 @@ export interface DataTableFilterField<TData> {
   // Advanced mode configuration
   defaultOperator?: FilterOperator // Override default operator
   availableOperators?: FilterOperator[] // Limit available operators
+
+  // Allow additional custom properties for plugin filters
+  [key: string]: unknown
 }
 
 export interface UseDataTableProps<TData> {
@@ -62,6 +75,14 @@ export interface UseDataTableProps<TData> {
   // Column pinning configuration
   defaultPinning?: ColumnPinningState
   enableColumnPinning?: boolean
+
+  // Column resizing configuration
+  enableColumnResizing?: boolean
+  columnResizeMode?: ColumnResizeMode
+
+  // Row expansion configuration
+  enableRowExpansion?: boolean
+  getRowCanExpand?: (row: Row<TData>) => boolean
 }
 
 export function useDataTable<TData>(props: UseDataTableProps<TData>) {
@@ -91,6 +112,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     pageSize: props.defaultPerPage || 10,
   })
   const columnPinning = ref<ColumnPinningState>(props.defaultPinning || { left: [], right: [] })
+  const columnSizing = ref<ColumnSizingState>({})
+  const expanded = ref<ExpandedState>({})
 
   // Handle state changes
   const onSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
@@ -117,6 +140,14 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   const onColumnPinningChange: OnChangeFn<ColumnPinningState> = (updaterOrValue) => {
     valueUpdater(updaterOrValue, columnPinning as Ref<ColumnPinningState>)
+  }
+
+  const onColumnSizingChange: OnChangeFn<ColumnSizingState> = (updaterOrValue) => {
+    valueUpdater(updaterOrValue, columnSizing as Ref<ColumnSizingState>)
+  }
+
+  const onExpandedChange: OnChangeFn<ExpandedState> = (updaterOrValue) => {
+    valueUpdater(updaterOrValue, expanded as Ref<ExpandedState>)
   }
 
   // Helper to resolve getter or value
@@ -154,19 +185,31 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
       get columnPinning() {
         return columnPinning.value
       },
+      get columnSizing() {
+        return columnSizing.value
+      },
+      get expanded() {
+        return expanded.value
+      },
     },
     enableRowSelection: props.enableRowSelection ?? false,
+    enableExpanding: props.enableRowExpansion ?? false,
     enableColumnPinning: props.enableColumnPinning ?? false,
+    enableColumnResizing: props.enableColumnResizing ?? false,
+    columnResizeMode: props.columnResizeMode ?? 'onChange',
     // Add meta with configuration accessible to all columns
     meta: {
       defaultPinning: props.defaultPinning || { left: [], right: [] },
       enableColumnPinning: props.enableColumnPinning ?? false,
+      enableColumnResizing: props.enableColumnResizing ?? false,
     },
     // Server-side mode: all operations handled by server
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: props.enableRowExpansion ? getExpandedRowModel() : undefined,
+    getRowCanExpand: props.getRowCanExpand,
     // State change handlers
     onSortingChange,
     onColumnFiltersChange,
@@ -174,6 +217,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     onRowSelectionChange,
     onPaginationChange,
     onColumnPinningChange,
+    onColumnSizingChange,
+    onExpandedChange,
   })
 
   // Watch for server-side changes
@@ -257,6 +302,18 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     columnPinning.value = props.defaultPinning || { left: [], right: [] }
   }
 
+  const resetColumnSizing = () => {
+    columnSizing.value = {}
+  }
+
+  const resetExpanded = () => {
+    expanded.value = {}
+  }
+
+  const toggleAllRowsExpanded = (isExpanded?: boolean) => {
+    table.toggleAllRowsExpanded(isExpanded)
+  }
+
   // Computed properties
   const isFiltered = computed(() => columnFilters.value.length > 0)
   const selectedRowCount = computed(() => Object.keys(rowSelection.value).length)
@@ -267,6 +324,15 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     return table.getSelectedRowModel().rows.map((row) => row.original)
   })
 
+  // Refresh method - triggers server-side change with current state
+  const refresh = () => {
+    props.onServerSideChange({
+      sorting: sorting.value,
+      filters: columnFilters.value,
+      pagination: pagination.value,
+    })
+  }
+
   return {
     table,
     sorting,
@@ -275,11 +341,13 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     rowSelection,
     pagination,
     columnPinning,
+    columnSizing,
     resetFilters,
     resetSorting,
     resetSelection,
     resetPagination,
     resetPinning,
+    resetColumnSizing,
     resetAll,
     isFiltered,
     selectedRowCount,
@@ -287,5 +355,9 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     selectedRows,
     pinColumn,
     unpinColumn,
+    refresh,
+    expanded,
+    resetExpanded,
+    toggleAllRowsExpanded,
   }
 }

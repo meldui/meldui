@@ -17,9 +17,12 @@ import type { DataTableFilterField } from './useDataTable'
 interface Props {
   filterFields: DataTableFilterField<TData>[]
   activeFilterCount: number
+  disabled?: boolean
 }
 
-defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
+})
 
 const emit = defineEmits<{
   addFilter: [fieldId: string]
@@ -41,7 +44,7 @@ const handleSelectFilter = (fieldId: string) => {
 <template>
     <Popover v-model:open="isOpen">
         <PopoverTrigger as-child>
-            <Button variant="outline" size="sm" class="h-8">
+            <Button variant="outline" size="sm" class="h-8" :disabled="props.disabled">
                 <IconFilter class="mr-2 h-4 w-4" />
                 <span class="text-xs">Filter</span>
                 <span

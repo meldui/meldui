@@ -188,13 +188,171 @@ const handleServerSideChange = (params) => {
       <td>Enable column pinning</td>
     </tr>
     <tr>
+      <td><code>enableColumnResizing</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable column resizing by dragging</td>
+    </tr>
+    <tr>
+      <td><code>columnResizeMode</code></td>
+      <td><code>'onChange' | 'onEnd'</code></td>
+      <td><code>'onChange'</code></td>
+      <td>When to apply resize (during drag or after)</td>
+    </tr>
+    <tr>
       <td><code>maxHeight</code></td>
       <td><code>string</code></td>
       <td><code>'600px'</code></td>
       <td>Maximum table height</td>
     </tr>
+    <tr>
+      <td><code>density</code></td>
+      <td><code>'compact' | 'comfortable' | 'spacious'</code></td>
+      <td><code>'comfortable'</code></td>
+      <td>Table density (affects cell padding and font size)</td>
+    </tr>
+    <tr>
+      <td><code>rowClass</code></td>
+      <td><code>(row: Row) =&gt; string | Record&lt;string, boolean&gt;</code></td>
+      <td>-</td>
+      <td>Function to add conditional CSS classes to rows</td>
+    </tr>
+    <tr>
+      <td><code>rowStyle</code></td>
+      <td><code>(row: Row) =&gt; CSSProperties</code></td>
+      <td>-</td>
+      <td>Function to add conditional inline styles to rows</td>
+    </tr>
+    <tr>
+      <td><code>rowProps</code></td>
+      <td><code>(row: Row) =&gt; HTMLAttributes</code></td>
+      <td>-</td>
+      <td>Function to add custom attributes/handlers to rows</td>
+    </tr>
+    <tr>
+      <td><code>loading</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show loading skeleton state</td>
+    </tr>
+    <tr>
+      <td><code>loadingMessage</code></td>
+      <td><code>string</code></td>
+      <td><code>'Loading data...'</code></td>
+      <td>Message shown during loading</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><code>string | Error</code></td>
+      <td>-</td>
+      <td>Error to display (shows error state)</td>
+    </tr>
+    <tr>
+      <td><code>showPageSizeSelector</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Show page size dropdown</td>
+    </tr>
+    <tr>
+      <td><code>showPageNumbers</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+      <td>Show clickable page numbers</td>
+    </tr>
+    <tr>
+      <td><code>siblingCount</code></td>
+      <td><code>number</code></td>
+      <td><code>1</code></td>
+      <td>Pages to show around current page</td>
+    </tr>
+    <tr>
+      <td><code>paginationPosition</code></td>
+      <td><code>'bottom' | 'top' | 'both'</code></td>
+      <td><code>'bottom'</code></td>
+      <td>Where to render pagination</td>
+    </tr>
+    <tr>
+      <td><code>enableKeyboardNavigation</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable keyboard navigation for accessibility</td>
+    </tr>
+    <tr>
+      <td><code>showRefreshButton</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show refresh button in toolbar</td>
+    </tr>
+    <tr>
+      <td><code>enableRowExpansion</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Enable row expansion for master-detail patterns</td>
+    </tr>
+    <tr>
+      <td><code>getRowCanExpand</code></td>
+      <td><code>(row: Row) =&gt; boolean</code></td>
+      <td>-</td>
+      <td>Function to determine if a row can be expanded</td>
+    </tr>
+    <tr>
+      <td><code>filterPlugins</code></td>
+      <td><code>RegisteredFilterPlugin[]</code></td>
+      <td><code>[]</code></td>
+      <td>Custom filter plugins for extending filter types</td>
+    </tr>
   </tbody>
 </table>
+
+## Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `@retry` | - | Emitted when retry button is clicked in error state |
+| `@rowActivate` | `Row<TData>` | Emitted when Enter is pressed on a focused row (requires `enableKeyboardNavigation`) |
+
+## Slots
+
+The DataTable provides several slots for customization:
+
+| Slot | Props | Description |
+|------|-------|-------------|
+| `#toolbar` | `{ table, loading }` | Replace the entire toolbar |
+| `#toolbar-start` | `{ table }` | Content before search input |
+| `#toolbar-end` | `{ table }` | Content after bulk actions |
+| `#empty` | `{ message, columns }` | Custom empty state |
+| `#error` | `{ error, retry }` | Custom error state |
+| `#pagination` | `{ table, pageCount, currentPage, pageSize, canPrevious, canNext }` | Custom pagination |
+| `#row` | `{ row, cells, isSelected, index }` | Custom row rendering |
+| `#cell-[columnId]` | `{ cell, row, value }` | Custom cell for specific column |
+| `#expanded-row` | `{ row }` | Content for expanded row (requires `enableRowExpansion`) |
+| `#footer` | `{ table, footerGroups }` | Custom footer content (replaces column footers) |
+
+### Slot Examples
+
+```vue
+<DataTable :columns="columns" :data="data" ...>
+  <!-- Add button before search -->
+  <template #toolbar-start="{ table }">
+    <Button @click="addNew">Add New</Button>
+  </template>
+
+  <!-- Custom cell for status column -->
+  <template #cell-status="{ value }">
+    <Badge :variant="value === 'active' ? 'default' : 'secondary'">
+      {{ value }}
+    </Badge>
+  </template>
+
+  <!-- Custom empty state -->
+  <template #empty="{ message }">
+    <div class="py-8 text-center">
+      <p>{{ message }}</p>
+      <Button @click="refresh">Refresh</Button>
+    </div>
+  </template>
+</DataTable>
+```
 
 ## Filter Types
 
@@ -281,21 +439,578 @@ tableRef.value.resetFilters()
 tableRef.value.resetSorting()
 tableRef.value.resetSelection()
 tableRef.value.resetAll()
+tableRef.value.refresh()  // Trigger data reload with current state
 
 // Access state
 const selected = tableRef.value.selectedRows
 const hasSelection = tableRef.value.hasSelection
+
+// Keyboard navigation methods (when enableKeyboardNavigation is true)
+tableRef.value.focusTable()  // Focus the table
+tableRef.value.blurTable()   // Remove focus from table
 </script>
 ```
+
+## Keyboard Navigation
+
+Enable keyboard navigation for improved accessibility with the `enableKeyboardNavigation` prop.
+
+### Usage
+
+```vue
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    enable-keyboard-navigation
+    enable-row-selection
+    @row-activate="handleRowActivate"
+  />
+</template>
+
+<script setup>
+const handleRowActivate = (row) => {
+  // Handle row activation (e.g., open detail view)
+  console.log('Activated row:', row.original)
+}
+</script>
+```
+
+### Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` | Navigate between rows |
+| `Home` | Jump to first row |
+| `End` | Jump to last row |
+| `PageUp` | Previous page |
+| `PageDown` | Next page |
+| `Ctrl+PageUp` | First page |
+| `Ctrl+PageDown` | Last page |
+| `Space` | Toggle row selection (when `enableRowSelection` is true) |
+| `Enter` | Activate row (emits `@rowActivate` event) |
+| `Escape` | Clear selection and focus |
+
+### Focus Behavior
+
+When keyboard navigation is enabled:
+- The table container receives `tabindex="0"` to make it focusable
+- Pressing `↑`/`↓` when entering the table focuses the first row
+- The focused row is highlighted with a visible outline
+- Focus is maintained when navigating between pages
+
+## Row Expansion
+
+Enable expandable rows for master-detail patterns with the `enableRowExpansion` prop.
+
+### Usage
+
+```vue
+<script setup>
+import { createColumnHelper } from '@meldui/vue'
+
+const helper = createColumnHelper<Order>()
+
+const columns = [
+  helper.expander(), // Add expander toggle column
+  helper.accessor('id', { title: 'Order ID' }),
+  helper.accessor('customer', { title: 'Customer' }),
+  helper.accessor('total', { title: 'Total' }),
+]
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="orders"
+    enable-row-expansion
+    :get-row-can-expand="(row) => row.original.items.length > 0"
+  >
+    <template #expanded-row="{ row }">
+      <div class="p-4">
+        <h4 class="font-medium mb-2">Order Items</h4>
+        <ul>
+          <li v-for="item in row.original.items" :key="item.id">
+            {{ item.name }} - {{ item.quantity }}x
+          </li>
+        </ul>
+      </div>
+    </template>
+  </DataTable>
+</template>
+```
+
+### Exposed Methods
+
+```typescript
+// Programmatic expansion control
+tableRef.value.expanded           // Current expansion state
+tableRef.value.resetExpanded()    // Collapse all rows
+tableRef.value.toggleAllRowsExpanded(true)  // Expand all
+tableRef.value.toggleAllRowsExpanded(false) // Collapse all
+```
+
+## Footer & Aggregations
+
+Add footer rows with summary data using column `footer` definitions or the `#footer` slot.
+
+### Using Column Footers with Aggregation Helpers
+
+```typescript
+import { createColumnHelper, aggregations } from '@meldui/vue'
+
+interface Invoice {
+  id: string
+  description: string
+  amount: number
+  tax: number
+  date: Date
+}
+
+const helper = createColumnHelper<Invoice>()
+
+const columns = [
+  helper.accessor('id', {
+    title: 'ID',
+    // Count total rows
+    footer: aggregations.count({ format: '{count} invoices' })
+  }),
+  helper.accessor('description', {
+    title: 'Description',
+  }),
+  helper.accessor('amount', {
+    title: 'Amount',
+    // Sum with currency formatting
+    footer: aggregations.sum({ format: 'currency', currency: 'USD' })
+  }),
+  helper.accessor('tax', {
+    title: 'Tax Rate',
+    // Average with percent formatting
+    footer: aggregations.average({ format: 'percent', decimals: 1 })
+  }),
+  helper.accessor('date', {
+    title: 'Date',
+    // Show date range
+    footer: aggregations.min({ format: 'date' })
+  }),
+]
+```
+
+### Available Aggregation Helpers
+
+| Helper | Description | Options |
+|--------|-------------|---------|
+| `aggregations.sum(options)` | Sum of all values | `format`, `currency`, `locale`, `decimals`, `prefix`, `suffix` |
+| `aggregations.count(options)` | Count of rows | `format` (use `{count}` placeholder), `locale` |
+| `aggregations.average(options)` | Average of all values | `format`, `currency`, `locale`, `decimals`, `prefix`, `suffix` |
+| `aggregations.min(options)` | Minimum value | `format`, `currency`, `locale`, `decimals`, `dateOptions`, `prefix`, `suffix` |
+| `aggregations.max(options)` | Maximum value | `format`, `currency`, `locale`, `decimals`, `dateOptions`, `prefix`, `suffix` |
+| `aggregations.range(options)` | Range (min – max) | `format`, `currency`, `locale`, `decimals`, `prefix`, `suffix` |
+| `aggregations.custom(fn)` | Custom aggregation | Function receiving `{ table, column }` context |
+
+### Format Options
+
+The `format` option supports:
+- `'number'` - Plain number formatting (default)
+- `'currency'` - Currency formatting (requires `currency` option)
+- `'percent'` - Percentage formatting
+- `'date'` - Date formatting (only for `min`/`max`)
+
+### Custom Aggregation Example
+
+```typescript
+helper.accessor('status', {
+  title: 'Status',
+  footer: aggregations.custom(({ table }) => {
+    const rows = table.getFilteredRowModel().rows
+    const completed = rows.filter(r => r.original.status === 'completed').length
+    return `${completed}/${rows.length} completed`
+  })
+})
+```
+
+### Custom Footer Slot
+
+For complete control over footer content, use the `#footer` slot:
+
+```vue
+<DataTable :columns="columns" :data="data" ...>
+  <template #footer="{ table }">
+    <tr>
+      <td colspan="2" class="font-medium">Totals</td>
+      <td class="font-medium">
+        {{ formatCurrency(calculateTotal(table)) }}
+      </td>
+      <td></td>
+    </tr>
+  </template>
+</DataTable>
+```
+
+## Theming with CSS Custom Properties
+
+The DataTable uses CSS custom properties defined in `@meldui/vue/themes/default.css`. Override these properties to customize the appearance:
+
+### Available Properties
+
+```css
+/* Defined in :root of your theme file */
+
+/* Header */
+--dt-header-bg: var(--muted);           /* Header background */
+--dt-header-text: var(--foreground);     /* Header text color */
+--dt-header-border: var(--border);       /* Header border color */
+
+/* Body */
+--dt-row-bg: var(--background);          /* Row background */
+--dt-row-hover-bg: var(--accent);        /* Row hover background */
+--dt-row-selected-bg: var(--muted);      /* Selected row background */
+--dt-cell-text: var(--foreground);       /* Cell text color */
+
+/* Borders */
+--dt-border-color: var(--border);        /* Table border color */
+--dt-border-radius: var(--radius);       /* Table border radius */
+
+/* Pinning */
+--dt-pinned-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Pinned column shadow */
+--dt-pinned-border: var(--border);       /* Pinned column border */
+
+/* States */
+--dt-loading-opacity: 0.6;               /* Loading state opacity */
+--dt-empty-text: var(--muted-foreground); /* Empty state text color */
+
+/* Z-index layers */
+--dt-z-body: 1;
+--dt-z-pinned: 10;
+--dt-z-header: 15;
+--dt-z-header-pinned: 20;
+
+/* Density (default: comfortable) */
+--dt-cell-padding-y: 0.5rem;
+--dt-cell-padding-x: 0.75rem;
+--dt-font-size: 0.875rem;
+--dt-line-height: 1.5;
+
+/* Column Resizing */
+--dt-resize-handle-width: 4px;
+--dt-resize-handle-bg: transparent;
+--dt-resize-handle-hover-bg: var(--primary);
+--dt-resize-handle-active-bg: var(--primary);
+
+/* Keyboard Navigation */
+--dt-focus-ring-color: var(--ring);
+--dt-focus-ring-width: 2px;
+--dt-focus-ring-offset: 2px;
+--dt-row-focused-bg: var(--accent);
+--dt-row-focused-outline: var(--primary);
+
+/* Row Expansion */
+--dt-expanded-row-bg: var(--muted);
+--dt-expanded-row-border: var(--border);
+--dt-expanded-content-padding: 1rem;
+
+/* Footer */
+--dt-footer-bg: var(--muted);
+--dt-footer-text: var(--foreground);
+--dt-footer-border: var(--border);
+--dt-footer-font-weight: 500;
+--dt-z-footer: 14;
+--dt-z-footer-pinned: 19;
+```
+
+### Theming Examples
+
+**Custom Header Style:**
+```vue
+<template>
+  <DataTable class="custom-table" ... />
+</template>
+
+<style>
+.custom-table {
+  --dt-header-bg: hsl(220 14% 96%);
+  --dt-header-text: hsl(220 14% 20%);
+  --dt-row-hover-bg: hsl(220 14% 94%);
+}
+</style>
+```
+
+**Using Density Prop:**
+```vue
+<template>
+  <!-- Built-in density options -->
+  <DataTable density="compact" ... />
+  <DataTable density="comfortable" ... />
+  <DataTable density="spacious" ... />
+</template>
+```
+
+**Custom Density Override:**
+```vue
+<style>
+/* Override density values globally */
+[data-density="compact"] {
+  --dt-cell-padding-y: 0.125rem;
+  --dt-cell-padding-x: 0.25rem;
+  --dt-font-size: 0.7rem;
+}
+</style>
+```
+
+**Striped Rows:**
+```vue
+<style>
+.striped-table :deep(tbody tr:nth-child(even)) {
+  --dt-row-bg: var(--muted);
+}
+</style>
+```
+
+**Conditional Row Styling:**
+```vue
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :row-class="(row) => ({
+      'bg-red-50 dark:bg-red-950': row.original.isOverdue,
+      'bg-green-50 dark:bg-green-950': row.original.isCompleted,
+    })"
+    :row-style="(row) => ({
+      opacity: row.original.isArchived ? 0.5 : 1
+    })"
+    :row-props="(row) => ({
+      'data-status': row.original.status,
+      onClick: () => handleRowClick(row.original)
+    })"
+  />
+</template>
+```
+
+## Column Definition Helpers
+
+Use `createColumnHelper` to reduce column definition boilerplate and get automatic header rendering.
+
+### Basic Usage
+
+```typescript
+import { createColumnHelper, cellRenderers } from '@meldui/vue'
+
+interface User {
+  id: string
+  name: string
+  email: string
+  status: 'active' | 'inactive'
+  salary: number
+  createdAt: Date
+}
+
+const helper = createColumnHelper<User>()
+
+const columns = [
+  // Selection checkbox column
+  helper.selection(),
+
+  // Accessor column with auto-generated header
+  helper.accessor('name', {
+    title: 'Name',
+    enableSorting: true,
+  }),
+
+  helper.accessor('email', {
+    title: 'Email',
+  }),
+
+  // With cell renderer
+  helper.accessor('status', {
+    title: 'Status',
+    cell: cellRenderers.badge({
+      variantMap: { active: 'default', inactive: 'secondary' }
+    })
+  }),
+
+  helper.accessor('salary', {
+    title: 'Salary',
+    cell: cellRenderers.currency({ currency: 'USD' })
+  }),
+
+  helper.accessor('createdAt', {
+    title: 'Created',
+    cell: cellRenderers.date({ format: 'medium' })
+  }),
+
+  // Actions column (dropdown mode)
+  helper.actions({
+    display: 'dropdown',
+    actions: [
+      {
+        label: 'Edit',
+        onClick: (row) => console.log('Edit', row.original)
+      },
+      {
+        label: 'Delete',
+        variant: 'destructive',
+        onClick: (row) => console.log('Delete', row.original)
+      }
+    ]
+  })
+]
+```
+
+### Column Helper Methods
+
+| Method | Description |
+|--------|-------------|
+| `helper.accessor(key, options)` | Creates an accessor column with auto-generated header |
+| `helper.display(options)` | Creates a display column (no data accessor) |
+| `helper.selection(options?)` | Creates a selection checkbox column |
+| `helper.expander(options?)` | Creates an expander toggle column for row expansion |
+| `helper.actions(options)` | Creates an actions column (inline or dropdown) |
+
+### Cell Renderers
+
+| Renderer | Description | Options |
+|----------|-------------|---------|
+| `cellRenderers.badge(options)` | Renders a Badge component | `variantMap`, `defaultVariant`, `format` |
+| `cellRenderers.date(options)` | Formats date values | `format`, `locale`, `fallback` |
+| `cellRenderers.currency(options)` | Formats as currency | `currency`, `locale`, `minimumFractionDigits` |
+| `cellRenderers.number(options)` | Formats numbers | `locale`, `useGrouping`, `compact` |
+| `cellRenderers.boolean(options)` | Formats boolean values | `trueText`, `falseText`, `asBadge` |
+| `cellRenderers.truncate(maxLength)` | Truncates text with ellipsis | `showTooltip` |
+
+### Actions Column Options
+
+```typescript
+helper.actions({
+  display: 'dropdown', // or 'inline'
+  id: 'actions',       // default: 'actions'
+  title: 'Actions',    // header title
+  dropdownLabel: 'Open menu', // for dropdown trigger
+  actions: [
+    {
+      label: 'Edit',
+      icon: IconEdit,           // optional icon
+      variant: 'ghost',         // button variant (inline mode)
+      onClick: (row) => {},     // handler
+      show: (row) => true,      // conditional visibility
+      disabled: (row) => false, // conditional disable
+    }
+  ]
+})
+```
+
+## Custom Filter Plugins
+
+Register custom filter types with the filter plugin system.
+
+### Creating a Custom Filter
+
+```typescript
+import { defineFilter, type FilterPluginComponentProps } from '@meldui/vue'
+import CurrencyFilterComponent from './CurrencyFilter.vue'
+
+// Define a custom filter plugin
+const currencyFilter = defineFilter({
+  type: 'currency',
+  component: CurrencyFilterComponent,
+  operators: ['equals', 'greaterThan', 'lessThan', 'between'],
+  defaultOperator: 'equals',
+  supportsMultiInstance: true,
+})
+
+// Use in DataTable
+<DataTable
+  :filter-plugins="[currencyFilter]"
+  :filter-fields="[
+    { id: 'price', label: 'Price', type: 'currency', currency: 'USD' }
+  ]"
+/>
+```
+
+### Custom Filter Component
+
+```vue
+<script setup lang="ts">
+import type { FilterPluginComponentProps } from '@meldui/vue'
+
+// Extend with your custom props
+const props = defineProps<FilterPluginComponentProps & {
+  currency?: string
+  min?: number
+  max?: number
+}>()
+
+// Required emit events
+const emit = defineEmits<{
+  'value-change': [value: number | undefined]
+  'remove': []
+  'close': []
+}>()
+</script>
+
+<template>
+  <!-- Your filter UI here -->
+</template>
+```
+
+### Plugin Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `type` | `string` | Unique filter type identifier |
+| `component` | `Component` | Vue component that renders the filter |
+| `operators` | `FilterOperator[]` | Available operators (optional) |
+| `defaultOperator` | `FilterOperator` | Default operator (optional) |
+| `supportsMultiInstance` | `boolean` | Allow multiple instances (default: false) |
+| `serialize` | `(value) => unknown` | Transform value for server (optional) |
+| `deserialize` | `(value) => T` | Transform server value back (optional) |
+
+### Component Props
+
+Your filter component will receive these props:
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `column` | `Column` | The table column being filtered |
+| `title` | `string` | Filter title/label |
+| `placeholder` | `string` | Placeholder text |
+| `icon` | `Component` | Icon component |
+| `defaultOpen` | `boolean` | Auto-open on mount |
+| `openTrigger` | `number` | Trigger to re-open |
+| `advancedMode` | `boolean` | Whether advanced mode is enabled |
+| `defaultOperator` | `FilterOperator` | Default operator |
+| `availableOperators` | `FilterOperator[]` | Available operators |
+| `...custom` | `unknown` | Custom props from filter field |
+
+### Required Events
+
+Your component must emit these events:
+
+- `value-change`: Emitted when the filter value changes
+- `remove`: Emitted when the filter is removed
+- `close`: Emitted when the filter popover closes
 
 ## Story Navigation
 
 Explore the following stories for detailed examples:
 
+### Core Features
 - **Basic** - Simple table, search, pagination, and sorting
 - **Filters** - All filter types with examples
 - **Selection** - Row selection and bulk actions
-- **Column Pinning** - Pinning columns left/right
 - **Advanced Filters** - Operator-based filtering
+
+### Visual Customization
+- **States** - Loading skeleton, error with retry, empty with custom slot
+- **Customization** - Slots, density variants, conditional row styling, CSS theming
+
+### Developer Experience
+- **ColumnHelpers** - `createColumnHelper`, selection column, actions column (inline/dropdown), cell renderers, aggregations
+- **Column Pinning** - Pinning columns left/right with sticky headers
+
+### Advanced Interactions
+- **InteractiveFeatures** - Column resizing, keyboard navigation, refresh button
 - **Events** - Event handling and callbacks
-- **Full Example** - Complete implementation
+
+### Complete Examples
+- **Full Example** - Complete implementation with all features
