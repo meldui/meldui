@@ -306,27 +306,93 @@ const handleServerSideChange = (params) => {
 
 ## Events
 
-| Event | Payload | Description |
-|-------|---------|-------------|
-| `@retry` | - | Emitted when retry button is clicked in error state |
-| `@rowActivate` | `Row<TData>` | Emitted when Enter is pressed on a focused row (requires `enableKeyboardNavigation`) |
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Payload</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>@retry</code></td>
+      <td>-</td>
+      <td>Emitted when retry button is clicked in error state</td>
+    </tr>
+    <tr>
+      <td><code>@rowActivate</code></td>
+      <td><code>Row&lt;TData&gt;</code></td>
+      <td>Emitted when Enter is pressed on a focused row (requires <code>enableKeyboardNavigation</code>)</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Slots
 
 The DataTable provides several slots for customization:
 
-| Slot | Props | Description |
-|------|-------|-------------|
-| `#toolbar` | `{ table, loading }` | Replace the entire toolbar |
-| `#toolbar-start` | `{ table }` | Content before search input |
-| `#toolbar-end` | `{ table }` | Content after bulk actions |
-| `#empty` | `{ message, columns }` | Custom empty state |
-| `#error` | `{ error, retry }` | Custom error state |
-| `#pagination` | `{ table, pageCount, currentPage, pageSize, canPrevious, canNext }` | Custom pagination |
-| `#row` | `{ row, cells, isSelected, index }` | Custom row rendering |
-| `#cell-[columnId]` | `{ cell, row, value }` | Custom cell for specific column |
-| `#expanded-row` | `{ row }` | Content for expanded row (requires `enableRowExpansion`) |
-| `#footer` | `{ table, footerGroups }` | Custom footer content (replaces column footers) |
+<table>
+  <thead>
+    <tr>
+      <th>Slot</th>
+      <th>Props</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>#toolbar</code></td>
+      <td><code>{'{table, loading}'}</code></td>
+      <td>Replace the entire toolbar</td>
+    </tr>
+    <tr>
+      <td><code>#toolbar-start</code></td>
+      <td><code>{'{table}'}</code></td>
+      <td>Content before search input</td>
+    </tr>
+    <tr>
+      <td><code>#toolbar-end</code></td>
+      <td><code>{'{table}'}</code></td>
+      <td>Content after bulk actions</td>
+    </tr>
+    <tr>
+      <td><code>#empty</code></td>
+      <td><code>{'{message, columns}'}</code></td>
+      <td>Custom empty state</td>
+    </tr>
+    <tr>
+      <td><code>#error</code></td>
+      <td><code>{'{error, retry}'}</code></td>
+      <td>Custom error state</td>
+    </tr>
+    <tr>
+      <td><code>#pagination</code></td>
+      <td><code>{'{table, pageCount, currentPage, pageSize, canPrevious, canNext}'}</code></td>
+      <td>Custom pagination</td>
+    </tr>
+    <tr>
+      <td><code>#row</code></td>
+      <td><code>{'{row, cells, isSelected, index}'}</code></td>
+      <td>Custom row rendering</td>
+    </tr>
+    <tr>
+      <td><code>#cell-[columnId]</code></td>
+      <td><code>{'{cell, row, value}'}</code></td>
+      <td>Custom cell for specific column</td>
+    </tr>
+    <tr>
+      <td><code>#expanded-row</code></td>
+      <td><code>{'{row}'}</code></td>
+      <td>Content for expanded row (requires <code>enableRowExpansion</code>)</td>
+    </tr>
+    <tr>
+      <td><code>#footer</code></td>
+      <td><code>{'{table, footerGroups}'}</code></td>
+      <td>Custom footer content (replaces column footers)</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Slot Examples
 
@@ -478,18 +544,56 @@ const handleRowActivate = (row) => {
 
 ### Keyboard Shortcuts
 
-| Key | Action |
-|-----|--------|
-| `↑` / `↓` | Navigate between rows |
-| `Home` | Jump to first row |
-| `End` | Jump to last row |
-| `PageUp` | Previous page |
-| `PageDown` | Next page |
-| `Ctrl+PageUp` | First page |
-| `Ctrl+PageDown` | Last page |
-| `Space` | Toggle row selection (when `enableRowSelection` is true) |
-| `Enter` | Activate row (emits `@rowActivate` event) |
-| `Escape` | Clear selection and focus |
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>↑</code> / <code>↓</code></td>
+      <td>Navigate between rows</td>
+    </tr>
+    <tr>
+      <td><code>Home</code></td>
+      <td>Jump to first row</td>
+    </tr>
+    <tr>
+      <td><code>End</code></td>
+      <td>Jump to last row</td>
+    </tr>
+    <tr>
+      <td><code>PageUp</code></td>
+      <td>Previous page</td>
+    </tr>
+    <tr>
+      <td><code>PageDown</code></td>
+      <td>Next page</td>
+    </tr>
+    <tr>
+      <td><code>Ctrl+PageUp</code></td>
+      <td>First page</td>
+    </tr>
+    <tr>
+      <td><code>Ctrl+PageDown</code></td>
+      <td>Last page</td>
+    </tr>
+    <tr>
+      <td><code>Space</code></td>
+      <td>Toggle row selection (when <code>enableRowSelection</code> is true)</td>
+    </tr>
+    <tr>
+      <td><code>Enter</code></td>
+      <td>Activate row (emits <code>@rowActivate</code> event)</td>
+    </tr>
+    <tr>
+      <td><code>Escape</code></td>
+      <td>Clear selection and focus</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Focus Behavior
 
@@ -598,15 +702,52 @@ const columns = [
 
 ### Available Aggregation Helpers
 
-| Helper | Description | Options |
-|--------|-------------|---------|
-| `aggregations.sum(options)` | Sum of all values | `format`, `currency`, `locale`, `decimals`, `prefix`, `suffix` |
-| `aggregations.count(options)` | Count of rows | `format` (use `{count}` placeholder), `locale` |
-| `aggregations.average(options)` | Average of all values | `format`, `currency`, `locale`, `decimals`, `prefix`, `suffix` |
-| `aggregations.min(options)` | Minimum value | `format`, `currency`, `locale`, `decimals`, `dateOptions`, `prefix`, `suffix` |
-| `aggregations.max(options)` | Maximum value | `format`, `currency`, `locale`, `decimals`, `dateOptions`, `prefix`, `suffix` |
-| `aggregations.range(options)` | Range (min – max) | `format`, `currency`, `locale`, `decimals`, `prefix`, `suffix` |
-| `aggregations.custom(fn)` | Custom aggregation | Function receiving `{ table, column }` context |
+<table>
+  <thead>
+    <tr>
+      <th>Helper</th>
+      <th>Description</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>aggregations.sum(options)</code></td>
+      <td>Sum of all values</td>
+      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>prefix</code>, <code>suffix</code></td>
+    </tr>
+    <tr>
+      <td><code>aggregations.count(options)</code></td>
+      <td>Count of rows</td>
+      <td><code>format</code> (use <code>{'{count}'}</code> placeholder), <code>locale</code></td>
+    </tr>
+    <tr>
+      <td><code>aggregations.average(options)</code></td>
+      <td>Average of all values</td>
+      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>prefix</code>, <code>suffix</code></td>
+    </tr>
+    <tr>
+      <td><code>aggregations.min(options)</code></td>
+      <td>Minimum value</td>
+      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code></td>
+    </tr>
+    <tr>
+      <td><code>aggregations.max(options)</code></td>
+      <td>Maximum value</td>
+      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code></td>
+    </tr>
+    <tr>
+      <td><code>aggregations.range(options)</code></td>
+      <td>Range (min – max)</td>
+      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>prefix</code>, <code>suffix</code></td>
+    </tr>
+    <tr>
+      <td><code>aggregations.custom(fn)</code></td>
+      <td>Custom aggregation</td>
+      <td>Function receiving <code>{'{table, column}'}</code> context</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Format Options
 
@@ -647,126 +788,61 @@ For complete control over footer content, use the `#footer` slot:
 </DataTable>
 ```
 
-## Theming with CSS Custom Properties
+## Styling
 
-The DataTable uses CSS custom properties defined in `@meldui/vue/themes/default.css`. Override these properties to customize the appearance:
+The DataTable uses your theme's CSS custom properties directly for consistent styling. Colors, borders, and states automatically adapt to your theme.
 
-### Available Properties
+### Theme Variables Used
+
+The DataTable references these standard theme variables:
+
+- `--background`, `--foreground` - Base colors
+- `--muted`, `--muted-foreground` - Header and footer backgrounds
+- `--accent` - Hover states
+- `--border` - All borders
+- `--ring`, `--primary` - Focus states
+
+### Density
+
+Control cell padding and font size with the `density` prop:
+
+```vue
+<template>
+  <DataTable density="compact" ... />    <!-- Tight spacing -->
+  <DataTable density="comfortable" ... /> <!-- Default -->
+  <DataTable density="spacious" ... />   <!-- Relaxed spacing -->
+</template>
+```
+
+The density system uses these CSS variables (customizable per density level):
 
 ```css
-/* Defined in :root of your theme file */
-
-/* Header */
---dt-header-bg: var(--muted);           /* Header background */
---dt-header-text: var(--foreground);     /* Header text color */
---dt-header-border: var(--border);       /* Header border color */
-
-/* Body */
---dt-row-bg: var(--background);          /* Row background */
---dt-row-hover-bg: var(--accent);        /* Row hover background */
---dt-row-selected-bg: var(--muted);      /* Selected row background */
---dt-cell-text: var(--foreground);       /* Cell text color */
-
-/* Borders */
---dt-border-color: var(--border);        /* Table border color */
---dt-border-radius: var(--radius);       /* Table border radius */
-
-/* Pinning */
---dt-pinned-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Pinned column shadow */
---dt-pinned-border: var(--border);       /* Pinned column border */
-
-/* States */
---dt-loading-opacity: 0.6;               /* Loading state opacity */
---dt-empty-text: var(--muted-foreground); /* Empty state text color */
-
-/* Z-index layers */
---dt-z-body: 1;
---dt-z-pinned: 10;
---dt-z-header: 15;
---dt-z-header-pinned: 20;
-
-/* Density (default: comfortable) */
---dt-cell-padding-y: 0.5rem;
---dt-cell-padding-x: 0.75rem;
---dt-font-size: 0.875rem;
---dt-line-height: 1.5;
-
-/* Column Resizing */
---dt-resize-handle-width: 4px;
---dt-resize-handle-bg: transparent;
---dt-resize-handle-hover-bg: var(--primary);
---dt-resize-handle-active-bg: var(--primary);
-
-/* Keyboard Navigation */
---dt-focus-ring-color: var(--ring);
---dt-focus-ring-width: 2px;
---dt-focus-ring-offset: 2px;
---dt-row-focused-bg: var(--accent);
---dt-row-focused-outline: var(--primary);
-
-/* Row Expansion */
---dt-expanded-row-bg: var(--muted);
---dt-expanded-row-border: var(--border);
---dt-expanded-content-padding: 1rem;
-
-/* Footer */
---dt-footer-bg: var(--muted);
---dt-footer-text: var(--foreground);
---dt-footer-border: var(--border);
---dt-footer-font-weight: 500;
---dt-z-footer: 14;
---dt-z-footer-pinned: 19;
-```
-
-### Theming Examples
-
-**Custom Header Style:**
-```vue
-<template>
-  <DataTable class="custom-table" ... />
-</template>
-
-<style>
-.custom-table {
-  --dt-header-bg: hsl(220 14% 96%);
-  --dt-header-text: hsl(220 14% 20%);
-  --dt-row-hover-bg: hsl(220 14% 94%);
+:root {
+  --dt-cell-padding-y: 0.5rem;
+  --dt-cell-padding-x: 0.75rem;
+  --dt-font-size: 0.875rem;
+  --dt-line-height: 1.5;
 }
-</style>
-```
 
-**Using Density Prop:**
-```vue
-<template>
-  <!-- Built-in density options -->
-  <DataTable density="compact" ... />
-  <DataTable density="comfortable" ... />
-  <DataTable density="spacious" ... />
-</template>
-```
-
-**Custom Density Override:**
-```vue
-<style>
-/* Override density values globally */
 [data-density="compact"] {
-  --dt-cell-padding-y: 0.125rem;
-  --dt-cell-padding-x: 0.25rem;
-  --dt-font-size: 0.7rem;
+  --dt-cell-padding-y: 0.25rem;
+  --dt-cell-padding-x: 0.5rem;
+  --dt-font-size: 0.75rem;
+  --dt-line-height: 1.25;
 }
-</style>
+
+[data-density="spacious"] {
+  --dt-cell-padding-y: 0.75rem;
+  --dt-cell-padding-x: 1rem;
+  --dt-font-size: 0.875rem;
+  --dt-line-height: 1.75;
+}
 ```
 
-**Striped Rows:**
-```vue
-<style>
-.striped-table :deep(tbody tr:nth-child(even)) {
-  --dt-row-bg: var(--muted);
-}
-</style>
-```
+### Conditional Row Styling
 
-**Conditional Row Styling:**
+Use the `rowClass`, `rowStyle`, and `rowProps` props for dynamic row styling:
+
 ```vue
 <template>
   <DataTable
@@ -785,6 +861,20 @@ The DataTable uses CSS custom properties defined in `@meldui/vue/themes/default.
     })"
   />
 </template>
+```
+
+### Striped Rows
+
+```vue
+<template>
+  <DataTable class="striped-table" ... />
+</template>
+
+<style>
+.striped-table :deep(tbody tr:nth-child(even) td) {
+  background-color: var(--muted);
+}
+</style>
 ```
 
 ## Column Definition Helpers
@@ -859,24 +949,80 @@ const columns = [
 
 ### Column Helper Methods
 
-| Method | Description |
-|--------|-------------|
-| `helper.accessor(key, options)` | Creates an accessor column with auto-generated header |
-| `helper.display(options)` | Creates a display column (no data accessor) |
-| `helper.selection(options?)` | Creates a selection checkbox column |
-| `helper.expander(options?)` | Creates an expander toggle column for row expansion |
-| `helper.actions(options)` | Creates an actions column (inline or dropdown) |
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>helper.accessor(key, options)</code></td>
+      <td>Creates an accessor column with auto-generated header</td>
+    </tr>
+    <tr>
+      <td><code>helper.display(options)</code></td>
+      <td>Creates a display column (no data accessor)</td>
+    </tr>
+    <tr>
+      <td><code>helper.selection(options?)</code></td>
+      <td>Creates a selection checkbox column</td>
+    </tr>
+    <tr>
+      <td><code>helper.expander(options?)</code></td>
+      <td>Creates an expander toggle column for row expansion</td>
+    </tr>
+    <tr>
+      <td><code>helper.actions(options)</code></td>
+      <td>Creates an actions column (inline or dropdown)</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Cell Renderers
 
-| Renderer | Description | Options |
-|----------|-------------|---------|
-| `cellRenderers.badge(options)` | Renders a Badge component | `variantMap`, `defaultVariant`, `format` |
-| `cellRenderers.date(options)` | Formats date values | `format`, `locale`, `fallback` |
-| `cellRenderers.currency(options)` | Formats as currency | `currency`, `locale`, `minimumFractionDigits` |
-| `cellRenderers.number(options)` | Formats numbers | `locale`, `useGrouping`, `compact` |
-| `cellRenderers.boolean(options)` | Formats boolean values | `trueText`, `falseText`, `asBadge` |
-| `cellRenderers.truncate(maxLength)` | Truncates text with ellipsis | `showTooltip` |
+<table>
+  <thead>
+    <tr>
+      <th>Renderer</th>
+      <th>Description</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>cellRenderers.badge(options)</code></td>
+      <td>Renders a Badge component</td>
+      <td><code>variantMap</code>, <code>defaultVariant</code>, <code>format</code></td>
+    </tr>
+    <tr>
+      <td><code>cellRenderers.date(options)</code></td>
+      <td>Formats date values</td>
+      <td><code>format</code>, <code>locale</code>, <code>fallback</code></td>
+    </tr>
+    <tr>
+      <td><code>cellRenderers.currency(options)</code></td>
+      <td>Formats as currency</td>
+      <td><code>currency</code>, <code>locale</code>, <code>minimumFractionDigits</code></td>
+    </tr>
+    <tr>
+      <td><code>cellRenderers.number(options)</code></td>
+      <td>Formats numbers</td>
+      <td><code>locale</code>, <code>useGrouping</code>, <code>compact</code></td>
+    </tr>
+    <tr>
+      <td><code>cellRenderers.boolean(options)</code></td>
+      <td>Formats boolean values</td>
+      <td><code>trueText</code>, <code>falseText</code>, <code>asBadge</code></td>
+    </tr>
+    <tr>
+      <td><code>cellRenderers.truncate(maxLength)</code></td>
+      <td>Truncates text with ellipsis</td>
+      <td><code>showTooltip</code></td>
+    </tr>
+  </tbody>
+</table>
 
 ### Actions Column Options
 
@@ -955,32 +1101,118 @@ const emit = defineEmits<{
 
 ### Plugin Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `type` | `string` | Unique filter type identifier |
-| `component` | `Component` | Vue component that renders the filter |
-| `operators` | `FilterOperator[]` | Available operators (optional) |
-| `defaultOperator` | `FilterOperator` | Default operator (optional) |
-| `supportsMultiInstance` | `boolean` | Allow multiple instances (default: false) |
-| `serialize` | `(value) => unknown` | Transform value for server (optional) |
-| `deserialize` | `(value) => T` | Transform server value back (optional) |
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>type</code></td>
+      <td><code>string</code></td>
+      <td>Unique filter type identifier</td>
+    </tr>
+    <tr>
+      <td><code>component</code></td>
+      <td><code>Component</code></td>
+      <td>Vue component that renders the filter</td>
+    </tr>
+    <tr>
+      <td><code>operators</code></td>
+      <td><code>FilterOperator[]</code></td>
+      <td>Available operators (optional)</td>
+    </tr>
+    <tr>
+      <td><code>defaultOperator</code></td>
+      <td><code>FilterOperator</code></td>
+      <td>Default operator (optional)</td>
+    </tr>
+    <tr>
+      <td><code>supportsMultiInstance</code></td>
+      <td><code>boolean</code></td>
+      <td>Allow multiple instances (default: false)</td>
+    </tr>
+    <tr>
+      <td><code>serialize</code></td>
+      <td><code>(value) =&gt; unknown</code></td>
+      <td>Transform value for server (optional)</td>
+    </tr>
+    <tr>
+      <td><code>deserialize</code></td>
+      <td><code>(value) =&gt; T</code></td>
+      <td>Transform server value back (optional)</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Component Props
 
 Your filter component will receive these props:
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `column` | `Column` | The table column being filtered |
-| `title` | `string` | Filter title/label |
-| `placeholder` | `string` | Placeholder text |
-| `icon` | `Component` | Icon component |
-| `defaultOpen` | `boolean` | Auto-open on mount |
-| `openTrigger` | `number` | Trigger to re-open |
-| `advancedMode` | `boolean` | Whether advanced mode is enabled |
-| `defaultOperator` | `FilterOperator` | Default operator |
-| `availableOperators` | `FilterOperator[]` | Available operators |
-| `...custom` | `unknown` | Custom props from filter field |
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>column</code></td>
+      <td><code>Column</code></td>
+      <td>The table column being filtered</td>
+    </tr>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td>Filter title/label</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>string</code></td>
+      <td>Placeholder text</td>
+    </tr>
+    <tr>
+      <td><code>icon</code></td>
+      <td><code>Component</code></td>
+      <td>Icon component</td>
+    </tr>
+    <tr>
+      <td><code>defaultOpen</code></td>
+      <td><code>boolean</code></td>
+      <td>Auto-open on mount</td>
+    </tr>
+    <tr>
+      <td><code>openTrigger</code></td>
+      <td><code>number</code></td>
+      <td>Trigger to re-open</td>
+    </tr>
+    <tr>
+      <td><code>advancedMode</code></td>
+      <td><code>boolean</code></td>
+      <td>Whether advanced mode is enabled</td>
+    </tr>
+    <tr>
+      <td><code>defaultOperator</code></td>
+      <td><code>FilterOperator</code></td>
+      <td>Default operator</td>
+    </tr>
+    <tr>
+      <td><code>availableOperators</code></td>
+      <td><code>FilterOperator[]</code></td>
+      <td>Available operators</td>
+    </tr>
+    <tr>
+      <td><code>...custom</code></td>
+      <td><code>unknown</code></td>
+      <td>Custom props from filter field</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Required Events
 
