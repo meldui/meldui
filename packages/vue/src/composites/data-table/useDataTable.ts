@@ -44,9 +44,9 @@ export interface DataTableFilterField<TData> {
 }
 
 export interface UseDataTableProps<TData> {
-  data: TData[]
-  columns: ColumnDef<TData, unknown>[]
-  pageCount: number // Required for server-side pagination
+  data: TData[] | (() => TData[])
+  columns: ColumnDef<TData, unknown>[] | (() => ColumnDef<TData, unknown>[])
+  pageCount: number | (() => number) // Required for server-side pagination
   defaultPerPage?: number
   enableRowSelection?: boolean
   filterFields?: DataTableFilterField<TData>[]
@@ -119,15 +119,22 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     valueUpdater(updaterOrValue, columnPinning as Ref<ColumnPinningState>)
   }
 
+  // Helper to resolve getter or value
+  const resolveValue = <T>(value: T | (() => T)): T => {
+    return typeof value === 'function' ? (value as () => T)() : value
+  }
+
   // Create table instance (server-side only)
   const table = useVueTable({
     get data() {
-      return props.data
+      return resolveValue(props.data)
     },
     get columns() {
-      return props.columns
+      return resolveValue(props.columns)
     },
-    pageCount: props.pageCount,
+    get pageCount() {
+      return resolveValue(props.pageCount)
+    },
     state: {
       get sorting() {
         return sorting.value

@@ -72,9 +72,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const tableState = useDataTable({
-  data: props.data,
-  columns: props.columns,
-  pageCount: props.pageCount,
+  data: () => props.data,
+  columns: () => props.columns,
+  pageCount: () => props.pageCount,
   defaultPerPage: props.defaultPerPage,
   enableRowSelection: props.enableRowSelection,
   filterFields: props.filterFields,

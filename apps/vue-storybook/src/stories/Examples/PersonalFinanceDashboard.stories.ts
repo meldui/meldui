@@ -11,8 +11,11 @@ import {
   IconCheck,
   IconCoins,
   IconCreditCard,
+  IconCurrencyDollar,
   IconDownload,
   IconEdit,
+  IconFileExport,
+  IconHash,
   IconHome,
   IconLock,
   IconLogout,
@@ -25,10 +28,13 @@ import {
   IconSettings,
   IconShield,
   IconSun,
+  IconTag,
+  IconTrash,
   IconTrendingUp,
   IconUser,
   IconWallet,
 } from '@meldui/tabler-vue'
+import type { BulkActionOption, DataTableFilterField } from '@meldui/vue'
 import {
   Avatar,
   AvatarFallback,
@@ -39,6 +45,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Checkbox,
+  DataTable,
+  DataTableColumnHeader,
+  DataTableSelectHeader,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -72,7 +82,15 @@ import {
   Textarea,
 } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { ref } from 'vue'
+import type {
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+  Table as TanStackTable,
+} from '@tanstack/vue-table'
+import { type Component, computed, h, ref } from 'vue'
 
 const meta: Meta = {
   title: 'Examples/Personal Finance Dashboard',
@@ -83,6 +101,259 @@ const meta: Meta = {
 
 export default meta
 type Story = StoryObj
+
+// ============================================================================
+// Transaction Types and Mock Data for DataTable
+// ============================================================================
+
+interface Transaction {
+  id: string
+  date: string
+  type: 'Buy' | 'Sell' | 'Dividend' | 'Transfer' | 'Fee'
+  symbol: string
+  name: string
+  shares: number
+  price: number
+  total: number
+  fees: number
+  notes: string
+  is_taxable: boolean
+  account: string
+}
+
+interface TransactionTableState {
+  sorting: SortingState
+  filters: ColumnFiltersState
+  pagination: PaginationState
+}
+
+interface TransactionServerResponse {
+  data: Transaction[]
+  meta: {
+    current_page: number
+    per_page: number
+    total: number
+    total_pages: number
+  }
+}
+
+// Stock symbols and names for generating data
+const STOCKS = [
+  { symbol: 'AAPL', name: 'Apple Inc.' },
+  { symbol: 'MSFT', name: 'Microsoft Corporation' },
+  { symbol: 'GOOGL', name: 'Alphabet Inc.' },
+  { symbol: 'TSLA', name: 'Tesla Inc.' },
+  { symbol: 'AMZN', name: 'Amazon.com Inc.' },
+  { symbol: 'NVDA', name: 'NVIDIA Corporation' },
+  { symbol: 'META', name: 'Meta Platforms Inc.' },
+  { symbol: 'JPM', name: 'JPMorgan Chase & Co.' },
+  { symbol: 'V', name: 'Visa Inc.' },
+  { symbol: 'JNJ', name: 'Johnson & Johnson' },
+  { symbol: 'WMT', name: 'Walmart Inc.' },
+  { symbol: 'PG', name: 'Procter & Gamble Co.' },
+]
+
+const TRANSACTION_TYPES: Transaction['type'][] = ['Buy', 'Sell', 'Dividend', 'Transfer', 'Fee']
+const ACCOUNTS = ['Brokerage', 'Retirement (401k)', 'IRA', 'Savings']
+
+function generateMockTransactions(count: number = 75): Transaction[] {
+  const transactions: Transaction[] = []
+  const startDate = new Date('2024-01-01')
+  const endDate = new Date('2025-11-25')
+
+  for (let i = 0; i < count; i++) {
+    const stock = STOCKS[i % STOCKS.length]
+    const type = TRANSACTION_TYPES[i % 5 === 4 ? 4 : i % 5 === 3 ? 3 : i % 3]
+    const randomDate = new Date(
+      startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()),
+    )
+
+    let shares = 0
+    let price = 0
+    let total = 0
+    let fees = 0
+
+    if (type === 'Buy' || type === 'Sell') {
+      shares = Math.floor(Math.random() * 100) + 1
+      price = Math.round((Math.random() * 400 + 50) * 100) / 100
+      fees = Math.round(Math.random() * 10 * 100) / 100
+      total = Math.round(shares * price * 100) / 100
+    } else if (type === 'Dividend') {
+      shares = Math.floor(Math.random() * 500) + 100
+      price = Math.round(Math.random() * 2 * 100) / 100
+      total = Math.round(shares * price * 100) / 100
+    } else if (type === 'Transfer') {
+      total = Math.round((Math.random() * 10000 + 1000) * 100) / 100
+    } else if (type === 'Fee') {
+      fees = Math.round((Math.random() * 50 + 5) * 100) / 100
+      total = fees
+    }
+
+    transactions.push({
+      id: `txn-${i + 1}`,
+      date: randomDate.toISOString().split('T')[0],
+      type,
+      symbol: type === 'Transfer' || type === 'Fee' ? '-' : stock.symbol,
+      name: type === 'Transfer' ? 'Account Transfer' : type === 'Fee' ? 'Platform Fee' : stock.name,
+      shares,
+      price,
+      total,
+      fees,
+      notes: i % 5 === 0 ? 'Quarterly rebalancing' : '',
+      is_taxable: type !== 'Transfer' && i % 3 !== 0,
+      account: ACCOUNTS[i % ACCOUNTS.length],
+    })
+  }
+
+  // Sort by date descending
+  return transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+}
+
+const MOCK_TRANSACTIONS = generateMockTransactions(75)
+
+// Server-side simulation for transactions
+function simulateTransactionServerSide(
+  data: Transaction[],
+  tableState: TransactionTableState,
+): TransactionServerResponse {
+  let filteredData = [...data]
+
+  // Apply filters
+  tableState.filters.forEach((filter) => {
+    const { id, value } = filter
+    if (value === undefined || value === null || value === '') return
+
+    switch (id) {
+      case 'symbol':
+        // Search is a plain string
+        if (typeof value === 'string') {
+          filteredData = filteredData.filter(
+            (txn) =>
+              txn.symbol.toLowerCase().includes(value.toLowerCase()) ||
+              txn.name.toLowerCase().includes(value.toLowerCase()),
+          )
+        }
+        break
+
+      case 'type':
+        // Multiselect returns string[]
+        if (Array.isArray(value)) {
+          filteredData = filteredData.filter((txn) => value.includes(txn.type))
+        } else if (typeof value === 'string') {
+          filteredData = filteredData.filter((txn) => txn.type === value)
+        }
+        break
+
+      case 'account':
+        // Multiselect returns string[]
+        if (Array.isArray(value)) {
+          filteredData = filteredData.filter((txn) => value.includes(txn.account))
+        }
+        break
+
+      case 'shares':
+        // Number filter returns array of numbers
+        if (Array.isArray(value)) {
+          filteredData = filteredData.filter((txn) => value.includes(txn.shares))
+        } else if (typeof value === 'number') {
+          filteredData = filteredData.filter((txn) => txn.shares === value)
+        }
+        break
+
+      case 'total':
+        // Range filter returns array of tuples [[min, max], ...]
+        if (Array.isArray(value)) {
+          filteredData = filteredData.filter((txn) =>
+            value.some((range: [number, number]) => {
+              const [min, max] = range
+              return txn.total >= min && txn.total <= max
+            }),
+          )
+        }
+        break
+
+      case 'is_taxable':
+        // Boolean filter returns boolean
+        if (typeof value === 'boolean') {
+          filteredData = filteredData.filter((txn) => txn.is_taxable === value)
+        }
+        break
+
+      case 'date':
+        // Date filter returns array of DateValue objects { year, month, day }
+        if (Array.isArray(value)) {
+          filteredData = filteredData.filter((txn) => {
+            const txnDate = new Date(txn.date)
+            return value.some((dateVal: { year: number; month: number; day: number }) => {
+              const filterDate = new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+              return txnDate.toDateString() === filterDate.toDateString()
+            })
+          })
+        }
+        break
+    }
+  })
+
+  // Apply sorting
+  if (tableState.sorting.length > 0) {
+    const { id, desc } = tableState.sorting[0]
+    filteredData.sort((a, b) => {
+      const aVal = a[id as keyof Transaction]
+      const bVal = b[id as keyof Transaction]
+      if (aVal === bVal) return 0
+      if (aVal === null || aVal === undefined) return 1
+      if (bVal === null || bVal === undefined) return -1
+
+      let comparison = 0
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        comparison = aVal.localeCompare(bVal)
+      } else {
+        comparison = aVal < bVal ? -1 : 1
+      }
+      return desc ? -comparison : comparison
+    })
+  }
+
+  // Apply pagination
+  const { pageIndex, pageSize } = tableState.pagination
+  const start = pageIndex * pageSize
+  const paginatedData = filteredData.slice(start, start + pageSize)
+
+  return {
+    data: paginatedData,
+    meta: {
+      current_page: pageIndex + 1,
+      per_page: pageSize,
+      total: filteredData.length,
+      total_pages: Math.ceil(filteredData.length / pageSize),
+    },
+  }
+}
+
+// Column header helper
+function createTransactionColumnHeader<TData, TValue>(
+  column: Column<TData, TValue>,
+  title: string,
+  table?: TanStackTable<TData>,
+) {
+  return h(DataTableColumnHeader as Component, { column, table, title })
+}
+
+// Filter options
+const transactionTypeOptions = [
+  { label: 'Buy', value: 'Buy' },
+  { label: 'Sell', value: 'Sell' },
+  { label: 'Dividend', value: 'Dividend' },
+  { label: 'Transfer', value: 'Transfer' },
+  { label: 'Fee', value: 'Fee' },
+]
+
+const accountOptions = [
+  { label: 'Brokerage', value: 'Brokerage' },
+  { label: 'Retirement (401k)', value: 'Retirement (401k)' },
+  { label: 'IRA', value: 'IRA' },
+  { label: 'Savings', value: 'Savings' },
+]
 
 export const FullApplication: Story = {
   render: () => ({
@@ -96,6 +367,7 @@ export const FullApplication: Story = {
       CardDescription,
       CardHeader,
       CardTitle,
+      DataTable,
       DropdownMenu,
       DropdownMenuContent,
       DropdownMenuItem,
@@ -375,6 +647,292 @@ export const FullApplication: Story = {
         })
       }
 
+      // ========================================================================
+      // DataTable Configuration for Transactions
+      // ========================================================================
+
+      const transactionTableRef = ref()
+
+      // Initialize with server-side simulation
+      const transactionData = ref(
+        simulateTransactionServerSide(MOCK_TRANSACTIONS, {
+          sorting: [],
+          filters: [],
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const transactionPageCount = computed(() => transactionData.value.meta.total_pages)
+
+      // Column definitions with sorting
+      const transactionColumns: ColumnDef<Transaction>[] = [
+        {
+          id: 'select',
+          header: ({ table }) => h(DataTableSelectHeader as Component, { table }),
+          cell: ({ row }) =>
+            h(Checkbox as Component, {
+              modelValue: row.getIsSelected(),
+              'onUpdate:modelValue': (value: boolean) => row.toggleSelected(!!value),
+              ariaLabel: 'Select row',
+            }),
+          enableSorting: false,
+          enableHiding: false,
+        },
+        {
+          accessorKey: 'date',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Date', table),
+          cell: ({ row }) => {
+            const date = new Date(row.getValue('date') as string)
+            return h(
+              'div',
+              { class: 'font-medium' },
+              date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            )
+          },
+          meta: { displayName: 'Date' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'type',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Type', table),
+          cell: ({ row }) => {
+            const type = row.getValue('type') as string
+            const variants: Record<string, string> = {
+              Buy: 'default',
+              Sell: 'destructive',
+              Dividend: 'secondary',
+              Transfer: 'outline',
+              Fee: 'outline',
+            }
+            return h(Badge as Component, { variant: variants[type] || 'default' }, () => type)
+          },
+          meta: { displayName: 'Type' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'symbol',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Symbol', table),
+          cell: ({ row }) => h('div', { class: 'font-bold' }, row.getValue('symbol')),
+          meta: { displayName: 'Symbol' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'name',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Name', table),
+          cell: ({ row }) =>
+            h(
+              'div',
+              { class: 'text-muted-foreground max-w-[200px] truncate' },
+              row.getValue('name'),
+            ),
+          meta: { displayName: 'Name' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'shares',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Shares', table),
+          cell: ({ row }) => {
+            const shares = row.getValue('shares') as number
+            return h('div', { class: 'text-right' }, shares > 0 ? shares.toString() : '-')
+          },
+          meta: { displayName: 'Shares' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'price',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Price', table),
+          cell: ({ row }) => {
+            const price = row.getValue('price') as number
+            return h(
+              'div',
+              { class: 'text-right' },
+              price > 0
+                ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+                    price,
+                  )
+                : '-',
+            )
+          },
+          meta: { displayName: 'Price' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'total',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Total', table),
+          cell: ({ row }) => {
+            const total = row.getValue('total') as number
+            const type = row.original.type
+            const isPositive = type === 'Sell' || type === 'Dividend'
+            return h(
+              'div',
+              { class: `text-right font-medium ${isPositive ? 'text-success' : ''}` },
+              new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total),
+            )
+          },
+          meta: { displayName: 'Total' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'account',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Account', table),
+          cell: ({ row }) =>
+            h(Badge as Component, { variant: 'outline' }, () => row.getValue('account')),
+          meta: { displayName: 'Account' },
+          enableSorting: true,
+        },
+        {
+          accessorKey: 'is_taxable',
+          header: ({ column, table }) => createTransactionColumnHeader(column, 'Taxable', table),
+          cell: ({ row }) => {
+            const taxable = row.getValue('is_taxable') as boolean
+            return taxable
+              ? h(Badge as Component, { variant: 'default', class: 'bg-amber-500' }, () => 'Yes')
+              : h(Badge as Component, { variant: 'secondary' }, () => 'No')
+          },
+          meta: { displayName: 'Taxable' },
+        },
+      ]
+
+      // Filter fields - demonstrating multiple filter types
+      const transactionFilterFields: DataTableFilterField<Transaction>[] = [
+        {
+          id: 'type',
+          label: 'Type',
+          type: 'multiselect',
+          icon: IconTag,
+          options: transactionTypeOptions,
+        },
+        {
+          id: 'account',
+          label: 'Account',
+          type: 'multiselect',
+          icon: IconBuildingBank,
+          options: accountOptions,
+        },
+        {
+          id: 'total',
+          label: 'Amount',
+          type: 'range',
+          icon: IconCurrencyDollar,
+          range: [0, 50000] as [number, number],
+          step: 500,
+          unit: '$',
+        },
+        {
+          id: 'shares',
+          label: 'Shares',
+          type: 'number',
+          icon: IconHash,
+          placeholder: 'Enter shares',
+          min: 1,
+          max: 1000,
+        },
+        {
+          id: 'is_taxable',
+          label: 'Taxable',
+          type: 'boolean',
+          icon: IconCheck,
+        },
+        {
+          id: 'date',
+          label: 'Date',
+          type: 'date',
+          icon: IconCalendar,
+          placeholder: 'Pick a date',
+        },
+      ]
+
+      // Bulk actions
+      const transactionBulkActions: BulkActionOption<Transaction>[] = [
+        {
+          label: 'Export CSV',
+          icon: IconFileExport,
+          action: () => {
+            const selectedRows = transactionTableRef.value?.selectedRows as
+              | Transaction[]
+              | undefined
+            if (selectedRows && selectedRows.length > 0) {
+              const headers = [
+                'Date',
+                'Type',
+                'Symbol',
+                'Name',
+                'Shares',
+                'Price',
+                'Total',
+                'Account',
+              ]
+              const csv = [
+                headers.join(','),
+                ...selectedRows.map((row) =>
+                  [
+                    row.date,
+                    row.type,
+                    row.symbol,
+                    row.name,
+                    row.shares,
+                    row.price,
+                    row.total,
+                    row.account,
+                  ].join(','),
+                ),
+              ].join('\n')
+              const blob = new Blob([csv], { type: 'text/csv' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `transactions-${new Date().toISOString().slice(0, 10)}.csv`
+              a.click()
+              URL.revokeObjectURL(url)
+              alert(`Exported ${selectedRows.length} transaction(s) to CSV`)
+            }
+          },
+        },
+        {
+          label: 'Export JSON',
+          icon: IconDownload,
+          action: () => {
+            const selectedRows = transactionTableRef.value?.selectedRows as
+              | Transaction[]
+              | undefined
+            if (selectedRows && selectedRows.length > 0) {
+              const data = JSON.stringify(selectedRows, null, 2)
+              const blob = new Blob([data], { type: 'application/json' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `transactions-${new Date().toISOString().slice(0, 10)}.json`
+              a.click()
+              URL.revokeObjectURL(url)
+              alert(`Exported ${selectedRows.length} transaction(s) to JSON`)
+            }
+          },
+        },
+        {
+          label: 'Delete',
+          icon: IconTrash,
+          variant: 'destructive',
+          action: () => {
+            const selectedRows = transactionTableRef.value?.selectedRows as
+              | Transaction[]
+              | undefined
+            if (selectedRows && selectedRows.length > 0) {
+              if (
+                confirm(`Are you sure you want to delete ${selectedRows.length} transaction(s)?`)
+              ) {
+                alert(`Deleted ${selectedRows.length} transaction(s)`)
+                transactionTableRef.value?.resetSelection()
+              }
+            }
+          },
+        },
+      ]
+
+      // Handle server-side changes
+      const handleTransactionChange = (state: TransactionTableState) => {
+        transactionData.value = simulateTransactionServerSide(MOCK_TRANSACTIONS, state)
+      }
+
       return {
         activePage,
         portfolioValue,
@@ -398,6 +956,14 @@ export const FullApplication: Story = {
         formatCurrency,
         formatPercent,
         formatDate,
+        // DataTable for Transactions
+        transactionTableRef,
+        transactionData,
+        transactionPageCount,
+        transactionColumns,
+        transactionFilterFields,
+        transactionBulkActions,
+        handleTransactionChange,
       }
     },
     template: `
@@ -853,50 +1419,28 @@ export const FullApplication: Story = {
             <div class="flex items-center justify-between">
               <div>
                 <h2 class="text-2xl font-bold">Transaction History</h2>
-                <p class="text-muted-foreground">All your investment activities</p>
+                <p class="text-muted-foreground">
+                  {{ transactionData.meta.total }} transactions • Filter, sort, and export your investment activities
+                </p>
               </div>
-              <Button>
-                <IconDownload :size="16" class="mr-2" />
-                Export
-              </Button>
             </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>All Transactions</CardTitle>
-                <CardDescription>Complete transaction history</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Type</TableHead>
-                      <TableHead>Symbol</TableHead>
-                      <TableHead class="text-right">Shares</TableHead>
-                      <TableHead class="text-right">Price</TableHead>
-                      <TableHead class="text-right">Total</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow v-for="(transaction, index) in transactions" :key="index">
-                      <TableCell class="text-muted-foreground">{{ formatDate(transaction.date) }}</TableCell>
-                      <TableCell>
-                        <Badge
-                          :variant="transaction.type === 'Buy' ? 'default' : transaction.type === 'Sell' ? 'destructive' : 'secondary'"
-                        >
-                          {{ transaction.type }}
-                        </Badge>
-                      </TableCell>
-                      <TableCell class="font-medium">{{ transaction.symbol }}</TableCell>
-                      <TableCell class="text-right">{{ transaction.shares }}</TableCell>
-                      <TableCell class="text-right">{{ formatCurrency(transaction.price) }}</TableCell>
-                      <TableCell class="text-right font-medium">{{ formatCurrency(transaction.total) }}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+            <DataTable
+              ref="transactionTableRef"
+              :columns="transactionColumns"
+              :data="transactionData.data"
+              :page-count="transactionPageCount"
+              :on-server-side-change="handleTransactionChange"
+              :filter-fields="transactionFilterFields"
+              :enable-row-selection="true"
+              :show-selected-count="true"
+              :bulk-select-options="transactionBulkActions"
+              :default-per-page="10"
+              :page-size-options="[10, 20, 50, 100]"
+              search-column="symbol"
+              search-placeholder="Search by symbol or name..."
+              max-height="600px"
+            />
           </div>
 
           <!-- Accounts Page -->
