@@ -15,6 +15,7 @@ import {
   type CSSProperties,
   computed,
   type HTMLAttributes,
+  nextTick,
   ref,
   useSlots,
 } from 'vue'
@@ -192,9 +193,11 @@ const {
 const tableContainerRef = ref<HTMLElement | null>(null)
 
 // Ref callback function for the table container
+// The outer container handles scrolling; inner Table.vue overflow is disabled via CSS
 const setTableContainerRef = (el: Element | ComponentPublicInstance | null) => {
   const element = el instanceof Element ? el : null
   tableContainerRef.value = element as HTMLElement | null
+
   if (element && pinnedTableRef) {
     pinnedTableRef.value = element as HTMLElement
   }
@@ -336,7 +339,7 @@ defineExpose({
             </slot>
         </template>
 
-        <!-- Table Container with horizontal and vertical scroll -->
+        <!-- Table Container wrapper - scrolling happens here, inner Table overflow is disabled -->
         <div
             :ref="setTableContainerRef"
             class="rounded-md border table-container overflow-auto"
@@ -346,6 +349,7 @@ defineExpose({
             }"
             :data-loading="loading"
             :data-density="density"
+            :data-column-resizing="enableColumnResizing || undefined"
             :tabindex="enableKeyboardNavigation ? 0 : undefined"
             :data-keyboard-navigation="enableKeyboardNavigation || undefined"
         >
@@ -362,7 +366,7 @@ defineExpose({
                             :colSpan="header.colSpan"
                             :data-column-id="header.column.id"
                             :class="[getPinningClass(header.column.id), { 'relative': enableColumnResizing, 'border-r border-border last:border-r-0': bordered }]"
-                            :style="{ width: header.getSize() !== 150 ? `${header.getSize()}px` : undefined }"
+                            :style="{ minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined, width: enableColumnResizing ? `${header.getSize()}px` : undefined }"
                         >
                             <FlexRender
                                 v-if="!header.isPlaceholder"
@@ -452,7 +456,7 @@ defineExpose({
                                         :key="cell.id"
                                         :data-column-id="cell.column.id"
                                         :class="[getPinningClass(cell.column.id), { 'border-r border-border last:border-r-0': bordered }]"
-                                        :style="{ width: cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : undefined }"
+                                        :style="{ minWidth: cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : undefined, width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined }"
                                     >
                                         <!-- Cell slot: Use #cell-[columnId] to customize specific column cells -->
                                         <slot
@@ -520,7 +524,7 @@ defineExpose({
                                 :colSpan="header.colSpan"
                                 :data-column-id="header.column.id"
                                 :class="getPinningClass(header.column.id)"
-                                :style="{ width: header.getSize() !== 150 ? `${header.getSize()}px` : undefined }"
+                                :style="{ minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined, width: enableColumnResizing ? `${header.getSize()}px` : undefined }"
                             >
                                 <FlexRender
                                     v-if="!header.isPlaceholder && header.column.columnDef.footer"
@@ -553,8 +557,12 @@ defineExpose({
 <style scoped>
 /*
  * DataTable Styles
- * CSS custom properties are defined in @meldui/vue/themes/default.css
- * Override --dt-* variables to customize appearance
+ *
+ * NOTE: Column pinning styles are in @meldui/vue/themes/default.css
+ * They use global selectors (.table-container .pinned-left, etc.) because
+ * Vue scoped CSS with :deep() doesn't reliably apply to nested child components.
+ *
+ * Override --dt-* CSS variables to customize appearance.
  */
 
 /* Table container */
@@ -563,73 +571,9 @@ defineExpose({
     border-radius: var(--dt-border-radius);
 }
 
-/* Sticky header for vertical scroll */
-:deep(thead th) {
-    position: sticky;
-    top: 0;
-    z-index: var(--dt-z-header);
-    background-color: var(--dt-header-bg);
-    color: var(--dt-header-text);
-    border-bottom: 1px solid var(--dt-header-border);
-}
-
-/* Base pinned column styles */
-:deep(.pinned-left),
-:deep(.pinned-right) {
-    position: sticky;
-    z-index: var(--dt-z-pinned);
-}
-
-:deep(.pinned-left) {
-    left: var(--col-left-offset, 0);
-}
-
-:deep(.pinned-right) {
-    right: var(--col-right-offset, 0);
-}
-
-/* Border separators for edge pinned columns */
-:deep(.pinned-left-last) {
-    border-right: 1px solid var(--dt-pinned-border);
-}
-
-:deep(.pinned-right-first) {
-    border-left: 1px solid var(--dt-pinned-border);
-}
-
-/* Header pinned columns - elevated z-index */
-:deep(thead .pinned-left),
-:deep(thead .pinned-right) {
-    z-index: var(--dt-z-header-pinned);
-}
-
-/* Ensure table and cells have solid backgrounds */
-:deep(table) {
-    background-color: var(--dt-row-bg);
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-:deep(thead),
-:deep(th) {
-    background-color: var(--dt-header-bg);
-}
-
-:deep(tbody tr) {
-    background-color: var(--dt-row-bg);
-    color: var(--dt-cell-text);
-}
-
-:deep(tbody tr:hover) {
-    background-color: var(--dt-row-hover-bg);
-}
-
-:deep(tbody tr[data-state="selected"]) {
-    background-color: var(--dt-row-selected-bg);
-}
-
-:deep(td) {
-    background-color: inherit;
+/* Disable inner Table.vue overflow - scrolling happens on .table-container */
+:deep([data-slot="table-container"]) {
+    overflow: visible !important;
 }
 
 /* Loading state overlay effect */
@@ -643,27 +587,9 @@ defineExpose({
    properties that are set on ancestor elements via attribute selectors like [data-density="compact"].
    All other CSS variables used here are defined in :root, so they work fine with :deep(). */
 
-/* Column resize handle */
-.resize-handle {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: var(--dt-resize-handle-width);
-    cursor: col-resize;
-    user-select: none;
-    touch-action: none;
-    background-color: var(--dt-resize-handle-bg);
-    transition: background-color 0.15s ease;
-}
-
-.resize-handle:hover {
-    background-color: var(--dt-resize-handle-hover-bg);
-}
-
-.resize-handle[data-resizing] {
-    background-color: var(--dt-resize-handle-active-bg);
-}
+/* Column resize handle styles are in @meldui/vue/themes/default.css
+   They use global selectors (.table-container .resize-handle) because
+   Vue scoped CSS doesn't reliably apply to dynamically rendered elements. */
 
 /* Expanded row styles */
 :deep(.expanded-row) {
@@ -678,7 +604,7 @@ defineExpose({
     padding: var(--dt-expanded-content-padding);
 }
 
-/* Footer styles */
+/* Footer styles - sticky positioning */
 :deep(.table-footer) {
     position: sticky;
     bottom: 0;
@@ -692,9 +618,30 @@ defineExpose({
     font-weight: var(--dt-footer-font-weight);
 }
 
-/* Footer pinned columns */
-:deep(.table-footer .pinned-left),
-:deep(.table-footer .pinned-right) {
-    z-index: var(--dt-z-footer-pinned);
+/* Column resizing - use fixed table layout for consistent resizing */
+.table-container[data-column-resizing] :deep(table) {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* Column resizing - prevent content overflow in cells */
+.table-container[data-column-resizing] :deep(th),
+.table-container[data-column-resizing] :deep(td) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Add extra padding to header cells for resize handle clearance */
+.table-container[data-column-resizing] :deep(th) {
+    padding-right: calc(var(--dt-cell-padding-x) + 8px);
+}
+
+/* Apply overflow handling to body cell content (nested elements) */
+.table-container[data-column-resizing] :deep(td > *) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
 </style>

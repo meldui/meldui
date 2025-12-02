@@ -25,6 +25,8 @@ export interface AccessorColumnOptions<TData, TValue = unknown> {
   enablePinning?: boolean
   /** Custom cell renderer */
   cell?: (props: CellContext<TData, TValue>) => VNode | string | number | null
+  /** Custom footer renderer */
+  footer?: (props: HeaderContext<TData, TValue>) => VNode | string | number | null
   /** Column size */
   size?: number
   /** Minimum column size */
@@ -109,7 +111,7 @@ export interface SelectionColumnOptions {
   id?: string
   /** Enable pinning (default: true) */
   enablePinning?: boolean
-  /** Column size (default: 40) */
+  /** Column size (default: 32) */
   size?: number
 }
 
@@ -182,9 +184,15 @@ export function createColumnHelper<TData>() {
             column,
             title: options.title,
           }),
-        cell: options.cell
-          ? (props: CellContext<TData, TData[TKey]>) => options.cell!(props)
-          : undefined,
+        // Only include cell if a custom renderer is provided
+        // Otherwise let TanStack Table use its default cell renderer (getValue())
+        ...(options.cell && {
+          cell: (props: CellContext<TData, TData[TKey]>) => options.cell!(props),
+        }),
+        // Only include footer if a custom renderer is provided
+        ...(options.footer && {
+          footer: (props: HeaderContext<TData, TData[TKey]>) => options.footer!(props),
+        }),
         enableSorting: options.enableSorting ?? true,
         enableHiding: options.enableHiding ?? true,
         enablePinning: options.enablePinning ?? true,
@@ -228,7 +236,7 @@ export function createColumnHelper<TData>() {
      */
     selection(options?: SelectionColumnOptions): ColumnDef<TData, unknown> {
       const id = options?.id ?? 'select'
-      const size = options?.size ?? 40
+      const size = options?.size ?? 32
 
       return {
         id,
@@ -252,6 +260,7 @@ export function createColumnHelper<TData>() {
           }),
         enableSorting: false,
         enableHiding: false,
+        enableResizing: false,
         enablePinning: options?.enablePinning ?? true,
         size,
         minSize: size,
@@ -297,6 +306,7 @@ export function createColumnHelper<TData>() {
         },
         enableSorting: false,
         enableHiding: false,
+        enableResizing: false,
         enablePinning: options?.enablePinning ?? true,
         size,
         minSize: size,

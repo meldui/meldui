@@ -7,6 +7,7 @@ import {
   Badge,
   Button,
   Checkbox,
+  createColumnHelper,
   DataTableColumnHeader,
   DataTableSelectHeader,
   DropdownMenu,
@@ -326,40 +327,20 @@ export const minimalColumns: ColumnDef<User>[] = [
 ]
 
 /**
+ * Column helper for User type
+ */
+const helper = createColumnHelper<User>()
+
+/**
  * Columns with selection checkbox
  */
-export const columnsWithSelection: ColumnDef<User>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => h(DataTableSelectHeader as Component, { table }),
-    cell: ({ row }) =>
-      h(Checkbox as Component, {
-        modelValue: row.getIsSelected(),
-        'onUpdate:modelValue': (value: boolean) => row.toggleSelected(!!value),
-        ariaLabel: 'Select row',
-      }),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  ...minimalColumns,
-]
+export const columnsWithSelection: ColumnDef<User>[] = [helper.selection(), ...minimalColumns]
 
 /**
  * Extended columns with more fields
  */
 export const extendedColumns: ColumnDef<User>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => h(DataTableSelectHeader as Component, { table }),
-    cell: ({ row }) =>
-      h(Checkbox as Component, {
-        modelValue: row.getIsSelected(),
-        'onUpdate:modelValue': (value: boolean) => row.toggleSelected(!!value),
-        ariaLabel: 'Select row',
-      }),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  helper.selection(),
   {
     accessorKey: 'name',
     header: ({ column, table }) => createColumnHeader(column, 'Name', table),

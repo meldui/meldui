@@ -178,10 +178,10 @@
   --dt-line-height: 1.5;
 
   /* Column Resizing */
-  --dt-resize-handle-width: 4px;
-  --dt-resize-handle-bg: transparent;
-  --dt-resize-handle-hover-bg: var(--primary);
-  --dt-resize-handle-active-bg: var(--primary);
+  --dt-resize-handle-width: 1px;
+  --dt-resize-handle-bg: var(--border);
+  --dt-resize-handle-hover-bg: var(--muted-foreground);
+  --dt-resize-handle-active-bg: var(--ring);
 
   /* Keyboard Navigation */
   --dt-focus-ring-color: var(--ring);
@@ -260,4 +260,145 @@
   background-color: var(--dt-row-focused-bg);
   outline: 1px solid var(--dt-row-focused-outline);
   outline-offset: -1px;
+}
+
+/* ==========================================================================
+   DataTable Column Pinning Styles
+   ========================================================================== */
+
+/* Table must use border-collapse: separate for sticky positioning to work */
+.table-container table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: var(--dt-row-bg);
+}
+
+/* Sticky header for vertical scroll */
+.table-container thead th {
+  position: sticky;
+  top: 0;
+  z-index: var(--dt-z-header);
+  background-color: var(--dt-header-bg);
+  color: var(--dt-header-text);
+  border-bottom: 1px solid var(--dt-header-border);
+}
+
+/* Base pinned column styles - sticky positioning */
+.table-container .pinned-left,
+.table-container .pinned-right {
+  position: sticky;
+  z-index: var(--dt-z-pinned);
+}
+
+.table-container .pinned-left {
+  left: var(--col-left-offset, 0);
+}
+
+.table-container .pinned-right {
+  right: var(--col-right-offset, 0);
+}
+
+/* Pinned header cells need higher z-index */
+.table-container thead th.pinned-left,
+.table-container thead th.pinned-right {
+  z-index: var(--dt-z-header-pinned);
+}
+
+/* Pinned body cells need solid background to hide scrolling content */
+.table-container tbody td.pinned-left,
+.table-container tbody td.pinned-right {
+  background-color: var(--dt-row-bg);
+}
+
+/* Hover state for pinned cells */
+.table-container tbody tr:hover td.pinned-left,
+.table-container tbody tr:hover td.pinned-right {
+  background-color: var(--dt-row-hover-bg);
+}
+
+/* Selected state for pinned cells */
+.table-container tbody tr[data-state="selected"] td.pinned-left,
+.table-container tbody tr[data-state="selected"] td.pinned-right {
+  background-color: var(--dt-row-selected-bg);
+}
+
+/* Border separator for last left-pinned column */
+.table-container .pinned-left-last {
+  border-right: 1px solid var(--dt-pinned-border);
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Border separator for first right-pinned column */
+.table-container .pinned-right-first {
+  border-left: 1px solid var(--dt-pinned-border);
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode shadow adjustments */
+.dark .table-container .pinned-left-last {
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.dark .table-container .pinned-right-first {
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer pinned columns */
+.table-container tfoot td.pinned-left,
+.table-container tfoot td.pinned-right {
+  background-color: var(--dt-footer-bg);
+  z-index: var(--dt-z-footer-pinned);
+}
+
+/* ==========================================================================
+   DataTable Column Resizing Styles
+   ========================================================================== */
+
+/* Column resize handle - positioned at right edge of header cells */
+.table-container .resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: var(--dt-resize-handle-width);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  background-color: var(--dt-resize-handle-bg);
+  transition: background-color 0.15s ease;
+}
+
+.table-container .resize-handle:hover {
+  background-color: var(--dt-resize-handle-hover-bg);
+}
+
+.table-container .resize-handle[data-resizing] {
+  background-color: var(--dt-resize-handle-active-bg);
+}
+
+/* Column resizing - use fixed table layout for consistent resizing */
+.table-container[data-column-resizing] table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Column resizing - prevent content overflow in cells */
+.table-container[data-column-resizing] th,
+.table-container[data-column-resizing] td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Add extra padding to header cells for resize handle clearance */
+.table-container[data-column-resizing] th {
+  padding-right: calc(var(--dt-cell-padding-x) + 8px);
+}
+
+/* Apply overflow handling to body cell content (nested elements) */
+.table-container[data-column-resizing] td > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }

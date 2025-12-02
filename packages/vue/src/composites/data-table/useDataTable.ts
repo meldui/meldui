@@ -209,7 +209,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     manualFiltering: true,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: props.enableRowExpansion ? getExpandedRowModel() : undefined,
-    getRowCanExpand: props.getRowCanExpand,
+    // Default to allowing all rows to expand when enableRowExpansion is true
+    getRowCanExpand: props.enableRowExpansion ? (props.getRowCanExpand ?? (() => true)) : undefined,
     // State change handlers
     onSortingChange,
     onColumnFiltersChange,

@@ -30,3 +30,6 @@ Thumbs.db
 npm-debug.log*
 pnpm-debug.log*
 *.tsbuildinfo
+
+# Playwright
+.playwright-mcp
