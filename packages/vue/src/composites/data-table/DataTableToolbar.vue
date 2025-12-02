@@ -7,14 +7,14 @@ import { Input } from '@/components/ui/input'
 import DataTableBulkActions from './DataTableBulkActions.vue'
 import DataTableFilterCommand from './DataTableFilterCommand.vue'
 import DataTableViewOptions from './DataTableViewOptions.vue'
-import DataTableBooleanFilter from './filters/DataTableBooleanFilter.vue'
-import DataTableDateFilter from './filters/DataTableDateFilter.vue'
-import DataTableDateRangeFilter from './filters/DataTableDateRangeFilter.vue'
-import DataTableMultiSelectFilter from './filters/DataTableMultiSelectFilter.vue'
-import DataTableNumberFilter from './filters/DataTableNumberFilter.vue'
-import DataTableRangeFilter from './filters/DataTableRangeFilter.vue'
-import DataTableSelectFilter from './filters/DataTableSelectFilter.vue'
-import DataTableTextFilter from './filters/DataTableTextFilter.vue'
+import BooleanFilter from './filters/BooleanFilter.vue'
+import DateFilter from './filters/DateFilter.vue'
+import DateRangeFilter from './filters/DateRangeFilter.vue'
+import MultiSelectFilter from './filters/MultiSelectFilter.vue'
+import NumberFilter from './filters/NumberFilter.vue'
+import RangeFilter from './filters/RangeFilter.vue'
+import SelectFilter from './filters/SelectFilter.vue'
+import TextFilter from './filters/TextFilter.vue'
 import type {
   AdvancedFilterValue,
   BooleanOperator,
@@ -313,7 +313,7 @@ onUnmounted(() => {
                 :key="instance.instanceId"
             >
                 <!-- Text Filter -->
-                <DataTableTextFilter
+                <TextFilter
                     v-if="instance.field.type === 'text'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"
@@ -340,7 +340,7 @@ onUnmounted(() => {
                 />
 
                 <!-- Number Filter -->
-                <DataTableNumberFilter
+                <NumberFilter
                     v-else-if="instance.field.type === 'number'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"
@@ -371,7 +371,7 @@ onUnmounted(() => {
                 />
 
                 <!-- Date Filter -->
-                <DataTableDateFilter
+                <DateFilter
                     v-else-if="instance.field.type === 'date'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"
@@ -398,7 +398,7 @@ onUnmounted(() => {
                 />
 
                 <!-- Select Filter -->
-                <DataTableSelectFilter
+                <SelectFilter
                     v-else-if="instance.field.type === 'select'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"
@@ -426,7 +426,7 @@ onUnmounted(() => {
                 />
 
                 <!-- Boolean Filter -->
-                <DataTableBooleanFilter
+                <BooleanFilter
                     v-else-if="instance.field.type === 'boolean'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"
@@ -452,7 +452,7 @@ onUnmounted(() => {
                 />
 
                 <!-- MultiSelect Filter -->
-                <DataTableMultiSelectFilter
+                <MultiSelectFilter
                     v-else-if="instance.field.type === 'multiselect'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"
@@ -471,7 +471,7 @@ onUnmounted(() => {
                 />
 
                 <!-- Range Filter -->
-                <DataTableRangeFilter
+                <RangeFilter
                     v-else-if="instance.field.type === 'range'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"
@@ -497,7 +497,7 @@ onUnmounted(() => {
                 />
 
                 <!-- DateRange Filter -->
-                <DataTableDateRangeFilter
+                <DateRangeFilter
                     v-else-if="instance.field.type === 'daterange'"
                     :column="table.getColumn(instance.fieldId)"
                     :title="instance.field.label"

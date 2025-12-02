@@ -6,15 +6,12 @@ export { default as DataTablePagination } from './DataTablePagination.vue'
 export { default as DataTableSelectHeader } from './DataTableSelectHeader.vue'
 export { default as DataTableToolbar } from './DataTableToolbar.vue'
 export { default as DataTableViewOptions } from './DataTableViewOptions.vue'
-export { default as DataTableBooleanFilter } from './filters/DataTableBooleanFilter.vue'
-export { default as DataTableDateFilter } from './filters/DataTableDateFilter.vue'
-export { default as DataTableDateRangeFilter } from './filters/DataTableDateRangeFilter.vue'
 // Filter components
-export { default as DataTableMultiSelectFilter } from './filters/DataTableMultiSelectFilter.vue'
-export { default as DataTableNumberFilter } from './filters/DataTableNumberFilter.vue'
-export { default as DataTableRangeFilter } from './filters/DataTableRangeFilter.vue'
-export { default as DataTableSelectFilter } from './filters/DataTableSelectFilter.vue'
-export { default as DataTableTextFilter } from './filters/DataTableTextFilter.vue'
+export { default as BooleanFilter } from './filters/BooleanFilter.vue'
+export { default as DateFilter } from './filters/DateFilter.vue'
+export { default as DateRangeFilter } from './filters/DateRangeFilter.vue'
+export { default as MultiSelectFilter } from './filters/MultiSelectFilter.vue'
+export { default as NumberFilter } from './filters/NumberFilter.vue'
 // Re-export operator utilities
 export {
   getAvailableOperators,
@@ -25,6 +22,9 @@ export {
   isNullaryOperator,
   isValidOperator,
 } from './filters/operators'
+export { default as RangeFilter } from './filters/RangeFilter.vue'
+export { default as SelectFilter } from './filters/SelectFilter.vue'
+export { default as TextFilter } from './filters/TextFilter.vue'
 // Re-export types
 export type {
   AdvancedFilterValue,

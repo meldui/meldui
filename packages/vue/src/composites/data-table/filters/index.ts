@@ -1,10 +1,10 @@
 // Filter components
 
-export { default as DataTableBooleanFilter } from './DataTableBooleanFilter.vue'
-export { default as DataTableDateFilter } from './DataTableDateFilter.vue'
-export { default as DataTableDateRangeFilter } from './DataTableDateRangeFilter.vue'
-export { default as DataTableMultiSelectFilter } from './DataTableMultiSelectFilter.vue'
-export { default as DataTableNumberFilter } from './DataTableNumberFilter.vue'
-export { default as DataTableRangeFilter } from './DataTableRangeFilter.vue'
-export { default as DataTableSelectFilter } from './DataTableSelectFilter.vue'
-export { default as DataTableTextFilter } from './DataTableTextFilter.vue'
+export { default as BooleanFilter } from './BooleanFilter.vue'
+export { default as DateFilter } from './DateFilter.vue'
+export { default as DateRangeFilter } from './DateRangeFilter.vue'
+export { default as MultiSelectFilter } from './MultiSelectFilter.vue'
+export { default as NumberFilter } from './NumberFilter.vue'
+export { default as RangeFilter } from './RangeFilter.vue'
+export { default as SelectFilter } from './SelectFilter.vue'
+export { default as TextFilter } from './TextFilter.vue'
