@@ -3,7 +3,7 @@ import { IconX } from '@meldui/tabler-vue'
 import type { Column } from '@tanstack/vue-table'
 import { type Component, computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
-import type { Input } from '@/components/ui/input'
+import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
@@ -54,7 +54,7 @@ const localOperator = ref<TextOperator>(
 )
 const localValue = ref('')
 const appliedValue = ref<string | { operator: TextOperator; value: string } | undefined>(undefined)
-const inputRef = ref<InstanceType<typeof Input> | null>(null)
+const inputRef = ref<{ $el: HTMLInputElement } | null>(null)
 
 // Watch openTrigger to programmatically reopen
 watch(
@@ -200,8 +200,7 @@ const displayOperator = computed(() => {
                     :class="
                         cn(
                             'h-8',
-                            isFiltered &&
-                                'border-primary rounded-r-none border-r-0',
+                            isFiltered && 'rounded-r-none border-r-0',
                         )
                     "
                     :aria-label="`Filter by ${title || 'text'}`"
@@ -313,7 +312,7 @@ const displayOperator = computed(() => {
             v-if="isFiltered"
             variant="outline"
             size="sm"
-            class="h-8 w-8 p-0 rounded-l-none border-l-0 border-primary"
+            class="h-8 w-8 p-0 rounded-l-none border-l-0"
             @click="clearFilter"
         >
             <IconX class="h-4 w-4" />

@@ -144,8 +144,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
                     :class="
                         cn(
                             'h-8',
-                            isFiltered &&
-                                'border-primary rounded-r-none border-r-0',
+                            isFiltered && 'rounded-r-none border-r-0',
                         )
                     "
                     :aria-label="`Filter by ${title || 'range'}`"
@@ -259,7 +258,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
             v-if="isFiltered"
             variant="outline"
             size="sm"
-            class="h-8 w-8 p-0 rounded-l-none border-l-0 border-primary"
+            class="h-8 w-8 p-0 rounded-l-none border-l-0"
             @click="clearFilter"
         >
             <IconX class="h-4 w-4" />
