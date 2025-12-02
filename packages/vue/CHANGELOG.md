@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.7
+
+### Patch Changes
+
+- fb2cea7: Added Datatables
+
 ## 0.1.6
 
 ### Patch Changes
