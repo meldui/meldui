@@ -29,6 +29,7 @@ Development and documentation applications:
 
 - **`vue-storybook`** - Component documentation and interactive playground
 - **`react-storybook`** - React documentation (planned)
+- **`task-manager`** - Full-featured example application showcasing MeldUI components
 
 ## Getting Started
 
@@ -120,6 +121,29 @@ pnpm storybook:vue
 ```
 
 Visit `http://localhost:6006` to browse components, view props, and interact with live examples.
+
+## Example Application
+
+The **Task Manager** app (`apps/task-manager`) is a full-featured example demonstrating real-world usage of MeldUI components.
+
+### Features Showcased
+- **Layout** - Sidebar navigation with collapsible state, responsive design
+- **Data Display** - DataTable with server-side filtering, sorting, pagination, and bulk actions
+- **Forms** - Task and project creation with validation using vee-validate and zod
+- **Components** - Cards, Badges, Timeline, Charts, Dialogs, Sheets, and more
+- **Theming** - Dark/light mode toggle with persistent settings
+
+### Running the Example
+
+```bash
+# Development server
+pnpm --filter task-manager dev
+
+# Build for production
+pnpm --filter task-manager build
+```
+
+Visit `http://localhost:5173` to explore the application.
 
 ## License
 

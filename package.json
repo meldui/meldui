@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@10.13.1",
   "scripts": {
-    "build": "turbo build",
+    "build": "turbo build --filter=!task-manager",
     "dev": "turbo dev",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
@@ -14,6 +14,8 @@
     "prepare": "husky",
     "storybook:vue": "pnpm --filter vue-storybook storybook",
     "build:storybook:vue": "pnpm --filter vue-storybook build-storybook",
+    "dev:example": "pnpm --filter task-manager dev",
+    "build:example": "pnpm --filter task-manager build",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:publish": "pnpm build && changeset publish",

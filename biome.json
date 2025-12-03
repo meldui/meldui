@@ -13,7 +13,8 @@
       "!**/dist",
       "!**/build",
       "!**/.turbo",
-      "!**/storybook-static"
+      "!**/storybook-static",
+      "!apps/task-manager"
     ]
   },
   "formatter": {
