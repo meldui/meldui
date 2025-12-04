@@ -95,10 +95,7 @@ const clearFilters = () => {
                     role="combobox"
                     size="sm"
                     :class="
-                        cn(
-                            'h-8',
-                            isFiltered && 'rounded-r-none border-r-0',
-                        )
+                        cn('h-8', isFiltered && 'rounded-r-none border-r-0')
                     "
                     :aria-label="`Filter by ${title || 'options'}`"
                 >
@@ -152,15 +149,16 @@ const clearFilters = () => {
                                 <div
                                     :class="
                                         cn(
-                                            'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                                            'mr-2 flex size-4 shrink-0 items-center justify-center rounded-sm border shadow-xs',
                                             selectedValues.has(option.value)
-                                                ? 'bg-primary text-primary-foreground'
-                                                : 'opacity-50 [&_svg]:invisible',
+                                                ? 'border-primary bg-primary text-primary-foreground'
+                                                : 'border-input',
                                         )
                                     "
                                 >
                                     <IconCheck
-                                        class="h-4 w-4 text-primary-foreground"
+                                        v-if="selectedValues.has(option.value)"
+                                        class="size-3.5"
                                     />
                                 </div>
                                 <component
