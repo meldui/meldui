@@ -6,20 +6,40 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 ## Prerequisites
 
-- Node.js 18+ and pnpm
+- Node.js 18+ and pnpm (or npm/yarn)
 - Vue 3.4+
-- Vite with Tailwind CSS v4
+- Vite 5+
 
-## Step 1: Install Packages
+## Step 1: Configure Registry
+
+MeldUI packages are hosted on GitHub Package Registry. Create or update `.npmrc` in your project root:
 
 ```bash
-pnpm add @meldui/vue @meldui/tabler-vue vue
-pnpm add -D tailwindcss @tailwindcss/vite
+@meldui:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 ```
 
-## Step 2: Configure Vite
+Set your GitHub token (needs `read:packages` scope):
 
-Add the Tailwind CSS plugin to your `vite.config.ts`:
+```bash
+export NPM_TOKEN=ghp_your_token_here
+```
+
+## Step 2: Install Packages
+
+```bash
+# Core packages
+pnpm add @meldui/vue @meldui/tabler-vue @meldui/charts-vue vue
+
+# Tailwind CSS v4 dependencies
+pnpm add -D tailwindcss @tailwindcss/vite tw-animate-css
+```
+
+> **Note:** `@meldui/charts-vue` is optional. Skip it if you don't need chart components.
+
+## Step 3: Configure Vite
+
+Update your `vite.config.ts`:
 
 ```typescript
 import tailwindcss from '@tailwindcss/vite'
@@ -31,40 +51,57 @@ export default defineConfig({
 })
 ```
 
-## Step 3: Set Up CSS
+## Step 4: Set Up CSS
 
-Create or update your main CSS file (e.g., `src/app.css`):
+Create `src/styles/app.css`:
 
 ```css
-/* Import Tailwind CSS */
 @import "tailwindcss";
-
-/* Import MeldUI theme */
+@import "tw-animate-css";
 @import "@meldui/vue/themes/default";
 
-/* Tell Tailwind where to find classes */
-@source "../src/**/*.{vue,ts,js}";
-@source "../node_modules/@meldui/vue/dist/*.mjs";
-
-/* Optional: Override theme variables */
-:root {
-  --primary: oklch(0.6 0.2 260);
-}
+/* Tell Tailwind where to scan for classes */
+@source "../**/*.{vue,js,ts,jsx,tsx}";
+@source "../node_modules/@meldui/vue/dist/**/*.mjs";
 ```
 
-## Step 4: Import CSS in Your App
+## Step 5: Import CSS
 
 In your `main.ts`:
 
 ```typescript
 import { createApp } from 'vue'
-import './app.css' // Import your CSS
 import App from './App.vue'
+import './styles/app.css'
 
 createApp(App).mount('#app')
 ```
 
-## Step 5: Use Components
+## Step 6: Set Up Toaster
+
+Add the `Toaster` component to your `App.vue` for toast notifications:
+
+```vue
+<script setup lang="ts">
+import { Toaster } from '@meldui/vue'
+</script>
+
+<template>
+  <RouterView />
+  <Toaster position="bottom-right" />
+</template>
+```
+
+Use toasts anywhere in your app:
+
+```typescript
+import { toast } from '@meldui/vue'
+
+toast.success('Changes saved!')
+toast.error('Something went wrong')
+```
+
+## Step 7: Use Components
 
 ```vue
 <script setup lang="ts">
@@ -79,13 +116,45 @@ import { IconCheck } from '@meldui/tabler-vue'
     </CardHeader>
     <CardContent>
       <Button>
-        <IconCheck :size="20" />
+        <IconCheck class="mr-2 h-4 w-4" />
         Get Started
       </Button>
     </CardContent>
   </Card>
 </template>
 ```
+
+## Charts (Optional)
+
+Add the charting package for data visualization:
+
+```bash
+pnpm add @meldui/charts-vue
+```
+
+```vue
+<script setup lang="ts">
+import { MeldLineChart } from '@meldui/charts-vue'
+
+const data = [
+  { month: 'Jan', sales: 100, revenue: 200 },
+  { month: 'Feb', sales: 150, revenue: 280 },
+  { month: 'Mar', sales: 200, revenue: 350 },
+]
+</script>
+
+<template>
+  <MeldLineChart
+    :data="data"
+    :config="{
+      xField: 'month',
+      yFields: ['sales', 'revenue'],
+    }"
+  />
+</template>
+```
+
+Available chart types: `MeldLineChart`, `MeldAreaChart`, `MeldBarChart`, `MeldPieChart`, `MeldDonutChart`, `MeldScatterChart`, `MeldRadarChart`, `MeldHeatmapChart`, `MeldMixedChart`.
 
 ## TypeScript Configuration
 
@@ -94,15 +163,58 @@ Ensure your `tsconfig.json` includes:
 ```json
 {
   "compilerOptions": {
+    "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "types": ["vue"]
-  }
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
 ```
+
+## Customizing the Theme
+
+Override theme variables in your CSS **after** the imports:
+
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@meldui/vue/themes/default";
+
+/* Your overrides */
+:root {
+  --primary: oklch(0.6 0.2 280);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --primary: oklch(0.7 0.2 280);
+}
+```
+
+See the [Theming](/?path=/docs/theming--docs) guide for all available variables.
+
+## Package Summary
+
+<table>
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>@meldui/vue</code></td><td>Core component library (70+ components)</td></tr>
+    <tr><td><code>@meldui/tabler-vue</code></td><td>5000+ Tabler icons with custom defaults</td></tr>
+    <tr><td><code>@meldui/charts-vue</code></td><td>Chart components built on ECharts</td></tr>
+  </tbody>
+</table>
 
 ## Next Steps
 
 - Learn about [Theming](/?path=/docs/theming--docs)
+- See the [Theme Preview](/?path=/story/theme-preview--default) for interactive examples
 - Explore [Components](/?path=/docs/components-button--docs)
 - Check out the [Icon System](/?path=/docs/icons--docs)
+- View the [Task Manager Example](https://github.com/meldui/meldui/tree/main/apps/task-manager) for a complete app

@@ -6,29 +6,65 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 MeldUI is an internal design system built on shadcn components, providing a consistent and beautiful UI across all our applications.
 
+## Packages
+
+<table>
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>@meldui/vue</code></td><td>70+ UI components built on shadcn-vue</td></tr>
+    <tr><td><code>@meldui/tabler-vue</code></td><td>5000+ Tabler icons with custom defaults</td></tr>
+    <tr><td><code>@meldui/charts-vue</code></td><td>Chart components built on ECharts</td></tr>
+  </tbody>
+</table>
+
 ## What's Included
 
-- **UI Components** - Base components from shadcn-vue (Button, Card, Input, etc.)
-- **Composite Components** - Custom combinations built from base components
-- **Icon System** - 5000+ Tabler icons with custom defaults
-- **Theming** - Customizable via CSS variables
-- **TypeScript** - Full type safety
-- **Vue 3** - Built with Composition API
+- **UI Components** - Base components from shadcn-vue (Button, Card, Dialog, Table, etc.)
+- **Composite Components** - DataTable, Timeline, MultiSelect, AvatarGroup, and more
+- **Icon System** - 5000+ Tabler icons with custom size and stroke defaults
+- **Charts** - Line, Bar, Pie, Area, Scatter, Radar, Heatmap charts
+- **Theming** - OKLCH colors with CSS variables, light/dark mode support
+- **TypeScript** - Full type safety across all components
+- **Tailwind CSS v4** - Modern CSS-first configuration
 
 ## Quick Start
 
 ```bash
-# Install packages
 pnpm add @meldui/vue @meldui/tabler-vue vue
+pnpm add -D tailwindcss @tailwindcss/vite tw-animate-css
 ```
 
-```typescript
-// Import styles
-import '@meldui/vue/styles'
+```css
+/* src/styles/app.css */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@meldui/vue/themes/default";
 
-// Import components
-import { Button, Card } from '@meldui/vue'
-import { IconX } from '@meldui/tabler-vue'
+@source "../**/*.{vue,js,ts,jsx,tsx}";
+@source "../node_modules/@meldui/vue/dist/**/*.mjs";
+```
+
+```vue
+<script setup lang="ts">
+import { Button, Card, CardContent } from '@meldui/vue'
+import { IconCheck } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <Card>
+    <CardContent class="pt-6">
+      <Button>
+        <IconCheck class="mr-2 h-4 w-4" />
+        Get Started
+      </Button>
+    </CardContent>
+  </Card>
+</template>
 ```
 
 ## Browse Components
@@ -37,6 +73,8 @@ Use the sidebar to explore available components, see usage examples, and test wi
 
 ## Need Help?
 
-- Check the [Installation](/?path=/docs/installation--docs) guide
-- Learn about [Theming](/?path=/docs/theming--docs)
+- Check the [Installation](/?path=/docs/installation--docs) guide for full setup
+- Learn about [Theming](/?path=/docs/theming--docs) and customization
+- See the [Theme Preview](/?path=/story/theme-preview--default) for interactive examples
 - Explore the [Icon System](/?path=/docs/icons--docs)
+- View the [Task Manager Example](https://github.com/meldui/meldui/tree/main/apps/task-manager) for a complete app

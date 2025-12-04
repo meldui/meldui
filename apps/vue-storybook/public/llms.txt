@@ -1,0 +1,187 @@
+# MeldUI
+
+> A Vue 3 component library built on shadcn-vue with Tailwind CSS v4, providing consistent and beautiful UI components.
+
+MeldUI is an internal design system monorepo that re-exports and customizes shadcn components. It consists of three separate packages: `@meldui/vue` for UI components, `@meldui/tabler-vue` for icons, and `@meldui/charts-vue` for data visualization. Uses Tailwind CSS v4 (NOT v3) with CSS-first configuration.
+
+## Critical: Common Mistakes
+
+1. **Using Tailwind CSS v3 syntax** - Do NOT create `tailwind.config.js`. Use CSS-first config with `@import "tailwindcss"`
+2. **Wrong icon imports** - Icons are in `@meldui/tabler-vue`, NOT `@meldui/vue`
+3. **Wrong chart imports** - Charts are in `@meldui/charts-vue`, NOT `@meldui/vue`
+4. **Missing theme import** - Must import `@meldui/vue/themes/default` in your CSS
+5. **Missing Tailwind source directive** - Add `@source "../node_modules/@meldui/vue/dist/*.mjs";`
+
+## Getting Started
+
+- [Installation](#installation): How to install and configure
+- [Theming](#theming): CSS variables and customization
+
+## Packages
+
+- [@meldui/vue](#meldui-vue): Core UI components (v0.1.7)
+- [@meldui/tabler-vue](#icons): 5000+ Tabler icons with custom defaults (v0.1.4)
+- [@meldui/charts-vue](#charts): Apache ECharts components (v0.1.6)
+
+## Components
+
+### Form & Input
+- Input - Text input for capturing user input
+- Textarea - Multi-line text input
+- Select - Custom select with grouping and keyboard navigation
+- Checkbox - Checkbox input with label support
+- RadioGroup - Radio button group for single selection
+- Switch - Toggle switch for boolean values
+- Slider - Range slider for numeric values
+- NumberField - Numeric input with increment/decrement
+- PinInput - PIN code input with individual boxes
+- TagsInput - Input for multiple tags
+- InputOtp - OTP/verification code input
+- FileUpload - File upload with drag and drop
+- MultiSelect - Select multiple options from a list
+- Mention - @mention input for user tagging
+- NativeSelect - Native HTML select element
+- InputGroup - Group inputs with addons
+- Label - Form field labels
+- Field - Form field wrapper with validation
+- Form - Form wrapper with validation (vee-validate)
+
+### Navigation
+- Tabs - Tabbed navigation with line and pill variants
+- Breadcrumb - Navigation breadcrumbs
+- NavigationMenu - Complex navigation menus
+- DropdownMenu - Dropdown menus with nested items
+- ContextMenu - Right-click context menus
+- Menubar - Horizontal menu bar
+- Pagination - Page navigation controls
+- Sidebar - Collapsible sidebar navigation
+
+### Data Display
+- Card - Container for content with header, content, and footer
+- Avatar - User avatar with fallback
+- AvatarGroup - Group of avatars with overflow
+- Badge - Status badges and labels
+- Calendar - Date picker calendar
+- Kbd - Keyboard key display
+- Table - Basic data table
+- DataTable - Advanced data table with server-side operations, filtering, sorting, pagination, row selection, column pinning, and keyboard navigation
+- Timeline - Vertical timeline display
+- RelativeTime - Relative time display (e.g., "2 hours ago")
+
+### Feedback
+- Alert - Alert messages with variants (default, destructive, success, warning, info, neutral)
+- Sonner - Toast notifications
+- Progress - Progress bar
+- CircularProgress - Circular progress indicator
+- Skeleton - Loading skeleton placeholders
+- Spinner - Loading spinner
+- Stepper - Step-by-step progress indicator
+- Dot - Status indicator dots
+- Empty - Empty state placeholder
+
+### Layout
+- Accordion - Collapsible content sections
+- AspectRatio - Maintain aspect ratios
+- Collapsible - Collapsible content
+- Separator - Visual separator line
+- ScrollArea - Custom scrollable area
+- Resizable - Resizable panels
+
+### Overlay
+- Dialog - Modal dialogs
+- AlertDialog - Confirmation dialogs
+- Sheet - Side panel overlays
+- Drawer - Bottom/side drawer overlays
+- Popover - Floating content popover
+- Tooltip - Hover tooltips
+- HoverCard - Rich hover cards
+
+### Interactive
+- Button - Buttons with variants (default, destructive, success, warning, info, outline, secondary, ghost, link)
+- ButtonGroup - Group of buttons
+- Toggle - Toggle button
+- ToggleGroup - Group of toggle buttons
+- Command - Command palette (cmd+k style)
+- Carousel - Image/content carousel
+- Combobox - Searchable select with autocomplete
+
+### Utility
+- ClipboardCopy - Copy to clipboard button
+
+### Charts (from @meldui/charts-vue)
+- MeldLineChart - Line charts for trends
+- MeldBarChart - Bar charts for comparisons
+- MeldAreaChart - Area charts with fills
+- MeldPieChart - Pie charts
+- MeldDonutChart - Donut charts
+- MeldScatterChart - Scatter plots
+- MeldRadarChart - Radar/spider charts
+- MeldHeatmapChart - Heatmap visualization
+- MeldMixedChart - Combined chart types
+- MeldChart - Dynamic chart type wrapper
+
+## Reference
+
+- [Colors](#colors): Color system reference with OKLCH color space
+- [Icon System](#icon-system): 5000+ Tabler icons with custom defaults
+
+## Need More Details?
+
+For detailed component documentation, interactive examples, and advanced usage patterns, consult the **MeldUI Storybook**:
+
+**Storybook URL:** https://meldui.github.io/meldui
+
+### What Storybook Provides
+
+| Need | Where to Look in Storybook |
+|------|----------------------------|
+| All component variants | Navigate to Components > [Category] > [Component] |
+| Interactive prop controls | Use the "Controls" panel to test props |
+| Complete code examples | View the "Docs" tab for each component |
+| Real-world patterns | Stories like `LoginForm`, `DashboardLayout`, `ProfileSettings` |
+| DataTable configurations | Components > DataTable (includes Overview docs) |
+| Chart configurations | Components > Charts (includes Installation guide) |
+| Form validation patterns | Components > Form > [Component] |
+| Accessibility info | Check the "Accessibility" panel |
+
+### Storybook Navigation
+
+1. **Docs pages** - MDX documentation with installation, theming, and overview guides
+2. **Component stories** - Interactive examples organized by category
+3. **Controls panel** - Test different prop combinations
+4. **Code snippets** - Copy-paste ready examples from each story
+
+### When to Use Storybook
+
+- Component has many variants or complex props
+- Need to understand interaction patterns
+- Looking for real-world composition examples
+- DataTable column definitions and server-side patterns
+- Chart configuration options and color palettes
+- Form validation with vee-validate integration
+
+## Additional Resources
+
+### Example Project: Task Manager
+
+A complete working application built with MeldUI demonstrating real-world usage patterns.
+
+**GitHub Path:** `apps/task-manager/` in the MeldUI repository
+
+Use this to understand:
+- Project structure and setup
+- Component composition patterns
+- State management with MeldUI
+- Full application architecture
+
+### GitHub Repository
+
+For source code, implementation details, and the latest updates:
+
+**Repository:** https://github.com/meldui/meldui
+
+Use the repository when:
+- Need to understand internal component implementation
+- Looking for the latest unreleased features
+- Want to see TypeScript type definitions
+- Debugging edge cases not covered in documentation

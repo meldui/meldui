@@ -1,0 +1,1599 @@
+# MeldUI - Complete Documentation for AI Assistants
+
+> A Vue 3 component library built on shadcn-vue with Tailwind CSS v4, providing consistent and beautiful UI components.
+
+This documentation is optimized for AI coding assistants. It contains everything needed to correctly use MeldUI components in Vue 3 projects.
+
+## Critical Information
+
+### Package Structure
+
+MeldUI consists of three packages that must be installed separately:
+
+| Package | Purpose | Install |
+|---------|---------|---------|
+| @meldui/vue | Core UI components | Required |
+| @meldui/tabler-vue | 5000+ Tabler icons | Required for icons |
+| @meldui/charts-vue | ECharts-based charts | Optional |
+
+### Common Mistakes to Avoid
+
+**1. Using Tailwind CSS v3 syntax**
+- WRONG: Creating `tailwind.config.js`
+- CORRECT: Use CSS-first config with `@import "tailwindcss"`
+
+**2. Wrong icon imports**
+- WRONG: `import { IconCheck } from '@meldui/vue'`
+- CORRECT: `import { IconCheck } from '@meldui/tabler-vue'`
+
+**3. Wrong chart imports**
+- WRONG: `import { MeldLineChart } from '@meldui/vue'`
+- CORRECT: `import { MeldLineChart } from '@meldui/charts-vue'`
+
+**4. Missing theme import**
+- WRONG: Only importing components
+- CORRECT: Also import `@meldui/vue/themes/default` in your CSS
+
+**5. Missing Tailwind source directive**
+- WRONG: Not scanning MeldUI dist files
+- CORRECT: Add `@source "../node_modules/@meldui/vue/dist/*.mjs";`
+
+---
+
+## Installation
+
+### Prerequisites
+
+- Node.js 18+ and pnpm
+- Vue 3.4+
+- Vite with Tailwind CSS v4
+
+### Step 1: Install Packages
+
+```bash
+pnpm add @meldui/vue @meldui/tabler-vue vue
+pnpm add -D tailwindcss @tailwindcss/vite
+```
+
+### Step 2: Configure Vite
+
+Add the Tailwind CSS plugin to your `vite.config.ts`:
+
+```typescript
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [vue(), tailwindcss()],
+})
+```
+
+### Step 3: Set Up CSS
+
+Create or update your main CSS file (e.g., `src/app.css`):
+
+```css
+/* Import Tailwind CSS */
+@import "tailwindcss";
+
+/* Import MeldUI theme */
+@import "@meldui/vue/themes/default";
+
+/* Tell Tailwind where to find classes */
+@source "../src/**/*.{vue,ts,js}";
+@source "../node_modules/@meldui/vue/dist/*.mjs";
+
+/* Optional: Override theme variables */
+:root {
+  --primary: oklch(0.6 0.2 260);
+}
+```
+
+### Step 4: Import CSS in Your App
+
+In your `main.ts`:
+
+```typescript
+import { createApp } from 'vue'
+import './app.css' // Import your CSS
+import App from './App.vue'
+
+createApp(App).mount('#app')
+```
+
+### Step 5: Use Components
+
+```vue
+<script setup lang="ts">
+import { Button, Card, CardHeader, CardTitle, CardContent } from '@meldui/vue'
+import { IconCheck } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <Card>
+    <CardHeader>
+      <CardTitle>Hello MeldUI</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Button>
+        <IconCheck :size="20" />
+        Get Started
+      </Button>
+    </CardContent>
+  </Card>
+</template>
+```
+
+### TypeScript Configuration
+
+Ensure your `tsconfig.json` includes:
+
+```json
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["vue"]
+  }
+}
+```
+
+---
+
+## Theming
+
+MeldUI uses CSS variables with OKLCH colors for theming. The theme is designed for Tailwind CSS v4's CSS-first approach.
+
+### Theme Structure
+
+MeldUI themes define two layers of variables:
+
+1. **Base variables** (`:root` / `.dark`) - Raw color values
+2. **Tailwind theme variables** (`@theme inline`) - Map base variables to Tailwind utilities
+
+```css
+/* Base variables */
+:root {
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+}
+
+/* Tailwind integration */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+```
+
+### Customizing Colors
+
+Override base variables in your CSS **after** importing the theme:
+
+```css
+@import "tailwindcss";
+@import "@meldui/vue/themes/default";
+
+/* Your overrides */
+:root {
+  --primary: oklch(0.6 0.2 280);        /* Purple */
+  --primary-foreground: oklch(1 0 0);   /* White */
+  --radius: 0.5rem;                      /* Rounder corners */
+}
+
+.dark {
+  --primary: oklch(0.7 0.2 280);        /* Lighter purple for dark mode */
+}
+```
+
+### Available Variables
+
+#### Colors
+
+| Variable | Description |
+|----------|-------------|
+| `--background` | Page background |
+| `--foreground` | Default text color |
+| `--primary` | Primary brand color |
+| `--primary-foreground` | Text on primary |
+| `--secondary` | Secondary actions |
+| `--secondary-foreground` | Text on secondary |
+| `--muted` | Subtle backgrounds |
+| `--muted-foreground` | Subtle text |
+| `--accent` | Accent/highlight |
+| `--accent-foreground` | Text on accent |
+| `--destructive` | Error/danger states |
+| `--success` | Success states |
+| `--warning` | Warning states |
+| `--info` | Info states |
+
+#### UI Elements
+
+| Variable | Description |
+|----------|-------------|
+| `--card` | Card background |
+| `--card-foreground` | Card text |
+| `--popover` | Popover/dropdown background |
+| `--popover-foreground` | Popover text |
+| `--border` | Border color |
+| `--input` | Input border |
+| `--ring` | Focus ring |
+
+#### Border Radius
+
+| Variable | Default |
+|----------|---------|
+| `--radius` | `0.625rem` (base) |
+| `--radius-sm` | `calc(var(--radius) - 4px)` |
+| `--radius-md` | `calc(var(--radius) - 2px)` |
+| `--radius-lg` | `var(--radius)` |
+| `--radius-xl` | `calc(var(--radius) + 4px)` |
+
+### Dark Mode
+
+MeldUI uses a class-based dark mode. Add the `dark` class to enable:
+
+```vue
+<template>
+  <div class="dark">
+    <!-- Dark mode content -->
+  </div>
+</template>
+```
+
+Toggle programmatically:
+
+```typescript
+document.documentElement.classList.toggle('dark')
+```
+
+### OKLCH Color Format
+
+MeldUI uses OKLCH colors for better perceptual uniformity:
+
+```css
+/* OKLCH: Lightness, Chroma, Hue */
+--primary: oklch(0.6 0.2 260);
+/*              ^    ^    ^
+                |    |    └── Hue (0-360)
+                |    └─────── Chroma (0-0.4)
+                └──────────── Lightness (0-1)
+*/
+```
+
+---
+
+## Icon System
+
+MeldUI uses Tabler Icons with custom defaults for size and stroke.
+
+### Installation
+
+Icons are in a separate package:
+
+```bash
+pnpm add @meldui/tabler-vue
+```
+
+### Usage
+
+```vue
+<script setup>
+import { IconX, IconCheck, IconAlertCircle } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <!-- Default (24px, stroke 1.5) -->
+  <IconCheck />
+
+  <!-- Custom size -->
+  <IconX :size="32" />
+
+  <!-- Custom stroke -->
+  <IconAlertCircle :stroke="2" />
+
+  <!-- Color via Tailwind class -->
+  <IconCheck class="text-green-500" />
+</template>
+```
+
+### Default Values
+
+All icons have these defaults:
+- **Size:** 24px
+- **Stroke:** 1.5 (Tabler default is 2)
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | number | 24 | Icon size in pixels |
+| `stroke` | number | 1.5 | Stroke thickness |
+
+### Color
+
+Icons use `currentColor` and inherit from the parent's text color:
+
+```vue
+<template>
+  <!-- Via parent -->
+  <span class="text-red-500">
+    <IconX /> <!-- Red icon -->
+  </span>
+
+  <!-- Directly on icon -->
+  <IconCheck class="text-green-500" />
+</template>
+```
+
+### Common Icons
+
+| Icon Name | Use Case |
+|-----------|----------|
+| `IconX` | Close, cancel |
+| `IconCheck` | Confirm, success |
+| `IconPlus` | Add, create |
+| `IconMinus` | Remove, subtract |
+| `IconEdit` | Edit, modify |
+| `IconTrash` | Delete |
+| `IconSearch` | Search |
+| `IconUser` | User, profile |
+| `IconSettings` | Settings, config |
+| `IconMenu` | Menu toggle |
+| `IconChevronDown` | Dropdown indicator |
+| `IconChevronRight` | Navigation, expand |
+| `IconAlertCircle` | Error, alert |
+| `IconAlertTriangle` | Warning |
+| `IconInfoCircle` | Information |
+| `IconLoader` | Loading |
+| `IconRefresh` | Refresh, reload |
+| `IconDownload` | Download |
+| `IconUpload` | Upload |
+| `IconCopy` | Copy |
+| `IconEye` | View, visible |
+| `IconEyeOff` | Hide, invisible |
+| `IconLock` | Locked, secure |
+| `IconUnlock` | Unlocked |
+| `IconMail` | Email |
+| `IconPhone` | Phone |
+| `IconCalendar` | Date, calendar |
+| `IconClock` | Time |
+| `IconHome` | Home |
+| `IconStar` | Favorite, rating |
+| `IconHeart` | Like, favorite |
+
+Browse all 5000+ icons at [tabler.io/icons](https://tabler.io/icons)
+
+---
+
+## Components Reference
+
+### Button
+
+Buttons with multiple variants and sizes.
+
+#### Import
+
+```typescript
+import { Button } from '@meldui/vue'
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' \| 'destructive' \| 'success' \| 'warning' \| 'info' \| 'outline' \| 'secondary' \| 'ghost' \| 'link'` | `'default'` | Visual style |
+| `size` | `'default' \| 'sm' \| 'lg' \| 'icon'` | `'default'` | Button size |
+| `disabled` | `boolean` | `false` | Disable button |
+| `as-child` | `boolean` | `false` | Render as child element |
+
+#### Examples
+
+```vue
+<template>
+  <!-- Basic -->
+  <Button>Click me</Button>
+
+  <!-- Variants -->
+  <Button variant="default">Default</Button>
+  <Button variant="secondary">Secondary</Button>
+  <Button variant="destructive">Destructive</Button>
+  <Button variant="success">Success</Button>
+  <Button variant="warning">Warning</Button>
+  <Button variant="info">Info</Button>
+  <Button variant="outline">Outline</Button>
+  <Button variant="ghost">Ghost</Button>
+  <Button variant="link">Link</Button>
+
+  <!-- Sizes -->
+  <Button size="sm">Small</Button>
+  <Button size="default">Default</Button>
+  <Button size="lg">Large</Button>
+
+  <!-- With Icon -->
+  <Button>
+    <IconCheck :size="20" />
+    Confirm
+  </Button>
+
+  <!-- Icon Only -->
+  <Button size="icon">
+    <IconX :size="20" />
+  </Button>
+</template>
+```
+
+---
+
+### Input
+
+Text input for capturing user input.
+
+#### Import
+
+```typescript
+import { Input } from '@meldui/vue'
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `type` | `'text' \| 'email' \| 'password' \| 'number' \| 'tel' \| 'url' \| 'search' \| 'date' \| 'time'` | `'text'` | Input type |
+| `placeholder` | `string` | - | Placeholder text |
+| `disabled` | `boolean` | `false` | Disable input |
+| `required` | `boolean` | `false` | Mark as required |
+| `modelValue` | `string` | - | Controlled value (v-model) |
+
+#### Examples
+
+```vue
+<script setup>
+import { Input, Label } from '@meldui/vue'
+import { ref } from 'vue'
+
+const email = ref('')
+</script>
+
+<template>
+  <!-- Basic -->
+  <Input placeholder="Enter text..." />
+
+  <!-- With Label -->
+  <div class="flex flex-col gap-2">
+    <Label for="email">Email</Label>
+    <Input id="email" type="email" placeholder="email@example.com" v-model="email" />
+  </div>
+
+  <!-- Disabled -->
+  <Input placeholder="Disabled" disabled />
+
+  <!-- With Error -->
+  <div class="flex flex-col gap-2">
+    <Label for="error-input">Email</Label>
+    <Input id="error-input" aria-invalid="true" />
+    <p class="text-xs text-destructive">Please enter a valid email</p>
+  </div>
+</template>
+```
+
+---
+
+### Card
+
+Container for content with header, content, and footer sections.
+
+#### Import
+
+```typescript
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  CardAction
+} from '@meldui/vue'
+```
+
+#### Examples
+
+```vue
+<template>
+  <!-- Basic Card -->
+  <Card class="max-w-md">
+    <CardHeader>
+      <CardTitle>Card Title</CardTitle>
+      <CardDescription>Card description text</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <p>Card content goes here.</p>
+    </CardContent>
+    <CardFooter class="flex gap-2">
+      <Button variant="outline">Cancel</Button>
+      <Button>Confirm</Button>
+    </CardFooter>
+  </Card>
+
+  <!-- With Action -->
+  <Card>
+    <CardHeader>
+      <CardTitle>Notifications</CardTitle>
+      <CardDescription>You have 3 unread messages</CardDescription>
+      <CardAction>
+        <IconBell :size="20" />
+      </CardAction>
+    </CardHeader>
+    <CardContent>
+      <!-- Content -->
+    </CardContent>
+  </Card>
+</template>
+```
+
+---
+
+### Alert
+
+Alert messages with semantic variants.
+
+#### Import
+
+```typescript
+import { Alert, AlertTitle, AlertDescription } from '@meldui/vue'
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' \| 'destructive' \| 'success' \| 'warning' \| 'info' \| 'neutral'` | `'default'` | Visual style |
+
+#### Examples
+
+```vue
+<script setup>
+import { Alert, AlertTitle, AlertDescription } from '@meldui/vue'
+import { IconCheck, IconAlertCircle, IconAlertTriangle, IconInfoCircle } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <!-- Default -->
+  <Alert>
+    <AlertTitle>Heads up!</AlertTitle>
+    <AlertDescription>You can add components using the CLI.</AlertDescription>
+  </Alert>
+
+  <!-- With Icon -->
+  <Alert variant="success">
+    <IconCheck />
+    <AlertTitle>Success</AlertTitle>
+    <AlertDescription>Your changes have been saved.</AlertDescription>
+  </Alert>
+
+  <!-- Destructive -->
+  <Alert variant="destructive">
+    <IconAlertCircle />
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>Your session has expired.</AlertDescription>
+  </Alert>
+
+  <!-- Warning -->
+  <Alert variant="warning">
+    <IconAlertTriangle />
+    <AlertTitle>Warning</AlertTitle>
+    <AlertDescription>This action cannot be undone.</AlertDescription>
+  </Alert>
+
+  <!-- Info -->
+  <Alert variant="info">
+    <IconInfoCircle />
+    <AlertTitle>Information</AlertTitle>
+    <AlertDescription>New features are available.</AlertDescription>
+  </Alert>
+</template>
+```
+
+---
+
+### Dialog
+
+Modal dialogs for important interactions.
+
+#### Import
+
+```typescript
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogScrollContent
+} from '@meldui/vue'
+```
+
+#### Examples
+
+```vue
+<script setup>
+import {
+  Button,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  Input,
+  Label
+} from '@meldui/vue'
+import { ref } from 'vue'
+
+const name = ref('')
+</script>
+
+<template>
+  <Dialog>
+    <DialogTrigger as-child>
+      <Button>Open Dialog</Button>
+    </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogDescription>
+          Make changes to your profile here.
+        </DialogDescription>
+      </DialogHeader>
+      <div class="flex flex-col gap-4 py-4">
+        <div class="flex flex-col gap-2">
+          <Label for="name">Name</Label>
+          <Input id="name" v-model="name" placeholder="John Doe" />
+        </div>
+      </div>
+      <DialogFooter>
+        <Button variant="outline">Cancel</Button>
+        <Button>Save Changes</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+</template>
+```
+
+---
+
+### Select
+
+Custom select component with grouping and keyboard navigation.
+
+#### Import
+
+```typescript
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  SelectGroup,
+  SelectLabel,
+  SelectSeparator
+} from '@meldui/vue'
+```
+
+#### Examples
+
+```vue
+<script setup>
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  SelectGroup,
+  SelectLabel,
+  Label
+} from '@meldui/vue'
+import { ref } from 'vue'
+
+const framework = ref('')
+</script>
+
+<template>
+  <!-- Basic -->
+  <Select v-model="framework">
+    <SelectTrigger class="w-64">
+      <SelectValue placeholder="Select a framework" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="vue">Vue.js</SelectItem>
+      <SelectItem value="react">React</SelectItem>
+      <SelectItem value="angular">Angular</SelectItem>
+    </SelectContent>
+  </Select>
+
+  <!-- With Groups -->
+  <Select>
+    <SelectTrigger class="w-64">
+      <SelectValue placeholder="Select a fruit" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>Citrus</SelectLabel>
+        <SelectItem value="orange">Orange</SelectItem>
+        <SelectItem value="lemon">Lemon</SelectItem>
+      </SelectGroup>
+      <SelectGroup>
+        <SelectLabel>Berries</SelectLabel>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="blueberry">Blueberry</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+</template>
+```
+
+---
+
+### Tabs
+
+Tabbed navigation with line and pill variants.
+
+#### Import
+
+```typescript
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@meldui/vue'
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'line' \| 'pill'` | `'line'` | Visual style |
+| `defaultValue` | `string` | - | Default active tab |
+| `modelValue` | `string` | - | Controlled value (v-model) |
+
+#### Examples
+
+```vue
+<script setup>
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@meldui/vue'
+</script>
+
+<template>
+  <!-- Basic -->
+  <Tabs default-value="account" class="w-[400px]">
+    <TabsList>
+      <TabsTrigger value="account">Account</TabsTrigger>
+      <TabsTrigger value="password">Password</TabsTrigger>
+    </TabsList>
+    <TabsContent value="account">
+      <p>Make changes to your account here.</p>
+    </TabsContent>
+    <TabsContent value="password">
+      <p>Change your password here.</p>
+    </TabsContent>
+  </Tabs>
+
+  <!-- Pill Variant -->
+  <Tabs variant="pill" default-value="overview">
+    <TabsList>
+      <TabsTrigger value="overview">Overview</TabsTrigger>
+      <TabsTrigger value="analytics">Analytics</TabsTrigger>
+      <TabsTrigger value="reports">Reports</TabsTrigger>
+    </TabsList>
+    <!-- TabsContent... -->
+  </Tabs>
+
+  <!-- Full Width Grid -->
+  <Tabs default-value="tab1">
+    <TabsList class="grid w-full grid-cols-3">
+      <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+      <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+      <TabsTrigger value="tab3">Tab 3</TabsTrigger>
+    </TabsList>
+    <!-- TabsContent... -->
+  </Tabs>
+</template>
+```
+
+---
+
+### Badge
+
+Status badges and labels with semantic variants.
+
+#### Import
+
+```typescript
+import { Badge } from '@meldui/vue'
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' \| 'secondary' \| 'destructive' \| 'success' \| 'warning' \| 'outline'` | `'default'` | Visual style |
+
+#### Examples
+
+```vue
+<template>
+  <Badge>Default</Badge>
+  <Badge variant="secondary">Secondary</Badge>
+  <Badge variant="destructive">Destructive</Badge>
+  <Badge variant="success">Success</Badge>
+  <Badge variant="warning">Warning</Badge>
+  <Badge variant="outline">Outline</Badge>
+</template>
+```
+
+---
+
+### DataTable
+
+Advanced data table with server-side operations, filtering, sorting, pagination, row selection, and column pinning.
+
+#### Import
+
+```typescript
+import { DataTable, DataTableColumnHeader, createColumnHelper, cellRenderers, aggregations } from '@meldui/vue'
+import type { ColumnDef } from '@tanstack/vue-table'
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `columns` | `ColumnDef<TData>[]` | Required | Column definitions |
+| `data` | `TData[]` | Required | Array of data |
+| `pageCount` | `number` | Required | Total number of pages |
+| `onServerSideChange` | `Function` | Required | Callback when table state changes |
+| `enableRowSelection` | `boolean` | `false` | Enable row selection |
+| `defaultPerPage` | `number` | `10` | Default page size |
+| `filterFields` | `DataTableFilterField[]` | `[]` | Filter configurations |
+| `searchColumn` | `string` | - | Column for search input |
+| `advancedMode` | `boolean` | `false` | Enable advanced filter operators |
+| `enableColumnPinning` | `boolean` | `false` | Enable column pinning |
+| `enableColumnResizing` | `boolean` | `false` | Enable column resizing |
+| `density` | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'` | Table density |
+| `loading` | `boolean` | `false` | Show loading state |
+| `error` | `string \| Error` | - | Show error state |
+| `enableKeyboardNavigation` | `boolean` | `false` | Enable keyboard navigation |
+| `enableRowExpansion` | `boolean` | `false` | Enable row expansion |
+
+#### Basic Example
+
+```vue
+<script setup lang="ts">
+import { ref, h } from 'vue'
+import { DataTable, DataTableColumnHeader, createColumnHelper } from '@meldui/vue'
+import type { ColumnDef } from '@tanstack/vue-table'
+
+interface User {
+  id: string
+  name: string
+  email: string
+  status: 'active' | 'inactive'
+}
+
+const helper = createColumnHelper<User>()
+
+const columns = [
+  helper.selection(),
+  helper.accessor('name', {
+    title: 'Name',
+    enableSorting: true,
+  }),
+  helper.accessor('email', {
+    title: 'Email',
+  }),
+  helper.accessor('status', {
+    title: 'Status',
+  }),
+  helper.actions({
+    display: 'dropdown',
+    actions: [
+      { label: 'Edit', onClick: (row) => console.log('Edit', row.original) },
+      { label: 'Delete', variant: 'destructive', onClick: (row) => console.log('Delete', row.original) }
+    ]
+  })
+]
+
+const users = ref<User[]>([])
+const pageCount = ref(1)
+const loading = ref(false)
+
+const handleServerSideChange = (params) => {
+  console.log('Server params:', params)
+  // Fetch data from server with params.sorting, params.filters, params.pagination
+}
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="users"
+    :page-count="pageCount"
+    :on-server-side-change="handleServerSideChange"
+    :loading="loading"
+    enable-row-selection
+    search-column="name"
+    search-placeholder="Search users..."
+  />
+</template>
+```
+
+#### Filter Types
+
+| Type | Description | Value Format |
+|------|-------------|--------------|
+| `text` | Text input | `string[]` |
+| `select` | Single dropdown | `string` |
+| `multiselect` | Multi checkbox | `string[]` |
+| `number` | Number input | `number[]` |
+| `range` | Range slider | `{start, end}[]` |
+| `boolean` | Toggle switch | `boolean` |
+| `date` | Date picker | `DateValue[]` |
+| `daterange` | Date range | `{start, end}[]` |
+
+#### Slots
+
+| Slot | Props | Description |
+|------|-------|-------------|
+| `#toolbar-start` | `{table}` | Content before search input |
+| `#toolbar-end` | `{table}` | Content after bulk actions |
+| `#empty` | `{message, columns}` | Custom empty state |
+| `#error` | `{error, retry}` | Custom error state |
+| `#cell-[columnId]` | `{cell, row, value}` | Custom cell for column |
+| `#expanded-row` | `{row}` | Content for expanded row |
+
+---
+
+## Charts Reference
+
+Charts are in a separate package: `@meldui/charts-vue`
+
+### Installation
+
+```bash
+pnpm add @meldui/vue @meldui/charts-vue
+```
+
+### Available Charts
+
+| Component | Description |
+|-----------|-------------|
+| `MeldLineChart` | Line charts for trends |
+| `MeldBarChart` | Bar charts for comparisons |
+| `MeldAreaChart` | Area charts with fills |
+| `MeldPieChart` | Pie charts |
+| `MeldDonutChart` | Donut charts |
+| `MeldScatterChart` | Scatter plots |
+| `MeldRadarChart` | Radar/spider charts |
+| `MeldHeatmapChart` | Heatmap visualization |
+| `MeldMixedChart` | Combined chart types |
+| `MeldChart` | Dynamic chart type wrapper |
+
+### Common Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `config` | `Meld[Type]ChartConfig` | Required | Chart configuration |
+| `height` | `number \| string` | `350` | Chart height |
+| `width` | `number \| string` | `'100%'` | Chart width |
+| `title` | `string` | - | Chart title |
+| `loading` | `boolean` | `false` | Show loading skeleton |
+
+### Line Chart Example
+
+```vue
+<script setup lang="ts">
+import { MeldLineChart } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
+
+const config: MeldLineChartConfig = {
+  series: [
+    { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] },
+    { name: 'Expenses', data: [20, 30, 35, 40, 39, 50, 60] }
+  ],
+  xAxis: {
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  legend: {
+    position: 'bottom'
+  },
+  stroke: {
+    curve: 'smooth',
+    width: 3
+  }
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" title="Weekly Performance" />
+</template>
+```
+
+### Bar Chart Example
+
+```vue
+<script setup lang="ts">
+import { MeldBarChart } from '@meldui/charts-vue'
+import type { MeldBarChartConfig } from '@meldui/charts-vue'
+
+const config: MeldBarChartConfig = {
+  series: [
+    { name: 'Sales', data: [100, 200, 150, 300, 250] }
+  ],
+  xAxis: {
+    categories: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5']
+  },
+  horizontal: false,
+  stacked: false
+}
+</script>
+
+<template>
+  <MeldBarChart :config="config" title="Quarterly Sales" />
+</template>
+```
+
+### Pie/Donut Chart Example
+
+```vue
+<script setup lang="ts">
+import { MeldPieChart, MeldDonutChart } from '@meldui/charts-vue'
+import type { MeldPieChartConfig } from '@meldui/charts-vue'
+
+const config: MeldPieChartConfig = {
+  series: [
+    { name: 'Chrome', data: [65] },
+    { name: 'Firefox', data: [20] },
+    { name: 'Safari', data: [10] },
+    { name: 'Other', data: [5] }
+  ]
+}
+</script>
+
+<template>
+  <MeldPieChart :config="config" title="Browser Share" />
+  <MeldDonutChart :config="config" title="Browser Share" />
+</template>
+```
+
+### Chart with Card
+
+```vue
+<script setup lang="ts">
+import { MeldLineChart } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, Badge } from '@meldui/vue'
+import { IconTrendingUp } from '@meldui/tabler-vue'
+
+const config: MeldLineChartConfig = {
+  series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
+  xAxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }
+}
+</script>
+
+<template>
+  <Card>
+    <CardHeader>
+      <div class="flex items-center justify-between">
+        <div>
+          <CardTitle>Weekly Revenue</CardTitle>
+          <CardDescription>Track your performance</CardDescription>
+        </div>
+        <Badge class="flex items-center gap-1">
+          <IconTrendingUp :size="16" />
+          +12.5%
+        </Badge>
+      </div>
+    </CardHeader>
+    <CardContent>
+      <MeldLineChart :config="config" :height="300" />
+    </CardContent>
+  </Card>
+</template>
+```
+
+### Color Palettes
+
+```typescript
+// Available palette names
+const config: MeldLineChartConfig = {
+  colors: 'default' | 'ocean' | 'sunset' | 'forest' | 'monochrome',
+  // ...
+}
+```
+
+---
+
+## Additional Components Quick Reference
+
+### Checkbox
+
+```vue
+<script setup>
+import { Checkbox } from '@meldui/vue'
+import { ref } from 'vue'
+const checked = ref(false)
+</script>
+
+<template>
+  <div class="flex items-center gap-2">
+    <Checkbox id="terms" v-model:checked="checked" />
+    <label for="terms">Accept terms</label>
+  </div>
+</template>
+```
+
+### Switch
+
+```vue
+<script setup>
+import { Switch } from '@meldui/vue'
+import { ref } from 'vue'
+const enabled = ref(false)
+</script>
+
+<template>
+  <Switch v-model:checked="enabled" />
+</template>
+```
+
+### Progress
+
+```vue
+<script setup>
+import { Progress } from '@meldui/vue'
+</script>
+
+<template>
+  <Progress :model-value="60" />
+</template>
+```
+
+### Tooltip
+
+```vue
+<script setup>
+import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@meldui/vue'
+</script>
+
+<template>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger as-child>
+        <Button variant="outline">Hover me</Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Tooltip content</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+</template>
+```
+
+### Popover
+
+```vue
+<script setup>
+import { Button, Popover, PopoverContent, PopoverTrigger } from '@meldui/vue'
+</script>
+
+<template>
+  <Popover>
+    <PopoverTrigger as-child>
+      <Button variant="outline">Open popover</Button>
+    </PopoverTrigger>
+    <PopoverContent>
+      <p>Popover content goes here.</p>
+    </PopoverContent>
+  </Popover>
+</template>
+```
+
+### Accordion
+
+```vue
+<script setup>
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@meldui/vue'
+</script>
+
+<template>
+  <Accordion type="single" collapsible>
+    <AccordionItem value="item-1">
+      <AccordionTrigger>Section 1</AccordionTrigger>
+      <AccordionContent>Content for section 1.</AccordionContent>
+    </AccordionItem>
+    <AccordionItem value="item-2">
+      <AccordionTrigger>Section 2</AccordionTrigger>
+      <AccordionContent>Content for section 2.</AccordionContent>
+    </AccordionItem>
+  </Accordion>
+</template>
+```
+
+### DropdownMenu
+
+```vue
+<script setup>
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@meldui/vue'
+</script>
+
+<template>
+  <DropdownMenu>
+    <DropdownMenuTrigger as-child>
+      <Button variant="outline">Open</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent>
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenuItem>Settings</DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>Log out</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</template>
+```
+
+### Avatar
+
+```vue
+<script setup>
+import { Avatar, AvatarFallback, AvatarImage } from '@meldui/vue'
+</script>
+
+<template>
+  <Avatar>
+    <AvatarImage src="https://example.com/avatar.jpg" alt="User" />
+    <AvatarFallback>JD</AvatarFallback>
+  </Avatar>
+</template>
+```
+
+### Skeleton
+
+```vue
+<script setup>
+import { Skeleton } from '@meldui/vue'
+</script>
+
+<template>
+  <div class="flex items-center space-x-4">
+    <Skeleton class="h-12 w-12 rounded-full" />
+    <div class="space-y-2">
+      <Skeleton class="h-4 w-[250px]" />
+      <Skeleton class="h-4 w-[200px]" />
+    </div>
+  </div>
+</template>
+```
+
+### Sheet (Side Panel)
+
+```vue
+<script setup>
+import { Button, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@meldui/vue'
+</script>
+
+<template>
+  <Sheet>
+    <SheetTrigger as-child>
+      <Button variant="outline">Open Sheet</Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Sheet Title</SheetTitle>
+        <SheetDescription>Sheet description here.</SheetDescription>
+      </SheetHeader>
+      <!-- Content -->
+    </SheetContent>
+  </Sheet>
+</template>
+```
+
+### Command (Command Palette)
+
+```vue
+<script setup>
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator
+} from '@meldui/vue'
+</script>
+
+<template>
+  <Command>
+    <CommandInput placeholder="Type a command..." />
+    <CommandList>
+      <CommandEmpty>No results found.</CommandEmpty>
+      <CommandGroup heading="Suggestions">
+        <CommandItem>Calendar</CommandItem>
+        <CommandItem>Search</CommandItem>
+        <CommandItem>Settings</CommandItem>
+      </CommandGroup>
+    </CommandList>
+  </Command>
+</template>
+```
+
+---
+
+## Full Component Export List
+
+All exports from `@meldui/vue`:
+
+```typescript
+// UI Components
+export * from './components/ui/accordion'
+export * from './components/ui/alert'
+export * from './components/ui/alert-dialog'
+export * from './components/ui/aspect-ratio'
+export * from './components/ui/avatar'
+export * from './components/ui/badge'
+export * from './components/ui/breadcrumb'
+export * from './components/ui/button'
+export * from './components/ui/button-group'
+export * from './components/ui/calendar'
+export * from './components/ui/card'
+export * from './components/ui/carousel'
+export * from './components/ui/chart'
+export * from './components/ui/checkbox'
+export * from './components/ui/circular-progress'
+export * from './components/ui/collapsible'
+export * from './components/ui/combobox'
+export * from './components/ui/command'
+export * from './components/ui/context-menu'
+export * from './components/ui/dialog'
+export * from './components/ui/dot'
+export * from './components/ui/drawer'
+export * from './components/ui/dropdown-menu'
+export * from './components/ui/empty'
+export * from './components/ui/field'
+export * from './components/ui/file-upload'
+export * from './components/ui/form'
+export * from './components/ui/hover-card'
+export * from './components/ui/input'
+export * from './components/ui/input-group'
+export * from './components/ui/input-otp'
+export * from './components/ui/item'
+export * from './components/ui/kbd'
+export * from './components/ui/label'
+export * from './components/ui/menubar'
+export * from './components/ui/native-select'
+export * from './components/ui/navigation-menu'
+export * from './components/ui/number-field'
+export * from './components/ui/pagination'
+export * from './components/ui/pin-input'
+export * from './components/ui/popover'
+export * from './components/ui/progress'
+export * from './components/ui/radio-group'
+export * from './components/ui/range-calendar'
+export * from './components/ui/resizable'
+export * from './components/ui/scroll-area'
+export * from './components/ui/select'
+export * from './components/ui/separator'
+export * from './components/ui/sheet'
+export * from './components/ui/sidebar'
+export * from './components/ui/skeleton'
+export * from './components/ui/slider'
+export * from './components/ui/sonner'
+export * from './components/ui/spinner'
+export * from './components/ui/stepper'
+export * from './components/ui/switch'
+export * from './components/ui/table'
+export * from './components/ui/tabs'
+export * from './components/ui/tags-input'
+export * from './components/ui/textarea'
+export * from './components/ui/toggle'
+export * from './components/ui/toggle-group'
+export * from './components/ui/tooltip'
+
+// Composite Components
+export * from './composites/avatar-group'
+export * from './composites/clipboard-copy'
+export * from './composites/data-table'
+export * from './composites/mention'
+export * from './composites/multi-select'
+export * from './composites/relative-time'
+export * from './composites/timeline'
+
+// Utility
+export { cn } from './lib/utils'
+```
+
+All exports from `@meldui/charts-vue`:
+
+```typescript
+// Chart Components
+export { default as MeldAreaChart } from './components/MeldAreaChart.vue'
+export { default as MeldBarChart } from './components/MeldBarChart.vue'
+export { default as MeldChart } from './components/MeldChart.vue'
+export { default as MeldChartSkeleton } from './components/MeldChartSkeleton.vue'
+export { default as MeldDonutChart } from './components/MeldDonutChart.vue'
+export { default as MeldHeatmapChart } from './components/MeldHeatmapChart.vue'
+export { default as MeldLineChart } from './components/MeldLineChart.vue'
+export { default as MeldMixedChart } from './components/MeldMixedChart.vue'
+export { default as MeldPieChart } from './components/MeldPieChart.vue'
+export { default as MeldRadarChart } from './components/MeldRadarChart.vue'
+export { default as MeldScatterChart } from './components/MeldScatterChart.vue'
+
+// Types
+export type {
+  MeldLineChartConfig,
+  MeldBarChartConfig,
+  MeldPieChartConfig,
+  MeldDonutChartConfig,
+  MeldAreaChartConfig,
+  MeldRadarChartConfig,
+  MeldHeatmapChartConfig,
+  MeldScatterChartConfig,
+  MeldMixedChartConfig,
+  ChartSeries,
+  ChartAxis,
+  ChartLegend,
+} from './types'
+
+// Palettes
+export { PALETTES, generateColors } from './config/palettes'
+```
+
+---
+
+## Need More Details? Use Storybook
+
+This documentation covers the most common use cases. For advanced patterns, edge cases, and interactive examples, consult the **MeldUI Storybook**:
+
+**Storybook URL:** https://meldui.github.io/meldui
+
+### What Storybook Provides That This File Doesn't
+
+| Use Case | Storybook Advantage |
+|----------|---------------------|
+| **All component variants** | Interactive examples for every variant, size, and state |
+| **Complex prop combinations** | Controls panel to test props in real-time |
+| **Real-world patterns** | Complete examples: `LoginCard`, `DashboardLayout`, `ProfileSettings`, `FilterExample` |
+| **DataTable advanced usage** | Server-side pagination, column pinning, row expansion, keyboard navigation examples |
+| **Chart customization** | All color palettes, dual-axis charts, responsive sizing, loading states |
+| **Form validation** | vee-validate integration with error states and submission handling |
+| **Accessibility** | A11y panel showing ARIA attributes and keyboard navigation |
+| **Responsive behavior** | Viewport addon to test different screen sizes |
+
+### How to Navigate Storybook
+
+1. **Left sidebar** - Browse by category: Docs, Components > [Category] > [Component]
+2. **Canvas tab** - View the rendered component
+3. **Docs tab** - Auto-generated documentation with all stories
+4. **Controls panel** - Adjust props interactively
+5. **Actions panel** - See event emissions (clicks, changes, etc.)
+
+### Recommended Storybook Pages
+
+| Topic | Storybook Path |
+|-------|----------------|
+| Getting Started | Docs > Introduction |
+| Installation Guide | Docs > Installation |
+| Theming & Customization | Docs > Theming |
+| Icon System | Docs > Icons |
+| Color Reference | Docs > Colors |
+| DataTable Guide | Components > DataTable > Overview |
+| Charts Guide | Components > Charts > Overview |
+| Charts Setup | Components > Charts > Installation |
+
+### When to Consult Storybook
+
+- **Component has 5+ variants** - See all options visually
+- **Building complex forms** - Check form validation stories
+- **DataTable implementation** - Many configuration options not fully documented here
+- **Chart styling** - Color palettes and advanced config options
+- **Composition patterns** - How to combine multiple components
+- **Slot usage** - See how to use named slots effectively
+- **Event handling** - Understand all emitted events
+
+---
+
+## Example Project: Task Manager
+
+A complete working application built with MeldUI that demonstrates real-world usage patterns.
+
+**Location:** `apps/task-manager/` in the MeldUI GitHub repository
+
+**GitHub URL:** https://github.com/meldui/meldui/tree/main/apps/task-manager
+
+### What the Task Manager Demonstrates
+
+| Feature | MeldUI Components Used |
+|---------|------------------------|
+| Project structure | Vite + Vue 3 + Tailwind CSS v4 setup |
+| Layout patterns | Sidebar, Card, Tabs |
+| Data tables | DataTable with filtering, sorting, pagination |
+| Forms | Input, Select, Dialog, Form validation |
+| Feedback | Alert, Sonner (toasts), Progress |
+| Navigation | Tabs, Breadcrumb, DropdownMenu |
+| State management | Composables with MeldUI components |
+
+### Key Files to Examine
+
+| File/Directory | What You'll Learn |
+|----------------|-------------------|
+| `src/App.vue` | Root layout with Sidebar |
+| `src/components/` | Reusable component patterns |
+| `src/composables/` | State management with Vue composables |
+| `src/views/` | Page-level component composition |
+| `src/app.css` | Tailwind CSS v4 setup with MeldUI theme |
+| `vite.config.ts` | Build configuration |
+
+### When to Use the Task Manager Example
+
+- Setting up a new project from scratch
+- Understanding how to structure a MeldUI application
+- Learning component composition patterns
+- Seeing DataTable with real data flows
+- Understanding form handling and validation
+- Implementing sidebar navigation layouts
+
+---
+
+## GitHub Repository
+
+For source code, implementation details, and the latest updates:
+
+**Repository:** https://github.com/meldui/meldui
+
+### Repository Structure
+
+```
+meldui/
+├── packages/
+│   ├── vue/              # @meldui/vue source code
+│   │   ├── src/components/ui/      # Base shadcn components
+│   │   └── src/composites/         # Composite components (DataTable, etc.)
+│   ├── tabler-vue/       # @meldui/tabler-vue icon wrappers
+│   └── charts-vue/       # @meldui/charts-vue chart components
+├── apps/
+│   ├── vue-storybook/    # Storybook documentation
+│   └── task-manager/     # Example application
+└── CLAUDE.md             # AI assistant instructions
+```
+
+### When to Use the Repository
+
+| Scenario | Where to Look |
+|----------|---------------|
+| Component implementation details | `packages/vue/src/components/ui/[component]/` |
+| TypeScript type definitions | `packages/vue/src/components/ui/[component]/index.ts` |
+| DataTable internals | `packages/vue/src/composites/data-table/` |
+| Chart component source | `packages/charts-vue/src/components/` |
+| Icon wrapper implementation | `packages/tabler-vue/src/` |
+| Theme CSS variables | `packages/vue/src/themes/` |
+| Build configuration | `packages/vue/vite.config.ts` |
+
+### Priority Order for Information
+
+1. **This file (llms-full.txt)** - Quick reference and common patterns
+2. **Storybook** - Interactive examples and all variants
+3. **Task Manager example** - Full application patterns
+4. **GitHub repository** - Source code and implementation details

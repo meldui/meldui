@@ -6,6 +6,27 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 MeldUI uses CSS variables with OKLCH colors for theming. The theme is designed for Tailwind CSS v4's CSS-first approach.
 
+## Available Themes
+
+<table>
+  <thead>
+    <tr>
+      <th>Theme</th>
+      <th>Import Path</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>default</code></td>
+      <td><code>@meldui/vue/themes/default</code></td>
+      <td>Slate-based neutral theme with light and dark modes</td>
+    </tr>
+  </tbody>
+</table>
+
+> More themes coming soon. See [Creating Custom Themes](#creating-custom-themes) to build your own.
+
 ## Theme Structure
 
 MeldUI themes define two layers of variables:
@@ -33,6 +54,7 @@ Override base variables in your CSS **after** importing the theme:
 
 ```css
 @import "tailwindcss";
+@import "tw-animate-css";
 @import "@meldui/vue/themes/default";
 
 /* Your overrides */
@@ -73,6 +95,25 @@ Override base variables in your CSS **after** importing the theme:
     <tr><td><code>--success</code></td><td>Success states</td></tr>
     <tr><td><code>--warning</code></td><td>Warning states</td></tr>
     <tr><td><code>--info</code></td><td>Info states</td></tr>
+    <tr><td><code>--neutral</code></td><td>Neutral/gray states</td></tr>
+  </tbody>
+</table>
+
+### Chart Colors
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--chart-1</code></td><td>First chart series color</td></tr>
+    <tr><td><code>--chart-2</code></td><td>Second chart series color</td></tr>
+    <tr><td><code>--chart-3</code></td><td>Third chart series color</td></tr>
+    <tr><td><code>--chart-4</code></td><td>Fourth chart series color</td></tr>
+    <tr><td><code>--chart-5</code></td><td>Fifth chart series color</td></tr>
   </tbody>
 </table>
 
@@ -93,6 +134,27 @@ Override base variables in your CSS **after** importing the theme:
     <tr><td><code>--border</code></td><td>Border color</td></tr>
     <tr><td><code>--input</code></td><td>Input border</td></tr>
     <tr><td><code>--ring</code></td><td>Focus ring</td></tr>
+  </tbody>
+</table>
+
+### Sidebar
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--sidebar</code></td><td>Sidebar background</td></tr>
+    <tr><td><code>--sidebar-foreground</code></td><td>Sidebar text</td></tr>
+    <tr><td><code>--sidebar-primary</code></td><td>Sidebar primary color</td></tr>
+    <tr><td><code>--sidebar-primary-foreground</code></td><td>Text on sidebar primary</td></tr>
+    <tr><td><code>--sidebar-accent</code></td><td>Sidebar accent/hover</td></tr>
+    <tr><td><code>--sidebar-accent-foreground</code></td><td>Text on sidebar accent</td></tr>
+    <tr><td><code>--sidebar-border</code></td><td>Sidebar border color</td></tr>
+    <tr><td><code>--sidebar-ring</code></td><td>Sidebar focus ring</td></tr>
   </tbody>
 </table>
 
@@ -203,5 +265,11 @@ Then import it instead of the default:
 
 ```css
 @import "tailwindcss";
+@import "tw-animate-css";
 @import "./themes/ocean.css";
 ```
+
+## See Also
+
+- [Theme Preview](/?path=/story/theme-preview--default) - Interactive theme explorer with dark mode toggle
+- [Installation](/?path=/docs/installation--docs) - Getting started guide
