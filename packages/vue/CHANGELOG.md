@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.8
+
+### Patch Changes
+
+- 0cab55f: Added DateRangePicker.
+
 ## 0.1.7
 
 ### Patch Changes
