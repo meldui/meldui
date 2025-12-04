@@ -666,6 +666,137 @@ const name = ref('')
 
 ---
 
+### DateRangePicker
+
+Date picker with predefined presets for single date or date range selection.
+
+#### Import
+
+```typescript
+import {
+  DateRangePicker,
+  defaultRangePresets,
+  defaultSinglePresets
+} from '@meldui/vue'
+import type { DatePreset, DateRange, DateRangePreset } from '@meldui/vue'
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'single' \| 'range'` | `'range'` | Selection mode |
+| `modelValue` | `DateValue \| DateRange` | - | Controlled value (v-model) |
+| `defaultValue` | `DateValue \| DateRange` | - | Default value when uncontrolled |
+| `presets` | `DatePreset[] \| DateRangePreset[]` | Built-in presets | Custom presets |
+| `showCalendar` | `boolean` | `true` | Whether to show the calendar |
+| `closeOnPresetSelect` | `boolean` | `true` | Close popover when preset selected |
+| `locale` | `string` | `'en'` | Locale for date formatting |
+| `minValue` | `DateValue` | - | Minimum selectable date |
+| `maxValue` | `DateValue` | - | Maximum selectable date |
+| `disabled` | `boolean` | `false` | Disable the picker |
+| `readonly` | `boolean` | `false` | Make picker read-only |
+| `numberOfMonths` | `number` | `1` | Number of months to display |
+| `placeholder` | `string` | `'Pick a date'` | Placeholder text |
+
+#### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `DateValue \| DateRange \| undefined` | Emitted when value changes |
+| `preset-select` | `DatePreset \| DateRangePreset` | Emitted when a preset is selected |
+
+#### Default Presets
+
+**Range mode presets:** Today, Yesterday, Last 7 days, Last 30 days, This month, Last month
+
+**Single mode presets:** Today, Yesterday, 1 week ago, 1 month ago
+
+#### Examples
+
+```vue
+<script setup lang="ts">
+import { DateRangePicker, defaultRangePresets } from '@meldui/vue'
+import type { DateRange, DateRangePreset } from '@meldui/vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+import { ref } from 'vue'
+
+const dateRange = ref<DateRange>()
+const singleDate = ref()
+
+// Custom presets
+const customPresets: DateRangePreset[] = [
+  {
+    label: 'Last 90 days',
+    value: () => ({
+      start: today(getLocalTimeZone()).subtract({ days: 89 }),
+      end: today(getLocalTimeZone()),
+    }),
+  },
+  {
+    label: 'This quarter',
+    value: () => {
+      const now = today(getLocalTimeZone())
+      const quarterStart = now.set({ month: Math.floor((now.month - 1) / 3) * 3 + 1, day: 1 })
+      return { start: quarterStart, end: now }
+    },
+  },
+]
+</script>
+
+<template>
+  <!-- Basic Range Picker (default) -->
+  <DateRangePicker v-model="dateRange" />
+
+  <!-- Single Date Mode -->
+  <DateRangePicker v-model="singleDate" mode="single" />
+
+  <!-- Presets Only (no calendar) -->
+  <DateRangePicker v-model="dateRange" :show-calendar="false" />
+
+  <!-- Custom Presets -->
+  <DateRangePicker v-model="dateRange" :presets="customPresets" />
+
+  <!-- With Two Months -->
+  <DateRangePicker v-model="dateRange" :number-of-months="2" />
+
+  <!-- With Date Constraints -->
+  <DateRangePicker
+    v-model="dateRange"
+    :min-value="today(getLocalTimeZone()).subtract({ months: 6 })"
+    :max-value="today(getLocalTimeZone())"
+  />
+</template>
+```
+
+#### Creating Custom Presets
+
+```typescript
+import { getLocalTimeZone, today } from '@internationalized/date'
+import type { DateRangePreset, DatePreset } from '@meldui/vue'
+
+// For range mode
+const rangePresets: DateRangePreset[] = [
+  {
+    label: 'Last week',
+    value: () => ({
+      start: today(getLocalTimeZone()).subtract({ days: 6 }),
+      end: today(getLocalTimeZone()),
+    }),
+  },
+]
+
+// For single mode
+const singlePresets: DatePreset[] = [
+  {
+    label: 'Today',
+    value: () => today(getLocalTimeZone()),
+  },
+]
+```
+
+---
+
 ### Select
 
 Custom select component with grouping and keyboard navigation.
@@ -1416,6 +1547,7 @@ export * from './components/ui/tooltip'
 export * from './composites/avatar-group'
 export * from './composites/clipboard-copy'
 export * from './composites/data-table'
+export * from './composites/date-range-picker'
 export * from './composites/mention'
 export * from './composites/multi-select'
 export * from './composites/relative-time'

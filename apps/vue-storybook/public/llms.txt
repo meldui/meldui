@@ -42,6 +42,7 @@ MeldUI is an internal design system monorepo that re-exports and customizes shad
 - Mention - @mention input for user tagging
 - NativeSelect - Native HTML select element
 - InputGroup - Group inputs with addons
+- DateRangePicker - Date picker with presets for single or range selection
 - Label - Form field labels
 - Field - Form field wrapper with validation
 - Form - Form wrapper with validation (vee-validate)
@@ -62,6 +63,7 @@ MeldUI is an internal design system monorepo that re-exports and customizes shad
 - AvatarGroup - Group of avatars with overflow
 - Badge - Status badges and labels
 - Calendar - Date picker calendar
+- RangeCalendar - Date range picker calendar
 - Kbd - Keyboard key display
 - Table - Basic data table
 - DataTable - Advanced data table with server-side operations, filtering, sorting, pagination, row selection, column pinning, and keyboard navigation
