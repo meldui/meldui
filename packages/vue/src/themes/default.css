@@ -137,6 +137,42 @@
   }
 }
 
+/* ==========================================================================
+   Custom Scrollbar Styles
+   Reusable class for consistent scrollbar styling across components
+   ========================================================================== */
+
+.custom-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: var(--border) transparent;
+
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    min-height: 40px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--muted-foreground);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
 /**
  * DataTable CSS Custom Properties
  * Minimal configuration - uses Tailwind classes for most styling
@@ -226,36 +262,7 @@
    DataTable Scrollbar Styles
    ========================================================================== */
 
-/* Custom scrollbar styling to match ScrollArea component */
-.table-container {
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-
-/* Webkit browsers (Chrome, Safari, Edge) */
-.table-container::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-.table-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-  background-color: var(--border);
-  border-radius: 9999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-  background-color: var(--muted-foreground);
-}
-
-.table-container::-webkit-scrollbar-corner {
-  background: transparent;
-}
+/* Note: .table-container should include the 'custom-scrollbar' class in component markup */
 
 /* ==========================================================================
    DataTable Column Pinning Styles

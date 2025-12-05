@@ -342,7 +342,7 @@ defineExpose({
         <!-- Table Container wrapper - scrolling happens here, inner Table overflow is disabled -->
         <div
             :ref="setTableContainerRef"
-            class="rounded-md border table-container overflow-auto"
+            class="rounded-md border table-container overflow-auto custom-scrollbar"
             :class="{
                 'is-scrolled': isScrolled,
                 'has-right-scroll': hasRightScroll,

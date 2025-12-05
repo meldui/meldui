@@ -15,6 +15,14 @@ const meta: Meta<typeof Textarea> = {
       control: 'text',
       description: 'Placeholder text',
     },
+    autosize: {
+      control: 'boolean',
+      description: 'Whether the textarea automatically resizes to fit content',
+    },
+    maxHeight: {
+      control: 'text',
+      description: 'Maximum height when autosize is enabled (e.g., "200px", "50vh")',
+    },
   },
   parameters: {
     docs: {
@@ -620,6 +628,158 @@ export const SupportTicket: Story = {
         >
           Submit Ticket
         </Button>
+      </div>
+    `,
+  }),
+}
+
+export const Autosize: Story = {
+  render: () => ({
+    components: { Label, Textarea },
+    setup() {
+      const content = ref('')
+      return { content }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-md">
+        <Label for="autosize">Auto-resizing Textarea</Label>
+        <Textarea
+          id="autosize"
+          v-model="content"
+          autosize
+          placeholder="Start typing... the textarea will grow as you add more content"
+        />
+        <p class="text-xs text-muted-foreground">
+          This textarea automatically expands to fit the content. Try typing multiple lines!
+        </p>
+      </div>
+    `,
+  }),
+}
+
+export const AutosizeWithMaxHeight: Story = {
+  render: () => ({
+    components: { Label, Textarea },
+    setup() {
+      const content = ref('')
+      return { content }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-md">
+        <Label for="autosize-max">Auto-resize with Max Height</Label>
+        <Textarea
+          id="autosize-max"
+          v-model="content"
+          autosize
+          max-height="200px"
+          placeholder="This textarea will grow until it reaches 200px, then show a scrollbar..."
+        />
+        <p class="text-xs text-muted-foreground">
+          Limited to 200px height. Add more content to see the scrollbar appear.
+        </p>
+      </div>
+    `,
+  }),
+}
+
+export const AutosizeWithRows: Story = {
+  render: () => ({
+    components: { Label, Textarea },
+    setup() {
+      const content = ref('')
+      return { content }
+    },
+    template: `
+      <div class="flex flex-col gap-2 max-w-md">
+        <Label for="autosize-rows">Auto-resize with Minimum Rows</Label>
+        <Textarea
+          id="autosize-rows"
+          v-model="content"
+          autosize
+          :rows="5"
+          class="min-h-0"
+          placeholder="This starts with 5 visible rows and grows from there..."
+        />
+        <p class="text-xs text-muted-foreground">
+          Uses the rows attribute to set a minimum height of 5 lines.
+        </p>
+      </div>
+    `,
+  }),
+}
+
+export const AutosizeComparison: Story = {
+  render: () => ({
+    components: { Label, Textarea },
+    setup() {
+      const fixedContent = ref('')
+      const autosizeContent = ref('')
+      return { fixedContent, autosizeContent }
+    },
+    template: `
+      <div class="flex gap-6 max-w-3xl">
+        <div class="flex-1 flex flex-col gap-2">
+          <Label for="fixed">Fixed Height (default)</Label>
+          <Textarea
+            id="fixed"
+            v-model="fixedContent"
+            placeholder="Fixed height with scrollbar..."
+          />
+          <p class="text-xs text-muted-foreground">
+            Standard textarea with scrollbar when content overflows
+          </p>
+        </div>
+
+        <div class="flex-1 flex flex-col gap-2">
+          <Label for="auto">Auto-resize</Label>
+          <Textarea
+            id="auto"
+            v-model="autosizeContent"
+            autosize
+            placeholder="Auto-resizing..."
+          />
+          <p class="text-xs text-muted-foreground">
+            Grows automatically to fit content
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+}
+
+export const AutosizeChat: Story = {
+  render: () => ({
+    components: { Button, Textarea },
+    setup() {
+      const message = ref('')
+
+      const sendMessage = () => {
+        if (message.value.trim()) {
+          alert(`Message sent: ${message.value}`)
+          message.value = ''
+        }
+      }
+
+      return { message, sendMessage }
+    },
+    template: `
+      <div class="max-w-lg p-4 border rounded-lg bg-muted/30">
+        <div class="flex items-end gap-2">
+          <Textarea
+            v-model="message"
+            autosize
+            max-height="150px"
+            placeholder="Type a message..."
+            class="flex-1 min-h-10 py-2"
+            @keydown.enter.exact.prevent="sendMessage"
+          />
+          <Button @click="sendMessage" :disabled="!message.trim()">
+            Send
+          </Button>
+        </div>
+        <p class="text-xs text-muted-foreground mt-2">
+          Press Enter to send, Shift+Enter for new line
+        </p>
       </div>
     `,
   }),
