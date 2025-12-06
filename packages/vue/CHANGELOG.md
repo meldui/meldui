@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.9
+
+### Patch Changes
+
+- ce8f48a: Fixed the sonner component to display it properly.
+
 ## 0.1.8
 
 ### Patch Changes
