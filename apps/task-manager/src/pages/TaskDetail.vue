@@ -43,10 +43,10 @@ import {
   TimelineDot,
   TimelineHeader,
   TimelineItem,
+  toast,
 } from '@meldui/vue'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
 import TaskForm from '@/components/tasks/TaskForm.vue'
 import { getProject } from '@/stores/projects'
 import { deleteTask, getTask } from '@/stores/tasks'

@@ -17,9 +17,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  toast,
 } from '@meldui/vue'
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import ProjectCard from '@/components/projects/ProjectCard.vue'
 import ProjectForm from '@/components/projects/ProjectForm.vue'
 import { deleteProject, projectsWithStats } from '@/stores/projects'

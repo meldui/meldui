@@ -36,9 +36,9 @@ import {
   TabsList,
   TabsTrigger,
   Textarea,
+  toast,
 } from '@meldui/vue'
 import { ref } from 'vue'
-import { toast } from 'vue-sonner'
 import { clearAllStorage, exportData, importData } from '@/composables/useLocalStorage'
 import { defaultView, resetSettings, setDefaultView, setTheme, theme } from '@/stores/settings'
 import type { DefaultView, ThemeMode } from '@/types'

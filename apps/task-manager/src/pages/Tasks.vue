@@ -32,6 +32,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
     RelativeTime,
+    toast,
 } from "@meldui/vue";
 import type {
     CellContext,
@@ -43,7 +44,6 @@ import type {
 } from "@tanstack/vue-table";
 import { computed, h, ref } from "vue";
 import { useRouter } from "vue-router";
-import { toast } from "vue-sonner";
 import TaskForm from "@/components/tasks/TaskForm.vue";
 import { allProjects, getProject } from "@/stores/projects";
 import {

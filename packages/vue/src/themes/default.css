@@ -7,6 +7,9 @@
  * @import "@meldui/vue/themes/default";
  */
 
+/* vue-sonner styles for Toaster component positioning */
+@import "vue-sonner/style.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
