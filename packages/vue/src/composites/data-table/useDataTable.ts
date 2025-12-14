@@ -76,6 +76,9 @@ export interface UseDataTableProps<TData> {
   defaultPinning?: ColumnPinningState
   enableColumnPinning?: boolean
 
+  // Column hiding configuration
+  enableColumnHiding?: boolean
+
   // Column resizing configuration
   enableColumnResizing?: boolean
   columnResizeMode?: ColumnResizeMode
@@ -201,6 +204,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     meta: {
       defaultPinning: props.defaultPinning || { left: [], right: [] },
       enableColumnPinning: props.enableColumnPinning ?? false,
+      enableColumnHiding: props.enableColumnHiding ?? false,
       enableColumnResizing: props.enableColumnResizing ?? false,
     },
     // Server-side mode: all operations handled by server

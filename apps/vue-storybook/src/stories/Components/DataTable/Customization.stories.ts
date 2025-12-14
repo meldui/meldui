@@ -696,3 +696,168 @@ export const BorderedCells: Story = {
     `,
   }),
 }
+
+// ============================================================================
+// Column Hiding Examples
+// ============================================================================
+
+/**
+ * Default behavior - column hiding disabled.
+ * No "View" button in toolbar and no "Hide" option in column header dropdowns.
+ */
+export const ColumnHidingDisabled: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: [],
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const handleChange = (state: TableState) => {
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return { localData, pageCount, handleChange, columns: minimalColumns }
+    },
+    template: `
+      <div class="space-y-4">
+        <p class="text-sm text-muted-foreground">
+          Default behavior: <code>enableColumnHiding</code> is <code>false</code> by default.
+          Notice there is no "View" button in the toolbar, and column header dropdowns do not have a "Hide" option.
+        </p>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          search-column="name"
+          search-placeholder="Search users..."
+        />
+      </div>
+    `,
+  }),
+}
+
+/**
+ * Column hiding enabled - shows "View" button and "Hide" options.
+ * Users can hide/show columns via the View button or column header dropdown.
+ */
+export const ColumnHidingEnabled: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: [],
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const handleChange = (state: TableState) => {
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return { localData, pageCount, handleChange, columns: minimalColumns }
+    },
+    template: `
+      <div class="space-y-4">
+        <p class="text-sm text-muted-foreground">
+          Column hiding enabled with <code>enable-column-hiding</code> prop.
+          Click the "View" button to toggle column visibility, or click a column header and select "Hide".
+        </p>
+        <DataTable
+          enable-column-hiding
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          search-column="name"
+          search-placeholder="Search users..."
+        />
+      </div>
+    `,
+  }),
+}
+
+/**
+ * Column hiding with specific columns locked.
+ * Some columns can be prevented from hiding using enableHiding: false in column definition.
+ */
+export const ColumnHidingWithLockedColumns: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: [],
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const handleChange = (state: TableState) => {
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      // Columns with enableHiding set to false for specific columns
+      const columnsWithLockedHiding = [
+        {
+          accessorKey: 'name',
+          header: 'Name',
+          enableHiding: false, // Cannot be hidden
+        },
+        {
+          accessorKey: 'email',
+          header: 'Email',
+          // enableHiding defaults to true, can be hidden
+        },
+        {
+          accessorKey: 'role',
+          header: 'Role',
+          // enableHiding defaults to true, can be hidden
+        },
+        {
+          accessorKey: 'status',
+          header: 'Status',
+          enableHiding: false, // Cannot be hidden
+        },
+      ]
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: columnsWithLockedHiding,
+      }
+    },
+    template: `
+      <div class="space-y-4">
+        <p class="text-sm text-muted-foreground">
+          Column hiding enabled, but "Name" and "Status" columns have <code>enableHiding: false</code>.
+          These columns won't appear in the View menu and won't have a "Hide" option in their dropdown.
+          Try clicking on column headers - only "Email" and "Role" have the "Hide" option.
+        </p>
+        <DataTable
+          enable-column-hiding
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          search-column="name"
+          search-placeholder="Search users..."
+        />
+      </div>
+    `,
+  }),
+}

@@ -69,6 +69,8 @@ interface Props {
   showPagination?: boolean
   showSelectedCount?: boolean
   bulkSelectOptions?: BulkActionOption<TData>[]
+  // Column hiding
+  enableColumnHiding?: boolean
   // Empty state
   emptyMessage?: string
   // Loading state
@@ -119,6 +121,7 @@ const props = withDefaults(defineProps<Props>(), {
   showToolbar: true,
   showPagination: true,
   showSelectedCount: false,
+  enableColumnHiding: false,
   emptyMessage: 'No results found.',
   loading: false,
   loadingMessage: 'Loading data...',
@@ -163,6 +166,7 @@ const tableState = useDataTable({
   advancedMode: props.advancedMode,
   defaultPinning: props.defaultPinning,
   enableColumnPinning: props.enableColumnPinning,
+  enableColumnHiding: props.enableColumnHiding,
   enableColumnResizing: props.enableColumnResizing,
   columnResizeMode: props.columnResizeMode,
   enableRowExpansion: props.enableRowExpansion,
@@ -310,6 +314,7 @@ defineExpose({
                     :advanced-mode="advancedMode"
                     :loading="loading"
                     :show-refresh-button="showRefreshButton"
+                    :enable-column-hiding="enableColumnHiding"
                     @refresh="tableState.refresh"
                 >
                     <!-- Pass through toolbar slots -->
