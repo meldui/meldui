@@ -47,6 +47,9 @@ interface Props {
 
   // Refresh button
   showRefreshButton?: boolean
+
+  // Column hiding
+  enableColumnHiding?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -56,6 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
   advancedMode: false,
   loading: false,
   showRefreshButton: false,
+  enableColumnHiding: false,
 })
 
 // Create plugin map for quick lookup
@@ -641,8 +645,8 @@ onUnmounted(() => {
             <!-- Toolbar End Slot -->
             <slot name="toolbar-end" :table="table" />
 
-            <!-- View Options -->
-            <DataTableViewOptions :table="table" />
+            <!-- View Options (Column Hiding) -->
+            <DataTableViewOptions v-if="enableColumnHiding" :table="table" />
         </div>
     </div>
 </template>

@@ -59,8 +59,7 @@ interface Props {
   defaultPerPage?: number
   pageSizeOptions?: number[]
   showPageSizeSelector?: boolean
-  showPageNumbers?: boolean
-  siblingCount?: number
+  showPageInfo?: boolean
   paginationPosition?: 'bottom' | 'top' | 'both'
   // Toolbar options
   filterFields?: DataTableFilterField<TData>[]
@@ -70,6 +69,8 @@ interface Props {
   showPagination?: boolean
   showSelectedCount?: boolean
   bulkSelectOptions?: BulkActionOption<TData>[]
+  // Column hiding
+  enableColumnHiding?: boolean
   // Empty state
   emptyMessage?: string
   // Loading state
@@ -113,14 +114,14 @@ const props = withDefaults(defineProps<Props>(), {
   defaultPerPage: 10,
   pageSizeOptions: () => [10, 20, 30, 40, 50],
   showPageSizeSelector: true,
-  showPageNumbers: true,
-  siblingCount: 1,
+  showPageInfo: true,
   paginationPosition: 'bottom',
   filterFields: () => [],
   searchPlaceholder: 'Search...',
   showToolbar: true,
   showPagination: true,
   showSelectedCount: false,
+  enableColumnHiding: false,
   emptyMessage: 'No results found.',
   loading: false,
   loadingMessage: 'Loading data...',
@@ -165,6 +166,7 @@ const tableState = useDataTable({
   advancedMode: props.advancedMode,
   defaultPinning: props.defaultPinning,
   enableColumnPinning: props.enableColumnPinning,
+  enableColumnHiding: props.enableColumnHiding,
   enableColumnResizing: props.enableColumnResizing,
   columnResizeMode: props.columnResizeMode,
   enableRowExpansion: props.enableRowExpansion,
@@ -312,6 +314,7 @@ defineExpose({
                     :advanced-mode="advancedMode"
                     :loading="loading"
                     :show-refresh-button="showRefreshButton"
+                    :enable-column-hiding="enableColumnHiding"
                     @refresh="tableState.refresh"
                 >
                     <!-- Pass through toolbar slots -->
@@ -333,8 +336,7 @@ defineExpose({
                     :page-size-options="pageSizeOptions"
                     :show-selected-count="showSelectedCount"
                     :show-page-size-selector="showPageSizeSelector"
-                    :show-page-numbers="showPageNumbers"
-                    :sibling-count="siblingCount"
+                    :show-page-info="showPageInfo"
                 />
             </slot>
         </template>
@@ -546,8 +548,7 @@ defineExpose({
                     :page-size-options="pageSizeOptions"
                     :show-selected-count="showSelectedCount"
                     :show-page-size-selector="showPageSizeSelector"
-                    :show-page-numbers="showPageNumbers"
-                    :sibling-count="siblingCount"
+                    :show-page-info="showPageInfo"
                 />
             </slot>
         </template>

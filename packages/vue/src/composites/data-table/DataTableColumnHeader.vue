@@ -56,6 +56,7 @@ const tableMeta = computed(() => {
     | {
         defaultPinning?: { left: string[]; right: string[] }
         enableColumnPinning?: boolean
+        enableColumnHiding?: boolean
       }
     | undefined
 })
@@ -83,9 +84,13 @@ const showPinOptions = computed(() => {
 })
 
 // Hiding state
-// - Hideable by default if enableHiding is not specified
-// - Only disabled when explicitly set to false in column definition
-const canHide = computed(() => props.column.getCanHide())
+// - Column hiding requires BOTH:
+//   1. Table-level enableColumnHiding: true
+//   2. Column-level enableHiding: true (default) or not set to false
+const canHide = computed(() => {
+  const enableColumnHiding = tableMeta.value?.enableColumnHiding ?? false
+  return enableColumnHiding && props.column.getCanHide()
+})
 
 // Determine if dropdown menu should be shown at all
 // Show dropdown if ANY of these are true:
