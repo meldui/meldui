@@ -59,9 +59,7 @@ interface Props {
   defaultPerPage?: number
   pageSizeOptions?: number[]
   showPageSizeSelector?: boolean
-  showPageNumbers?: boolean
   showPageInfo?: boolean
-  siblingCount?: number
   paginationPosition?: 'bottom' | 'top' | 'both'
   // Toolbar options
   filterFields?: DataTableFilterField<TData>[]
@@ -114,9 +112,7 @@ const props = withDefaults(defineProps<Props>(), {
   defaultPerPage: 10,
   pageSizeOptions: () => [10, 20, 30, 40, 50],
   showPageSizeSelector: true,
-  showPageNumbers: true,
   showPageInfo: true,
-  siblingCount: 1,
   paginationPosition: 'bottom',
   filterFields: () => [],
   searchPlaceholder: 'Search...',
@@ -335,9 +331,7 @@ defineExpose({
                     :page-size-options="pageSizeOptions"
                     :show-selected-count="showSelectedCount"
                     :show-page-size-selector="showPageSizeSelector"
-                    :show-page-numbers="showPageNumbers"
                     :show-page-info="showPageInfo"
-                    :sibling-count="siblingCount"
                 />
             </slot>
         </template>
@@ -549,9 +543,7 @@ defineExpose({
                     :page-size-options="pageSizeOptions"
                     :show-selected-count="showSelectedCount"
                     :show-page-size-selector="showPageSizeSelector"
-                    :show-page-numbers="showPageNumbers"
                     :show-page-info="showPageInfo"
-                    :sibling-count="siblingCount"
                 />
             </slot>
         </template>

@@ -9,12 +9,6 @@ import type { Table } from '@tanstack/vue-table'
 import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-} from '@/components/ui/pagination'
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -27,27 +21,20 @@ interface Props {
   pageSizeOptions?: number[]
   showSelectedCount?: boolean
   showPageSizeSelector?: boolean
-  showPageNumbers?: boolean
   showPageInfo?: boolean
-  siblingCount?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   pageSizeOptions: () => [10, 20, 30, 40, 50],
   showSelectedCount: false,
   showPageSizeSelector: true,
-  showPageNumbers: true,
   showPageInfo: true,
-  siblingCount: 1,
 })
 
 const selectedCount = computed(() => props.table.getFilteredSelectedRowModel().rows.length)
 const totalCount = computed(() => props.table.getFilteredRowModel().rows.length)
 
-const currentPage = computed({
-  get: () => props.table.getState().pagination.pageIndex + 1,
-  set: (value) => props.table.setPageIndex(value - 1),
-})
+const currentPage = computed(() => props.table.getState().pagination.pageIndex + 1)
 
 const pageCount = computed(() => props.table.getPageCount())
 
@@ -58,14 +45,6 @@ const pageSize = computed({
   get: () => props.table.getState().pagination.pageSize,
   set: (value) => props.table.setPageSize(value),
 })
-
-// Total items for pagination component (use pageSize * pageCount as approximation)
-const totalItems = computed(() => pageCount.value * pageSize.value)
-
-// Handle page change from Pagination component
-const handlePageChange = (page: number) => {
-  props.table.setPageIndex(page - 1)
-}
 </script>
 
 <template>
@@ -104,84 +83,55 @@ const handlePageChange = (page: number) => {
             </div>
 
             <!-- Pagination Controls -->
-            <Pagination
-                v-slot="{ page }"
-                :page="currentPage"
-                :total="totalItems"
-                :items-per-page="pageSize"
-                :sibling-count="siblingCount"
-                show-edges
-                class="mx-0 w-auto"
-                @update:page="handlePageChange"
-            >
-                <PaginationContent class="gap-1">
-                    <!-- First Page Button -->
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        class="hidden h-8 w-8 lg:flex"
-                        :disabled="!canPreviousPage"
-                        @click="table.setPageIndex(0)"
-                    >
-                        <span class="sr-only">Go to first page</span>
-                        <IconChevronsLeft class="h-4 w-4" />
-                    </Button>
+            <div class="flex items-center gap-1">
+                <!-- First Page Button -->
+                <Button
+                    variant="outline"
+                    size="icon"
+                    class="hidden h-8 w-8 lg:flex"
+                    :disabled="!canPreviousPage"
+                    @click="table.setPageIndex(0)"
+                >
+                    <span class="sr-only">Go to first page</span>
+                    <IconChevronsLeft class="h-4 w-4" />
+                </Button>
 
-                    <!-- Previous Page Button -->
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        class="h-8 w-8"
-                        :disabled="!canPreviousPage"
-                        @click="table.previousPage()"
-                    >
-                        <span class="sr-only">Go to previous page</span>
-                        <IconChevronLeft class="h-4 w-4" />
-                    </Button>
+                <!-- Previous Page Button -->
+                <Button
+                    variant="outline"
+                    size="icon"
+                    class="h-8 w-8"
+                    :disabled="!canPreviousPage"
+                    @click="table.previousPage()"
+                >
+                    <span class="sr-only">Go to previous page</span>
+                    <IconChevronLeft class="h-4 w-4" />
+                </Button>
 
-                    <!-- Page Numbers (when enabled) -->
-                    <template v-if="showPageNumbers">
-                        <template v-for="(item, index) in page.items" :key="index">
-                            <PaginationEllipsis
-                                v-if="item.type === 'ellipsis'"
-                                :index="index"
-                            />
-                            <PaginationItem
-                                v-else
-                                :value="item.value"
-                                :is-active="item.value === currentPage"
-                                class="h-8 w-8"
-                            >
-                                {{ item.value }}
-                            </PaginationItem>
-                        </template>
-                    </template>
+                <!-- Next Page Button -->
+                <Button
+                    variant="outline"
+                    size="icon"
+                    class="h-8 w-8"
+                    :disabled="!canNextPage"
+                    @click="table.nextPage()"
+                >
+                    <span class="sr-only">Go to next page</span>
+                    <IconChevronRight class="h-4 w-4" />
+                </Button>
 
-                    <!-- Next Page Button -->
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        class="h-8 w-8"
-                        :disabled="!canNextPage"
-                        @click="table.nextPage()"
-                    >
-                        <span class="sr-only">Go to next page</span>
-                        <IconChevronRight class="h-4 w-4" />
-                    </Button>
-
-                    <!-- Last Page Button -->
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        class="hidden h-8 w-8 lg:flex"
-                        :disabled="!canNextPage"
-                        @click="table.setPageIndex(pageCount - 1)"
-                    >
-                        <span class="sr-only">Go to last page</span>
-                        <IconChevronsRight class="h-4 w-4" />
-                    </Button>
-                </PaginationContent>
-            </Pagination>
+                <!-- Last Page Button -->
+                <Button
+                    variant="outline"
+                    size="icon"
+                    class="hidden h-8 w-8 lg:flex"
+                    :disabled="!canNextPage"
+                    @click="table.setPageIndex(pageCount - 1)"
+                >
+                    <span class="sr-only">Go to last page</span>
+                    <IconChevronsRight class="h-4 w-4" />
+                </Button>
+            </div>
         </div>
     </div>
 </template>
