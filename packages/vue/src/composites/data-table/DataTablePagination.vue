@@ -28,6 +28,7 @@ interface Props {
   showSelectedCount?: boolean
   showPageSizeSelector?: boolean
   showPageNumbers?: boolean
+  showPageInfo?: boolean
   siblingCount?: number
 }
 
@@ -36,6 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   showSelectedCount: false,
   showPageSizeSelector: true,
   showPageNumbers: true,
+  showPageInfo: true,
   siblingCount: 1,
 })
 
@@ -93,10 +95,10 @@ const handlePageChange = (page: number) => {
                 </Select>
             </div>
 
-            <!-- Page indicator (when page numbers hidden) -->
+            <!-- Page indicator -->
             <div
-                v-if="!showPageNumbers"
-                class="flex w-[100px] items-center justify-center text-sm font-medium"
+                v-if="showPageInfo"
+                class="flex items-center justify-center text-sm font-medium"
             >
                 Page {{ currentPage }} of {{ pageCount }}
             </div>

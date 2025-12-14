@@ -60,6 +60,7 @@ interface Props {
   pageSizeOptions?: number[]
   showPageSizeSelector?: boolean
   showPageNumbers?: boolean
+  showPageInfo?: boolean
   siblingCount?: number
   paginationPosition?: 'bottom' | 'top' | 'both'
   // Toolbar options
@@ -114,6 +115,7 @@ const props = withDefaults(defineProps<Props>(), {
   pageSizeOptions: () => [10, 20, 30, 40, 50],
   showPageSizeSelector: true,
   showPageNumbers: true,
+  showPageInfo: true,
   siblingCount: 1,
   paginationPosition: 'bottom',
   filterFields: () => [],
@@ -334,6 +336,7 @@ defineExpose({
                     :show-selected-count="showSelectedCount"
                     :show-page-size-selector="showPageSizeSelector"
                     :show-page-numbers="showPageNumbers"
+                    :show-page-info="showPageInfo"
                     :sibling-count="siblingCount"
                 />
             </slot>
@@ -547,6 +550,7 @@ defineExpose({
                     :show-selected-count="showSelectedCount"
                     :show-page-size-selector="showPageSizeSelector"
                     :show-page-numbers="showPageNumbers"
+                    :show-page-info="showPageInfo"
                     :sibling-count="siblingCount"
                 />
             </slot>
