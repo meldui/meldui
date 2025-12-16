@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.10
+
+### Patch Changes
+
+- fc6051b: Fixed issues in datatable component
+
 ## 0.1.9
 
 ### Patch Changes
