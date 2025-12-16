@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="TData">
 import { IconLoader2, IconPinnedOff, IconRefresh, IconSearch, IconX } from '@meldui/tabler-vue'
 import type { Table } from '@tanstack/vue-table'
-import { computed, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import DataTableBulkActions from './DataTableBulkActions.vue'
@@ -90,6 +90,109 @@ const filterInstances = ref<FilterInstance<TData>[]>([])
 // Track instance values for aggregation
 const instanceValues = ref<Map<string, FilterValue>>(new Map())
 let instanceCounter = 0
+
+/**
+ * Initialize filter instances from table's initial columnFilters state
+ * This enables URL state restoration - when defaultFilters is provided,
+ * the filter UI will reflect those values on mount.
+ */
+const initializeFiltersFromTableState = () => {
+  const columnFilters = props.table.getState().columnFilters
+  if (columnFilters.length === 0) return
+
+  for (const filter of columnFilters) {
+    const fieldId = filter.id
+    const field = props.filterFields.find((f) => String(f.id) === fieldId)
+    if (!field) continue
+
+    const filterValue = filter.value
+
+    // Determine how many instances to create based on filter type and value
+    if (props.advancedMode) {
+      // Advanced mode: value is always array of operator objects
+      const values = filterValue as AdvancedFilterValue
+      if (Array.isArray(values)) {
+        for (const value of values) {
+          const instanceId = `filter-${fieldId}-${instanceCounter++}`
+          ;(filterInstances.value as FilterInstance[]).push({
+            instanceId,
+            fieldId,
+            field,
+            autoOpen: false,
+            openTrigger: 0,
+          } as FilterInstance)
+          instanceValues.value.set(instanceId, value)
+        }
+      }
+    } else {
+      // Simple mode: format depends on filter type
+      switch (field.type) {
+        case 'text':
+        case 'number':
+        case 'date': {
+          // These support multi-instance, value is array
+          const values = filterValue as unknown[]
+          if (Array.isArray(values)) {
+            for (const value of values) {
+              const instanceId = `filter-${fieldId}-${instanceCounter++}`
+              ;(filterInstances.value as FilterInstance[]).push({
+                instanceId,
+                fieldId,
+                field,
+                autoOpen: false,
+                openTrigger: 0,
+              } as FilterInstance)
+              instanceValues.value.set(instanceId, value as FilterValue)
+            }
+          }
+          break
+        }
+
+        case 'range':
+        case 'daterange': {
+          // Multi-instance, value is array of tuples/objects
+          const values = filterValue as unknown[]
+          if (Array.isArray(values)) {
+            for (const value of values) {
+              const instanceId = `filter-${fieldId}-${instanceCounter++}`
+              ;(filterInstances.value as FilterInstance[]).push({
+                instanceId,
+                fieldId,
+                field,
+                autoOpen: false,
+                openTrigger: 0,
+              } as FilterInstance)
+              instanceValues.value.set(instanceId, value as FilterValue)
+            }
+          }
+          break
+        }
+
+        case 'select':
+        case 'boolean':
+        case 'multiselect':
+        default: {
+          // Single instance types
+          const instanceId = `filter-${fieldId}-${instanceCounter++}`
+          ;(filterInstances.value as FilterInstance[]).push({
+            instanceId,
+            fieldId,
+            field,
+            autoOpen: false,
+            openTrigger: 0,
+          } as FilterInstance)
+          instanceValues.value.set(instanceId, filterValue as FilterValue)
+          break
+        }
+      }
+    }
+  }
+}
+
+// Initialize on mount
+onMounted(() => {
+  initializeFiltersFromTableState()
+})
 
 const isFiltered = computed(() => props.table.getState().columnFilters.length > 0)
 
@@ -372,6 +475,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as TextOperator[]
                     "
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -403,6 +507,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as NumberOperator[]
                     "
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -430,6 +535,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as DateOperator[]
                     "
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -458,6 +564,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as SelectOperator[]
                     "
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -484,6 +591,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as BooleanOperator[]
                     "
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -529,6 +637,7 @@ onUnmounted(() => {
                     :step="instance.field.step"
                     :unit="instance.field.unit"
                     :default-open="instance.autoOpen"
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -548,6 +657,7 @@ onUnmounted(() => {
                     :placeholder="instance.field.placeholder"
                     :icon="instance.field.icon"
                     :default-open="instance.autoOpen"
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -575,6 +685,7 @@ onUnmounted(() => {
                         instance.field.availableOperators ??
                         getPlugin(instance.field.type)?.operators
                     "
+                    :initial-value="instanceValues.get(instance.instanceId)"
                     v-bind="instance.field"
                     @value-change="
                         (value: unknown) =>

@@ -43,6 +43,15 @@ interface Props {
   advancedMode?: boolean
   defaultOperator?: DateOperator
   availableOperators?: DateOperator[]
+
+  // Initial value for URL state restoration
+  initialValue?:
+    | DateValue
+    | [DateValue, DateValue]
+    | {
+        operator: DateOperator
+        value: DateValue | [DateValue, DateValue] | null
+      }
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -67,11 +76,62 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(props.defaultOpen)
-const localOperator = ref<DateOperator>(
-  props.defaultOperator ?? (getDefaultOperator('date', props.advancedMode) as DateOperator),
-)
-const localDate = ref<unknown>(undefined)
-const localDateRange = ref<DateRange | undefined>(undefined)
+
+// Initialize from initialValue prop for URL state restoration
+const getInitialOperator = (): DateOperator => {
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    'operator' in props.initialValue
+  ) {
+    return props.initialValue.operator
+  }
+  return props.defaultOperator ?? (getDefaultOperator('date', props.advancedMode) as DateOperator)
+}
+
+const getInitialDate = (): unknown => {
+  if (!props.initialValue) return undefined
+  // Check if it's a DateValue (has calendar property typically)
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    !('operator' in props.initialValue) &&
+    !Array.isArray(props.initialValue)
+  ) {
+    return props.initialValue
+  }
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    'value' in props.initialValue
+  ) {
+    const val = props.initialValue.value
+    if (val && !Array.isArray(val)) return val
+  }
+  return undefined
+}
+
+const getInitialDateRange = (): DateRange | undefined => {
+  if (!props.initialValue) return undefined
+  if (Array.isArray(props.initialValue)) {
+    return { start: props.initialValue[0], end: props.initialValue[1] }
+  }
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    'value' in props.initialValue
+  ) {
+    const val = props.initialValue.value
+    if (Array.isArray(val)) {
+      return { start: val[0], end: val[1] }
+    }
+  }
+  return undefined
+}
+
+const localOperator = ref<DateOperator>(getInitialOperator())
+const localDate = ref<unknown>(getInitialDate())
+const localDateRange = ref<DateRange | undefined>(getInitialDateRange())
 const appliedValue = ref<
   | DateValue
   | [DateValue, DateValue]
@@ -80,7 +140,7 @@ const appliedValue = ref<
       value: DateValue | [DateValue, DateValue] | null
     }
   | undefined
->(undefined)
+>(props.initialValue)
 
 // Watch openTrigger to programmatically reopen
 watch(

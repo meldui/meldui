@@ -80,6 +80,8 @@ interface Props {
   error?: string | Error
   // Advanced filter mode (static - never changes)
   advancedMode?: boolean
+  // Default filters for URL state restoration
+  defaultFilters?: ColumnFiltersState
   // Column pinning
   defaultPinning?: ColumnPinningState
   enableColumnPinning?: boolean
@@ -164,6 +166,7 @@ const tableState = useDataTable({
   filterFields: props.filterFields,
   onServerSideChange: props.onServerSideChange,
   advancedMode: props.advancedMode,
+  defaultFilters: props.defaultFilters,
   defaultPinning: props.defaultPinning,
   enableColumnPinning: props.enableColumnPinning,
   enableColumnHiding: props.enableColumnHiding,

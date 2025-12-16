@@ -176,6 +176,12 @@ const handleServerSideChange = (params) => {
       <td>Enable advanced filter operators</td>
     </tr>
     <tr>
+      <td><code>defaultFilters</code></td>
+      <td><code>ColumnFiltersState</code></td>
+      <td><code>[]</code></td>
+      <td>Initial filter values for URL state restoration</td>
+    </tr>
+    <tr>
       <td><code>defaultPinning</code></td>
       <td><code>ColumnPinningState</code></td>
       <td>-</td>
@@ -516,6 +522,49 @@ tableRef.value.focusTable()  // Focus the table
 tableRef.value.blurTable()   // Remove focus from table
 </script>
 ```
+
+## URL State Restoration
+
+Use `defaultFilters` to restore filter state from URL parameters on page load:
+
+```vue
+<script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { DataTable } from '@meldui/vue'
+import type { ColumnFiltersState } from '@tanstack/vue-table'
+
+const route = useRoute()
+
+// Parse filters from URL on initial load
+const defaultFilters = computed<ColumnFiltersState>(() => {
+  const filters: ColumnFiltersState = []
+
+  // Example: ?status=active&role=admin
+  if (route.query.status) {
+    filters.push({ id: 'status', value: [route.query.status] })
+  }
+  if (route.query.role) {
+    filters.push({ id: 'role', value: route.query.role })
+  }
+
+  return filters
+})
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    :on-server-side-change="handleChange"
+    :default-filters="defaultFilters"
+    :filter-fields="filterFields"
+  />
+</template>
+```
+
+This ensures the filter UI reflects the URL state when the page loads, avoiding double API calls.
 
 ## Keyboard Navigation
 

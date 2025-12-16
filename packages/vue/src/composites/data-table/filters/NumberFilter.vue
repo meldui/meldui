@@ -36,6 +36,12 @@ interface Props {
   advancedMode?: boolean
   defaultOperator?: NumberOperator
   availableOperators?: NumberOperator[]
+
+  // Initial value for URL state restoration
+  initialValue?:
+    | number
+    | [number, number]
+    | { operator: NumberOperator; value: number | [number, number] }
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -57,18 +63,56 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(props.defaultOpen)
-const localOperator = ref<NumberOperator>(
-  props.defaultOperator ?? (getDefaultOperator('number', props.advancedMode) as NumberOperator),
-)
-const localValue = ref('')
-const localMin = ref('')
-const localMax = ref('')
+
+// Initialize from initialValue prop for URL state restoration
+const getInitialOperator = (): NumberOperator => {
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    'operator' in props.initialValue
+  ) {
+    return props.initialValue.operator
+  }
+  return (
+    props.defaultOperator ?? (getDefaultOperator('number', props.advancedMode) as NumberOperator)
+  )
+}
+
+const getInitialValue = (): string => {
+  if (props.initialValue === undefined || props.initialValue === null) return ''
+  if (typeof props.initialValue === 'number') return String(props.initialValue)
+  if (typeof props.initialValue === 'object' && 'value' in props.initialValue) {
+    const val = props.initialValue.value
+    return typeof val === 'number' ? String(val) : ''
+  }
+  return ''
+}
+
+const getInitialMinMax = (): [string, string] => {
+  if (!props.initialValue) return ['', '']
+  if (Array.isArray(props.initialValue)) {
+    return [String(props.initialValue[0]), String(props.initialValue[1])]
+  }
+  if (typeof props.initialValue === 'object' && 'value' in props.initialValue) {
+    const val = props.initialValue.value
+    if (Array.isArray(val)) {
+      return [String(val[0]), String(val[1])]
+    }
+  }
+  return ['', '']
+}
+
+const [initMin, initMax] = getInitialMinMax()
+const localOperator = ref<NumberOperator>(getInitialOperator())
+const localValue = ref(getInitialValue())
+const localMin = ref(initMin)
+const localMax = ref(initMax)
 const appliedValue = ref<
   | number
   | [number, number]
   | { operator: NumberOperator; value: number | [number, number] }
   | undefined
->(undefined)
+>(props.initialValue)
 const inputRef = ref<{ $el: HTMLInputElement } | null>(null)
 
 // Watch openTrigger to programmatically reopen
