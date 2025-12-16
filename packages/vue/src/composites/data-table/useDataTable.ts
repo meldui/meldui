@@ -72,6 +72,9 @@ export interface UseDataTableProps<TData> {
   // Advanced mode configuration (static - never changes after init)
   advancedMode?: boolean // Static mode - true for advanced, false for simple
 
+  // Default filters for URL state restoration
+  defaultFilters?: ColumnFiltersState
+
   // Column pinning configuration
   defaultPinning?: ColumnPinningState
   enableColumnPinning?: boolean
@@ -107,7 +110,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   // State management
   const sorting = ref<SortingState>([])
-  const columnFilters = ref<ColumnFiltersState>([])
+  const columnFilters = ref<ColumnFiltersState>(props.defaultFilters || [])
   const columnVisibility = ref<VisibilityState>({})
   const rowSelection = ref<RowSelectionState>({})
   const pagination = ref<PaginationState>({
@@ -241,7 +244,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   // Helper methods
   const resetFilters = () => {
-    columnFilters.value = []
+    columnFilters.value = props.defaultFilters || []
   }
 
   const resetSorting = () => {

@@ -34,6 +34,9 @@ interface Props {
   advancedMode?: boolean
   defaultOperator?: TextOperator
   availableOperators?: TextOperator[]
+
+  // Initial value for URL state restoration
+  initialValue?: string | { operator: TextOperator; value: string }
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -49,11 +52,27 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(props.defaultOpen)
-const localOperator = ref<TextOperator>(
-  props.defaultOperator ?? (getDefaultOperator('text', props.advancedMode) as TextOperator),
+
+// Initialize from initialValue prop for URL state restoration
+const getInitialOperator = (): TextOperator => {
+  if (props.initialValue && typeof props.initialValue === 'object') {
+    return props.initialValue.operator
+  }
+  return props.defaultOperator ?? (getDefaultOperator('text', props.advancedMode) as TextOperator)
+}
+
+const getInitialValue = (): string => {
+  if (props.initialValue) {
+    return typeof props.initialValue === 'object' ? props.initialValue.value : props.initialValue
+  }
+  return ''
+}
+
+const localOperator = ref<TextOperator>(getInitialOperator())
+const localValue = ref(getInitialValue())
+const appliedValue = ref<string | { operator: TextOperator; value: string } | undefined>(
+  props.initialValue,
 )
-const localValue = ref('')
-const appliedValue = ref<string | { operator: TextOperator; value: string } | undefined>(undefined)
 const inputRef = ref<{ $el: HTMLInputElement } | null>(null)
 
 // Watch openTrigger to programmatically reopen

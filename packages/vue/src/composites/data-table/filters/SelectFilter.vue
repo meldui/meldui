@@ -45,6 +45,9 @@ interface Props {
   advancedMode?: boolean
   defaultOperator?: SelectOperator
   availableOperators?: SelectOperator[]
+
+  // Initial value for URL state restoration
+  initialValue?: string | string[] | { operator: SelectOperator; value: string | string[] }
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -63,14 +66,47 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(props.defaultOpen)
-const localOperator = ref<SelectOperator>(
-  props.defaultOperator ?? (getDefaultOperator('select', props.advancedMode) as SelectOperator),
-)
-const localValue = ref<string | undefined>(undefined)
-const localValues = ref<string[]>([])
+
+// Initialize from initialValue prop for URL state restoration
+const getInitialOperator = (): SelectOperator => {
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    'operator' in props.initialValue
+  ) {
+    return props.initialValue.operator
+  }
+  return (
+    props.defaultOperator ?? (getDefaultOperator('select', props.advancedMode) as SelectOperator)
+  )
+}
+
+const getInitialSingleValue = (): string | undefined => {
+  if (!props.initialValue) return undefined
+  if (typeof props.initialValue === 'string') return props.initialValue
+  if (typeof props.initialValue === 'object' && 'value' in props.initialValue) {
+    const val = props.initialValue.value
+    return typeof val === 'string' ? val : val[0]
+  }
+  return undefined
+}
+
+const getInitialArrayValue = (): string[] => {
+  if (!props.initialValue) return []
+  if (Array.isArray(props.initialValue)) return props.initialValue
+  if (typeof props.initialValue === 'object' && 'value' in props.initialValue) {
+    const val = props.initialValue.value
+    return Array.isArray(val) ? val : [val]
+  }
+  return []
+}
+
+const localOperator = ref<SelectOperator>(getInitialOperator())
+const localValue = ref<string | undefined>(getInitialSingleValue())
+const localValues = ref<string[]>(getInitialArrayValue())
 const appliedValue = ref<
   string | string[] | { operator: SelectOperator; value: string | string[] } | undefined
->(undefined)
+>(props.initialValue)
 
 // Watch openTrigger to programmatically reopen
 watch(

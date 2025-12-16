@@ -17,6 +17,9 @@ interface Props {
   unit?: string
   icon?: Component
   defaultOpen?: boolean
+
+  // Initial value for URL state restoration
+  initialValue?: [number, number]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -32,8 +35,8 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(props.defaultOpen)
-const localValue = ref<[number, number]>(props.range!)
-const appliedValue = ref<[number, number] | undefined>(undefined)
+const localValue = ref<[number, number]>(props.initialValue ?? props.range!)
+const appliedValue = ref<[number, number] | undefined>(props.initialValue)
 
 // Watch popover open/close to reset local value and emit close event
 watch(isOpen, (newValue, oldValue) => {

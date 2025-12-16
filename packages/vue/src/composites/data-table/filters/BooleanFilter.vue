@@ -34,6 +34,9 @@ interface Props {
   advancedMode?: boolean
   defaultOperator?: BooleanOperator
   availableOperators?: BooleanOperator[]
+
+  // Initial value for URL state restoration
+  initialValue?: boolean | { operator: BooleanOperator; value: boolean }
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -49,12 +52,37 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(props.defaultOpen)
-const localOperator = ref<BooleanOperator>(
-  props.defaultOperator ?? (getDefaultOperator('boolean', props.advancedMode) as BooleanOperator),
-)
-const localValue = ref<boolean>(false)
+
+// Initialize from initialValue prop for URL state restoration
+const getInitialOperator = (): BooleanOperator => {
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    'operator' in props.initialValue
+  ) {
+    return props.initialValue.operator
+  }
+  return (
+    props.defaultOperator ?? (getDefaultOperator('boolean', props.advancedMode) as BooleanOperator)
+  )
+}
+
+const getInitialValue = (): boolean => {
+  if (typeof props.initialValue === 'boolean') return props.initialValue
+  if (
+    props.initialValue &&
+    typeof props.initialValue === 'object' &&
+    'value' in props.initialValue
+  ) {
+    return props.initialValue.value
+  }
+  return false
+}
+
+const localOperator = ref<BooleanOperator>(getInitialOperator())
+const localValue = ref<boolean>(getInitialValue())
 const appliedValue = ref<boolean | { operator: BooleanOperator; value: boolean } | undefined>(
-  undefined,
+  props.initialValue,
 )
 
 // Watch openTrigger to programmatically reopen
