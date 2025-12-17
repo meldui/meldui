@@ -93,7 +93,7 @@ let instanceCounter = 0
 
 /**
  * Initialize filter instances from table's initial columnFilters state
- * This enables URL state restoration - when defaultFilters is provided,
+ * This enables URL state restoration - when initialFilters is provided,
  * the filter UI will reflect those values on mount.
  */
 const initializeFiltersFromTableState = () => {
@@ -611,6 +611,7 @@ onUnmounted(() => {
                     :icon="instance.field.icon"
                     :options="instance.field.options ?? []"
                     :default-open="instance.autoOpen"
+                    :open-trigger="instance.openTrigger"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(

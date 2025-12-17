@@ -80,8 +80,11 @@ interface Props {
   error?: string | Error
   // Advanced filter mode (static - never changes)
   advancedMode?: boolean
-  // Default filters for URL state restoration
-  defaultFilters?: ColumnFiltersState
+  // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
+  // Note: Reset methods reset to true defaults (empty), not to initial values
+  initialFilters?: ColumnFiltersState
+  initialSorting?: SortingState
+  initialPagination?: Partial<PaginationState>
   // Column pinning
   defaultPinning?: ColumnPinningState
   enableColumnPinning?: boolean
@@ -166,7 +169,9 @@ const tableState = useDataTable({
   filterFields: props.filterFields,
   onServerSideChange: props.onServerSideChange,
   advancedMode: props.advancedMode,
-  defaultFilters: props.defaultFilters,
+  initialFilters: props.initialFilters,
+  initialSorting: props.initialSorting,
+  initialPagination: props.initialPagination,
   defaultPinning: props.defaultPinning,
   enableColumnPinning: props.enableColumnPinning,
   enableColumnHiding: props.enableColumnHiding,
