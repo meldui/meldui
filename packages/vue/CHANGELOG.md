@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.10
+
+### Patch Changes
+
+- 924198a: added the ability to set initial state for filter sort and pagination in data-table
+
 ## 0.1.9
 
 ### Patch Changes
