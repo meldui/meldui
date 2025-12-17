@@ -1,5 +1,12 @@
 # @meldui/vue
 
+## 0.1.11
+
+### Patch Changes
+
+- 4b285bd: Added fixes to datatable. Initial filters, sorting and pagination.
+- 9cffcec: Fixes in datatable - initial filters, pagination and sorting.
+
 ## 0.1.10
 
 ### Patch Changes
