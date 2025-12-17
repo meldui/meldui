@@ -176,10 +176,22 @@ const handleServerSideChange = (params) => {
       <td>Enable advanced filter operators</td>
     </tr>
     <tr>
-      <td><code>defaultFilters</code></td>
+      <td><code>initialFilters</code></td>
       <td><code>ColumnFiltersState</code></td>
       <td><code>[]</code></td>
       <td>Initial filter values for URL state restoration</td>
+    </tr>
+    <tr>
+      <td><code>initialSorting</code></td>
+      <td><code>SortingState</code></td>
+      <td><code>[]</code></td>
+      <td>Initial sorting state for URL state restoration</td>
+    </tr>
+    <tr>
+      <td><code>initialPagination</code></td>
+      <td><code>Partial&lt;PaginationState&gt;</code></td>
+      <td>-</td>
+      <td>Initial pagination for URL state restoration (pageIndex, pageSize)</td>
     </tr>
     <tr>
       <td><code>defaultPinning</code></td>
@@ -525,29 +537,43 @@ tableRef.value.blurTable()   // Remove focus from table
 
 ## URL State Restoration
 
-Use `defaultFilters` to restore filter state from URL parameters on page load:
+Use `initialFilters`, `initialSorting`, and `initialPagination` to restore table state from URL parameters on page load:
 
 ```vue
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { DataTable } from '@meldui/vue'
-import type { ColumnFiltersState } from '@tanstack/vue-table'
+import type { ColumnFiltersState, SortingState, PaginationState } from '@tanstack/vue-table'
 
 const route = useRoute()
 
-// Parse filters from URL on initial load
-const defaultFilters = computed<ColumnFiltersState>(() => {
-  const filters: ColumnFiltersState = []
+// URL format: ?page=2&per_page=20&sort_by=name&sort_order=desc&status=active&role=admin
 
-  // Example: ?status=active&role=admin
+// Parse pagination from URL
+const initialPagination = computed<Partial<PaginationState>>(() => ({
+  pageIndex: Math.max(0, Number(route.query.page || 1) - 1), // Convert 1-indexed to 0-indexed
+  pageSize: Number(route.query.per_page) || 10,
+}))
+
+// Parse sorting from URL
+const initialSorting = computed<SortingState>(() => {
+  if (!route.query.sort_by) return []
+  return [{
+    id: String(route.query.sort_by),
+    desc: route.query.sort_order === 'desc',
+  }]
+})
+
+// Parse filters from URL
+const initialFilters = computed<ColumnFiltersState>(() => {
+  const filters: ColumnFiltersState = []
   if (route.query.status) {
     filters.push({ id: 'status', value: [route.query.status] })
   }
   if (route.query.role) {
     filters.push({ id: 'role', value: route.query.role })
   }
-
   return filters
 })
 </script>
@@ -558,13 +584,15 @@ const defaultFilters = computed<ColumnFiltersState>(() => {
     :data="data"
     :page-count="pageCount"
     :on-server-side-change="handleChange"
-    :default-filters="defaultFilters"
+    :initial-filters="initialFilters"
+    :initial-sorting="initialSorting"
+    :initial-pagination="initialPagination"
     :filter-fields="filterFields"
   />
 </template>
 ```
 
-This ensures the filter UI reflects the URL state when the page loads, avoiding double API calls.
+**Note:** Reset methods reset to true defaults (empty), not to initial values. This ensures the filter UI reflects the URL state when the page loads, avoiding double API calls.
 
 ## Keyboard Navigation
 

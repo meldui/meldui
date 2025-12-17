@@ -72,8 +72,11 @@ export interface UseDataTableProps<TData> {
   // Advanced mode configuration (static - never changes after init)
   advancedMode?: boolean // Static mode - true for advanced, false for simple
 
-  // Default filters for URL state restoration
-  defaultFilters?: ColumnFiltersState
+  // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
+  // Note: Reset methods reset to true defaults (empty), not to initial values
+  initialFilters?: ColumnFiltersState
+  initialSorting?: SortingState
+  initialPagination?: Partial<PaginationState>
 
   // Column pinning configuration
   defaultPinning?: ColumnPinningState
@@ -109,13 +112,15 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   }
 
   // State management
-  const sorting = ref<SortingState>([])
-  const columnFilters = ref<ColumnFiltersState>(props.defaultFilters || [])
+  // Initial values are used for URL state restoration (e.g., page refresh)
+  // Reset methods reset to true defaults (empty), not to initial values
+  const sorting = ref<SortingState>(props.initialSorting || [])
+  const columnFilters = ref<ColumnFiltersState>(props.initialFilters || [])
   const columnVisibility = ref<VisibilityState>({})
   const rowSelection = ref<RowSelectionState>({})
   const pagination = ref<PaginationState>({
-    pageIndex: 0,
-    pageSize: props.defaultPerPage || 10,
+    pageIndex: props.initialPagination?.pageIndex ?? 0,
+    pageSize: props.initialPagination?.pageSize ?? props.defaultPerPage ?? 10,
   })
   const columnPinning = ref<ColumnPinningState>(props.defaultPinning || { left: [], right: [] })
   const columnSizing = ref<ColumnSizingState>({})
@@ -243,8 +248,9 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   )
 
   // Helper methods
+  // Reset methods reset to true defaults (empty), not to initial values
   const resetFilters = () => {
-    columnFilters.value = props.defaultFilters || []
+    columnFilters.value = []
   }
 
   const resetSorting = () => {
