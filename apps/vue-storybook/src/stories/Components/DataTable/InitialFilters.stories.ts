@@ -12,8 +12,10 @@
  * Note: Reset methods reset to true defaults (empty), not to initial values.
  */
 
+import { CalendarDate } from '@internationalized/date'
 import {
   IconBuilding,
+  IconCalendar,
   IconCheck,
   IconCurrencyDollar,
   IconHash,
@@ -915,6 +917,504 @@ export const URLStateRestoration: Story = {
             and pass them to <code>initialFilters</code>.
           </p>
         </div>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          :filter-fields="filterFields"
+          :initial-filters="initialFilters"
+          :enable-row-selection="true"
+        />
+      </div>
+    `,
+  }),
+}
+
+// ============================================================================
+// Search Filter Examples
+// ============================================================================
+
+/**
+ * Table with pre-applied search filter value.
+ * The search input is populated from initialFilters when the searchColumn matches.
+ */
+export const InitialSearchFilter: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      // Initial filter for the search column (name)
+      // Note: search filter uses plain string value, not wrapped in array
+      const initialFilters: ColumnFiltersState = [{ id: 'name', value: 'John' }]
+
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: initialFilters,
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const handleChange = (state: TableState) => {
+        console.log('Search filter state:', state.filters)
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: minimalColumns,
+        initialFilters,
+      }
+    },
+    template: `
+      <div class="space-y-2">
+        <p class="text-sm text-muted-foreground">
+          Search input pre-populated with "John". The <code>searchColumn</code> prop ("name")
+          matches the filter id, so the search input shows the initial value.
+        </p>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          :initial-filters="initialFilters"
+          search-column="name"
+          search-placeholder="Search by name..."
+        />
+      </div>
+    `,
+  }),
+}
+
+/**
+ * Combined search and other filters.
+ * Shows search filter working together with other filter types.
+ */
+export const SearchWithOtherFilters: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      // URL: ?search=John&role=admin&status=active
+      const initialFilters: ColumnFiltersState = [
+        { id: 'name', value: 'John' }, // Search filter (plain string)
+        { id: 'role', value: 'admin' }, // Select filter
+        { id: 'status', value: ['active'] }, // Multiselect filter
+      ]
+
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: initialFilters,
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const filterFields: DataTableFilterField<User>[] = [
+        {
+          id: 'role',
+          label: 'Role',
+          type: 'select',
+          icon: IconShield,
+          options: roleOptions,
+        },
+        {
+          id: 'status',
+          label: 'Status',
+          type: 'multiselect',
+          icon: IconCheck,
+          options: statusOptions,
+        },
+      ]
+
+      const handleChange = (state: TableState) => {
+        console.log('Combined filter state:', state.filters)
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: extendedColumns,
+        filterFields,
+        initialFilters,
+      }
+    },
+    template: `
+      <div class="space-y-2">
+        <div class="rounded-md bg-muted p-3 text-sm">
+          <p class="font-medium">Simulated URL:</p>
+          <code class="text-xs">?search=John&role=admin&status=active</code>
+        </div>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          :filter-fields="filterFields"
+          :initial-filters="initialFilters"
+          search-column="name"
+          search-placeholder="Search by name..."
+          :enable-row-selection="true"
+        />
+      </div>
+    `,
+  }),
+}
+
+// ============================================================================
+// Date Filter Examples
+// ============================================================================
+
+/**
+ * Simple mode with a pre-applied date filter.
+ * The table loads with a specific date already filtered.
+ */
+export const SimpleDateFilter: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      // Initial filter: created_at is December 1, 2024
+      // CalendarDate uses (year, month, day) format
+      const initialDate = new CalendarDate(2024, 12, 1)
+      const initialFilters: ColumnFiltersState = [{ id: 'created_at', value: [initialDate] }]
+
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: initialFilters,
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const filterFields: DataTableFilterField<User>[] = [
+        {
+          id: 'created_at',
+          label: 'Created Date',
+          type: 'date',
+          icon: IconCalendar,
+          placeholder: 'Select date...',
+        },
+      ]
+
+      const handleChange = (state: TableState) => {
+        console.log('Date filter state:', JSON.stringify(state.filters, null, 2))
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: extendedColumns,
+        filterFields,
+        initialFilters,
+      }
+    },
+    template: `
+      <div class="space-y-2">
+        <p class="text-sm text-muted-foreground">
+          Simple date filter with December 1, 2024 pre-applied.
+          Uses <code>CalendarDate</code> from <code>@internationalized/date</code>.
+        </p>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          :filter-fields="filterFields"
+          :initial-filters="initialFilters"
+          :enable-row-selection="true"
+        />
+      </div>
+    `,
+  }),
+}
+
+/**
+ * Advanced mode with date filter using "isAfter" operator.
+ * Shows dates after the specified date.
+ */
+export const AdvancedDateIsAfter: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      // Initial filter: created_at is after November 15, 2024
+      const initialDate = new CalendarDate(2024, 11, 15)
+      const initialFilters: ColumnFiltersState = [
+        { id: 'created_at', value: [{ operator: 'isAfter', value: initialDate }] },
+      ]
+
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: initialFilters,
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const filterFields: DataTableFilterField<User>[] = [
+        {
+          id: 'created_at',
+          label: 'Created Date',
+          type: 'date',
+          icon: IconCalendar,
+          placeholder: 'Select date...',
+        },
+      ]
+
+      const handleChange = (state: TableState) => {
+        console.log('Advanced date filter state:', JSON.stringify(state.filters, null, 2))
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: extendedColumns,
+        filterFields,
+        initialFilters,
+      }
+    },
+    template: `
+      <div class="space-y-2">
+        <p class="text-sm text-muted-foreground">
+          Advanced mode with "isAfter: Nov 15, 2024" date filter pre-applied.
+          The operator dropdown shows "is after".
+        </p>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          :filter-fields="filterFields"
+          :initial-filters="initialFilters"
+          :advanced-mode="true"
+          :enable-row-selection="true"
+        />
+      </div>
+    `,
+  }),
+}
+
+/**
+ * Advanced mode with date filter using "isBetween" operator.
+ * Shows dates within a range.
+ */
+export const AdvancedDateIsBetween: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      // Initial filter: created_at is between Nov 1 and Dec 15, 2024
+      const startDate = new CalendarDate(2024, 11, 1)
+      const endDate = new CalendarDate(2024, 12, 15)
+      const initialFilters: ColumnFiltersState = [
+        { id: 'created_at', value: [{ operator: 'isBetween', value: [startDate, endDate] }] },
+      ]
+
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: initialFilters,
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const filterFields: DataTableFilterField<User>[] = [
+        {
+          id: 'created_at',
+          label: 'Created Date',
+          type: 'date',
+          icon: IconCalendar,
+          placeholder: 'Select date...',
+        },
+      ]
+
+      const handleChange = (state: TableState) => {
+        console.log('Advanced date filter state:', JSON.stringify(state.filters, null, 2))
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: extendedColumns,
+        filterFields,
+        initialFilters,
+      }
+    },
+    template: `
+      <div class="space-y-2">
+        <p class="text-sm text-muted-foreground">
+          Advanced mode with "isBetween: [Nov 1, 2024 - Dec 15, 2024]" date filter pre-applied.
+          The operator shows "is between" with a range calendar.
+        </p>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          :filter-fields="filterFields"
+          :initial-filters="initialFilters"
+          :advanced-mode="true"
+          :enable-row-selection="true"
+        />
+      </div>
+    `,
+  }),
+}
+
+// ============================================================================
+// DateRange Filter Examples
+// ============================================================================
+
+/**
+ * Simple mode with a pre-applied date range filter.
+ * The table loads with a date range already applied.
+ */
+export const SimpleDateRangeFilter: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      // Initial filter: last_login_at range from Nov 1 to Dec 15, 2024
+      const startDate = new CalendarDate(2024, 11, 1)
+      const endDate = new CalendarDate(2024, 12, 15)
+      const initialFilters: ColumnFiltersState = [
+        { id: 'last_login_at', value: [{ start: startDate, end: endDate }] },
+      ]
+
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: initialFilters,
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const filterFields: DataTableFilterField<User>[] = [
+        {
+          id: 'last_login_at',
+          label: 'Last Login',
+          type: 'daterange',
+          icon: IconCalendar,
+          placeholder: 'Select date range...',
+        },
+      ]
+
+      const handleChange = (state: TableState) => {
+        console.log('DateRange filter state:', JSON.stringify(state.filters, null, 2))
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: extendedColumns,
+        filterFields,
+        initialFilters,
+      }
+    },
+    template: `
+      <div class="space-y-2">
+        <p class="text-sm text-muted-foreground">
+          DateRange filter with Nov 1 - Dec 15, 2024 pre-applied.
+          Value format: <code>{ start: CalendarDate, end: CalendarDate }</code>
+        </p>
+        <DataTable
+          :columns="columns"
+          :data="localData.data"
+          :page-count="pageCount"
+          :on-server-side-change="handleChange"
+          :filter-fields="filterFields"
+          :initial-filters="initialFilters"
+          :enable-row-selection="true"
+        />
+      </div>
+    `,
+  }),
+}
+
+/**
+ * Combined date and daterange filters.
+ * Shows multiple date-related filters applied together.
+ */
+export const CombinedDateFilters: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      // Multiple date filters combined
+      const createdDate = new CalendarDate(2024, 10, 1)
+      const loginStart = new CalendarDate(2024, 11, 1)
+      const loginEnd = new CalendarDate(2024, 12, 31)
+
+      const initialFilters: ColumnFiltersState = [
+        { id: 'created_at', value: [createdDate] },
+        { id: 'last_login_at', value: [{ start: loginStart, end: loginEnd }] },
+      ]
+
+      const localData = ref(
+        simulateServerSide(MOCK_USERS, {
+          sorting: [],
+          filters: initialFilters,
+          pagination: { pageIndex: 0, pageSize: 10 },
+        }),
+      )
+
+      const pageCount = computed(() => localData.value.meta.total_pages)
+
+      const filterFields: DataTableFilterField<User>[] = [
+        {
+          id: 'created_at',
+          label: 'Created Date',
+          type: 'date',
+          icon: IconCalendar,
+          placeholder: 'Select date...',
+        },
+        {
+          id: 'last_login_at',
+          label: 'Last Login',
+          type: 'daterange',
+          icon: IconCalendar,
+          placeholder: 'Select date range...',
+        },
+      ]
+
+      const handleChange = (state: TableState) => {
+        console.log('Combined date filter state:', JSON.stringify(state.filters, null, 2))
+        localData.value = simulateServerSide(MOCK_USERS, state)
+      }
+
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: extendedColumns,
+        filterFields,
+        initialFilters,
+      }
+    },
+    template: `
+      <div class="space-y-2">
+        <p class="text-sm text-muted-foreground">
+          Multiple date filters combined: Created on Oct 1, 2024 AND last login between Nov 1 - Dec 31, 2024.
+        </p>
         <DataTable
           :columns="columns"
           :data="localData.data"
