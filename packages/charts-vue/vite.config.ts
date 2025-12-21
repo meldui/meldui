@@ -35,6 +35,8 @@ export default defineConfig({
       },
     },
     sourcemap: true,
+    // Enable minification
+    minify: 'esbuild',
     emptyOutDir: true,
   },
   resolve: {

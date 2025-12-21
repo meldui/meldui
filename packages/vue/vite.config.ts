@@ -34,7 +34,6 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'MeldUIVue',
       formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
     },
     rollupOptions: {
       // External dependencies that shouldn't be bundled
@@ -56,21 +55,40 @@ export default defineConfig({
         /^zod/, // Exclude zod
         /^reka-ui/, // Exclude reka-ui
       ],
-      output: {
-        globals: {
-          vue: 'Vue',
+      output: [
+        {
+          format: 'es',
+          preserveModules: true,
+          preserveModulesRoot: 'src',
+          entryFileNames: '[name].mjs',
+          dir: 'dist/esm',
+          globals: {
+            vue: 'Vue',
+          },
+          // CSS output path (only needed in ESM)
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name === 'style.css') {
+              return 'styles/index.css'
+            }
+            return assetInfo.name || ''
+          },
         },
-        // Also export CSS
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'style.css') {
-            return 'styles/index.css'
-          }
-          return assetInfo.name || ''
+        {
+          format: 'cjs',
+          preserveModules: true,
+          preserveModulesRoot: 'src',
+          entryFileNames: '[name].cjs',
+          dir: 'dist/cjs',
+          globals: {
+            vue: 'Vue',
+          },
         },
-      },
+      ],
     },
     cssCodeSplit: false, // Bundle all CSS into one file
     sourcemap: true,
+    // Enable minification
+    minify: 'esbuild',
     emptyOutDir: true,
   },
   resolve: {

@@ -3,13 +3,16 @@
   "version": "0.1.11",
   "description": "MeldUI Vue component library built on shadcn-vue",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs",
       "types": "./dist/index.d.ts"
     },
     "./themes/default": {
@@ -19,10 +22,10 @@
       "default": "./dist/themes/default.css"
     },
     "./styles": {
-      "style": "./dist/styles/index.css",
-      "import": "./dist/styles/index.css",
-      "require": "./dist/styles/index.css",
-      "default": "./dist/styles/index.css"
+      "style": "./dist/esm/styles/index.css",
+      "import": "./dist/esm/styles/index.css",
+      "require": "./dist/esm/styles/index.css",
+      "default": "./dist/esm/styles/index.css"
     }
   },
   "files": [
