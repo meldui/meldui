@@ -1,5 +1,11 @@
 # @meldui/tabler-vue
 
+## 0.1.5
+
+### Patch Changes
+
+- 3de10a0: Add changeset for bundle optimization
+
 ## 0.1.4
 
 ### Patch Changes

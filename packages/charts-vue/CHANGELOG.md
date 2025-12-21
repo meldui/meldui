@@ -1,5 +1,13 @@
 # @meldui/charts-vue
 
+## 0.1.11
+
+### Patch Changes
+
+- 3de10a0: Add changeset for bundle optimization
+- Updated dependencies [3de10a0]
+  - @meldui/vue@0.1.12
+
 ## 0.1.10
 
 ### Patch Changes
