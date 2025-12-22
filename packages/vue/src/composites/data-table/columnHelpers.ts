@@ -180,7 +180,7 @@ export function createColumnHelper<TData>() {
       return {
         accessorKey,
         header: ({ column }: HeaderContext<TData, TData[TKey]>) =>
-          h(DataTableColumnHeader, {
+          h(DataTableColumnHeader as Component, {
             column,
             title: options.title,
           }),
@@ -213,9 +213,9 @@ export function createColumnHelper<TData>() {
         id: options.id,
         header: options.title
           ? ({ column }: HeaderContext<TData, unknown>) =>
-              h(DataTableColumnHeader, {
+              h(DataTableColumnHeader as Component, {
                 column,
-                title: options.title,
+                title: options.title!,
               })
           : undefined,
         cell: (props: CellContext<TData, unknown>) => options.cell(props),
@@ -328,7 +328,7 @@ export function createColumnHelper<TData>() {
         id,
         header: title
           ? ({ column }: HeaderContext<TData, unknown>) =>
-              h(DataTableColumnHeader, {
+              h(DataTableColumnHeader as Component, {
                 column,
                 title,
               })

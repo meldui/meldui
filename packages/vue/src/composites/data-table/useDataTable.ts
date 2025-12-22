@@ -31,11 +31,10 @@ export interface DataTableFilterField<TData> {
   label: string
   placeholder?: string
   /**
-   * Filter type - can be a built-in type or a custom plugin type string
+   * Filter type
    * Built-in types: text, number, date, select, boolean, multiselect, range, daterange
-   * Custom types: any string registered via filterPlugins
    */
-  type: FilterType | (string & {}) // All 8 built-in types OR custom plugin type
+  type: FilterType
   options?: FilterOption[] // For select/multiselect
   icon?: Component
 
@@ -51,9 +50,6 @@ export interface DataTableFilterField<TData> {
   // Advanced mode configuration
   defaultOperator?: FilterOperator // Override default operator
   availableOperators?: FilterOperator[] // Limit available operators
-
-  // Allow additional custom properties for plugin filters
-  [key: string]: unknown
 }
 
 export interface UseDataTableProps<TData> {

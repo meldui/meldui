@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactiveOmit } from '@vueuse/core'
 import type { AccordionItemProps } from 'reka-ui'
-import { AccordionItem, useForwardProps } from 'reka-ui'
+import { AccordionItem as RekaAccordionItem, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
@@ -13,12 +13,12 @@ const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
-  <AccordionItem
+  <RekaAccordionItem
     v-slot="slotProps"
     data-slot="accordion-item"
     v-bind="forwardedProps"
     :class="cn('border-b last:border-b-0', props.class)"
   >
     <slot v-bind="slotProps" />
-  </AccordionItem>
+  </RekaAccordionItem>
 </template>

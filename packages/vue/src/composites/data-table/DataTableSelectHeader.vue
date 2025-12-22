@@ -1,14 +1,9 @@
 <script setup lang="ts" generic="TData">
-import type { Table } from '@tanstack/vue-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
+import type { DataTableSelectHeaderProps } from './componentProps'
 
-interface Props {
-  table: Table<TData>
-  class?: string
-}
-
-const props = defineProps<Props>()
+const props = defineProps<DataTableSelectHeaderProps<TData>>()
 </script>
 
 <template>

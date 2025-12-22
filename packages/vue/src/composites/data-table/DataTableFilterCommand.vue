@@ -11,16 +11,10 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import type { DataTableFilterCommandProps } from './componentProps'
 import { getFilterIcon } from './filters/filter-icons'
-import type { DataTableFilterField } from './useDataTable'
 
-interface Props {
-  filterFields: DataTableFilterField<TData>[]
-  activeFilterCount: number
-  disabled?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DataTableFilterCommandProps<TData>>(), {
   disabled: false,
 })
 

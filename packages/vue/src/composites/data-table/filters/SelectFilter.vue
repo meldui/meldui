@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="TData, TValue">
 import { IconCheck, IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
-import { type Component, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,8 +20,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import type { SelectFilterProps } from '../componentProps'
 import type { SelectOperator } from '../types'
-import type { FilterOption } from '../useDataTable'
 import { getFilterIcon } from './filter-icons'
 import {
   getAvailableOperators,
@@ -32,25 +31,7 @@ import {
   isNullaryOperator,
 } from './operators'
 
-interface Props {
-  column?: Column<TData, TValue>
-  title?: string
-  options: FilterOption[]
-  placeholder?: string
-  icon?: Component
-  defaultOpen?: boolean
-  openTrigger?: number
-
-  // Advanced mode props
-  advancedMode?: boolean
-  defaultOperator?: SelectOperator
-  availableOperators?: SelectOperator[]
-
-  // Initial value for URL state restoration
-  initialValue?: string | string[] | { operator: SelectOperator; value: string | string[] }
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<SelectFilterProps<TData, TValue>>(), {
   placeholder: 'Select option...',
   defaultOpen: false,
   openTrigger: 0,

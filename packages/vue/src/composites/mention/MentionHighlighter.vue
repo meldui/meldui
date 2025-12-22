@@ -13,7 +13,7 @@ if (!context) {
   throw new Error('MentionHighlighter must be used within a Mention component')
 }
 
-const { inputValue, mentions, inputRef, multiline } = context
+const { inputValue, mentions, inputRef, multiline: _multiline } = context
 
 // Ref for the highlighter element
 const highlighterRef = ref<HTMLElement | null>(null)

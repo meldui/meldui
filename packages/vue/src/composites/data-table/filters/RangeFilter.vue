@@ -1,28 +1,15 @@
 <script setup lang="ts" generic="TData, TValue">
 import { IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
-import { type Component, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Slider } from '@/components/ui/slider'
 import { cn } from '@/lib/utils'
+import type { RangeFilterProps } from '../componentProps'
 import { getFilterIcon } from './filter-icons'
 
-interface Props {
-  column?: Column<TData, TValue>
-  title?: string
-  range?: [number, number] // [min, max]
-  step?: number
-  unit?: string
-  icon?: Component
-  defaultOpen?: boolean
-
-  // Initial value for URL state restoration
-  initialValue?: [number, number]
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<RangeFilterProps<TData, TValue>>(), {
   range: () => [0, 100],
   step: 1,
   defaultOpen: false,

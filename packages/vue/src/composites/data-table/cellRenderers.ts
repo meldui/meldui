@@ -7,19 +7,24 @@ import { Badge } from '@/components/ui/badge'
 // ============================================================================
 
 /**
+ * Available badge variants matching the Badge component
+ */
+type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'
+
+/**
  * Badge variant mapping based on value
  */
 export interface BadgeOptions<TValue extends string = string> {
   /**
    * Map of values to badge variants
-   * @example { active: 'default', inactive: 'secondary', pending: 'outline' }
+   * @example { active: 'default', inactive: 'secondary', pending: 'warning' }
    */
-  variantMap?: Partial<Record<TValue, 'default' | 'secondary' | 'destructive' | 'outline'>>
+  variantMap?: Partial<Record<TValue, BadgeVariant>>
   /**
    * Default variant when value is not in variantMap
    * @default 'secondary'
    */
-  defaultVariant?: 'default' | 'secondary' | 'destructive' | 'outline'
+  defaultVariant?: BadgeVariant
   /**
    * Optional formatter for the display text
    * @default Capitalizes the value
@@ -136,12 +141,12 @@ export interface BooleanOptions {
    * Badge variant for true
    * @default 'default'
    */
-  trueVariant?: 'default' | 'secondary' | 'destructive' | 'outline'
+  trueVariant?: BadgeVariant
   /**
    * Badge variant for false
    * @default 'secondary'
    */
-  falseVariant?: 'default' | 'secondary' | 'destructive' | 'outline'
+  falseVariant?: BadgeVariant
 }
 
 // ============================================================================
@@ -182,13 +187,14 @@ export const cellRenderers = {
   badge<TData, TValue extends string>(
     options: BadgeOptions<TValue> = {},
   ): (props: CellContext<TData, TValue>) => VNode {
-    const { variantMap = {}, defaultVariant = 'secondary', format } = options
+    const { variantMap, defaultVariant = 'secondary', format } = options
+    const safeVariantMap = (variantMap ?? {}) as Partial<Record<string, BadgeVariant>>
 
     return (props: CellContext<TData, TValue>) => {
       const value = props.getValue()
       if (value == null) return h('span', { class: 'text-muted-foreground' }, '-')
 
-      const variant = variantMap[value] ?? defaultVariant
+      const variant = safeVariantMap[value] ?? defaultVariant
       const text = format ? format(value) : capitalize(String(value))
 
       return h(Badge, { variant }, () => text)

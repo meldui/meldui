@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="TData">
 import { IconDots } from '@meldui/tabler-vue'
-import type { Row } from '@tanstack/vue-table'
-import { type Component, computed } from 'vue'
+import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -9,23 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import type { ActionDefinition, ActionsCellDropdownProps } from './componentProps'
 
-interface ActionDefinition<T> {
-  label: string
-  icon?: Component
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  onClick: (row: Row<T>) => void
-  show?: (row: Row<T>) => boolean
-  disabled?: (row: Row<T>) => boolean
-}
-
-interface Props {
-  row: Row<TData>
-  actions: ActionDefinition<TData>[]
-  dropdownLabel?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ActionsCellDropdownProps<TData>>(), {
   dropdownLabel: 'Actions',
 })
 

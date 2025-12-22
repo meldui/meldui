@@ -5,7 +5,6 @@ import {
   IconChevronsLeft,
   IconChevronsRight,
 } from '@meldui/tabler-vue'
-import type { Table } from '@tanstack/vue-table'
 import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,16 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import type { DataTablePaginationProps } from './componentProps'
 
-interface Props {
-  table: Table<TData>
-  pageSizeOptions?: number[]
-  showSelectedCount?: boolean
-  showPageSizeSelector?: boolean
-  showPageInfo?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DataTablePaginationProps<TData>>(), {
   pageSizeOptions: () => [10, 20, 30, 40, 50],
   showSelectedCount: false,
   showPageSizeSelector: true,
