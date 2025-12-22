@@ -15,10 +15,10 @@
 
 /* App-specific styles */
 body {
-    @apply bg-background text-foreground antialiased;
+  @apply bg-background text-foreground antialiased;
 }
 
 /* Ensure sidebar layout takes full viewport */
 #app {
-    @apply min-h-screen;
+  @apply min-h-screen;
 }

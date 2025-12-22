@@ -1,232 +1,221 @@
 <script setup lang="ts" generic="TData">
-import { IconAlertCircle, IconRefresh } from "@meldui/tabler-vue";
-import { type Cell, FlexRender, type Row } from "@tanstack/vue-table";
-import { type ComponentPublicInstance, computed, ref, useSlots } from "vue";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { IconAlertCircle, IconRefresh } from '@meldui/tabler-vue'
+import { type Cell, FlexRender, type Row } from '@tanstack/vue-table'
+import { type ComponentPublicInstance, computed, ref, useSlots } from 'vue'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
-    Empty,
-    EmptyDescription,
-    EmptyHeader,
-    EmptyTitle,
-} from "@/components/ui/empty";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import type { DataTableProps } from "./componentProps";
-import DataTablePagination from "./DataTablePagination.vue";
-import DataTableToolbar from "./DataTableToolbar.vue";
-import { useDataTable } from "./useDataTable";
-import { usePinnedColumns } from "./usePinnedColumns";
-import { useTableKeyboard } from "./useTableKeyboard";
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import type { DataTableProps } from './componentProps'
+import DataTablePagination from './DataTablePagination.vue'
+import DataTableToolbar from './DataTableToolbar.vue'
+import { useDataTable } from './useDataTable'
+import { usePinnedColumns } from './usePinnedColumns'
+import { useTableKeyboard } from './useTableKeyboard'
 
 // Get slots for dynamic cell slot detection
-const slots: ReturnType<typeof useSlots> = useSlots();
+const slots: ReturnType<typeof useSlots> = useSlots()
 
 const props = withDefaults(defineProps<DataTableProps<TData>>(), {
-    enableRowSelection: false,
-    defaultPerPage: 10,
-    pageSizeOptions: () => [10, 20, 30, 40, 50],
-    showPageSizeSelector: true,
-    showPageInfo: true,
-    paginationPosition: "bottom",
-    filterFields: () => [],
-    searchPlaceholder: "Search...",
-    showToolbar: true,
-    showPagination: true,
-    showSelectedCount: false,
-    enableColumnHiding: false,
-    emptyMessage: "No results found.",
-    loading: false,
-    loadingMessage: "Loading data...",
-    advancedMode: false,
-    enableColumnPinning: false,
-    enableColumnResizing: false,
-    columnResizeMode: "onChange",
-    maxHeight: "600px",
-    density: "comfortable",
-    bordered: false,
-    enableKeyboardNavigation: false,
-    showRefreshButton: false,
-    enableRowExpansion: false,
-    filterPlugins: () => [],
-});
+  enableRowSelection: false,
+  defaultPerPage: 10,
+  pageSizeOptions: () => [10, 20, 30, 40, 50],
+  showPageSizeSelector: true,
+  showPageInfo: true,
+  paginationPosition: 'bottom',
+  filterFields: () => [],
+  searchPlaceholder: 'Search...',
+  showToolbar: true,
+  showPagination: true,
+  showSelectedCount: false,
+  enableColumnHiding: false,
+  emptyMessage: 'No results found.',
+  loading: false,
+  loadingMessage: 'Loading data...',
+  advancedMode: false,
+  enableColumnPinning: false,
+  enableColumnResizing: false,
+  columnResizeMode: 'onChange',
+  maxHeight: '600px',
+  density: 'comfortable',
+  bordered: false,
+  enableKeyboardNavigation: false,
+  showRefreshButton: false,
+  enableRowExpansion: false,
+  filterPlugins: () => [],
+})
 
 // Emits
 const emit = defineEmits<{
-    retry: [];
-    rowActivate: [row: Row<TData>];
-}>();
+  retry: []
+  rowActivate: [row: Row<TData>]
+}>()
 
 // Retry handler for error state
 const handleRetry = () => {
-    emit("retry");
-};
+  emit('retry')
+}
 
 // Computed error message
 const errorMessage = computed(() => {
-    if (!props.error) return "";
-    return props.error instanceof Error ? props.error.message : props.error;
-});
+  if (!props.error) return ''
+  return props.error instanceof Error ? props.error.message : props.error
+})
 
 const tableState = useDataTable({
-    data: () => props.data,
-    columns: () => props.columns,
-    pageCount: () => props.pageCount,
-    defaultPerPage: props.defaultPerPage,
-    enableRowSelection: props.enableRowSelection,
-    filterFields: props.filterFields,
-    onServerSideChange: props.onServerSideChange,
-    advancedMode: props.advancedMode,
-    initialFilters: props.initialFilters,
-    initialSorting: props.initialSorting,
-    initialPagination: props.initialPagination,
-    defaultPinning: props.defaultPinning,
-    enableColumnPinning: props.enableColumnPinning,
-    enableColumnHiding: props.enableColumnHiding,
-    enableColumnResizing: props.enableColumnResizing,
-    columnResizeMode: props.columnResizeMode,
-    enableRowExpansion: props.enableRowExpansion,
-    getRowCanExpand: props.getRowCanExpand,
-});
+  data: () => props.data,
+  columns: () => props.columns,
+  pageCount: () => props.pageCount,
+  defaultPerPage: props.defaultPerPage,
+  enableRowSelection: props.enableRowSelection,
+  filterFields: props.filterFields,
+  onServerSideChange: props.onServerSideChange,
+  advancedMode: props.advancedMode,
+  initialFilters: props.initialFilters,
+  initialSorting: props.initialSorting,
+  initialPagination: props.initialPagination,
+  defaultPinning: props.defaultPinning,
+  enableColumnPinning: props.enableColumnPinning,
+  enableColumnHiding: props.enableColumnHiding,
+  enableColumnResizing: props.enableColumnResizing,
+  columnResizeMode: props.columnResizeMode,
+  enableRowExpansion: props.enableRowExpansion,
+  getRowCanExpand: props.getRowCanExpand,
+})
 
-const { table } = tableState;
+const { table } = tableState
 
 // Create a reactive reference to the table instance for pinning
-const tableInstanceRef = computed(() => table);
+const tableInstanceRef = computed(() => table)
 
 // Pinning composable (only when pinning is enabled)
 const {
-    tableRef: pinnedTableRef,
-    isScrolled,
-    hasRightScroll,
+  tableRef: pinnedTableRef,
+  isScrolled,
+  hasRightScroll,
 } = props.enableColumnPinning
-    ? usePinnedColumns(tableInstanceRef)
-    : {
-          tableRef: ref(null),
-          isScrolled: ref(false),
-          hasRightScroll: ref(false),
-      };
+  ? usePinnedColumns(tableInstanceRef)
+  : {
+      tableRef: ref(null),
+      isScrolled: ref(false),
+      hasRightScroll: ref(false),
+    }
 
 // Ref for the table container (used for both pinning and keyboard navigation)
-const tableContainerRef = ref<HTMLElement | null>(null);
+const tableContainerRef = ref<HTMLElement | null>(null)
 
 // Ref callback function for the table container
 // The outer container handles scrolling; inner Table.vue overflow is disabled via CSS
 const setTableContainerRef = (el: Element | ComponentPublicInstance | null) => {
-    const element = el instanceof Element ? el : null;
-    tableContainerRef.value = element as HTMLElement | null;
+  const element = el instanceof Element ? el : null
+  tableContainerRef.value = element as HTMLElement | null
 
-    if (element && pinnedTableRef) {
-        pinnedTableRef.value = element as HTMLElement;
-    }
-};
+  if (element && pinnedTableRef) {
+    pinnedTableRef.value = element as HTMLElement
+  }
+}
 
 // Keyboard navigation composable (only when enabled)
 const keyboardState = props.enableKeyboardNavigation
-    ? useTableKeyboard({
-          table,
-          tableContainerRef,
-          enableSelection: props.enableRowSelection,
-          enablePagination: props.showPagination,
-          onRowActivate: (row) => emit("rowActivate", row),
-      })
-    : {
-          focusedRowIndex: ref(-1),
-          isFocused: ref(false),
-          focusTable: () => {},
-          blurTable: () => {},
-      };
+  ? useTableKeyboard({
+      table,
+      tableContainerRef,
+      enableSelection: props.enableRowSelection,
+      enablePagination: props.showPagination,
+      onRowActivate: (row) => emit('rowActivate', row),
+    })
+  : {
+      focusedRowIndex: ref(-1),
+      isFocused: ref(false),
+      focusTable: () => {},
+      blurTable: () => {},
+    }
 
 // Helper to get pinning class for a column
 const getPinningClass = (columnId: string) => {
-    if (!props.enableColumnPinning) return "";
+  if (!props.enableColumnPinning) return ''
 
-    const { left = [], right = [] } = table.getState().columnPinning;
+  const { left = [], right = [] } = table.getState().columnPinning
 
-    // Check if column is pinned left
-    if (left.includes(columnId)) {
-        const isLastLeftPinned = left[left.length - 1] === columnId;
-        return isLastLeftPinned
-            ? "pinned-left pinned-left-last"
-            : "pinned-left";
-    }
+  // Check if column is pinned left
+  if (left.includes(columnId)) {
+    const isLastLeftPinned = left[left.length - 1] === columnId
+    return isLastLeftPinned ? 'pinned-left pinned-left-last' : 'pinned-left'
+  }
 
-    // Check if column is pinned right
-    if (right.includes(columnId)) {
-        const isFirstRightPinned = right[0] === columnId;
-        return isFirstRightPinned
-            ? "pinned-right pinned-right-first"
-            : "pinned-right";
-    }
+  // Check if column is pinned right
+  if (right.includes(columnId)) {
+    const isFirstRightPinned = right[0] === columnId
+    return isFirstRightPinned ? 'pinned-right pinned-right-first' : 'pinned-right'
+  }
 
-    return "";
-};
+  return ''
+}
 
 // Helper to check if a cell slot exists for a column
 const hasCellSlot = (columnId: string) => {
-    return !!slots[`cell-${columnId}`];
-};
+  return !!slots[`cell-${columnId}`]
+}
 
 // Helper to get cell slot props
 const getCellSlotProps = (cell: Cell<TData, unknown>, row: Row<TData>) => {
-    return {
-        cell,
-        row,
-        value: cell.getValue(),
-    };
-};
+  return {
+    cell,
+    row,
+    value: cell.getValue(),
+  }
+}
 
 // Helper to get row slot props
 const getRowSlotProps = (row: Row<TData>, index: number) => {
-    return {
-        row,
-        cells: row.getVisibleCells(),
-        isSelected: row.getIsSelected(),
-        index,
-    };
-};
+  return {
+    row,
+    cells: row.getVisibleCells(),
+    isSelected: row.getIsSelected(),
+    index,
+  }
+}
 
 // Pagination slot props
 const paginationSlotProps = computed(() => ({
-    table,
-    pageCount: table.getPageCount(),
-    currentPage: table.getState().pagination.pageIndex + 1,
-    pageSize: table.getState().pagination.pageSize,
-    canPrevious: table.getCanPreviousPage(),
-    canNext: table.getCanNextPage(),
-}));
+  table,
+  pageCount: table.getPageCount(),
+  currentPage: table.getState().pagination.pageIndex + 1,
+  pageSize: table.getState().pagination.pageSize,
+  canPrevious: table.getCanPreviousPage(),
+  canNext: table.getCanNextPage(),
+}))
 
 // Footer slot props
 const footerSlotProps = computed(() => ({
-    table,
-    footerGroups: table.getFooterGroups(),
-}));
+  table,
+  footerGroups: table.getFooterGroups(),
+}))
 
 // Check if any column has a footer defined
 const hasColumnFooters = computed(() => {
-    return table
-        .getFooterGroups()
-        .some((group) =>
-            group.headers.some((header) => header.column.columnDef.footer),
-        );
-});
+  return table
+    .getFooterGroups()
+    .some((group) => group.headers.some((header) => header.column.columnDef.footer))
+})
 
 // Check if footer slot is provided
-const hasFooterSlot = computed(() => !!slots.footer);
+const hasFooterSlot = computed(() => !!slots.footer)
 
 // Expose table state for parent components to access selected rows
 defineExpose({
-    ...tableState,
-    ...keyboardState,
-});
+  ...tableState,
+  ...keyboardState,
+})
 </script>
 
 <template>

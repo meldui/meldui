@@ -187,11 +187,11 @@ export function createColumnHelper<TData>() {
         // Only include cell if a custom renderer is provided
         // Otherwise let TanStack Table use its default cell renderer (getValue())
         ...(options.cell && {
-          cell: (props: CellContext<TData, TData[TKey]>) => options.cell!(props),
+          cell: (props: CellContext<TData, TData[TKey]>) => options.cell?.(props),
         }),
         // Only include footer if a custom renderer is provided
         ...(options.footer && {
-          footer: (props: HeaderContext<TData, TData[TKey]>) => options.footer!(props),
+          footer: (props: HeaderContext<TData, TData[TKey]>) => options.footer?.(props),
         }),
         enableSorting: options.enableSorting ?? true,
         enableHiding: options.enableHiding ?? true,
@@ -215,7 +215,7 @@ export function createColumnHelper<TData>() {
           ? ({ column }: HeaderContext<TData, unknown>) =>
               h(DataTableColumnHeader as Component, {
                 column,
-                title: options.title!,
+                title: options.title,
               })
           : undefined,
         cell: (props: CellContext<TData, unknown>) => options.cell(props),

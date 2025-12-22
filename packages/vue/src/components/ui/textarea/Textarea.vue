@@ -60,7 +60,7 @@ watch(
       nextTick(() => {
         if (textareaRef.value) {
           const currentMinHeight = Number.parseFloat(textareaRef.value.style.minHeight)
-          if (currentMinHeight > maxHeightPx.value!) {
+          if (maxHeightPx.value && currentMinHeight > maxHeightPx.value) {
             textareaRef.value.style.minHeight = `${maxHeightPx.value}px`
           }
         }

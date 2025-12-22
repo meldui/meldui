@@ -5,10 +5,10 @@
 
 import type { DateValue } from '@internationalized/date'
 import type {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   ColumnPinningState,
-  Column,
   PaginationState,
   Row,
   SortingState,

@@ -22,7 +22,10 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(props.defaultOpen)
-const localValue = ref<[number, number]>(props.initialValue ?? props.range!)
+const range = computed(() => props.range ?? [0, 100])
+const localValue = ref<[number, number]>(
+  props.initialValue ?? ([...range.value] as [number, number]),
+)
 const appliedValue = ref<[number, number] | undefined>(props.initialValue)
 
 // Watch popover open/close to reset local value and emit close event
@@ -32,14 +35,14 @@ watch(isOpen, (newValue, oldValue) => {
     if (appliedValue.value !== undefined) {
       localValue.value = [...appliedValue.value] as [number, number]
     } else {
-      localValue.value = [...props.range!] as [number, number]
+      localValue.value = [...range.value] as [number, number]
     }
   } else if (oldValue && !newValue) {
     // Popover closed - reset local value to applied value or default range (discard unsaved changes)
     if (appliedValue.value !== undefined) {
       localValue.value = [...appliedValue.value] as [number, number]
     } else {
-      localValue.value = [...props.range!] as [number, number]
+      localValue.value = [...range.value] as [number, number]
     }
     // Emit close event
     emit('close')
@@ -56,7 +59,7 @@ const minValue = computed({
   get: () => localValue.value[0],
   set: (value: number) => {
     // Clamp within range bounds
-    value = clamp(value, props.range![0], props.range![1])
+    value = clamp(value, range.value[0], range.value[1])
     // Ensure min doesn't exceed max
     const newMin = Math.min(value, localValue.value[1])
     localValue.value = [newMin, localValue.value[1]]
@@ -67,7 +70,7 @@ const maxValue = computed({
   get: () => localValue.value[1],
   set: (value: number) => {
     // Clamp within range bounds
-    value = clamp(value, props.range![0], props.range![1])
+    value = clamp(value, range.value[0], range.value[1])
     // Ensure max doesn't go below min
     const newMax = Math.max(value, localValue.value[0])
     localValue.value = [localValue.value[0], newMax]
@@ -83,7 +86,7 @@ const hasChanges = computed(() => {
   // Has unsaved changes if current local value differs from applied value
   if (!appliedValue.value) {
     // No applied value - check if differs from default
-    return localValue.value[0] !== props.range![0] || localValue.value[1] !== props.range![1]
+    return localValue.value[0] !== range.value[0] || localValue.value[1] !== range.value[1]
   }
   // Check if differs from applied value
   return (
@@ -96,7 +99,7 @@ const formatValue = (val: number) => {
 }
 
 const clearFilter = () => {
-  localValue.value = [...props.range!] as [number, number]
+  localValue.value = [...range.value] as [number, number]
   appliedValue.value = undefined
   emit('valueChange', undefined)
   emit('remove')
@@ -104,7 +107,7 @@ const clearFilter = () => {
 
 const applyFilter = () => {
   // Only set filter if it's different from the default range
-  if (localValue.value[0] === props.range![0] && localValue.value[1] === props.range![1]) {
+  if (localValue.value[0] === range.value[0] && localValue.value[1] === range.value[1]) {
     appliedValue.value = undefined
     emit('valueChange', undefined)
   } else {

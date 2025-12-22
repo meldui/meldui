@@ -5,6 +5,7 @@ import type { ToggleGroupItemProps } from 'reka-ui'
 import { ToggleGroupItem as RekaToggleGroupItem, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { inject } from 'vue'
+// biome-ignore lint/style/useImportType: toggleVariants is used with typeof for VariantProps
 import { toggleVariants } from '@/components/ui/toggle'
 import { cn } from '@/lib/utils'
 

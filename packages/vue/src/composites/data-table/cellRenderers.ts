@@ -9,7 +9,14 @@ import { Badge } from '@/components/ui/badge'
 /**
  * Available badge variants matching the Badge component
  */
-type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'
+type BadgeVariant =
+  | 'default'
+  | 'secondary'
+  | 'destructive'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'neutral'
 
 /**
  * Badge variant mapping based on value
@@ -367,7 +374,7 @@ export const cellRenderers = {
 
       if (value.length <= maxLength) return value
 
-      const truncated = value.slice(0, maxLength) + '...'
+      const truncated = `${value.slice(0, maxLength)}...`
 
       if (showTooltip) {
         return h(

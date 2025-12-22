@@ -1,8 +1,4 @@
-import type {
-  EmblaCarouselType,
-  EmblaOptionsType,
-  EmblaPluginType,
-} from 'embla-carousel'
+import type { EmblaCarouselType, EmblaOptionsType, EmblaPluginType } from 'embla-carousel'
 import type useEmblaCarousel from 'embla-carousel-vue'
 import type { EmblaCarouselVueType } from 'embla-carousel-vue'
 import type { HTMLAttributes, UnwrapRef } from 'vue'

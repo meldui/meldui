@@ -12,6 +12,7 @@ const props = withDefaults(
     nameKey?: string
     labelKey?: string
     labelFormatter?: (d: number | Date) => string
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic chart payload requires flexible typing
     payload?: Record<string, any>
     config?: ChartConfig
     class?: HTMLAttributes['class']
