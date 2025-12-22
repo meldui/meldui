@@ -1,8 +1,7 @@
 <script setup lang="ts" generic="TData, TValue">
 import type { DateValue } from '@internationalized/date'
 import { IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
-import { type Component, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -15,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import type { DateFilterProps, DateRange } from '../componentProps'
 import type { DateOperator } from '../types'
 import { getFilterIcon } from './filter-icons'
 import {
@@ -25,36 +25,7 @@ import {
   isNullaryOperator,
 } from './operators'
 
-// Define DateRange type for range calendar
-interface DateRange {
-  start: DateValue | undefined
-  end: DateValue | undefined
-}
-
-interface Props {
-  column?: Column<TData, TValue>
-  title?: string
-  placeholder?: string
-  icon?: Component
-  defaultOpen?: boolean
-  openTrigger?: number
-
-  // Advanced mode props
-  advancedMode?: boolean
-  defaultOperator?: DateOperator
-  availableOperators?: DateOperator[]
-
-  // Initial value for URL state restoration
-  initialValue?:
-    | DateValue
-    | [DateValue, DateValue]
-    | {
-        operator: DateOperator
-        value: DateValue | [DateValue, DateValue] | null
-      }
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DateFilterProps<TData, TValue>>(), {
   placeholder: 'Pick a date',
   defaultOpen: false,
   advancedMode: false,

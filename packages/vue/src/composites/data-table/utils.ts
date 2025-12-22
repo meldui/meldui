@@ -57,7 +57,9 @@ export function tableStateToServerParams(
     tableState.filters.forEach((filter) => {
       // Check if this is the search column filter - keep as string
       if (searchColumn && filter.id === searchColumn) {
-        params.filters![filter.id] = filter.value as string
+        if (params.filters) {
+          params.filters[filter.id] = filter.value as string
+        }
         return
       }
 
@@ -138,7 +140,9 @@ export function tableStateToServerParams(
           transformedValue = filter.value as ServerFilterValue
       }
 
-      params.filters![filter.id] = transformedValue
+      if (params.filters) {
+        params.filters[filter.id] = transformedValue
+      }
     })
   }
 

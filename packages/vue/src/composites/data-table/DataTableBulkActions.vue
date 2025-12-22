@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="TData">
 import { IconStack2, IconX } from '@meldui/tabler-vue'
-import type { Table } from '@tanstack/vue-table'
 import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,14 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { BulkActionOption } from './types'
+import type { DataTableBulkActionsProps } from './componentProps'
 
-interface Props {
-  table: Table<TData>
-  options: BulkActionOption<TData>[]
-}
-
-const props = defineProps<Props>()
+const props = defineProps<DataTableBulkActionsProps<TData>>()
 
 const selectedRows = computed(() => {
   return props.table.getSelectedRowModel().rows.map((row) => row.original)

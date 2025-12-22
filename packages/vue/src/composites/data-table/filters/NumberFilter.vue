@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="TData, TValue">
 import { IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
-import { type Component, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -13,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import type { NumberFilterProps } from '../componentProps'
 import type { NumberOperator } from '../types'
 import { getFilterIcon } from './filter-icons'
 import {
@@ -23,28 +23,7 @@ import {
   isNullaryOperator,
 } from './operators'
 
-interface Props {
-  column?: Column<TData, TValue>
-  title?: string
-  placeholder?: string
-  unit?: string
-  icon?: Component
-  defaultOpen?: boolean
-  openTrigger?: number
-
-  // Advanced mode props
-  advancedMode?: boolean
-  defaultOperator?: NumberOperator
-  availableOperators?: NumberOperator[]
-
-  // Initial value for URL state restoration
-  initialValue?:
-    | number
-    | [number, number]
-    | { operator: NumberOperator; value: number | [number, number] }
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<NumberFilterProps<TData, TValue>>(), {
   placeholder: 'Enter number...',
   defaultOpen: false,
   advancedMode: false,

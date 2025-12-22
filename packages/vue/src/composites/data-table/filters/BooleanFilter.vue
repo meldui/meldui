@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="TData, TValue">
 import { IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
-import { type Component, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -14,6 +13,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
+import type { BooleanFilterProps } from '../componentProps'
 import type { BooleanOperator } from '../types'
 import { getFilterIcon } from './filter-icons'
 import {
@@ -23,23 +23,7 @@ import {
   isNullaryOperator,
 } from './operators'
 
-interface Props {
-  column?: Column<TData, TValue>
-  title?: string
-  icon?: Component
-  defaultOpen?: boolean
-  openTrigger?: number
-
-  // Advanced mode props
-  advancedMode?: boolean
-  defaultOperator?: BooleanOperator
-  availableOperators?: BooleanOperator[]
-
-  // Initial value for URL state restoration
-  initialValue?: boolean | { operator: BooleanOperator; value: boolean }
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<BooleanFilterProps<TData, TValue>>(), {
   defaultOpen: false,
   openTrigger: 0,
   advancedMode: false,

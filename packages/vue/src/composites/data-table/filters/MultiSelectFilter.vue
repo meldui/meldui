@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="TData, TValue">
 import { IconCheck, IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
-import { type Component, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,19 +14,10 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import type { FilterOption } from '../useDataTable'
+import type { MultiSelectFilterProps } from '../componentProps'
 import { getFilterIcon } from './filter-icons'
 
-interface Props {
-  column?: Column<TData, TValue>
-  title?: string
-  options: FilterOption[]
-  icon?: Component
-  defaultOpen?: boolean
-  openTrigger?: number
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<MultiSelectFilterProps<TData, TValue>>(), {
   defaultOpen: false,
   openTrigger: 0,
 })

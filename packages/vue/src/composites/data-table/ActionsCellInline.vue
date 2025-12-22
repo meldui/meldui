@@ -1,23 +1,9 @@
 <script setup lang="ts" generic="TData">
-import type { Row } from '@tanstack/vue-table'
-import { type Component, computed } from 'vue'
+import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
+import type { ActionDefinition, ActionsCellInlineProps } from './componentProps'
 
-interface ActionDefinition<T> {
-  label: string
-  icon?: Component
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  onClick: (row: Row<T>) => void
-  show?: (row: Row<T>) => boolean
-  disabled?: (row: Row<T>) => boolean
-}
-
-interface Props {
-  row: Row<TData>
-  actions: ActionDefinition<TData>[]
-}
-
-const props = defineProps<Props>()
+const props = defineProps<ActionsCellInlineProps<TData>>()
 
 // Filter visible actions
 const visibleActions = computed(() =>

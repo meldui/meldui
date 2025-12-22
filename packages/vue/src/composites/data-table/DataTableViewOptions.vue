@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="TData">
 import { IconSettings2 } from '@meldui/tabler-vue'
-import type { Column, Table } from '@tanstack/vue-table'
+import type { Column } from '@tanstack/vue-table'
 import { ref, watchEffect } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,12 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import type { DataTableViewOptionsProps } from './componentProps'
 
-interface Props {
-  table: Table<TData>
-}
-
-const props = defineProps<Props>()
+const props = defineProps<DataTableViewOptionsProps<TData>>()
 
 interface ColumnItem {
   id: string

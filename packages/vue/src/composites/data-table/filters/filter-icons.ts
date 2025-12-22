@@ -9,16 +9,7 @@ import {
   IconToggleRight,
 } from '@meldui/tabler-vue'
 import type { Component } from 'vue'
-
-export type FilterType =
-  | 'text'
-  | 'select'
-  | 'multiselect'
-  | 'number'
-  | 'range'
-  | 'boolean'
-  | 'date'
-  | 'daterange'
+import type { FilterType } from '../types'
 
 /**
  * Get the default icon for a filter type

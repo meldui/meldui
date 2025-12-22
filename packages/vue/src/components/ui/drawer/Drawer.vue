@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<DrawerRootProps>(), {
 
 const emits = defineEmits<DrawerRootEmits>()
 
+// biome-ignore lint/suspicious/noExplicitAny: Type assertion required for vaul-vue compatibility
 const forwarded = useForwardPropsEmits(props, emits) as DrawerRootProps & { [key: string]: any }
 </script>
 

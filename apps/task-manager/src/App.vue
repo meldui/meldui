@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { SidebarInset, SidebarProvider, Toaster } from "@meldui/vue";
-import { onMounted } from "vue";
-import { RouterView } from "vue-router";
-import AppHeader from "@/components/layout/AppHeader.vue";
-import AppSidebar from "@/components/layout/AppSidebar.vue";
-import { initializeTheme, sidebarCollapsed } from "@/stores/settings";
+import { SidebarInset, SidebarProvider, Toaster } from '@meldui/vue'
+import { onMounted } from 'vue'
+import { RouterView } from 'vue-router'
+import AppHeader from '@/components/layout/AppHeader.vue'
+import AppSidebar from '@/components/layout/AppSidebar.vue'
+import { initializeTheme, sidebarCollapsed } from '@/stores/settings'
 
 onMounted(() => {
-    initializeTheme();
-});
+  initializeTheme()
+})
 </script>
 
 <template>

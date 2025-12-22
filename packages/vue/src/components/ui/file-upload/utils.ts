@@ -31,7 +31,7 @@ export function isValidFileType(file: File, accept: string | undefined): boolean
     // Handle MIME type wildcards like "image/*"
     if (type.endsWith('/*')) {
       const category = type.slice(0, -2)
-      return file.type.startsWith(category + '/')
+      return file.type.startsWith(`${category}/`)
     }
 
     // Handle extensions like ".pdf"

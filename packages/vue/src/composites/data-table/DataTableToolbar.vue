@@ -1,13 +1,22 @@
 <script setup lang="ts" generic="TData">
 import { IconLoader2, IconPinnedOff, IconRefresh, IconSearch, IconX } from '@meldui/tabler-vue'
-import type { Table } from '@tanstack/vue-table'
 import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import type {
+  BooleanFilterInitialValue,
+  DataTableToolbarProps,
+  DateFilterInitialValue,
+  DateRangeFilterInitialValue,
+  NumberFilterInitialValue,
+  RangeFilterInitialValue,
+  SelectFilterInitialValue,
+  TextFilterInitialValue,
+} from './componentProps'
 import DataTableBulkActions from './DataTableBulkActions.vue'
 import DataTableFilterCommand from './DataTableFilterCommand.vue'
 import DataTableViewOptions from './DataTableViewOptions.vue'
-import { createPluginMap, isBuiltInFilterType, type RegisteredFilterPlugin } from './filterPlugins'
+import { createPluginMap, isBuiltInFilterType } from './filterPlugins'
 import BooleanFilter from './filters/BooleanFilter.vue'
 import DateFilter from './filters/DateFilter.vue'
 import DateRangeFilter from './filters/DateRangeFilter.vue'
@@ -19,7 +28,6 @@ import TextFilter from './filters/TextFilter.vue'
 import type {
   AdvancedFilterValue,
   BooleanOperator,
-  BulkActionOption,
   DateOperator,
   FilterInstanceValue,
   FilterType,
@@ -31,28 +39,7 @@ import type {
 } from './types'
 import type { DataTableFilterField } from './useDataTable'
 
-interface Props {
-  table: Table<TData>
-  filterFields?: DataTableFilterField<TData>[]
-  filterPlugins?: RegisteredFilterPlugin[]
-  searchPlaceholder?: string
-  searchColumn?: string
-  bulkSelectOptions?: BulkActionOption<TData>[]
-
-  // Advanced mode (static - never changes)
-  advancedMode?: boolean
-
-  // Loading state
-  loading?: boolean
-
-  // Refresh button
-  showRefreshButton?: boolean
-
-  // Column hiding
-  enableColumnHiding?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DataTableToolbarProps<TData>>(), {
   searchPlaceholder: 'Search...',
   filterFields: () => [],
   filterPlugins: () => [],
@@ -168,9 +155,6 @@ const initializeFiltersFromTableState = () => {
           break
         }
 
-        case 'select':
-        case 'boolean':
-        case 'multiselect':
         default: {
           // Single instance types
           const instanceId = `filter-${fieldId}-${instanceCounter++}`
@@ -475,7 +459,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as TextOperator[]
                     "
-                    :initial-value="instanceValues.get(instance.instanceId)"
+                    :initial-value="instanceValues.get(instance.instanceId) as TextFilterInitialValue | undefined"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -507,7 +491,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as NumberOperator[]
                     "
-                    :initial-value="instanceValues.get(instance.instanceId)"
+                    :initial-value="instanceValues.get(instance.instanceId) as NumberFilterInitialValue | undefined"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -535,7 +519,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as DateOperator[]
                     "
-                    :initial-value="instanceValues.get(instance.instanceId)"
+                    :initial-value="instanceValues.get(instance.instanceId) as DateFilterInitialValue | undefined"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -564,7 +548,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as SelectOperator[]
                     "
-                    :initial-value="instanceValues.get(instance.instanceId)"
+                    :initial-value="instanceValues.get(instance.instanceId) as SelectFilterInitialValue | undefined"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -591,7 +575,7 @@ onUnmounted(() => {
                     :available-operators="
                         instance.field.availableOperators as BooleanOperator[]
                     "
-                    :initial-value="instanceValues.get(instance.instanceId)"
+                    :initial-value="instanceValues.get(instance.instanceId) as BooleanFilterInitialValue | undefined"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -638,7 +622,7 @@ onUnmounted(() => {
                     :step="instance.field.step"
                     :unit="instance.field.unit"
                     :default-open="instance.autoOpen"
-                    :initial-value="instanceValues.get(instance.instanceId)"
+                    :initial-value="instanceValues.get(instance.instanceId) as RangeFilterInitialValue | undefined"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -658,7 +642,7 @@ onUnmounted(() => {
                     :placeholder="instance.field.placeholder"
                     :icon="instance.field.icon"
                     :default-open="instance.autoOpen"
-                    :initial-value="instanceValues.get(instance.instanceId)"
+                    :initial-value="instanceValues.get(instance.instanceId) as DateRangeFilterInitialValue | undefined"
                     @value-change="
                         (value: unknown) =>
                             handleInstanceValueChange(
@@ -751,7 +735,10 @@ onUnmounted(() => {
                 :disabled="loading"
                 @click="emit('refresh')"
             >
-                <IconRefresh class="h-4 w-4" :class="{ 'animate-spin': loading }" />
+                <IconRefresh
+                    class="h-4 w-4"
+                    :class="{ 'animate-spin': loading }"
+                />
             </Button>
 
             <!-- Toolbar End Slot -->

@@ -1,24 +1,7 @@
 <script setup lang="ts" generic="TData">
 import { IconAlertCircle, IconRefresh } from '@meldui/tabler-vue'
-import {
-  type Cell,
-  type ColumnDef,
-  type ColumnFiltersState,
-  type ColumnPinningState,
-  FlexRender,
-  type PaginationState,
-  type Row,
-  type SortingState,
-} from '@tanstack/vue-table'
-import {
-  type ComponentPublicInstance,
-  type CSSProperties,
-  computed,
-  type HTMLAttributes,
-  nextTick,
-  ref,
-  useSlots,
-} from 'vue'
+import { type Cell, FlexRender, type Row } from '@tanstack/vue-table'
+import { type ComponentPublicInstance, computed, ref, useSlots } from 'vue'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
@@ -32,89 +15,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import type { DataTableProps } from './componentProps'
 import DataTablePagination from './DataTablePagination.vue'
 import DataTableToolbar from './DataTableToolbar.vue'
-import type { RegisteredFilterPlugin } from './filterPlugins'
-import type { BulkActionOption } from './types'
-import { type DataTableFilterField, useDataTable } from './useDataTable'
+import { useDataTable } from './useDataTable'
 import { usePinnedColumns } from './usePinnedColumns'
 import { useTableKeyboard } from './useTableKeyboard'
 
 // Get slots for dynamic cell slot detection
-const slots = useSlots()
+const slots: ReturnType<typeof useSlots> = useSlots()
 
-interface Props {
-  columns: ColumnDef<TData, unknown>[]
-  data: TData[]
-  // Server-side props (required)
-  pageCount: number
-  onServerSideChange: (params: {
-    sorting: SortingState
-    filters: ColumnFiltersState
-    pagination: PaginationState
-  }) => void
-  // Feature toggles
-  enableRowSelection?: boolean
-  // Pagination options
-  defaultPerPage?: number
-  pageSizeOptions?: number[]
-  showPageSizeSelector?: boolean
-  showPageInfo?: boolean
-  paginationPosition?: 'bottom' | 'top' | 'both'
-  // Toolbar options
-  filterFields?: DataTableFilterField<TData>[]
-  searchPlaceholder?: string
-  searchColumn?: string
-  showToolbar?: boolean
-  showPagination?: boolean
-  showSelectedCount?: boolean
-  bulkSelectOptions?: BulkActionOption<TData>[]
-  // Column hiding
-  enableColumnHiding?: boolean
-  // Empty state
-  emptyMessage?: string
-  // Loading state
-  loading?: boolean
-  loadingMessage?: string
-  // Error state
-  error?: string | Error
-  // Advanced filter mode (static - never changes)
-  advancedMode?: boolean
-  // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
-  // Note: Reset methods reset to true defaults (empty), not to initial values
-  initialFilters?: ColumnFiltersState
-  initialSorting?: SortingState
-  initialPagination?: Partial<PaginationState>
-  // Column pinning
-  defaultPinning?: ColumnPinningState
-  enableColumnPinning?: boolean
-  // Column resizing
-  enableColumnResizing?: boolean
-  columnResizeMode?: 'onChange' | 'onEnd'
-  // Table container styling
-  maxHeight?: string
-  // Table density
-  density?: 'compact' | 'comfortable' | 'spacious'
-  // Row styling
-  rowClass?: (row: Row<TData>) => string | Record<string, boolean> | undefined
-  rowStyle?: (row: Row<TData>) => CSSProperties | undefined
-  rowProps?: (row: Row<TData>) => HTMLAttributes | undefined
-  // Header styling
-  headerClass?: HTMLAttributes['class']
-  // Bordered cells (spreadsheet-like)
-  bordered?: boolean
-  // Keyboard navigation
-  enableKeyboardNavigation?: boolean
-  // Refresh button
-  showRefreshButton?: boolean
-  // Row expansion
-  enableRowExpansion?: boolean
-  getRowCanExpand?: (row: Row<TData>) => boolean
-  // Custom filter plugins
-  filterPlugins?: RegisteredFilterPlugin[]
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DataTableProps<TData>>(), {
   enableRowSelection: false,
   defaultPerPage: 10,
   pageSizeOptions: () => [10, 20, 30, 40, 50],
@@ -337,7 +248,12 @@ defineExpose({
         </template>
 
         <!-- Top Pagination (when position is 'top' or 'both') -->
-        <template v-if="showPagination && (paginationPosition === 'top' || paginationPosition === 'both')">
+        <template
+            v-if="
+                showPagination &&
+                (paginationPosition === 'top' || paginationPosition === 'both')
+            "
+        >
             <slot name="pagination" v-bind="paginationSlotProps">
                 <DataTablePagination
                     :table="table"
@@ -375,8 +291,23 @@ defineExpose({
                             :key="header.id"
                             :colSpan="header.colSpan"
                             :data-column-id="header.column.id"
-                            :class="[getPinningClass(header.column.id), { 'relative': enableColumnResizing, 'border-r border-border last:border-r-0': bordered }]"
-                            :style="{ minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined, width: enableColumnResizing ? `${header.getSize()}px` : undefined }"
+                            :class="[
+                                getPinningClass(header.column.id),
+                                {
+                                    relative: enableColumnResizing,
+                                    'border-r border-border last:border-r-0':
+                                        bordered,
+                                },
+                            ]"
+                            :style="{
+                                minWidth:
+                                    header.getSize() !== 150
+                                        ? `${header.getSize()}px`
+                                        : undefined,
+                                width: enableColumnResizing
+                                    ? `${header.getSize()}px`
+                                    : undefined,
+                            }"
                         >
                             <FlexRender
                                 v-if="!header.isPlaceholder"
@@ -385,11 +316,18 @@ defineExpose({
                             />
                             <!-- Column resize handle -->
                             <div
-                                v-if="enableColumnResizing && header.column.getCanResize()"
+                                v-if="
+                                    enableColumnResizing &&
+                                    header.column.getCanResize()
+                                "
                                 class="resize-handle"
-                                :data-resizing="header.column.getIsResizing() || undefined"
+                                :data-resizing="
+                                    header.column.getIsResizing() || undefined
+                                "
                                 @mousedown="header.getResizeHandler()?.($event)"
-                                @touchstart="header.getResizeHandler()?.($event)"
+                                @touchstart="
+                                    header.getResizeHandler()?.($event)
+                                "
                             />
                         </TableHead>
                     </TableRow>
@@ -407,14 +345,18 @@ defineExpose({
                                     <Alert variant="destructive" class="m-4">
                                         <IconAlertCircle class="size-4" />
                                         <AlertTitle>Error</AlertTitle>
-                                        <AlertDescription class="flex items-center justify-between">
+                                        <AlertDescription
+                                            class="flex items-center justify-between"
+                                        >
                                             <span>{{ errorMessage }}</span>
                                             <Button
                                                 variant="outline"
                                                 size="sm"
                                                 @click="handleRetry"
                                             >
-                                                <IconRefresh class="mr-1 size-4" />
+                                                <IconRefresh
+                                                    class="mr-1 size-4"
+                                                />
                                                 Retry
                                             </Button>
                                         </AlertDescription>
@@ -427,13 +369,17 @@ defineExpose({
                     <!-- Loading state -->
                     <template v-else-if="loading">
                         <TableRow
-                            v-for="rowIndex in table.getState().pagination.pageSize"
+                            v-for="rowIndex in table.getState().pagination
+                                .pageSize"
                             :key="`skeleton-row-${rowIndex}`"
                         >
                             <TableCell
-                                v-for="(column, colIndex) in columns"
+                                v-for="(_column, colIndex) in columns"
                                 :key="`skeleton-cell-${rowIndex}-${colIndex}`"
-                                :class="{ 'border-r border-border last:border-r-0': bordered }"
+                                :class="{
+                                    'border-r border-border last:border-r-0':
+                                        bordered,
+                                }"
                             >
                                 <Skeleton class="h-5 w-full" />
                             </TableCell>
@@ -465,8 +411,22 @@ defineExpose({
                                         v-for="cell in row.getVisibleCells()"
                                         :key="cell.id"
                                         :data-column-id="cell.column.id"
-                                        :class="[getPinningClass(cell.column.id), { 'border-r border-border last:border-r-0': bordered }]"
-                                        :style="{ minWidth: cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : undefined, width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined }"
+                                        :class="[
+                                            getPinningClass(cell.column.id),
+                                            {
+                                                'border-r border-border last:border-r-0':
+                                                    bordered,
+                                            },
+                                        ]"
+                                        :style="{
+                                            minWidth:
+                                                cell.column.getSize() !== 150
+                                                    ? `${cell.column.getSize()}px`
+                                                    : undefined,
+                                            width: enableColumnResizing
+                                                ? `${cell.column.getSize()}px`
+                                                : undefined,
+                                        }"
                                     >
                                         <!-- Cell slot: Use #cell-[columnId] to customize specific column cells -->
                                         <slot
@@ -483,13 +443,22 @@ defineExpose({
                                 </TableRow>
                                 <!-- Expanded row content -->
                                 <TableRow
-                                    v-if="enableRowExpansion && row.getIsExpanded()"
+                                    v-if="
+                                        enableRowExpansion &&
+                                        row.getIsExpanded()
+                                    "
                                     class="expanded-row"
                                     :data-expanded="true"
                                 >
-                                    <TableCell :colspan="columns.length" class="p-0">
+                                    <TableCell
+                                        :colspan="columns.length"
+                                        class="p-0"
+                                    >
                                         <div class="expanded-row-content">
-                                            <slot name="expanded-row" :row="row" />
+                                            <slot
+                                                name="expanded-row"
+                                                :row="row"
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -522,7 +491,10 @@ defineExpose({
                 </TableBody>
 
                 <!-- Footer: Use #footer slot to completely replace, or use column footers -->
-                <TableFooter v-if="hasFooterSlot || hasColumnFooters" class="table-footer">
+                <TableFooter
+                    v-if="hasFooterSlot || hasColumnFooters"
+                    class="table-footer"
+                >
                     <slot name="footer" v-bind="footerSlotProps">
                         <TableRow
                             v-for="footerGroup in table.getFooterGroups()"
@@ -534,10 +506,21 @@ defineExpose({
                                 :colSpan="header.colSpan"
                                 :data-column-id="header.column.id"
                                 :class="getPinningClass(header.column.id)"
-                                :style="{ minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined, width: enableColumnResizing ? `${header.getSize()}px` : undefined }"
+                                :style="{
+                                    minWidth:
+                                        header.getSize() !== 150
+                                            ? `${header.getSize()}px`
+                                            : undefined,
+                                    width: enableColumnResizing
+                                        ? `${header.getSize()}px`
+                                        : undefined,
+                                }"
                             >
                                 <FlexRender
-                                    v-if="!header.isPlaceholder && header.column.columnDef.footer"
+                                    v-if="
+                                        !header.isPlaceholder &&
+                                        header.column.columnDef.footer
+                                    "
                                     :render="header.column.columnDef.footer"
                                     :props="header.getContext()"
                                 />
@@ -549,7 +532,13 @@ defineExpose({
         </div>
 
         <!-- Bottom Pagination (when position is 'bottom' or 'both') -->
-        <template v-if="showPagination && (paginationPosition === 'bottom' || paginationPosition === 'both')">
+        <template
+            v-if="
+                showPagination &&
+                (paginationPosition === 'bottom' ||
+                    paginationPosition === 'both')
+            "
+        >
             <slot name="pagination" v-bind="paginationSlotProps">
                 <DataTablePagination
                     :table="table"

@@ -33,8 +33,8 @@ export interface AvatarGroupProps {
 }
 
 defineSlots<{
-  default(): any
-  overflow(props: { count: number }): any
+  default(): unknown
+  overflow(props: { count: number }): unknown
 }>()
 
 const props = defineProps<AvatarGroupProps>()

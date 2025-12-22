@@ -7,15 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": [
-      "**",
-      "!**/node_modules",
-      "!**/dist",
-      "!**/build",
-      "!**/.turbo",
-      "!**/storybook-static",
-      "!apps/task-manager"
-    ]
+    "includes": ["**"]
   },
   "formatter": {
     "enabled": true,
@@ -25,6 +17,17 @@
   },
   "linter": {
     "enabled": true,
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/build/**",
+      "!**/.turbo/**",
+      "!**/storybook-static/**",
+      "!apps/task-manager/**",
+      "!apps/*-storybook/**",
+      "!packages/charts-vue/**"
+    ],
     "rules": {
       "recommended": true
     }
@@ -33,6 +36,15 @@
     "formatter": {
       "quoteStyle": "single",
       "semicolons": "asNeeded"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
+    },
+    "linter": {
+      "enabled": false
     }
   },
   "assist": { "actions": { "source": { "organizeImports": "on" } } }

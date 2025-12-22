@@ -1,33 +1,14 @@
 <script setup lang="ts" generic="TData, TValue">
-import type { DateValue } from '@internationalized/date'
 import { IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
-import { type Component, computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RangeCalendar } from '@/components/ui/range-calendar'
 import { cn } from '@/lib/utils'
+import type { DateRange, DateRangeFilterProps } from '../componentProps'
 import { getFilterIcon } from './filter-icons'
 
-// Define DateRange type for range calendar
-// Note: Properties are required but values can be undefined (matches reka-ui's DateRange)
-interface DateRange {
-  start: DateValue | undefined
-  end: DateValue | undefined
-}
-
-interface Props {
-  column?: Column<TData, TValue>
-  title?: string
-  placeholder?: string
-  icon?: Component
-  defaultOpen?: boolean
-
-  // Initial value for URL state restoration
-  initialValue?: DateRange
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<DateRangeFilterProps<TData, TValue>>(), {
   placeholder: 'Pick date range',
   defaultOpen: false,
 })

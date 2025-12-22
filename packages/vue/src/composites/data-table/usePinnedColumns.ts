@@ -51,12 +51,12 @@ export function usePinnedColumns<TData>(tableInstance: Ref<Table<TData>>) {
 
     leftPinnedColumns.forEach((column) => {
       const columnId = column.id
-      const headerCell = tableRef.value!.querySelector(
+      const headerCell = tableRef.value?.querySelector(
         `thead th[data-column-id="${columnId}"]`,
-      ) as HTMLElement
-      const bodyCells = tableRef.value!.querySelectorAll(`tbody td[data-column-id="${columnId}"]`)
+      ) as HTMLElement | null
+      const bodyCells = tableRef.value?.querySelectorAll(`tbody td[data-column-id="${columnId}"]`)
 
-      if (!headerCell) return
+      if (!headerCell || !bodyCells) return
 
       // For the first column, offset is 0
       // For subsequent columns, offset is the accumulated width of previous columns
@@ -81,10 +81,10 @@ export function usePinnedColumns<TData>(tableInstance: Ref<Table<TData>>) {
     for (let i = rightPinnedColumns.length - 1; i >= 0; i--) {
       const column = rightPinnedColumns[i]
       const columnId = column.id
-      const headerCell = tableRef.value!.querySelector(
+      const headerCell = tableRef.value?.querySelector(
         `thead th[data-column-id="${columnId}"]`,
-      ) as HTMLElement
-      const bodyCells = tableRef.value!.querySelectorAll(`tbody td[data-column-id="${columnId}"]`)
+      ) as HTMLElement | null
+      const bodyCells = tableRef.value?.querySelectorAll(`tbody td[data-column-id="${columnId}"]`)
 
       if (!headerCell) continue
 
@@ -133,7 +133,7 @@ export function usePinnedColumns<TData>(tableInstance: Ref<Table<TData>>) {
     // Observe all table cells for size changes
     const cells = tableRef.value.querySelectorAll('th, td')
     cells.forEach((cell) => {
-      resizeObserver!.observe(cell)
+      resizeObserver?.observe(cell)
     })
   }
 

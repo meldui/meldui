@@ -8,7 +8,6 @@ import {
   IconPin,
   IconPinnedOff,
 } from '@meldui/tabler-vue'
-import type { Column, Table } from '@tanstack/vue-table'
 import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,15 +18,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import type { DataTableColumnHeaderProps } from './componentProps'
 
-interface Props {
-  column: Column<TData, TValue>
-  table?: Table<TData>
-  title: string
-  class?: string
-}
-
-const props = defineProps<Props>()
+const props = defineProps<DataTableColumnHeaderProps<TData, TValue>>()
 
 // TanStack Table handles enableSorting logic:
 // - Sortable by default if enableSorting is not specified
@@ -48,8 +41,8 @@ const canPin = computed(() => props.column.getCanPin())
 
 // Access table meta for configuration
 const tableMeta = computed(() => {
-  // Use table prop if provided, otherwise fallback to column.table
-  const table = props.table || props.column.table
+  // Table must be provided via props
+  const table = props.table
   if (!table) return undefined
 
   return table.options.meta as
@@ -216,9 +209,6 @@ const handlePin = (position: 'left' | 'right' | false) => {
                             class="mr-2 h-3.5 w-3.5 text-muted-foreground/70 rotate-45"
                         />
                         Pin Left
-                        <span v-if="isPinned === 'left'" class="ml-auto"
-                            ><IconCheck class="size-4"
-                        /></span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         v-if="isPinned !== 'right'"
@@ -228,9 +218,6 @@ const handlePin = (position: 'left' | 'right' | false) => {
                             class="mr-2 h-3.5 w-3.5 text-muted-foreground/70 rotate-[-45deg]"
                         />
                         Pin Right
-                        <span v-if="isPinned === 'right'" class="ml-auto"
-                            ><IconCheck class="size-4"
-                        /></span>
                     </DropdownMenuItem>
                     <DropdownMenuItem v-if="isPinned" @click="handlePin(false)">
                         <IconPinnedOff

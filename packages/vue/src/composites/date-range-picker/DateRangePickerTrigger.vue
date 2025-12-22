@@ -11,7 +11,7 @@ import type { DateRange } from './types'
 
 interface Props {
   mode: 'single' | 'range'
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Flexible typing for vModel compatibility with useVModel
   modelValue?: any
   placeholder?: string
   disabled?: boolean
