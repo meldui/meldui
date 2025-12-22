@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -62,7 +62,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -90,10 +90,10 @@ jobs:
 
       - name: Check for build artifacts
         run: |
-          test -f packages/vue/dist/index.mjs || exit 1
-          test -f packages/vue/dist/index.cjs || exit 1
-          test -f packages/tabler-vue/dist/index.mjs || exit 1
-          test -f packages/tabler-vue/dist/index.cjs || exit 1
+          test -f packages/vue/dist/esm/index.mjs || exit 1
+          test -f packages/vue/dist/cjs/index.cjs || exit 1
+          test -f packages/tabler-vue/dist/esm/index.mjs || exit 1
+          test -f packages/tabler-vue/dist/cjs/index.cjs || exit 1
           test -f packages/charts-vue/dist/index.mjs || exit 1
           test -f packages/charts-vue/dist/index.cjs || exit 1
           echo "✅ All build artifacts present"
