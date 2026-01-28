@@ -379,154 +379,119 @@ const displayOperator = computed(() => {
 </script>
 
 <template>
-    <div class="flex items-center">
-        <Popover v-model:open="isOpen">
-            <PopoverTrigger as-child>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :class="
-                        cn(
-                            'h-8',
-                            isFiltered && 'rounded-r-none border-r-0',
-                        )
-                    "
-                    :aria-label="`Filter by ${title || 'date'}`"
-                >
-                    <!-- Icon -->
-                    <component
-                        :is="getFilterIcon(icon, 'date')"
-                        class="mr-2 h-4 w-4 shrink-0"
-                    />
-
-                    <!-- Title | Operator | Value -->
-                    <span class="text-xs">
-                        {{ title || "Date" }}
-                        <template v-if="isFiltered">
-                            <!-- Show operator with separator -->
-                            <template v-if="displayOperator">
-                                <span class="mx-1.5 text-muted-foreground"
-                                    >|</span
-                                >
-                                <span class="text-muted-foreground">{{
-                                    displayOperator
-                                }}</span>
-                            </template>
-                            <!-- Value (only show if not nullary operator) -->
-                            <template
-                                v-if="
-                                    !displayOperator ||
-                                    (appliedValue &&
-                                        typeof appliedValue === 'object' &&
-                                        'operator' in appliedValue &&
-                                        !isNullaryOperator(
-                                            appliedValue.operator,
-                                        ))
-                                "
-                            >
-                                <span class="mx-1.5 text-muted-foreground"
-                                    >|</span
-                                >
-                                <span class="font-normal">{{
-                                    displayValue
-                                }}</span>
-                            </template>
-                        </template>
-                    </span>
-                </Button>
-            </PopoverTrigger>
-
-            <PopoverContent class="w-auto p-3" align="start">
-                <div class="space-y-3">
-                    <!-- Operator selector (advanced mode only) -->
-                    <Select v-if="advancedMode" v-model="localOperator">
-                        <SelectTrigger class="h-8">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem
-                                v-for="op in operators"
-                                :key="op"
-                                :value="op"
-                            >
-                                {{ getOperatorLabel(op) }}
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <!-- Single date picker -->
-                    <Calendar
-                        v-if="requiresValue && !requiresTwoValues"
-                        :model-value="calendarDate"
-                        @update:model-value="handleSingleDateSelect"
-                    />
-
-                    <!-- Between operator - range calendar (single calendar for both dates) -->
-                    <RangeCalendar
-                        v-if="requiresTwoValues"
-                        :model-value="calendarRange"
-                        @update:model-value="handleRangeSelect"
-                    />
-
-                    <!-- Preview (advanced mode) -->
-                    <p
-                        v-if="advancedMode && hasChanges"
-                        class="text-xs text-muted-foreground"
-                    >
-                        Filter:
-                        <span class="font-medium text-foreground">
-                            {{ getOperatorLabel(localOperator) }}
-                            <template
-                                v-if="
-                                    requiresTwoValues &&
-                                    localDateRange?.start &&
-                                    localDateRange?.end
-                                "
-                            >
-                                {{
-                                    formatDateRange({
-                                        start: localDateRange.start as DateValue,
-                                        end: localDateRange.end as DateValue,
-                                    })
-                                }}
-                            </template>
-                            <template v-else-if="requiresValue && localDate">
-                                {{ formatDate(localDate) }}
-                            </template>
-                        </span>
-                    </p>
-
-                    <!-- Apply button (advanced mode or between operator) -->
-                    <Button
-                        v-if="advancedMode || requiresTwoValues"
-                        size="sm"
-                        class="w-full h-7 text-xs"
-                        :disabled="
-                            (requiresValue &&
-                                !requiresTwoValues &&
-                                !localDate) ||
-                            (requiresTwoValues &&
-                                (!localDateRange?.start ||
-                                    !localDateRange?.end))
-                        "
-                        @click="applyFilter"
-                    >
-                        Apply Filter
-                    </Button>
-                </div>
-            </PopoverContent>
-        </Popover>
-
-        <!-- Clear button -->
+  <div class="flex items-center">
+    <Popover v-model:open="isOpen">
+      <PopoverTrigger as-child>
         <Button
-            v-if="isFiltered"
-            variant="outline"
-            size="sm"
-            class="h-8 w-8 p-0 rounded-l-none border-l-0"
-            @click="clearFilter"
+          variant="outline"
+          size="sm"
+          :class="cn('h-8', isFiltered && 'rounded-r-none border-r-0')"
+          :aria-label="`Filter by ${title || 'date'}`"
         >
-            <IconX class="h-4 w-4" />
-            <span class="sr-only">Clear filter</span>
+          <!-- Icon -->
+          <component :is="getFilterIcon(icon, 'date')" class="mr-2 h-4 w-4 shrink-0" />
+
+          <!-- Title | Operator | Value -->
+          <span class="text-xs">
+            {{ title || 'Date' }}
+            <template v-if="isFiltered">
+              <!-- Show operator with separator -->
+              <template v-if="displayOperator">
+                <span class="mx-1.5 text-muted-foreground">|</span>
+                <span class="text-muted-foreground">{{ displayOperator }}</span>
+              </template>
+              <!-- Value (only show if not nullary operator) -->
+              <template
+                v-if="
+                  !displayOperator ||
+                  (appliedValue &&
+                    typeof appliedValue === 'object' &&
+                    'operator' in appliedValue &&
+                    !isNullaryOperator(appliedValue.operator))
+                "
+              >
+                <span class="mx-1.5 text-muted-foreground">|</span>
+                <span class="font-normal">{{ displayValue }}</span>
+              </template>
+            </template>
+          </span>
         </Button>
-    </div>
+      </PopoverTrigger>
+
+      <PopoverContent class="w-auto p-3" align="start">
+        <div class="space-y-3">
+          <!-- Operator selector (advanced mode only) -->
+          <Select v-if="advancedMode" v-model="localOperator">
+            <SelectTrigger class="h-8">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="op in operators" :key="op" :value="op">
+                {{ getOperatorLabel(op) }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+
+          <!-- Single date picker -->
+          <Calendar
+            v-if="requiresValue && !requiresTwoValues"
+            :model-value="calendarDate"
+            @update:model-value="handleSingleDateSelect"
+          />
+
+          <!-- Between operator - range calendar (single calendar for both dates) -->
+          <RangeCalendar
+            v-if="requiresTwoValues"
+            :model-value="calendarRange"
+            @update:model-value="handleRangeSelect"
+          />
+
+          <!-- Preview (advanced mode) -->
+          <p v-if="advancedMode && hasChanges" class="text-xs text-muted-foreground">
+            Filter:
+            <span class="font-medium text-foreground">
+              {{ getOperatorLabel(localOperator) }}
+              <template v-if="requiresTwoValues && localDateRange?.start && localDateRange?.end">
+                {{
+                  formatDateRange({
+                    start: localDateRange.start as DateValue,
+                    end: localDateRange.end as DateValue,
+                  })
+                }}
+              </template>
+              <template v-else-if="requiresValue && localDate">
+                {{ formatDate(localDate) }}
+              </template>
+            </span>
+          </p>
+
+          <!-- Apply button (advanced mode or between operator) -->
+          <Button
+            v-if="advancedMode || requiresTwoValues"
+            size="sm"
+            class="w-full h-7 text-xs"
+            :disabled="
+              (requiresValue && !requiresTwoValues && !localDate) ||
+              (requiresTwoValues && (!localDateRange?.start || !localDateRange?.end))
+            "
+            @click="applyFilter"
+          >
+            Apply Filter
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+
+    <!-- Clear button -->
+    <Button
+      v-if="isFiltered"
+      variant="outline"
+      size="sm"
+      class="h-8 w-8 p-0 rounded-l-none border-l-0"
+      @click="clearFilter"
+    >
+      <IconX class="h-4 w-4" />
+      <span class="sr-only">Clear filter</span>
+    </Button>
+  </div>
 </template>

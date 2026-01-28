@@ -141,56 +141,43 @@ const formatDateRange = (range: unknown) => {
 </script>
 
 <template>
-    <div class="flex items-center">
-        <Popover v-model:open="isOpen">
-            <PopoverTrigger as-child>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :class="
-                        cn(
-                            'h-8',
-                            isFiltered && 'rounded-r-none border-r-0',
-                        )
-                    "
-                    :aria-label="`Filter by ${title || 'date'}`"
-                >
-                    <!-- Icon on the left -->
-                    <component
-                        :is="getFilterIcon(icon, 'daterange')"
-                        class="mr-2 h-4 w-4 shrink-0"
-                    />
-
-                    <!-- Title | Selected Date/Range -->
-                    <span class="text-xs">
-                        {{ title || "Date Range" }}
-                        <template v-if="isFiltered">
-                            <span class="mx-1.5 text-muted-foreground">|</span>
-                            <span class="font-normal">{{
-                                formatDateRange(appliedValue)
-                            }}</span>
-                        </template>
-                    </span>
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent class="w-auto p-0" align="start">
-                <RangeCalendar
-                    :model-value="calendarRange"
-                    @update:model-value="handleSelect"
-                />
-            </PopoverContent>
-        </Popover>
-
-        <!-- Clear button - shows when filtered, appears as part of single button -->
+  <div class="flex items-center">
+    <Popover v-model:open="isOpen">
+      <PopoverTrigger as-child>
         <Button
-            v-if="isFiltered"
-            variant="outline"
-            size="sm"
-            class="h-8 w-8 p-0 rounded-l-none border-l-0"
-            @click="clearFilter"
+          variant="outline"
+          size="sm"
+          :class="cn('h-8', isFiltered && 'rounded-r-none border-r-0')"
+          :aria-label="`Filter by ${title || 'date'}`"
         >
-            <IconX class="h-4 w-4" />
-            <span class="sr-only">Clear filter</span>
+          <!-- Icon on the left -->
+          <component :is="getFilterIcon(icon, 'daterange')" class="mr-2 h-4 w-4 shrink-0" />
+
+          <!-- Title | Selected Date/Range -->
+          <span class="text-xs">
+            {{ title || 'Date Range' }}
+            <template v-if="isFiltered">
+              <span class="mx-1.5 text-muted-foreground">|</span>
+              <span class="font-normal">{{ formatDateRange(appliedValue) }}</span>
+            </template>
+          </span>
         </Button>
-    </div>
+      </PopoverTrigger>
+      <PopoverContent class="w-auto p-0" align="start">
+        <RangeCalendar :model-value="calendarRange" @update:model-value="handleSelect" />
+      </PopoverContent>
+    </Popover>
+
+    <!-- Clear button - shows when filtered, appears as part of single button -->
+    <Button
+      v-if="isFiltered"
+      variant="outline"
+      size="sm"
+      class="h-8 w-8 p-0 rounded-l-none border-l-0"
+      @click="clearFilter"
+    >
+      <IconX class="h-4 w-4" />
+      <span class="sr-only">Clear filter</span>
+    </Button>
+  </div>
 </template>

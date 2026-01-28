@@ -111,6 +111,14 @@ const users = [
   },
 ]
 
+function getUserInitials(name: string) {
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+}
+
 export const Default: Story = {
   render: () => ({
     components: {
@@ -202,15 +210,7 @@ export const WithAvatars: Story = {
         searchQuery.value = query
       }
 
-      const getInitials = (name: string) => {
-        return name
-          .split(' ')
-          .map((n) => n[0])
-          .join('')
-          .toUpperCase()
-      }
-
-      return { value, filteredUsers, handleSearch, getInitials }
+      return { value, filteredUsers, handleSearch, getInitials: getUserInitials }
     },
     template: `
       <div class="w-full max-w-md">

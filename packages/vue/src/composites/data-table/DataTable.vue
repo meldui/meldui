@@ -308,259 +308,251 @@ defineExpose({
 </script>
 
 <template>
-    <div class="w-full space-y-4">
-        <!-- Toolbar: Use #toolbar slot to completely replace, or use default with #toolbar-start/#toolbar-end -->
-        <template v-if="showToolbar">
-            <slot name="toolbar" :table="table" :loading="loading">
-                <DataTableToolbar
-                    :table="table"
-                    :filter-fields="filterFields"
-                    :filter-plugins="filterPlugins"
-                    :search-placeholder="searchPlaceholder"
-                    :search-column="searchColumn"
-                    :bulk-select-options="bulkSelectOptions"
-                    :advanced-mode="advancedMode"
-                    :loading="loading"
-                    :show-refresh-button="showRefreshButton"
-                    :enable-column-hiding="enableColumnHiding"
-                    @refresh="tableState.refresh"
-                >
-                    <!-- Pass through toolbar slots -->
-                    <template #toolbar-start="slotProps">
-                        <slot name="toolbar-start" v-bind="slotProps" />
-                    </template>
-                    <template #toolbar-end="slotProps">
-                        <slot name="toolbar-end" v-bind="slotProps" />
-                    </template>
-                </DataTableToolbar>
-            </slot>
-        </template>
-
-        <!-- Top Pagination (when position is 'top' or 'both') -->
-        <template v-if="showPagination && (paginationPosition === 'top' || paginationPosition === 'both')">
-            <slot name="pagination" v-bind="paginationSlotProps">
-                <DataTablePagination
-                    :table="table"
-                    :page-size-options="pageSizeOptions"
-                    :show-selected-count="showSelectedCount"
-                    :show-page-size-selector="showPageSizeSelector"
-                    :show-page-info="showPageInfo"
-                />
-            </slot>
-        </template>
-
-        <!-- Table Container wrapper - scrolling happens here, inner Table overflow is disabled -->
-        <div
-            :ref="setTableContainerRef"
-            class="rounded-md border table-container overflow-auto custom-scrollbar"
-            :class="{
-                'is-scrolled': isScrolled,
-                'has-right-scroll': hasRightScroll,
-            }"
-            :data-loading="loading"
-            :data-density="density"
-            :data-column-resizing="enableColumnResizing || undefined"
-            :tabindex="enableKeyboardNavigation ? 0 : undefined"
-            :data-keyboard-navigation="enableKeyboardNavigation || undefined"
+  <div class="w-full space-y-4">
+    <!-- Toolbar: Use #toolbar slot to completely replace, or use default with #toolbar-start/#toolbar-end -->
+    <template v-if="showToolbar">
+      <slot name="toolbar" :table="table" :loading="loading">
+        <DataTableToolbar
+          :table="table"
+          :filter-fields="filterFields"
+          :filter-plugins="filterPlugins"
+          :search-placeholder="searchPlaceholder"
+          :search-column="searchColumn"
+          :bulk-select-options="bulkSelectOptions"
+          :advanced-mode="advancedMode"
+          :loading="loading"
+          :show-refresh-button="showRefreshButton"
+          :enable-column-hiding="enableColumnHiding"
+          @refresh="tableState.refresh"
         >
-            <!--maxHeight needs to be added in style property to add this style in container of <Table> component which has over-flow: auto-->
-            <Table :style="{ maxHeight: maxHeight }">
-                <TableHeader :class="headerClass ?? 'bg-muted'">
-                    <TableRow
-                        v-for="headerGroup in table.getHeaderGroups()"
-                        :key="headerGroup.id"
-                    >
-                        <TableHead
-                            v-for="header in headerGroup.headers"
-                            :key="header.id"
-                            :colSpan="header.colSpan"
-                            :data-column-id="header.column.id"
-                            :class="[getPinningClass(header.column.id), { 'relative': enableColumnResizing, 'border-r border-border last:border-r-0': bordered }]"
-                            :style="{ minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined, width: enableColumnResizing ? `${header.getSize()}px` : undefined }"
-                        >
-                            <FlexRender
-                                v-if="!header.isPlaceholder"
-                                :render="header.column.columnDef.header"
-                                :props="header.getContext()"
-                            />
-                            <!-- Column resize handle -->
-                            <div
-                                v-if="enableColumnResizing && header.column.getCanResize()"
-                                class="resize-handle"
-                                :data-resizing="header.column.getIsResizing() || undefined"
-                                @mousedown="header.getResizeHandler()?.($event)"
-                                @touchstart="header.getResizeHandler()?.($event)"
-                            />
-                        </TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <!-- Error state -->
-                    <template v-if="error">
-                        <TableRow>
-                            <TableCell :colspan="columns.length" class="p-0">
-                                <slot
-                                    name="error"
-                                    :error="error"
-                                    :retry="handleRetry"
-                                >
-                                    <Alert variant="destructive" class="m-4">
-                                        <IconAlertCircle class="size-4" />
-                                        <AlertTitle>Error</AlertTitle>
-                                        <AlertDescription class="flex items-center justify-between">
-                                            <span>{{ errorMessage }}</span>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                @click="handleRetry"
-                                            >
-                                                <IconRefresh class="mr-1 size-4" />
-                                                Retry
-                                            </Button>
-                                        </AlertDescription>
-                                    </Alert>
-                                </slot>
-                            </TableCell>
-                        </TableRow>
-                    </template>
+          <!-- Pass through toolbar slots -->
+          <template #toolbar-start="slotProps">
+            <slot name="toolbar-start" v-bind="slotProps" />
+          </template>
+          <template #toolbar-end="slotProps">
+            <slot name="toolbar-end" v-bind="slotProps" />
+          </template>
+        </DataTableToolbar>
+      </slot>
+    </template>
 
-                    <!-- Loading state -->
-                    <template v-else-if="loading">
-                        <TableRow
-                            v-for="rowIndex in table.getState().pagination.pageSize"
-                            :key="`skeleton-row-${rowIndex}`"
-                        >
-                            <TableCell
-                                v-for="(column, colIndex) in columns"
-                                :key="`skeleton-cell-${rowIndex}-${colIndex}`"
-                                :class="{ 'border-r border-border last:border-r-0': bordered }"
-                            >
-                                <Skeleton class="h-5 w-full" />
-                            </TableCell>
-                        </TableRow>
-                    </template>
+    <!-- Top Pagination (when position is 'top' or 'both') -->
+    <template
+      v-if="showPagination && (paginationPosition === 'top' || paginationPosition === 'both')"
+    >
+      <slot name="pagination" v-bind="paginationSlotProps">
+        <DataTablePagination
+          :table="table"
+          :page-size-options="pageSizeOptions"
+          :show-selected-count="showSelectedCount"
+          :show-page-size-selector="showPageSizeSelector"
+          :show-page-info="showPageInfo"
+        />
+      </slot>
+    </template>
 
-                    <!-- Data rows -->
-                    <template v-else-if="table.getRowModel().rows?.length">
-                        <template
-                            v-for="(row, index) in table.getRowModel().rows"
-                            :key="row.id"
-                        >
-                            <!-- Row slot: Use #row to completely replace row rendering -->
-                            <slot
-                                name="row"
-                                v-bind="getRowSlotProps(row, index)"
-                            >
-                                <TableRow
-                                    :data-state="
-                                        row.getIsSelected()
-                                            ? 'selected'
-                                            : undefined
-                                    "
-                                    :class="rowClass?.(row)"
-                                    :style="rowStyle?.(row)"
-                                    v-bind="rowProps?.(row)"
-                                >
-                                    <TableCell
-                                        v-for="cell in row.getVisibleCells()"
-                                        :key="cell.id"
-                                        :data-column-id="cell.column.id"
-                                        :class="[getPinningClass(cell.column.id), { 'border-r border-border last:border-r-0': bordered }]"
-                                        :style="{ minWidth: cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : undefined, width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined }"
-                                    >
-                                        <!-- Cell slot: Use #cell-[columnId] to customize specific column cells -->
-                                        <slot
-                                            v-if="hasCellSlot(cell.column.id)"
-                                            :name="`cell-${cell.column.id}`"
-                                            v-bind="getCellSlotProps(cell, row)"
-                                        />
-                                        <FlexRender
-                                            v-else
-                                            :render="cell.column.columnDef.cell"
-                                            :props="cell.getContext()"
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                                <!-- Expanded row content -->
-                                <TableRow
-                                    v-if="enableRowExpansion && row.getIsExpanded()"
-                                    class="expanded-row"
-                                    :data-expanded="true"
-                                >
-                                    <TableCell :colspan="columns.length" class="p-0">
-                                        <div class="expanded-row-content">
-                                            <slot name="expanded-row" :row="row" />
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            </slot>
-                        </template>
-                    </template>
+    <!-- Table Container wrapper - scrolling happens here, inner Table overflow is disabled -->
+    <div
+      :ref="setTableContainerRef"
+      class="rounded-md border table-container overflow-auto custom-scrollbar"
+      :class="{
+        'is-scrolled': isScrolled,
+        'has-right-scroll': hasRightScroll,
+      }"
+      :data-loading="loading"
+      :data-density="density"
+      :data-column-resizing="enableColumnResizing || undefined"
+      :tabindex="enableKeyboardNavigation ? 0 : undefined"
+      :data-keyboard-navigation="enableKeyboardNavigation || undefined"
+    >
+      <!--maxHeight needs to be added in style property to add this style in container of <Table> component which has over-flow: auto-->
+      <Table :style="{ maxHeight: maxHeight }">
+        <TableHeader :class="headerClass ?? 'bg-muted'">
+          <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+            <TableHead
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              :colSpan="header.colSpan"
+              :data-column-id="header.column.id"
+              :class="[
+                getPinningClass(header.column.id),
+                {
+                  relative: enableColumnResizing,
+                  'border-r border-border last:border-r-0': bordered,
+                },
+              ]"
+              :style="{
+                minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined,
+                width: enableColumnResizing ? `${header.getSize()}px` : undefined,
+              }"
+            >
+              <FlexRender
+                v-if="!header.isPlaceholder"
+                :render="header.column.columnDef.header"
+                :props="header.getContext()"
+              />
+              <!-- Column resize handle -->
+              <div
+                v-if="enableColumnResizing && header.column.getCanResize()"
+                class="resize-handle"
+                :data-resizing="header.column.getIsResizing() || undefined"
+                @mousedown="header.getResizeHandler()?.($event)"
+                @touchstart="header.getResizeHandler()?.($event)"
+              />
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <!-- Error state -->
+          <template v-if="error">
+            <TableRow>
+              <TableCell :colspan="columns.length" class="p-0">
+                <slot name="error" :error="error" :retry="handleRetry">
+                  <Alert variant="destructive" class="m-4">
+                    <IconAlertCircle class="size-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription class="flex items-center justify-between">
+                      <span>{{ errorMessage }}</span>
+                      <Button variant="outline" size="sm" @click="handleRetry">
+                        <IconRefresh class="mr-1 size-4" />
+                        Retry
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                </slot>
+              </TableCell>
+            </TableRow>
+          </template>
 
-                    <!-- Empty state slot -->
-                    <TableRow v-else>
-                        <TableCell :colspan="columns.length" class="p-0">
-                            <slot
-                                name="empty"
-                                :message="emptyMessage"
-                                :columns="columns.length"
-                            >
-                                <Empty class="border-0">
-                                    <EmptyHeader>
-                                        <EmptyTitle>{{
-                                            emptyMessage
-                                        }}</EmptyTitle>
-                                        <EmptyDescription>
-                                            Try adjusting your filters or search
-                                            criteria.
-                                        </EmptyDescription>
-                                    </EmptyHeader>
-                                </Empty>
-                            </slot>
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
+          <!-- Loading state -->
+          <template v-else-if="loading">
+            <TableRow
+              v-for="rowIndex in table.getState().pagination.pageSize"
+              :key="`skeleton-row-${rowIndex}`"
+            >
+              <TableCell
+                v-for="(column, colIndex) in columns"
+                :key="`skeleton-cell-${rowIndex}-${colIndex}`"
+                :class="{ 'border-r border-border last:border-r-0': bordered }"
+              >
+                <Skeleton class="h-5 w-full" />
+              </TableCell>
+            </TableRow>
+          </template>
 
-                <!-- Footer: Use #footer slot to completely replace, or use column footers -->
-                <TableFooter v-if="hasFooterSlot || hasColumnFooters" class="table-footer">
-                    <slot name="footer" v-bind="footerSlotProps">
-                        <TableRow
-                            v-for="footerGroup in table.getFooterGroups()"
-                            :key="footerGroup.id"
-                        >
-                            <TableCell
-                                v-for="header in footerGroup.headers"
-                                :key="header.id"
-                                :colSpan="header.colSpan"
-                                :data-column-id="header.column.id"
-                                :class="getPinningClass(header.column.id)"
-                                :style="{ minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined, width: enableColumnResizing ? `${header.getSize()}px` : undefined }"
-                            >
-                                <FlexRender
-                                    v-if="!header.isPlaceholder && header.column.columnDef.footer"
-                                    :render="header.column.columnDef.footer"
-                                    :props="header.getContext()"
-                                />
-                            </TableCell>
-                        </TableRow>
-                    </slot>
-                </TableFooter>
-            </Table>
-        </div>
+          <!-- Data rows -->
+          <template v-else-if="table.getRowModel().rows?.length">
+            <template v-for="(row, index) in table.getRowModel().rows" :key="row.id">
+              <!-- Row slot: Use #row to completely replace row rendering -->
+              <slot name="row" v-bind="getRowSlotProps(row, index)">
+                <TableRow
+                  :data-state="row.getIsSelected() ? 'selected' : undefined"
+                  :class="rowClass?.(row)"
+                  :style="rowStyle?.(row)"
+                  v-bind="rowProps?.(row)"
+                >
+                  <TableCell
+                    v-for="cell in row.getVisibleCells()"
+                    :key="cell.id"
+                    :data-column-id="cell.column.id"
+                    :class="[
+                      getPinningClass(cell.column.id),
+                      { 'border-r border-border last:border-r-0': bordered },
+                    ]"
+                    :style="{
+                      minWidth:
+                        cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : undefined,
+                      width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined,
+                    }"
+                  >
+                    <!-- Cell slot: Use #cell-[columnId] to customize specific column cells -->
+                    <slot
+                      v-if="hasCellSlot(cell.column.id)"
+                      :name="`cell-${cell.column.id}`"
+                      v-bind="getCellSlotProps(cell, row)"
+                    />
+                    <FlexRender
+                      v-else
+                      :render="cell.column.columnDef.cell"
+                      :props="cell.getContext()"
+                    />
+                  </TableCell>
+                </TableRow>
+                <!-- Expanded row content -->
+                <TableRow
+                  v-if="enableRowExpansion && row.getIsExpanded()"
+                  class="expanded-row"
+                  :data-expanded="true"
+                >
+                  <TableCell :colspan="columns.length" class="p-0">
+                    <div class="expanded-row-content">
+                      <slot name="expanded-row" :row="row" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              </slot>
+            </template>
+          </template>
 
-        <!-- Bottom Pagination (when position is 'bottom' or 'both') -->
-        <template v-if="showPagination && (paginationPosition === 'bottom' || paginationPosition === 'both')">
-            <slot name="pagination" v-bind="paginationSlotProps">
-                <DataTablePagination
-                    :table="table"
-                    :page-size-options="pageSizeOptions"
-                    :show-selected-count="showSelectedCount"
-                    :show-page-size-selector="showPageSizeSelector"
-                    :show-page-info="showPageInfo"
+          <!-- Empty state slot -->
+          <TableRow v-else>
+            <TableCell :colspan="columns.length" class="p-0">
+              <slot name="empty" :message="emptyMessage" :columns="columns.length">
+                <Empty class="border-0">
+                  <EmptyHeader>
+                    <EmptyTitle>{{ emptyMessage }}</EmptyTitle>
+                    <EmptyDescription>
+                      Try adjusting your filters or search criteria.
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
+              </slot>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+
+        <!-- Footer: Use #footer slot to completely replace, or use column footers -->
+        <TableFooter v-if="hasFooterSlot || hasColumnFooters" class="table-footer">
+          <slot name="footer" v-bind="footerSlotProps">
+            <TableRow v-for="footerGroup in table.getFooterGroups()" :key="footerGroup.id">
+              <TableCell
+                v-for="header in footerGroup.headers"
+                :key="header.id"
+                :colSpan="header.colSpan"
+                :data-column-id="header.column.id"
+                :class="getPinningClass(header.column.id)"
+                :style="{
+                  minWidth: header.getSize() !== 150 ? `${header.getSize()}px` : undefined,
+                  width: enableColumnResizing ? `${header.getSize()}px` : undefined,
+                }"
+              >
+                <FlexRender
+                  v-if="!header.isPlaceholder && header.column.columnDef.footer"
+                  :render="header.column.columnDef.footer"
+                  :props="header.getContext()"
                 />
-            </slot>
-        </template>
+              </TableCell>
+            </TableRow>
+          </slot>
+        </TableFooter>
+      </Table>
     </div>
+
+    <!-- Bottom Pagination (when position is 'bottom' or 'both') -->
+    <template
+      v-if="showPagination && (paginationPosition === 'bottom' || paginationPosition === 'both')"
+    >
+      <slot name="pagination" v-bind="paginationSlotProps">
+        <DataTablePagination
+          :table="table"
+          :page-size-options="pageSizeOptions"
+          :show-selected-count="showSelectedCount"
+          :show-page-size-selector="showPageSizeSelector"
+          :show-page-info="showPageInfo"
+        />
+      </slot>
+    </template>
+  </div>
 </template>
 
 <style scoped>
@@ -573,67 +565,67 @@ defineExpose({
  */
 
 /* Disable inner Table.vue overflow - scrolling happens on .table-container */
-:deep([data-slot="table-container"]) {
-    overflow: visible !important;
+:deep([data-slot='table-container']) {
+  overflow: visible !important;
 }
 
 /* Loading state overlay effect */
-.table-container[data-loading="true"] {
-    opacity: 0.6;
-    pointer-events: none;
+.table-container[data-loading='true'] {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 /* Expanded row styles */
 :deep(.expanded-row) {
-    background-color: var(--muted);
+  background-color: var(--muted);
 }
 
 :deep(.expanded-row td) {
-    border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border);
 }
 
 .expanded-row-content {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 /* Footer styles - sticky positioning */
 :deep(.table-footer) {
-    position: sticky;
-    bottom: 0;
-    z-index: 14;
+  position: sticky;
+  bottom: 0;
+  z-index: 14;
 }
 
 :deep(.table-footer td) {
-    background-color: var(--muted);
-    border-top: 1px solid var(--border);
-    color: var(--foreground);
-    font-weight: 500;
+  background-color: var(--muted);
+  border-top: 1px solid var(--border);
+  color: var(--foreground);
+  font-weight: 500;
 }
 
 /* Column resizing - use fixed table layout for consistent resizing */
 .table-container[data-column-resizing] :deep(table) {
-    table-layout: fixed;
-    width: 100%;
+  table-layout: fixed;
+  width: 100%;
 }
 
 /* Column resizing - prevent content overflow in cells */
 .table-container[data-column-resizing] :deep(th),
 .table-container[data-column-resizing] :deep(td) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Add extra padding to header cells for resize handle clearance */
 .table-container[data-column-resizing] :deep(th) {
-    padding-right: calc(var(--dt-cell-padding-x) + 8px);
+  padding-right: calc(var(--dt-cell-padding-x) + 8px);
 }
 
 /* Apply overflow handling to body cell content (nested elements) */
 .table-container[data-column-resizing] :deep(td > *) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
 </style>

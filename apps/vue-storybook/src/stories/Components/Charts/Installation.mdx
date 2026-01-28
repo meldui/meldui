@@ -31,12 +31,10 @@ import { MeldLineChart } from '@meldui/charts-vue'
 import type { MeldLineChartConfig } from '@meldui/charts-vue'
 
 const config: MeldLineChartConfig = {
-  series: [
-    { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }
-  ],
+  series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
   xAxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  }
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  },
 }
 </script>
 
@@ -92,15 +90,15 @@ import type {
 const lineConfig: MeldLineChartConfig = {
   series: [{ name: 'Sales', data: [10, 20, 30] }],
   xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
-  stroke: { curve: 'smooth' }  // Line-specific option
+  stroke: { curve: 'smooth' }, // Line-specific option
 }
 
 // Bar chart config - shows bar-relevant options only
 const barConfig: MeldBarChartConfig = {
   series: [{ name: 'Revenue', data: [100, 200, 150] }],
   xAxis: { categories: ['2022', '2023', '2024'] },
-  horizontal: true,  // Bar-specific option
-  stacked: true
+  horizontal: true, // Bar-specific option
+  stacked: true,
 }
 ```
 
@@ -117,6 +115,7 @@ Charts work seamlessly with Nuxt and other SSR frameworks:
 ```
 
 During SSR:
+
 - A loading skeleton renders (no layout shift)
 - Chart initializes after hydration in the browser
 - No "window is not defined" errors
@@ -125,12 +124,12 @@ During SSR:
 
 With proper tree-shaking (automatic in Vite), typical bundle sizes:
 
-| Usage | Bundle Size (Gzipped) |
-|-------|----------------------|
-| Single chart type (e.g., `MeldLineChart`) | ~70-90 KB |
-| 2-3 chart types | ~85-110 KB |
-| 5 different chart types | ~120-150 KB |
-| Full dashboard (10+ charts) | ~150-200 KB |
+| Usage                                     | Bundle Size (Gzipped) |
+| ----------------------------------------- | --------------------- |
+| Single chart type (e.g., `MeldLineChart`) | ~70-90 KB             |
+| 2-3 chart types                           | ~85-110 KB            |
+| 5 different chart types                   | ~120-150 KB           |
+| Full dashboard (10+ charts)               | ~150-200 KB           |
 
 **Tip:** Import specific chart components (not `MeldChart`) for best tree-shaking:
 
@@ -170,7 +169,9 @@ const config = ref(null)
 
 onMounted(() => {
   // Browser-only code here
-  config.value = { /* ... */ }
+  config.value = {
+    /* ... */
+  }
 })
 </script>
 ```
@@ -187,10 +188,10 @@ export default {
     rollupOptions: {
       output: {
         manualChunks: {
-          'charts': ['@meldui/charts-vue']
-        }
-      }
-    }
-  }
+          charts: ['@meldui/charts-vue'],
+        },
+      },
+    },
+  },
 }
 ```

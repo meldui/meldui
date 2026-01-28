@@ -1,9 +1,14 @@
 import type { ChartLegend } from '../../../types'
 
 /**
+ * ECharts legend configuration type
+ */
+type EChartsLegendConfig = Record<string, unknown>
+
+/**
  * Build legend configuration
  */
-export function buildLegend(legend: ChartLegend | undefined): any {
+export function buildLegend(legend: ChartLegend | undefined): EChartsLegendConfig {
   if (!legend) {
     return { show: true, top: 10, left: 'center' }
   }
@@ -12,7 +17,7 @@ export function buildLegend(legend: ChartLegend | undefined): any {
     return { show: false }
   }
 
-  const legendConfig: any = {
+  const legendConfig: EChartsLegendConfig = {
     show: legend.show ?? true,
   }
 

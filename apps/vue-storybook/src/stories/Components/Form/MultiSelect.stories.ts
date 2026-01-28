@@ -364,7 +364,7 @@ export const LargeDataset: Story = {
         'Russia',
         'Pakistan',
         'Bangladesh',
-      ].sort()
+      ].toSorted()
 
       return { selected, countries }
     },

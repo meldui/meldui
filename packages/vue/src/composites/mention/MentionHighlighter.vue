@@ -21,7 +21,7 @@ const highlighterRef = ref<HTMLElement | null>(null)
 // Generate segments for rendering
 const segments = computed(() => {
   const text = inputValue.value
-  const sortedMentions = [...mentions.value].sort((a, b) => a.start - b.start)
+  const sortedMentions = [...mentions.value].toSorted((a, b) => a.start - b.start)
 
   const result: Array<{
     type: 'text' | 'mention'
@@ -203,7 +203,8 @@ watch(inputValue, () => {
         :class="cn('bg-primary/15 rounded', props.tagClass)"
         data-tag
         :data-trigger="segment.trigger"
-      >{{ segment.content }}</span>
+        >{{ segment.content }}</span
+      >
       <span v-else>{{ segment.content }}</span>
     </template>
     <!-- Trailing space to match input behavior -->

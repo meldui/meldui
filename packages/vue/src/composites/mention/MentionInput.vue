@@ -155,7 +155,9 @@ const inputStyles = computed(() => ({
       role="combobox"
       autocomplete="off"
       :style="inputStyles"
-      :class="cn('mention-input-element relative z-10 w-full bg-transparent resize-none', props.class)"
+      :class="
+        cn('mention-input-element relative z-10 w-full bg-transparent resize-none', props.class)
+      "
       @input="onInput"
       @keydown="onKeyDown"
       @focus="onFocus"

@@ -21,10 +21,7 @@ const handlePresetClick = (preset: DatePreset | DateRangePreset) => {
 </script>
 
 <template>
-  <div
-    data-slot="date-range-picker-presets"
-    :class="cn('flex flex-col gap-1 py-2', props.class)"
-  >
+  <div data-slot="date-range-picker-presets" :class="cn('flex flex-col gap-1 py-2', props.class)">
     <Button
       v-for="preset in presetsList"
       :key="preset.label"

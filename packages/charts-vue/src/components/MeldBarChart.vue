@@ -68,10 +68,7 @@ useChartResize(chartRef, chartInstance)
   <div class="flex flex-col" :style="{ width: computedWidth }">
     <!-- Header slot for title, actions, etc. -->
     <slot name="header">
-      <h3
-        v-if="title"
-        class="text-base font-semibold text-foreground mb-2 px-1"
-      >
+      <h3 v-if="title" class="text-base font-semibold text-foreground mb-2 px-1">
         {{ title }}
       </h3>
     </slot>
@@ -82,12 +79,7 @@ useChartResize(chartRef, chartInstance)
       :style="{ height: computedHeight }"
     >
       <!-- Show skeleton during SSR, loading, or initialization -->
-      <MeldChartSkeleton
-        v-if="!chartReady || loading"
-        :height="height"
-        :width="width"
-        type="bar"
-      />
+      <MeldChartSkeleton v-if="!chartReady || loading" :height="height" :width="width" type="bar" />
 
       <!-- Chart canvas -->
       <div

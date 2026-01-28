@@ -32,10 +32,7 @@ const handleRangeUpdate = (value: DateRange) => {
 </script>
 
 <template>
-  <div
-    data-slot="date-range-picker-calendar"
-    :class="cn(props.class)"
-  >
+  <div data-slot="date-range-picker-calendar" :class="cn(props.class)">
     <Calendar
       v-if="mode === 'single'"
       :model-value="modelValue as DateValue"

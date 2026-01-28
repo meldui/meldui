@@ -430,335 +430,273 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="flex flex-wrap justify-between gap-2">
-        <div class="flex flex-1 items-center flex-wrap gap-2">
-            <!-- Toolbar Start Slot -->
-            <slot name="toolbar-start" :table="table" />
+  <div class="flex flex-wrap justify-between gap-2">
+    <div class="flex flex-1 items-center flex-wrap gap-2">
+      <!-- Toolbar Start Slot -->
+      <slot name="toolbar-start" :table="table" />
 
-            <!-- Search Input -->
-            <div v-if="searchColumn" class="relative">
-                <IconLoader2
-                    v-if="loading"
-                    class="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground animate-spin"
-                />
-                <IconSearch
-                    v-else
-                    class="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                />
-                <Input
-                    :model-value="searchInputValue"
-                    @update:model-value="handleSearchInput"
-                    :placeholder="searchPlaceholder"
-                    :disabled="loading"
-                    class="h-8 w-[150px] pl-8 lg:w-[250px]"
-                />
-            </div>
+      <!-- Search Input -->
+      <div v-if="searchColumn" class="relative">
+        <IconLoader2
+          v-if="loading"
+          class="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground animate-spin"
+        />
+        <IconSearch
+          v-else
+          class="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+        />
+        <Input
+          :model-value="searchInputValue"
+          @update:model-value="handleSearchInput"
+          :placeholder="searchPlaceholder"
+          :disabled="loading"
+          class="h-8 w-[150px] pl-8 lg:w-[250px]"
+        />
+      </div>
 
-            <!-- Dynamic Filter Instances - Type-specific rendering for proper type narrowing -->
-            <template
-                v-for="instance in filterInstances"
-                :key="instance.instanceId"
-            >
-                <!-- Text Filter -->
-                <TextFilter
-                    v-if="instance.field.type === 'text'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :placeholder="instance.field.placeholder"
-                    :icon="instance.field.icon"
-                    :default-open="instance.autoOpen"
-                    :open-trigger="instance.openTrigger"
-                    :advanced-mode="advancedMode"
-                    :default-operator="
-                        instance.field.defaultOperator as TextOperator
-                    "
-                    :available-operators="
-                        instance.field.availableOperators as TextOperator[]
-                    "
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+      <!-- Dynamic Filter Instances - Type-specific rendering for proper type narrowing -->
+      <template v-for="instance in filterInstances" :key="instance.instanceId">
+        <!-- Text Filter -->
+        <TextFilter
+          v-if="instance.field.type === 'text'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :placeholder="instance.field.placeholder"
+          :icon="instance.field.icon"
+          :default-open="instance.autoOpen"
+          :open-trigger="instance.openTrigger"
+          :advanced-mode="advancedMode"
+          :default-operator="instance.field.defaultOperator as TextOperator"
+          :available-operators="instance.field.availableOperators as TextOperator[]"
+          :initial-value="instanceValues.get(instance.instanceId)"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- Number Filter -->
-                <NumberFilter
-                    v-else-if="instance.field.type === 'number'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :placeholder="instance.field.placeholder"
-                    :icon="instance.field.icon"
-                    :min="instance.field.min"
-                    :max="instance.field.max"
-                    :step="instance.field.step"
-                    :unit="instance.field.unit"
-                    :default-open="instance.autoOpen"
-                    :open-trigger="instance.openTrigger"
-                    :advanced-mode="advancedMode"
-                    :default-operator="
-                        instance.field.defaultOperator as NumberOperator
-                    "
-                    :available-operators="
-                        instance.field.availableOperators as NumberOperator[]
-                    "
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+        <!-- Number Filter -->
+        <NumberFilter
+          v-else-if="instance.field.type === 'number'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :placeholder="instance.field.placeholder"
+          :icon="instance.field.icon"
+          :min="instance.field.min"
+          :max="instance.field.max"
+          :step="instance.field.step"
+          :unit="instance.field.unit"
+          :default-open="instance.autoOpen"
+          :open-trigger="instance.openTrigger"
+          :advanced-mode="advancedMode"
+          :default-operator="instance.field.defaultOperator as NumberOperator"
+          :available-operators="instance.field.availableOperators as NumberOperator[]"
+          :initial-value="instanceValues.get(instance.instanceId)"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- Date Filter -->
-                <DateFilter
-                    v-else-if="instance.field.type === 'date'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :placeholder="instance.field.placeholder"
-                    :icon="instance.field.icon"
-                    :default-open="instance.autoOpen"
-                    :open-trigger="instance.openTrigger"
-                    :advanced-mode="advancedMode"
-                    :default-operator="
-                        instance.field.defaultOperator as DateOperator
-                    "
-                    :available-operators="
-                        instance.field.availableOperators as DateOperator[]
-                    "
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+        <!-- Date Filter -->
+        <DateFilter
+          v-else-if="instance.field.type === 'date'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :placeholder="instance.field.placeholder"
+          :icon="instance.field.icon"
+          :default-open="instance.autoOpen"
+          :open-trigger="instance.openTrigger"
+          :advanced-mode="advancedMode"
+          :default-operator="instance.field.defaultOperator as DateOperator"
+          :available-operators="instance.field.availableOperators as DateOperator[]"
+          :initial-value="instanceValues.get(instance.instanceId)"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- Select Filter -->
-                <SelectFilter
-                    v-else-if="instance.field.type === 'select'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :placeholder="instance.field.placeholder"
-                    :icon="instance.field.icon"
-                    :options="instance.field.options ?? []"
-                    :default-open="instance.autoOpen"
-                    :open-trigger="instance.openTrigger"
-                    :advanced-mode="advancedMode"
-                    :default-operator="
-                        instance.field.defaultOperator as SelectOperator
-                    "
-                    :available-operators="
-                        instance.field.availableOperators as SelectOperator[]
-                    "
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+        <!-- Select Filter -->
+        <SelectFilter
+          v-else-if="instance.field.type === 'select'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :placeholder="instance.field.placeholder"
+          :icon="instance.field.icon"
+          :options="instance.field.options ?? []"
+          :default-open="instance.autoOpen"
+          :open-trigger="instance.openTrigger"
+          :advanced-mode="advancedMode"
+          :default-operator="instance.field.defaultOperator as SelectOperator"
+          :available-operators="instance.field.availableOperators as SelectOperator[]"
+          :initial-value="instanceValues.get(instance.instanceId)"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- Boolean Filter -->
-                <BooleanFilter
-                    v-else-if="instance.field.type === 'boolean'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :icon="instance.field.icon"
-                    :default-open="instance.autoOpen"
-                    :open-trigger="instance.openTrigger"
-                    :advanced-mode="advancedMode"
-                    :default-operator="
-                        instance.field.defaultOperator as BooleanOperator
-                    "
-                    :available-operators="
-                        instance.field.availableOperators as BooleanOperator[]
-                    "
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+        <!-- Boolean Filter -->
+        <BooleanFilter
+          v-else-if="instance.field.type === 'boolean'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :icon="instance.field.icon"
+          :default-open="instance.autoOpen"
+          :open-trigger="instance.openTrigger"
+          :advanced-mode="advancedMode"
+          :default-operator="instance.field.defaultOperator as BooleanOperator"
+          :available-operators="instance.field.availableOperators as BooleanOperator[]"
+          :initial-value="instanceValues.get(instance.instanceId)"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- MultiSelect Filter -->
-                <MultiSelectFilter
-                    v-else-if="instance.field.type === 'multiselect'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :icon="instance.field.icon"
-                    :options="instance.field.options ?? []"
-                    :default-open="instance.autoOpen"
-                    :open-trigger="instance.openTrigger"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+        <!-- MultiSelect Filter -->
+        <MultiSelectFilter
+          v-else-if="instance.field.type === 'multiselect'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :icon="instance.field.icon"
+          :options="instance.field.options ?? []"
+          :default-open="instance.autoOpen"
+          :open-trigger="instance.openTrigger"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- Range Filter -->
-                <RangeFilter
-                    v-else-if="instance.field.type === 'range'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :icon="instance.field.icon"
-                    :range="
-                        instance.field.range ?? [
-                            instance.field.min ?? 0,
-                            instance.field.max ?? 100,
-                        ]
-                    "
-                    :step="instance.field.step"
-                    :unit="instance.field.unit"
-                    :default-open="instance.autoOpen"
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+        <!-- Range Filter -->
+        <RangeFilter
+          v-else-if="instance.field.type === 'range'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :icon="instance.field.icon"
+          :range="instance.field.range ?? [instance.field.min ?? 0, instance.field.max ?? 100]"
+          :step="instance.field.step"
+          :unit="instance.field.unit"
+          :default-open="instance.autoOpen"
+          :initial-value="instanceValues.get(instance.instanceId)"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- DateRange Filter -->
-                <DateRangeFilter
-                    v-else-if="instance.field.type === 'daterange'"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :placeholder="instance.field.placeholder"
-                    :icon="instance.field.icon"
-                    :default-open="instance.autoOpen"
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
+        <!-- DateRange Filter -->
+        <DateRangeFilter
+          v-else-if="instance.field.type === 'daterange'"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :placeholder="instance.field.placeholder"
+          :icon="instance.field.icon"
+          :default-open="instance.autoOpen"
+          :initial-value="instanceValues.get(instance.instanceId)"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
 
-                <!-- Plugin Filter (custom filter types) -->
-                <component
-                    v-else-if="isPluginFilter(instance.field.type)"
-                    :is="getPlugin(instance.field.type)?.component"
-                    :column="table.getColumn(instance.fieldId)"
-                    :title="instance.field.label"
-                    :placeholder="instance.field.placeholder"
-                    :icon="instance.field.icon"
-                    :default-open="instance.autoOpen"
-                    :open-trigger="instance.openTrigger"
-                    :advanced-mode="advancedMode"
-                    :default-operator="instance.field.defaultOperator"
-                    :available-operators="
-                        instance.field.availableOperators ??
-                        getPlugin(instance.field.type)?.operators
-                    "
-                    :initial-value="instanceValues.get(instance.instanceId)"
-                    v-bind="instance.field"
-                    @value-change="
-                        (value: unknown) =>
-                            handleInstanceValueChange(
-                                instance.instanceId,
-                                value as FilterValue | undefined,
-                            )
-                    "
-                    @remove="removeFilterInstance(instance.instanceId)"
-                    @close="handleInstanceClose(instance.instanceId)"
-                />
-            </template>
+        <!-- Plugin Filter (custom filter types) -->
+        <component
+          v-else-if="isPluginFilter(instance.field.type)"
+          :is="getPlugin(instance.field.type)?.component"
+          :column="table.getColumn(instance.fieldId)"
+          :title="instance.field.label"
+          :placeholder="instance.field.placeholder"
+          :icon="instance.field.icon"
+          :default-open="instance.autoOpen"
+          :open-trigger="instance.openTrigger"
+          :advanced-mode="advancedMode"
+          :default-operator="instance.field.defaultOperator"
+          :available-operators="
+            instance.field.availableOperators ?? getPlugin(instance.field.type)?.operators
+          "
+          :initial-value="instanceValues.get(instance.instanceId)"
+          v-bind="instance.field"
+          @value-change="
+            (value: unknown) =>
+              handleInstanceValueChange(instance.instanceId, value as FilterValue | undefined)
+          "
+          @remove="removeFilterInstance(instance.instanceId)"
+          @close="handleInstanceClose(instance.instanceId)"
+        />
+      </template>
 
-            <!-- Filter Command Button -->
-            <DataTableFilterCommand
-                v-if="filterFields.length > 0"
-                :filter-fields="filterFields"
-                :active-filter-count="filterInstances.length"
-                :disabled="loading"
-                @add-filter="addFilter"
-            />
+      <!-- Filter Command Button -->
+      <DataTableFilterCommand
+        v-if="filterFields.length > 0"
+        :filter-fields="filterFields"
+        :active-filter-count="filterInstances.length"
+        :disabled="loading"
+        @add-filter="addFilter"
+      />
 
-            <!-- Clear All Filters Button -->
-            <Button
-                v-if="isFiltered"
-                variant="outline"
-                size="sm"
-                class="h-8"
-                :disabled="loading"
-                @click="resetFilters"
-            >
-                <IconX class="mr-1 h-4 w-4" />
-                <span class="text-xs">Reset</span>
-            </Button>
-        </div>
-
-        <div class="flex gap-2">
-            <!-- Bulk Actions Dropdown -->
-            <DataTableBulkActions
-                v-if="bulkSelectOptions && bulkSelectOptions.length > 0"
-                :table="table"
-                :options="bulkSelectOptions"
-            />
-
-            <!-- Reset Pinning Button -->
-            <Button
-                v-if="hasUserPins"
-                variant="outline"
-                size="sm"
-                class="h-8"
-                @click="resetPinning"
-            >
-                <IconPinnedOff class="h-4 w-4" />
-            </Button>
-
-            <!-- Refresh Button -->
-            <Button
-                v-if="showRefreshButton"
-                variant="outline"
-                size="sm"
-                class="h-8"
-                :disabled="loading"
-                @click="emit('refresh')"
-            >
-                <IconRefresh class="h-4 w-4" :class="{ 'animate-spin': loading }" />
-            </Button>
-
-            <!-- Toolbar End Slot -->
-            <slot name="toolbar-end" :table="table" />
-
-            <!-- View Options (Column Hiding) -->
-            <DataTableViewOptions v-if="enableColumnHiding" :table="table" />
-        </div>
+      <!-- Clear All Filters Button -->
+      <Button
+        v-if="isFiltered"
+        variant="outline"
+        size="sm"
+        class="h-8"
+        :disabled="loading"
+        @click="resetFilters"
+      >
+        <IconX class="mr-1 h-4 w-4" />
+        <span class="text-xs">Reset</span>
+      </Button>
     </div>
+
+    <div class="flex gap-2">
+      <!-- Bulk Actions Dropdown -->
+      <DataTableBulkActions
+        v-if="bulkSelectOptions && bulkSelectOptions.length > 0"
+        :table="table"
+        :options="bulkSelectOptions"
+      />
+
+      <!-- Reset Pinning Button -->
+      <Button v-if="hasUserPins" variant="outline" size="sm" class="h-8" @click="resetPinning">
+        <IconPinnedOff class="h-4 w-4" />
+      </Button>
+
+      <!-- Refresh Button -->
+      <Button
+        v-if="showRefreshButton"
+        variant="outline"
+        size="sm"
+        class="h-8"
+        :disabled="loading"
+        @click="emit('refresh')"
+      >
+        <IconRefresh class="h-4 w-4" :class="{ 'animate-spin': loading }" />
+      </Button>
+
+      <!-- Toolbar End Slot -->
+      <slot name="toolbar-end" :table="table" />
+
+      <!-- View Options (Column Hiding) -->
+      <DataTableViewOptions v-if="enableColumnHiding" :table="table" />
+    </div>
+  </div>
 </template>

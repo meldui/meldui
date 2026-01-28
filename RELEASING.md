@@ -12,6 +12,7 @@ This document describes how to release new versions of MeldUI packages to GitHub
 ## Publishing to GitHub Packages
 
 MeldUI packages are published to GitHub Packages at `https://npm.pkg.github.com`. This means:
+
 - Packages are hosted on GitHub, not the public npm registry
 - Users need to configure their `.npmrc` to install packages (see [Installation](#user-installation))
 - Publishing is free and integrated with GitHub permissions
@@ -39,6 +40,7 @@ pnpm changeset
 ```
 
 Answer the prompts:
+
 1. **Which packages changed?** Select affected packages (use spacebar to select)
 2. **What type of change?**
    - **patch** (0.0.x) - Bug fixes, minor improvements, no breaking changes
@@ -47,6 +49,7 @@ Answer the prompts:
 3. **Summary** - Describe the change for the changelog (supports markdown)
 
 Example:
+
 ```
 🦋  Which packages would you like to include?
 ◉ @meldui/vue
@@ -76,6 +79,7 @@ pnpm changeset:version
 ```
 
 This will:
+
 - Read all changeset files in `.changeset/`
 - Update `package.json` versions for affected packages
 - Generate/update `CHANGELOG.md` entries
@@ -117,6 +121,7 @@ git push --tags
 ```
 
 The GitHub Actions workflow will:
+
 1. Run code quality checks
 2. Build all packages
 3. Publish to GitHub Packages
@@ -142,6 +147,7 @@ pnpm release
 ```
 
 This command:
+
 1. Runs code quality checks (`pnpm check:fix`)
 2. Builds all packages (`pnpm build`)
 3. Publishes to GitHub Packages (`changeset publish`)
@@ -189,6 +195,7 @@ Create `.npmrc` in the project root:
 ```
 
 Users will need to authenticate with GitHub:
+
 ```bash
 npm login --scope=@meldui --registry=https://npm.pkg.github.com
 ```
@@ -198,6 +205,7 @@ See `.npmrc.example` for a template.
 ## Version Guidelines
 
 ### Patch (0.0.x)
+
 - Bug fixes that don't affect the API
 - Documentation updates
 - Performance improvements
@@ -208,6 +216,7 @@ See `.npmrc.example` for a template.
 **Example:** Fixing a bug where Button color prop wasn't working
 
 ### Minor (0.x.0)
+
 - New features that are backwards compatible
 - New components
 - New props or methods
@@ -217,6 +226,7 @@ See `.npmrc.example` for a template.
 **Example:** Adding a new DataTable component
 
 ### Major (x.0.0)
+
 - Breaking API changes
 - Removed features or components
 - Changed prop names or types
@@ -266,6 +276,7 @@ git push --tags
 Location: `.github/workflows/publish.yml`
 
 Triggers when you push tags matching `@meldui/*@*`:
+
 ```bash
 git tag @meldui/vue@0.2.0
 git push --tags
@@ -276,12 +287,14 @@ git push --tags
 Location: `.github/workflows/release.yml`
 
 Trigger manually from GitHub Actions UI:
+
 1. Go to Actions tab
 2. Select "Release" workflow
 3. Click "Run workflow"
 4. Choose version bump type
 
 This will:
+
 - Create a PR with version bumps (if changesets exist)
 - Or publish directly (if PR is merged)
 
@@ -290,6 +303,7 @@ This will:
 ### "You must be logged in to publish"
 
 **For local publishing:**
+
 ```bash
 npm login --scope=@meldui --registry=https://npm.pkg.github.com
 ```
@@ -300,6 +314,7 @@ The `GITHUB_TOKEN` is automatically provided and has package write permissions.
 ### "You cannot publish over the previously published version"
 
 The version already exists in GitHub Packages. You need to:
+
 1. Update version in package.json manually, or
 2. Run `pnpm changeset:version` to bump version, or
 3. Create a new changeset and run version command
@@ -307,22 +322,26 @@ The version already exists in GitHub Packages. You need to:
 ### "403 Forbidden" or "Permission denied"
 
 **For local publishing:**
+
 - Ensure your Personal Access Token has `write:packages` scope
 - Verify you have write access to the `meldui/meldui` repository
 
 **For GitHub Actions:**
+
 - Check that the workflow has `packages: write` permission (already configured)
 - Ensure repository settings allow GitHub Actions to publish packages
 
 ### "GITHUB_TOKEN doesn't have permission to publish"
 
 Go to repository Settings → Actions → General → Workflow permissions:
+
 - Select "Read and write permissions"
 - Check "Allow GitHub Actions to create and approve pull requests"
 
 ### Changeset not found
 
 If you run `pnpm changeset:version` and nothing happens:
+
 ```bash
 # Check if changesets exist
 ls .changeset/*.md

@@ -313,235 +313,183 @@ const displayOperator = computed(() => {
 </script>
 
 <template>
-    <div class="flex items-center">
-        <Popover v-model:open="isOpen">
-            <PopoverTrigger as-child>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    size="sm"
-                    :class="
-                        cn(
-                            'h-8',
-                            isFiltered && 'rounded-r-none border-r-0',
-                        )
-                    "
-                    :aria-label="`Filter by ${title || 'option'}`"
-                >
-                    <!-- Icon -->
-                    <component
-                        :is="getFilterIcon(icon, 'select')"
-                        class="mr-2 h-4 w-4 shrink-0"
-                    />
-
-                    <!-- Title | Operator | Value -->
-                    <span class="text-xs">
-                        {{ title || "Filter" }}
-                        <template v-if="isFiltered">
-                            <!-- Show operator with separator -->
-                            <template v-if="displayOperator">
-                                <span class="mx-1.5 text-muted-foreground"
-                                    >|</span
-                                >
-                                <span class="text-muted-foreground">{{
-                                    displayOperator
-                                }}</span>
-                            </template>
-                            <!-- Value (only show if not nullary operator) -->
-                            <template
-                                v-if="
-                                    !displayOperator ||
-                                    (appliedValue &&
-                                        typeof appliedValue === 'object' &&
-                                        'operator' in appliedValue &&
-                                        !isNullaryOperator(
-                                            appliedValue.operator,
-                                        ))
-                                "
-                            >
-                                <span class="mx-1.5 text-muted-foreground"
-                                    >|</span
-                                >
-                                <!-- Show badges for isAnyOf/isNoneOf operators (even for single selection) -->
-                                <template
-                                    v-if="
-                                        appliedValue &&
-                                        typeof appliedValue === 'object' &&
-                                        'operator' in appliedValue &&
-                                        (appliedValue.operator === 'isAnyOf' ||
-                                            appliedValue.operator ===
-                                                'isNoneOf') &&
-                                        selectedOptions.length > 0
-                                    "
-                                >
-                                    <Badge
-                                        v-if="selectedOptions.length > 2"
-                                        variant="secondary"
-                                        class="rounded-sm px-1 font-normal text-xs"
-                                    >
-                                        {{ selectedOptions.length }} selected
-                                    </Badge>
-                                    <template v-else>
-                                        <Badge
-                                            v-for="option in selectedOptions"
-                                            :key="option.value"
-                                            variant="secondary"
-                                            class="rounded-sm px-1 font-normal text-xs mr-1 last:mr-0"
-                                        >
-                                            {{ option.label }}
-                                        </Badge>
-                                    </template>
-                                </template>
-                                <!-- For other operators - show as text -->
-                                <span v-else class="font-normal">{{
-                                    displayValue
-                                }}</span>
-                            </template>
-                        </template>
-                    </span>
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent class="w-[240px] p-0" align="start">
-                <div class="flex flex-col">
-                    <!-- Operator selector (advanced mode only) -->
-                    <div v-if="advancedMode" class="p-2 border-b">
-                        <Select v-model="localOperator">
-                            <SelectTrigger class="h-8">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem
-                                    v-for="op in operators"
-                                    :key="op"
-                                    :value="op"
-                                >
-                                    {{ getOperatorLabel(op) }}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <!-- Option list -->
-                    <Command v-if="requiresValue">
-                        <CommandInput
-                            :placeholder="`Search ${title?.toLowerCase()}...`"
-                        />
-                        <CommandList>
-                            <CommandEmpty>No results found.</CommandEmpty>
-                            <CommandGroup>
-                                <CommandItem
-                                    v-for="option in options"
-                                    :key="option.value"
-                                    :value="option.value"
-                                    @select="
-                                        advancedMode
-                                            ? requiresMultipleValues
-                                                ? handleMultiSelect(
-                                                      option.value,
-                                                  )
-                                                : handleSingleSelect(
-                                                      option.value,
-                                                  )
-                                            : handleSimpleSelect(option.value)
-                                    "
-                                    class="py-2"
-                                >
-                                    <IconCheck
-                                        :class="
-                                            cn(
-                                                'h-4 w-4',
-                                                requiresMultipleValues
-                                                    ? localValues.includes(
-                                                          option.value,
-                                                      )
-                                                        ? 'opacity-100'
-                                                        : 'opacity-0'
-                                                    : localValue ===
-                                                        option.value
-                                                      ? 'opacity-100'
-                                                      : 'opacity-0',
-                                            )
-                                        "
-                                    />
-                                    <component
-                                        v-if="option.icon"
-                                        :is="option.icon"
-                                        class="mr-2 h-4 w-4 text-muted-foreground"
-                                    />
-                                    {{ option.label }}
-                                </CommandItem>
-                            </CommandGroup>
-                        </CommandList>
-                    </Command>
-
-                    <!-- Preview (advanced mode) -->
-                    <div v-if="advancedMode && hasChanges" class="p-2 border-t">
-                        <p class="text-xs text-muted-foreground">
-                            Filter:
-                            <span class="font-medium text-foreground">
-                                {{ getOperatorLabel(localOperator) }}
-                                <template
-                                    v-if="
-                                        requiresMultipleValues &&
-                                        localValues.length > 0
-                                    "
-                                >
-                                    {{
-                                        localValues
-                                            .map(
-                                                (v) =>
-                                                    options.find(
-                                                        (o) => o.value === v,
-                                                    )?.label || v,
-                                            )
-                                            .join(", ")
-                                    }}
-                                </template>
-                                <template
-                                    v-else-if="requiresValue && localValue"
-                                >
-                                    {{
-                                        options.find(
-                                            (o) => o.value === localValue,
-                                        )?.label || localValue
-                                    }}
-                                </template>
-                            </span>
-                        </p>
-                    </div>
-
-                    <!-- Apply button (advanced mode only) -->
-                    <div v-if="advancedMode" class="p-2 border-t">
-                        <Button
-                            v-if="hasChanges"
-                            size="sm"
-                            class="w-full h-7 text-xs"
-                            :disabled="
-                                (requiresValue &&
-                                    !requiresMultipleValues &&
-                                    !localValue) ||
-                                (requiresMultipleValues &&
-                                    localValues.length === 0)
-                            "
-                            @click="applyFilter"
-                        >
-                            Apply Filter
-                        </Button>
-                    </div>
-                </div>
-            </PopoverContent>
-        </Popover>
-
-        <!-- Clear button -->
+  <div class="flex items-center">
+    <Popover v-model:open="isOpen">
+      <PopoverTrigger as-child>
         <Button
-            v-if="isFiltered"
-            variant="outline"
-            size="sm"
-            class="h-8 w-8 p-0 rounded-l-none border-l-0"
-            @click="clearFilter"
+          variant="outline"
+          role="combobox"
+          size="sm"
+          :class="cn('h-8', isFiltered && 'rounded-r-none border-r-0')"
+          :aria-label="`Filter by ${title || 'option'}`"
         >
-            <IconX class="h-4 w-4" />
-            <span class="sr-only">Clear filter</span>
+          <!-- Icon -->
+          <component :is="getFilterIcon(icon, 'select')" class="mr-2 h-4 w-4 shrink-0" />
+
+          <!-- Title | Operator | Value -->
+          <span class="text-xs">
+            {{ title || 'Filter' }}
+            <template v-if="isFiltered">
+              <!-- Show operator with separator -->
+              <template v-if="displayOperator">
+                <span class="mx-1.5 text-muted-foreground">|</span>
+                <span class="text-muted-foreground">{{ displayOperator }}</span>
+              </template>
+              <!-- Value (only show if not nullary operator) -->
+              <template
+                v-if="
+                  !displayOperator ||
+                  (appliedValue &&
+                    typeof appliedValue === 'object' &&
+                    'operator' in appliedValue &&
+                    !isNullaryOperator(appliedValue.operator))
+                "
+              >
+                <span class="mx-1.5 text-muted-foreground">|</span>
+                <!-- Show badges for isAnyOf/isNoneOf operators (even for single selection) -->
+                <template
+                  v-if="
+                    appliedValue &&
+                    typeof appliedValue === 'object' &&
+                    'operator' in appliedValue &&
+                    (appliedValue.operator === 'isAnyOf' || appliedValue.operator === 'isNoneOf') &&
+                    selectedOptions.length > 0
+                  "
+                >
+                  <Badge
+                    v-if="selectedOptions.length > 2"
+                    variant="secondary"
+                    class="rounded-sm px-1 font-normal text-xs"
+                  >
+                    {{ selectedOptions.length }} selected
+                  </Badge>
+                  <template v-else>
+                    <Badge
+                      v-for="option in selectedOptions"
+                      :key="option.value"
+                      variant="secondary"
+                      class="rounded-sm px-1 font-normal text-xs mr-1 last:mr-0"
+                    >
+                      {{ option.label }}
+                    </Badge>
+                  </template>
+                </template>
+                <!-- For other operators - show as text -->
+                <span v-else class="font-normal">{{ displayValue }}</span>
+              </template>
+            </template>
+          </span>
         </Button>
-    </div>
+      </PopoverTrigger>
+      <PopoverContent class="w-[240px] p-0" align="start">
+        <div class="flex flex-col">
+          <!-- Operator selector (advanced mode only) -->
+          <div v-if="advancedMode" class="p-2 border-b">
+            <Select v-model="localOperator">
+              <SelectTrigger class="h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="op in operators" :key="op" :value="op">
+                  {{ getOperatorLabel(op) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <!-- Option list -->
+          <Command v-if="requiresValue">
+            <CommandInput :placeholder="`Search ${title?.toLowerCase()}...`" />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup>
+                <CommandItem
+                  v-for="option in options"
+                  :key="option.value"
+                  :value="option.value"
+                  @select="
+                    advancedMode
+                      ? requiresMultipleValues
+                        ? handleMultiSelect(option.value)
+                        : handleSingleSelect(option.value)
+                      : handleSimpleSelect(option.value)
+                  "
+                  class="py-2"
+                >
+                  <IconCheck
+                    :class="
+                      cn(
+                        'h-4 w-4',
+                        requiresMultipleValues
+                          ? localValues.includes(option.value)
+                            ? 'opacity-100'
+                            : 'opacity-0'
+                          : localValue === option.value
+                            ? 'opacity-100'
+                            : 'opacity-0',
+                      )
+                    "
+                  />
+                  <component
+                    v-if="option.icon"
+                    :is="option.icon"
+                    class="mr-2 h-4 w-4 text-muted-foreground"
+                  />
+                  {{ option.label }}
+                </CommandItem>
+              </CommandGroup>
+            </CommandList>
+          </Command>
+
+          <!-- Preview (advanced mode) -->
+          <div v-if="advancedMode && hasChanges" class="p-2 border-t">
+            <p class="text-xs text-muted-foreground">
+              Filter:
+              <span class="font-medium text-foreground">
+                {{ getOperatorLabel(localOperator) }}
+                <template v-if="requiresMultipleValues && localValues.length > 0">
+                  {{
+                    localValues
+                      .map((v) => options.find((o) => o.value === v)?.label || v)
+                      .join(', ')
+                  }}
+                </template>
+                <template v-else-if="requiresValue && localValue">
+                  {{ options.find((o) => o.value === localValue)?.label || localValue }}
+                </template>
+              </span>
+            </p>
+          </div>
+
+          <!-- Apply button (advanced mode only) -->
+          <div v-if="advancedMode" class="p-2 border-t">
+            <Button
+              v-if="hasChanges"
+              size="sm"
+              class="w-full h-7 text-xs"
+              :disabled="
+                (requiresValue && !requiresMultipleValues && !localValue) ||
+                (requiresMultipleValues && localValues.length === 0)
+              "
+              @click="applyFilter"
+            >
+              Apply Filter
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+
+    <!-- Clear button -->
+    <Button
+      v-if="isFiltered"
+      variant="outline"
+      size="sm"
+      class="h-8 w-8 p-0 rounded-l-none border-l-0"
+      @click="clearFilter"
+    >
+      <IconX class="h-4 w-4" />
+      <span class="sr-only">Clear filter</span>
+    </Button>
+  </div>
 </template>

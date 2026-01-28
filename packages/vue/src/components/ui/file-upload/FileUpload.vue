@@ -99,11 +99,7 @@ provide('fileUploadContext', context)
 </script>
 
 <template>
-  <div
-    data-slot="file-upload"
-    :class="cn(props.class)"
-    :data-disabled="disabled ? '' : undefined"
-  >
+  <div data-slot="file-upload" :class="cn(props.class)" :data-disabled="disabled ? '' : undefined">
     <input
       ref="inputRef"
       type="file"
@@ -114,7 +110,7 @@ provide('fileUploadContext', context)
       class="sr-only"
       tabindex="-1"
       @change="handleInputChange"
-    >
+    />
     <slot />
   </div>
 </template>

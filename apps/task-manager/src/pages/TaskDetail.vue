@@ -210,9 +210,7 @@ const timelineItems = computed(() => {
         </Button>
         <div class="flex-1">
           <h1 class="text-2xl font-bold">{{ task.title }}</h1>
-          <p class="text-muted-foreground">
-            Created <RelativeTime :date="task.createdAt" />
-          </p>
+          <p class="text-muted-foreground">Created <RelativeTime :date="task.createdAt" /></p>
         </div>
         <div class="flex gap-2">
           <Dialog v-model:open="isEditDialogOpen">
@@ -225,7 +223,11 @@ const timelineItems = computed(() => {
                 <DialogTitle>Edit Task</DialogTitle>
                 <DialogDescription>Update task details</DialogDescription>
               </DialogHeader>
-              <TaskForm :task="task" @submit="handleEditComplete" @cancel="isEditDialogOpen = false" />
+              <TaskForm
+                :task="task"
+                @submit="handleEditComplete"
+                @cancel="isEditDialogOpen = false"
+              />
             </DialogContent>
           </Dialog>
 

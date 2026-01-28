@@ -383,6 +383,53 @@ export const Animated: Story = {
   }),
 }
 
+function handleUploadStart(
+  uploadProgress: { value: number },
+  isUploading: { value: boolean },
+  interval: { value: NodeJS.Timeout | null },
+) {
+  isUploading.value = true
+  uploadProgress.value = 0
+
+  interval.value = setInterval(() => {
+    uploadProgress.value = Math.min(100, uploadProgress.value + Math.random() * 15)
+
+    if (uploadProgress.value >= 100) {
+      if (interval.value) {
+        clearInterval(interval.value)
+        interval.value = null
+      }
+      isUploading.value = false
+    }
+  }, 200)
+}
+
+function handleUploadReset(
+  uploadProgress: { value: number },
+  isUploading: { value: boolean },
+  interval: { value: NodeJS.Timeout | null },
+) {
+  uploadProgress.value = 0
+  isUploading.value = false
+  if (interval.value) {
+    clearInterval(interval.value)
+    interval.value = null
+  }
+}
+
+function handleSetIndeterminate(
+  uploadProgress: { value: number | null },
+  isUploading: { value: boolean },
+  interval: { value: NodeJS.Timeout | null },
+) {
+  uploadProgress.value = null
+  isUploading.value = false
+  if (interval.value) {
+    clearInterval(interval.value)
+    interval.value = null
+  }
+}
+
 export const UploadProgress: Story = {
   render: () => ({
     components: {
@@ -395,47 +442,16 @@ export const UploadProgress: Story = {
     setup() {
       const uploadProgress = ref(0)
       const isUploading = ref(false)
-      let interval: NodeJS.Timeout | null = null
+      const interval = { value: null as NodeJS.Timeout | null }
 
-      const onUploadStart = () => {
-        isUploading.value = true
-        uploadProgress.value = 0
-
-        interval = setInterval(() => {
-          uploadProgress.value = Math.min(100, uploadProgress.value + Math.random() * 15)
-
-          if (uploadProgress.value >= 100) {
-            if (interval) {
-              clearInterval(interval)
-              interval = null
-            }
-            isUploading.value = false
-          }
-        }, 200)
-      }
-
-      const onUploadReset = () => {
-        uploadProgress.value = 0
-        isUploading.value = false
-        if (interval) {
-          clearInterval(interval)
-          interval = null
-        }
-      }
-
-      const setIndeterminate = () => {
-        uploadProgress.value = null as any
-        isUploading.value = false
-        if (interval) {
-          clearInterval(interval)
-          interval = null
-        }
-      }
+      const onUploadStart = () => handleUploadStart(uploadProgress, isUploading, interval)
+      const onUploadReset = () => handleUploadReset(uploadProgress, isUploading, interval)
+      const setIndeterminate = () => handleSetIndeterminate(uploadProgress, isUploading, interval)
 
       onUnmounted(() => {
-        if (interval) {
-          clearInterval(interval)
-          interval = null
+        if (interval.value) {
+          clearInterval(interval.value)
+          interval.value = null
         }
       })
 

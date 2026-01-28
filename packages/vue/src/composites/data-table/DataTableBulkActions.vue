@@ -37,37 +37,29 @@ const clearSelection = () => {
 </script>
 
 <template>
-    <DropdownMenu v-if="hasSelection">
-        <DropdownMenuTrigger as-child>
-            <Button variant="outline" size="sm" class="h-8 gap-1.5">
-                <IconStack2 class="h-4 w-4" />
-                <span class="text-xs font-medium">{{ selectedCount }}</span>
-            </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-            <DropdownMenuItem
-                v-for="(option, index) in options"
-                :key="index"
-                :class="
-                    option.variant === 'destructive'
-                        ? 'text-destructive focus:text-destructive'
-                        : ''
-                "
-                @click="handleAction(option.action)"
-            >
-                <component
-                    v-if="option.icon"
-                    :is="option.icon"
-                    class="mr-2 h-4 w-4"
-                />
-                {{ option.label }}
-            </DropdownMenuItem>
+  <DropdownMenu v-if="hasSelection">
+    <DropdownMenuTrigger as-child>
+      <Button variant="outline" size="sm" class="h-8 gap-1.5">
+        <IconStack2 class="h-4 w-4" />
+        <span class="text-xs font-medium">{{ selectedCount }}</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="start">
+      <DropdownMenuItem
+        v-for="(option, index) in options"
+        :key="index"
+        :class="option.variant === 'destructive' ? 'text-destructive focus:text-destructive' : ''"
+        @click="handleAction(option.action)"
+      >
+        <component v-if="option.icon" :is="option.icon" class="mr-2 h-4 w-4" />
+        {{ option.label }}
+      </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
-            <DropdownMenuItem @click="clearSelection">
-                <IconX class="mr-2 h-4 w-4" />
-                Clear
-            </DropdownMenuItem>
-        </DropdownMenuContent>
-    </DropdownMenu>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem @click="clearSelection">
+        <IconX class="mr-2 h-4 w-4" />
+        Clear
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
 </template>

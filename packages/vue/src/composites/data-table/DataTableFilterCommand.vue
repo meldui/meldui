@@ -42,41 +42,41 @@ const handleSelectFilter = (fieldId: string) => {
 </script>
 
 <template>
-    <Popover v-model:open="isOpen">
-        <PopoverTrigger as-child>
-            <Button variant="outline" size="sm" class="h-8" :disabled="props.disabled">
-                <IconFilter class="mr-2 h-4 w-4" />
-                <span class="text-xs">Filter</span>
-                <span
-                    v-if="activeFilterCount > 0"
-                    class="ml-2 rounded-sm bg-primary/20 px-1 text-xs font-medium"
-                >
-                    {{ activeFilterCount }}
-                </span>
-            </Button>
-        </PopoverTrigger>
-        <PopoverContent class="w-[200px] p-0" align="start">
-            <Command>
-                <CommandInput placeholder="Search filters..." />
-                <CommandList>
-                    <CommandEmpty>No filters found.</CommandEmpty>
-                    <CommandGroup>
-                        <CommandItem
-                            v-for="field in filterFields"
-                            :key="String(field.id)"
-                            :value="String(field.id)"
-                            @select="handleSelectFilter(String(field.id))"
-                            class="cursor-pointer py-2"
-                        >
-                            <component
-                                :is="getFilterIcon(field.icon, field.type)"
-                                class="mr-2 h-4 w-4 text-muted-foreground"
-                            />
-                            <span>{{ field.label }}</span>
-                        </CommandItem>
-                    </CommandGroup>
-                </CommandList>
-            </Command>
-        </PopoverContent>
-    </Popover>
+  <Popover v-model:open="isOpen">
+    <PopoverTrigger as-child>
+      <Button variant="outline" size="sm" class="h-8" :disabled="props.disabled">
+        <IconFilter class="mr-2 h-4 w-4" />
+        <span class="text-xs">Filter</span>
+        <span
+          v-if="activeFilterCount > 0"
+          class="ml-2 rounded-sm bg-primary/20 px-1 text-xs font-medium"
+        >
+          {{ activeFilterCount }}
+        </span>
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent class="w-[200px] p-0" align="start">
+      <Command>
+        <CommandInput placeholder="Search filters..." />
+        <CommandList>
+          <CommandEmpty>No filters found.</CommandEmpty>
+          <CommandGroup>
+            <CommandItem
+              v-for="field in filterFields"
+              :key="String(field.id)"
+              :value="String(field.id)"
+              @select="handleSelectFilter(String(field.id))"
+              class="cursor-pointer py-2"
+            >
+              <component
+                :is="getFilterIcon(field.icon, field.type)"
+                class="mr-2 h-4 w-4 text-muted-foreground"
+              />
+              <span>{{ field.label }}</span>
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </PopoverContent>
+  </Popover>
 </template>

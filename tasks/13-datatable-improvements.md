@@ -9,6 +9,7 @@
 Enhance the existing DataTable component with improved customizability, better UX states, and additional features while maintaining the "works by default, customizable when needed" philosophy. This task focuses on adding escape hatches for customization without breaking the existing simple API.
 
 **Key Principles:**
+
 - Reuse existing MeldUI components wherever possible (Skeleton, Alert, Empty, Pagination)
 - Add slots for customization while providing sensible defaults
 - Maintain backward compatibility with existing DataTable usage
@@ -18,14 +19,14 @@ Enhance the existing DataTable component with improved customizability, better U
 
 ## Components to Reuse
 
-| Need | Existing Component | Location |
-|------|-------------------|----------|
-| Loading | `Skeleton` | `ui/skeleton/` |
-| Error | `Alert` | `ui/alert/` |
-| Empty State | `Empty`, `EmptyHeader`, `EmptyTitle`, etc. | `ui/empty/` |
-| Pagination | `Pagination`, `PaginationContent`, etc. | `ui/pagination/` |
-| Buttons | `Button` | `ui/button/` |
-| Dropdowns | `DropdownMenu` | `ui/dropdown-menu/` |
+| Need        | Existing Component                         | Location            |
+| ----------- | ------------------------------------------ | ------------------- |
+| Loading     | `Skeleton`                                 | `ui/skeleton/`      |
+| Error       | `Alert`                                    | `ui/alert/`         |
+| Empty State | `Empty`, `EmptyHeader`, `EmptyTitle`, etc. | `ui/empty/`         |
+| Pagination  | `Pagination`, `PaginationContent`, etc.    | `ui/pagination/`    |
+| Buttons     | `Button`                                   | `ui/button/`        |
+| Dropdowns   | `DropdownMenu`                             | `ui/dropdown-menu/` |
 
 ---
 
@@ -61,9 +62,11 @@ Add named slots to `DataTable.vue` for customization while maintaining defaults.
   - Allows custom rendering per column without render functions
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 
 **Acceptance Criteria:**
+
 - All slots work with sensible defaults when not provided
 - Slot props provide sufficient context for custom implementations
 - Backward compatible - existing usage unchanged
@@ -93,16 +96,19 @@ Add proper loading and error states using existing MeldUI components.
   - Show loading indicator near search (optional)
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 - `packages/vue/src/composites/data-table/useDataTable.ts` (if needed)
 
 **New Dependencies:**
+
 ```typescript
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 ```
 
 **Acceptance Criteria:**
+
 - Loading skeleton matches table structure
 - Error state is clearly visible with retry option
 - States don't break table layout
@@ -128,10 +134,12 @@ Refactor `DataTablePagination.vue` to use the existing `Pagination` component fr
   - `paginationPosition?: 'bottom' | 'top' | 'both'` (default: 'bottom')
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTablePagination.vue`
 - `packages/vue/src/composites/data-table/DataTable.vue`
 
 **Acceptance Criteria:**
+
 - Uses existing Pagination component internally
 - All existing functionality preserved
 - Page numbers clickable for direct navigation
@@ -143,6 +151,7 @@ Refactor `DataTablePagination.vue` to use the existing `Pagination` component fr
 Create a documented CSS custom properties API for theming.
 
 - [x] **4.1 Define CSS Custom Properties**
+
   ```css
   .data-table {
     /* Header */
@@ -180,10 +189,12 @@ Create a documented CSS custom properties API for theming.
   - Provide examples of custom themes
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue` (styles section)
 - `apps/vue-storybook/src/stories/Components/DataTable/Overview.mdx`
 
 **Acceptance Criteria:**
+
 - All visual aspects customizable via CSS properties
 - Dark mode works without `:global(.dark)` hacks
 - Documentation includes theming guide
@@ -195,6 +206,7 @@ Create a documented CSS custom properties API for theming.
 Create helpers to reduce column definition boilerplate.
 
 - [x] **5.1 Enhanced `createColumnHelper`**
+
   ```typescript
   import { createColumnHelper } from '@meldui/vue'
 
@@ -216,12 +228,14 @@ Create helpers to reduce column definition boilerplate.
   ```
 
 - [x] **5.2 Selection Column Helper**
+
   ```typescript
   // Creates checkbox column with proper header/cell
   helper.selection()
   ```
 
 - [x] **5.3 Actions Column Helper**
+
   ```typescript
   helper.actions({
     display: 'inline' | 'dropdown', // Built-in options
@@ -229,13 +243,13 @@ Create helpers to reduce column definition boilerplate.
       {
         label: 'Edit',
         icon: IconEdit,
-        onClick: (row) => editUser(row.original)
+        onClick: (row) => editUser(row.original),
       },
       {
         label: 'Delete',
         icon: IconTrash,
         variant: 'destructive',
-        onClick: (row) => deleteUser(row.original)
+        onClick: (row) => deleteUser(row.original),
       },
     ],
     dropdownLabel: 'Actions', // For dropdown mode
@@ -243,28 +257,30 @@ Create helpers to reduce column definition boilerplate.
   ```
 
 - [x] **5.4 Common Cell Renderers**
+
   ```typescript
   import { cellRenderers } from '@meldui/vue'
 
   helper.accessor('status', {
     title: 'Status',
     cell: cellRenderers.badge({
-      colorMap: { active: 'green', inactive: 'gray' }
-    })
+      colorMap: { active: 'green', inactive: 'gray' },
+    }),
   })
 
   helper.accessor('createdAt', {
     title: 'Created',
-    cell: cellRenderers.date({ format: 'PP' }) // Uses date-fns
+    cell: cellRenderers.date({ format: 'PP' }), // Uses date-fns
   })
 
   helper.accessor('amount', {
     title: 'Amount',
-    cell: cellRenderers.currency({ currency: 'USD' })
+    cell: cellRenderers.currency({ currency: 'USD' }),
   })
   ```
 
 **Files to create:**
+
 - `packages/vue/src/composites/data-table/columnHelpers.ts`
 - `packages/vue/src/composites/data-table/cellRenderers.ts`
 - `packages/vue/src/composites/data-table/ActionsCell.vue`
@@ -272,9 +288,11 @@ Create helpers to reduce column definition boilerplate.
 - `packages/vue/src/composites/data-table/ActionsCellInline.vue`
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/index.ts` (exports)
 
 **Acceptance Criteria:**
+
 - Column definitions are significantly less verbose
 - Actions column works in both inline and dropdown modes
 - Type safety preserved throughout
@@ -286,6 +304,7 @@ Create helpers to reduce column definition boilerplate.
 Add density/spacing variants.
 
 - [x] **6.1 Add Density Prop**
+
   ```typescript
   interface Props {
     density?: 'compact' | 'comfortable' | 'spacious' // default: 'comfortable'
@@ -293,15 +312,15 @@ Add density/spacing variants.
   ```
 
 - [x] **6.2 Implement Density Styles**
-  | Density | Cell Padding | Font Size | Row Height |
-  |---------|--------------|-----------|------------|
-  | compact | 0.25rem 0.5rem | 0.75rem | ~32px |
-  | comfortable | 0.5rem 0.75rem | 0.875rem | ~44px |
-  | spacious | 0.75rem 1rem | 0.875rem | ~56px |
+      | Density | Cell Padding | Font Size | Row Height |
+      |---------|--------------|-----------|------------|
+      | compact | 0.25rem 0.5rem | 0.75rem | ~32px |
+      | comfortable | 0.5rem 0.75rem | 0.875rem | ~44px |
+      | spacious | 0.75rem 1rem | 0.875rem | ~56px |
 
 - [x] **6.3 Use CSS Custom Properties**
   ```css
-  .data-table[data-density="compact"] {
+  .data-table[data-density='compact'] {
     --dt-cell-padding-y: 0.25rem;
     --dt-cell-padding-x: 0.5rem;
     --dt-font-size: 0.75rem;
@@ -309,9 +328,11 @@ Add density/spacing variants.
   ```
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 
 **Acceptance Criteria:**
+
 - Three density options work correctly
 - Density doesn't break pinning or other features
 - Easy to customize via CSS properties
@@ -323,6 +344,7 @@ Add density/spacing variants.
 Allow dynamic row styling based on data.
 
 - [x] **7.1 Add Row Class Prop**
+
   ```typescript
   interface Props {
     rowClass?: (row: Row<TData>) => string | Record<string, boolean> | undefined
@@ -330,16 +352,20 @@ Allow dynamic row styling based on data.
   ```
 
   Usage:
+
   ```vue
   <DataTable
-    :row-class="(row) => ({
-      'bg-red-50': row.original.isOverdue,
-      'bg-green-50': row.original.isCompleted,
-    })"
+    :row-class="
+      (row) => ({
+        'bg-red-50': row.original.isOverdue,
+        'bg-green-50': row.original.isCompleted,
+      })
+    "
   />
   ```
 
 - [x] **7.2 Add Row Style Prop (Optional)**
+
   ```typescript
   interface Props {
     rowStyle?: (row: Row<TData>) => CSSProperties | undefined
@@ -347,6 +373,7 @@ Allow dynamic row styling based on data.
   ```
 
 - [x] **7.3 Add Row Props Prop**
+
   ```typescript
   interface Props {
     rowProps?: (row: Row<TData>) => HTMLAttributes | undefined
@@ -356,9 +383,11 @@ Allow dynamic row styling based on data.
   Allows custom data attributes, event handlers, etc.
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 
 **Acceptance Criteria:**
+
 - Row classes applied correctly
 - Works with selection and hover states
 - TypeScript types are correct
@@ -370,6 +399,7 @@ Allow dynamic row styling based on data.
 Enable TanStack Table's column resizing feature.
 
 - [x] **8.1 Add Column Resizing Props**
+
   ```typescript
   interface Props {
     enableColumnResizing?: boolean // default: false
@@ -383,6 +413,7 @@ Enable TanStack Table's column resizing feature.
   - Cursor changes on hover
 
 - [x] **8.3 Style the Resize Handle**
+
   ```css
   .resize-handle {
     position: absolute;
@@ -406,12 +437,14 @@ Enable TanStack Table's column resizing feature.
   - Update pinning offsets on resize
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 - `packages/vue/src/composites/data-table/DataTableColumnHeader.vue`
 - `packages/vue/src/composites/data-table/useDataTable.ts`
 - `packages/vue/src/composites/data-table/usePinnedColumns.ts`
 
 **Acceptance Criteria:**
+
 - Columns can be resized by dragging
 - Minimum column width respected
 - Works with pinned columns
@@ -452,12 +485,15 @@ Add comprehensive keyboard support for accessibility.
   ```
 
 **Files to create:**
+
 - `packages/vue/src/composites/data-table/useTableKeyboard.ts`
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 
 **Acceptance Criteria:**
+
 - Full keyboard navigation without mouse
 - Focus is clearly visible
 - Works with screen readers
@@ -470,6 +506,7 @@ Add comprehensive keyboard support for accessibility.
 Add ability to refresh data without changing parameters.
 
 - [x] **10.1 Add Refresh Method**
+
   ```typescript
   // In useDataTable.ts
   const refresh = () => {
@@ -482,6 +519,7 @@ Add ability to refresh data without changing parameters.
   ```
 
 - [x] **10.2 Expose via defineExpose**
+
   ```typescript
   defineExpose({
     ...tableState,
@@ -494,11 +532,13 @@ Add ability to refresh data without changing parameters.
   - Renders refresh button in toolbar when true
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/useDataTable.ts`
 - `packages/vue/src/composites/data-table/DataTable.vue`
 - `packages/vue/src/composites/data-table/DataTableToolbar.vue` (optional)
 
 **Acceptance Criteria:**
+
 - `tableRef.value.refresh()` triggers data reload
 - Works correctly with all current state
 
@@ -509,6 +549,7 @@ Add ability to refresh data without changing parameters.
 Add expandable rows for master-detail patterns.
 
 - [x] **11.1 Add Expansion Props**
+
   ```typescript
   interface Props {
     enableRowExpansion?: boolean
@@ -522,6 +563,7 @@ Add expandable rows for master-detail patterns.
   - CSS custom properties for styling
 
 - [x] **11.3 Add Expansion Slot**
+
   ```vue
   <template #expanded-row="{ row }">
     <OrderDetails :order="row.original" />
@@ -531,16 +573,18 @@ Add expandable rows for master-detail patterns.
 - [x] **11.4 Create Expansion Column Helper**
   ```typescript
   helper.expander({
-    getCanExpand: (row) => row.original.hasDetails
+    getCanExpand: (row) => row.original.hasDetails,
   })
   ```
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 - `packages/vue/src/composites/data-table/useDataTable.ts`
 - `packages/vue/src/composites/data-table/columnHelpers.ts`
 
 **Acceptance Criteria:**
+
 - Rows can be expanded/collapsed
 - Expansion state manageable externally
 - Animated transitions
@@ -560,6 +604,7 @@ Add support for footer rows with aggregations.
   - Support render functions and static values
 
 - [x] **12.3 Add Footer Slot**
+
   ```vue
   <template #footer="{ table }">
     <tr>
@@ -570,21 +615,25 @@ Add support for footer rows with aggregations.
   ```
 
 - [x] **12.4 Common Aggregation Helpers**
+
   ```typescript
   import { aggregations } from '@meldui/vue'
 
   helper.accessor('amount', {
-    footer: aggregations.sum({ format: 'currency' })
+    footer: aggregations.sum({ format: 'currency' }),
   })
   ```
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTable.vue`
 
 **Files to create:**
+
 - `packages/vue/src/composites/data-table/aggregations.ts`
 
 **Acceptance Criteria:**
+
 - Footer renders when columns have footer definitions
 - Slot allows complete customization
 - Aggregation helpers work correctly
@@ -598,6 +647,7 @@ Add support for footer rows with aggregations.
 Create a headless version for maximum customization. **This is a long-term architectural enhancement.**
 
 - [ ] ~~**13.1 Create Root Context Provider**~~
+
   ```vue
   <DataTableRoot :data="data" :columns="columns" v-slot="{ table }">
     <!-- Full control -->
@@ -619,10 +669,12 @@ Create a headless version for maximum customization. **This is a long-term archi
   - Full backward compatibility
 
 **Files to create:**
+
 - `packages/vue/src/composites/data-table/headless/` (new directory)
 - Multiple component files
 
 **Acceptance Criteria:**
+
 - Headless components work independently
 - Can compose custom table layouts
 - Current DataTable API unchanged
@@ -634,6 +686,7 @@ Create a headless version for maximum customization. **This is a long-term archi
 Allow registration of custom filter types.
 
 - [x] **14.1 Define Filter Plugin Interface**
+
   ```typescript
   interface FilterPlugin<TValue = unknown> {
     type: string
@@ -646,6 +699,7 @@ Allow registration of custom filter types.
   ```
 
 - [x] **14.2 Create Plugin Registration**
+
   ```typescript
   const currencyFilter = defineFilter({
     type: 'currency',
@@ -662,13 +716,16 @@ Allow registration of custom filter types.
   - Type detection in `DataTableFilterCommand`
 
 **Files to create:**
+
 - `packages/vue/src/composites/data-table/filterPlugins.ts`
 
 **Files to modify:**
+
 - `packages/vue/src/composites/data-table/DataTableToolbar.vue`
 - `packages/vue/src/composites/data-table/DataTableFilterCommand.vue`
 
 **Acceptance Criteria:**
+
 - Custom filters can be registered
 - Plugin filters work like built-in filters
 - Type safety maintained
@@ -746,6 +803,7 @@ Consolidated stories that demonstrate multiple capabilities together:
 All changes are **backward compatible**. Existing DataTable usage will continue to work without modifications. New features are opt-in via props or slots.
 
 **Deprecations (if any):**
+
 - None planned
 
 ---

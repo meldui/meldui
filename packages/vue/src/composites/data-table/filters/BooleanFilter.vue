@@ -205,140 +205,106 @@ const displayOperator = computed(() => {
 </script>
 
 <template>
-    <div class="flex items-center">
-        <Popover v-model:open="isOpen">
-            <PopoverTrigger as-child>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :class="
-                        cn(
-                            'h-8',
-                            isFiltered && 'rounded-r-none border-r-0',
-                        )
-                    "
-                    :aria-label="`Filter by ${title || 'boolean'}`"
-                >
-                    <!-- Icon -->
-                    <component
-                        :is="getFilterIcon(icon, 'boolean')"
-                        class="mr-2 h-4 w-4 shrink-0"
-                    />
-
-                    <!-- Title | Operator | Value -->
-                    <span class="text-xs">
-                        {{ title || "Boolean" }}
-                        <template v-if="isFiltered">
-                            <!-- Show operator with separator -->
-                            <template v-if="displayOperator">
-                                <span class="mx-1.5 text-muted-foreground"
-                                    >|</span
-                                >
-                                <span class="text-muted-foreground">{{
-                                    displayOperator
-                                }}</span>
-                            </template>
-                            <!-- Value (only show if not nullary operator) -->
-                            <template
-                                v-if="
-                                    !displayOperator ||
-                                    (appliedValue &&
-                                        typeof appliedValue === 'object' &&
-                                        'operator' in appliedValue &&
-                                        !isNullaryOperator(
-                                            appliedValue.operator,
-                                        ))
-                                "
-                            >
-                                <span class="mx-1.5 text-muted-foreground"
-                                    >|</span
-                                >
-                                <span class="font-normal">{{
-                                    displayValue
-                                }}</span>
-                            </template>
-                        </template>
-                    </span>
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent class="w-[220px] p-3" align="start">
-                <div class="space-y-3">
-                    <!-- Operator selector (advanced mode only) -->
-                    <Select v-if="advancedMode" v-model="localOperator">
-                        <SelectTrigger class="h-8">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem
-                                v-for="op in operators"
-                                :key="op"
-                                :value="op"
-                            >
-                                {{ getOperatorLabel(op) }}
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <!-- Boolean switch (shown for operators that require value) -->
-                    <div
-                        v-if="requiresValue"
-                        class="flex items-center justify-between space-x-2"
-                    >
-                        <Label
-                            :for="`${column?.id}-switch`"
-                            class="text-sm font-medium"
-                        >
-                            {{ title || "Boolean Filter" }}
-                        </Label>
-                        <Switch
-                            :id="`${column?.id}-switch`"
-                            :model-value="localValue"
-                            @update:model-value="
-                                (v: boolean) =>
-                                    advancedMode
-                                        ? (localValue = v)
-                                        : handleSimpleUpdate(v)
-                            "
-                        />
-                    </div>
-
-                    <!-- Preview (advanced mode) -->
-                    <p
-                        v-if="advancedMode && hasChanges"
-                        class="text-xs text-muted-foreground"
-                    >
-                        Filter:
-                        <span class="font-medium text-foreground">
-                            {{ getOperatorLabel(localOperator) }}
-                            <template v-if="requiresValue">
-                                {{ localValue ? "True" : "False" }}
-                            </template>
-                        </span>
-                    </p>
-
-                    <!-- Apply button (advanced mode only) -->
-                    <Button
-                        v-if="advancedMode && hasChanges"
-                        size="sm"
-                        class="w-full h-7 text-xs"
-                        @click="applyFilter"
-                    >
-                        Apply Filter
-                    </Button>
-                </div>
-            </PopoverContent>
-        </Popover>
-
-        <!-- Clear button -->
+  <div class="flex items-center">
+    <Popover v-model:open="isOpen">
+      <PopoverTrigger as-child>
         <Button
-            v-if="isFiltered"
-            variant="outline"
-            size="sm"
-            class="h-8 w-8 p-0 rounded-l-none border-l-0"
-            @click="clearFilter"
+          variant="outline"
+          size="sm"
+          :class="cn('h-8', isFiltered && 'rounded-r-none border-r-0')"
+          :aria-label="`Filter by ${title || 'boolean'}`"
         >
-            <IconX class="h-4 w-4" />
-            <span class="sr-only">Clear filter</span>
+          <!-- Icon -->
+          <component :is="getFilterIcon(icon, 'boolean')" class="mr-2 h-4 w-4 shrink-0" />
+
+          <!-- Title | Operator | Value -->
+          <span class="text-xs">
+            {{ title || 'Boolean' }}
+            <template v-if="isFiltered">
+              <!-- Show operator with separator -->
+              <template v-if="displayOperator">
+                <span class="mx-1.5 text-muted-foreground">|</span>
+                <span class="text-muted-foreground">{{ displayOperator }}</span>
+              </template>
+              <!-- Value (only show if not nullary operator) -->
+              <template
+                v-if="
+                  !displayOperator ||
+                  (appliedValue &&
+                    typeof appliedValue === 'object' &&
+                    'operator' in appliedValue &&
+                    !isNullaryOperator(appliedValue.operator))
+                "
+              >
+                <span class="mx-1.5 text-muted-foreground">|</span>
+                <span class="font-normal">{{ displayValue }}</span>
+              </template>
+            </template>
+          </span>
         </Button>
-    </div>
+      </PopoverTrigger>
+      <PopoverContent class="w-[220px] p-3" align="start">
+        <div class="space-y-3">
+          <!-- Operator selector (advanced mode only) -->
+          <Select v-if="advancedMode" v-model="localOperator">
+            <SelectTrigger class="h-8">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="op in operators" :key="op" :value="op">
+                {{ getOperatorLabel(op) }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+
+          <!-- Boolean switch (shown for operators that require value) -->
+          <div v-if="requiresValue" class="flex items-center justify-between space-x-2">
+            <Label :for="`${column?.id}-switch`" class="text-sm font-medium">
+              {{ title || 'Boolean Filter' }}
+            </Label>
+            <Switch
+              :id="`${column?.id}-switch`"
+              :model-value="localValue"
+              @update:model-value="
+                (v: boolean) => (advancedMode ? (localValue = v) : handleSimpleUpdate(v))
+              "
+            />
+          </div>
+
+          <!-- Preview (advanced mode) -->
+          <p v-if="advancedMode && hasChanges" class="text-xs text-muted-foreground">
+            Filter:
+            <span class="font-medium text-foreground">
+              {{ getOperatorLabel(localOperator) }}
+              <template v-if="requiresValue">
+                {{ localValue ? 'True' : 'False' }}
+              </template>
+            </span>
+          </p>
+
+          <!-- Apply button (advanced mode only) -->
+          <Button
+            v-if="advancedMode && hasChanges"
+            size="sm"
+            class="w-full h-7 text-xs"
+            @click="applyFilter"
+          >
+            Apply Filter
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+
+    <!-- Clear button -->
+    <Button
+      v-if="isFiltered"
+      variant="outline"
+      size="sm"
+      class="h-8 w-8 p-0 rounded-l-none border-l-0"
+      @click="clearFilter"
+    >
+      <IconX class="h-4 w-4" />
+      <span class="sr-only">Clear filter</span>
+    </Button>
+  </div>
 </template>

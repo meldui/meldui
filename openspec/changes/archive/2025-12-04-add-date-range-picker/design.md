@@ -7,6 +7,7 @@ MeldUI needs a date selection component that combines quick preset selections wi
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Provide a full-featured date picker with preset quick selections
 - Support both single date and date range selection modes
 - Allow customizable presets via props
@@ -15,6 +16,7 @@ MeldUI needs a date selection component that combines quick preset selections wi
 - Support accessibility (keyboard navigation, ARIA)
 
 **Non-Goals:**
+
 - Time picker functionality (date only)
 - Multi-calendar views (e.g., showing 3 months at once) - can use `numberOfMonths` prop
 - Date/time zone conversion utilities
@@ -26,6 +28,7 @@ MeldUI needs a date selection component that combines quick preset selections wi
 **Decision:** Create a composite component that composes existing primitives.
 
 The component will be structured as:
+
 ```
 DateRangePicker (main entry)
 ├── DateRangePickerTrigger (button that opens popover)
@@ -43,18 +46,19 @@ DateRangePicker (main entry)
 ```typescript
 interface DatePreset {
   label: string
-  value: () => DateValue  // for single mode
+  value: () => DateValue // for single mode
 }
 
 interface DateRangePreset {
   label: string
-  value: () => { start: DateValue; end: DateValue }  // for range mode
+  value: () => { start: DateValue; end: DateValue } // for range mode
 }
 ```
 
 **Rationale:** Static functions allow presets to calculate relative dates at selection time (e.g., "Today" always returns current date). This is more flexible than storing config like `{ days: -7 }` which requires interpretation logic.
 
 **Alternatives considered:**
+
 - Relative config objects: More declarative but less flexible for complex calculations
 - String identifiers with built-in logic: Less customizable
 
@@ -63,12 +67,14 @@ interface DateRangePreset {
 **Decision:** Provide separate defaults for single and range modes.
 
 **Single mode defaults:**
+
 - Today
 - Yesterday
 - 1 week ago
 - 1 month ago
 
 **Range mode defaults:**
+
 - Today
 - Yesterday
 - Last 7 days
@@ -96,7 +102,7 @@ When `false`, only the presets panel is shown. This is useful for simple use cas
 
 ```typescript
 interface DateRangePickerProps {
-  mode?: 'single' | 'range'  // default: 'range'
+  mode?: 'single' | 'range' // default: 'range'
   // ... other props
 }
 ```
@@ -105,11 +111,11 @@ interface DateRangePickerProps {
 
 ## Risks / Trade-offs
 
-| Risk | Mitigation |
-|------|------------|
+| Risk                                                                          | Mitigation                                                             |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | Preset date calculations may differ from user expectations (timezone, locale) | Use `@internationalized/date` consistently, document timezone behavior |
-| Large API surface with many props | Keep defaults sensible, provide good documentation |
-| Performance with many presets | Presets are rendered once, not a concern |
+| Large API surface with many props                                             | Keep defaults sensible, provide good documentation                     |
+| Performance with many presets                                                 | Presets are rendered once, not a concern                               |
 
 ## Component API
 
@@ -135,7 +141,7 @@ interface DateRangePickerProps {
 
   // Display
   placeholder?: string
-  dateFormat?: string  // format for displaying selected date(s)
+  dateFormat?: string // format for displaying selected date(s)
   class?: string
 }
 

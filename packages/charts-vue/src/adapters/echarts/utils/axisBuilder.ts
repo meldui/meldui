@@ -2,20 +2,25 @@ import { CHART_DEFAULTS } from '../../../config/defaults'
 import type { ChartAxis, ChartType } from '../../../types'
 
 /**
+ * ECharts axis configuration type
+ */
+type EChartsAxisConfig = Record<string, unknown>
+
+/**
  * Build X-axis configuration
  */
 export function buildXAxis(
   xAxis: ChartAxis | undefined,
   chartType: ChartType,
   _horizontal?: boolean | undefined, // Unused - kept for compatibility
-): any {
+): EChartsAxisConfig {
   // Pie and donut charts don't need axes
   if (chartType === 'pie' || chartType === 'donut') {
     return { show: false }
   }
 
   // Start with default xAxis styling
-  const defaultXAxis = (CHART_DEFAULTS.xAxis as any) || {}
+  const defaultXAxis = (CHART_DEFAULTS.xAxis as EChartsAxisConfig) || {}
 
   if (xAxis) {
     return {
@@ -57,14 +62,14 @@ export function buildYAxis(
   yAxis: ChartAxis | undefined,
   chartType: ChartType,
   _horizontal?: boolean | undefined, // Unused - kept for compatibility
-): any {
+): EChartsAxisConfig {
   // Pie and donut charts don't need axes
   if (chartType === 'pie' || chartType === 'donut') {
     return { show: false }
   }
 
   // Start with default yAxis styling
-  const defaultYAxis = (CHART_DEFAULTS.yAxis as any) || {}
+  const defaultYAxis = (CHART_DEFAULTS.yAxis as EChartsAxisConfig) || {}
 
   if (yAxis) {
     return {

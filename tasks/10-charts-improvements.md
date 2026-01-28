@@ -10,16 +10,16 @@ This task documents improvements and enhancements for the `@meldui/charts-vue` p
 
 ## Key Improvement Areas
 
-| Category | Priority | Effort | Impact |
-|----------|----------|--------|--------|
-| Memory Leak Fix | **High** | Low | Production stability |
-| Event System | **High** | Medium | User interactivity |
-| Chart-Specific Configs | **High** | High | Developer experience (BREAKING) |
-| Code Duplication | **Medium** | Medium | Maintainability |
-| Bundle Optimization | **Medium** | Medium | Performance |
-| Accessibility | **Medium** | Medium | Compliance |
-| Type Cleanup | **Low** | Low | Code quality |
-| Config Validation | **Low** | Medium | Error handling |
+| Category               | Priority   | Effort | Impact                          |
+| ---------------------- | ---------- | ------ | ------------------------------- |
+| Memory Leak Fix        | **High**   | Low    | Production stability            |
+| Event System           | **High**   | Medium | User interactivity              |
+| Chart-Specific Configs | **High**   | High   | Developer experience (BREAKING) |
+| Code Duplication       | **Medium** | Medium | Maintainability                 |
+| Bundle Optimization    | **Medium** | Medium | Performance                     |
+| Accessibility          | **Medium** | Medium | Compliance                      |
+| Type Cleanup           | **Low**    | Low    | Code quality                    |
+| Config Validation      | **Low**    | Medium | Error handling                  |
 
 ---
 
@@ -190,6 +190,7 @@ const pieConfig: MeldChartConfig = {
 ```
 
 **Issues:**
+
 1. **Cognitive overload** - Users must mentally filter irrelevant options
 2. **No TypeScript guidance** - IDE suggests properties that don't apply
 3. **Runtime confusion** - What happens if you set `horizontal: true` on a radar chart?
@@ -307,7 +308,7 @@ interface MeldDonutChartConfig extends ChartConfigBase {
   /** Outer radius */
   radius?: string | number
   /** Inner radius (creates the hole) */
-  innerRadius?: string | number  // e.g., '40%' or 50
+  innerRadius?: string | number // e.g., '40%' or 50
   /** Center label content */
   centerLabel?: {
     show?: boolean
@@ -342,7 +343,7 @@ interface MeldHeatmapChartConfig extends ChartConfigBase {
   colorRange?: {
     min?: number
     max?: number
-    colors?: string[]  // Gradient colors
+    colors?: string[] // Gradient colors
   }
   /** Show values in cells */
   showValues?: boolean
@@ -395,7 +396,7 @@ interface MixedChartSeries extends ChartSeries {
 ```typescript
 // Each component accepts ONLY its specific config type
 interface MeldBarChartProps {
-  config: MeldBarChartConfig  // Not MeldChartConfig!
+  config: MeldBarChartConfig // Not MeldChartConfig!
   height?: number | string
   width?: number | string
   title?: string
@@ -403,7 +404,7 @@ interface MeldBarChartProps {
 }
 
 interface MeldPieChartProps {
-  config: MeldPieChartConfig  // Focused, relevant options only
+  config: MeldPieChartConfig // Focused, relevant options only
   height?: number | string
   width?: number | string
   title?: string
@@ -438,16 +439,18 @@ type MeldDynamicChartProps =
 ### User Experience Comparison
 
 **Before (unified):**
+
 ```typescript
 // IDE shows 20+ properties, user must guess which matter
 const config: MeldChartConfig = {
   series: [{ name: 'Sales', data: [30, 40, 50] }],
   // ... what else do I need for a pie chart? Let me check docs...
-  xAxis: { categories: ['A', 'B', 'C'] },  // Wait, does pie need this?
+  xAxis: { categories: ['A', 'B', 'C'] }, // Wait, does pie need this?
 }
 ```
 
 **After (specific):**
+
 ```typescript
 // IDE shows only 6-8 relevant properties - self-documenting!
 const config: MeldPieChartConfig = {
@@ -509,19 +512,20 @@ export function transformToEChartsOption(
 
 ### Benefits
 
-| Aspect | Before (Unified) | After (Specific) |
-|--------|------------------|------------------|
-| TypeScript DX | Poor - irrelevant suggestions | Excellent - only relevant options |
-| Learning curve | Confusing - what applies? | Self-documenting |
-| Documentation | Complex caveats needed | Types ARE the docs |
-| Runtime errors | Possible invalid combos | Prevented at compile time |
-| IDE experience | Noisy autocomplete | Clean, focused suggestions |
+| Aspect         | Before (Unified)              | After (Specific)                  |
+| -------------- | ----------------------------- | --------------------------------- |
+| TypeScript DX  | Poor - irrelevant suggestions | Excellent - only relevant options |
+| Learning curve | Confusing - what applies?     | Self-documenting                  |
+| Documentation  | Complex caveats needed        | Types ARE the docs                |
+| Runtime errors | Possible invalid combos       | Prevented at compile time         |
+| IDE experience | Noisy autocomplete            | Clean, focused suggestions        |
 
 ---
 
 ## Improvement 4: Code Duplication Across Chart Components (MEDIUM PRIORITY) - SKIPPED
 
 > **Decision:** After review, this improvement was **intentionally skipped**. While there is code duplication across chart components, the current approach is preferred because:
+>
 > 1. Logic is already extracted into composables (`useChartBase`, `useChartEvents`, `useChartResize`, `useChartTheme`)
 > 2. Each component is self-contained and easy to understand
 > 3. Vue SFCs don't work well with JavaScript factories for template logic
@@ -541,6 +545,7 @@ transformToEChartsOption(props.config, chartThemeConfig.value, 'line')
 ```
 
 This leads to:
+
 - Maintenance burden (changes must be replicated 9+ times)
 - Inconsistency risk
 - Larger bundle size
@@ -663,6 +668,7 @@ import MeldChartBase from './MeldChartBase.vue'
 ### Problem
 
 `ChartType` is defined in two places:
+
 - `packages/charts-vue/src/types.ts:5-14`
 - `packages/charts-vue/src/adapters/echarts/utils/seriesTransformer.ts:3-13`
 
@@ -692,6 +698,7 @@ The `title` prop was defined in `MeldChartBaseProps` but never rendered.
 ### Solution Implemented
 
 Used **slots** for maximum flexibility. Each chart now has:
+
 - `header` slot - for title, actions, filters, etc.
 - `footer` slot - for legends, captions, timestamps, etc.
 
@@ -760,8 +767,10 @@ In chart components, deep watching config can be expensive for large datasets:
 ```typescript
 watch(
   () => props.config,
-  (newConfig) => { /* ... */ },
-  { deep: true }  // Expensive for thousands of data points
+  (newConfig) => {
+    /* ... */
+  },
+  { deep: true }, // Expensive for thousands of data points
 )
 ```
 
@@ -880,7 +889,11 @@ Add comprehensive accessibility support:
 
     <!-- Hidden data table for screen readers -->
     <table v-if="config.series.length" class="sr-only">
-      <caption>{{ title || 'Chart data' }}</caption>
+      <caption>
+        {{
+          title || 'Chart data'
+        }}
+      </caption>
       <thead>
         <tr>
           <th>Category</th>
@@ -906,7 +919,7 @@ Add prop for custom aria-label:
 interface MeldChartBaseProps {
   // ...
   ariaLabel?: string
-  showAccessibleTable?: boolean  // Default: true
+  showAccessibleTable?: boolean // Default: true
 }
 ```
 
@@ -928,7 +941,7 @@ Full ECharts is imported dynamically, but selective imports could reduce bundle 
 
 ```typescript
 // Current
-const echarts = await import('echarts')  // ~354KB full
+const echarts = await import('echarts') // ~354KB full
 ```
 
 ### Solution
@@ -938,7 +951,14 @@ Use selective imports with ECharts modular architecture:
 ```typescript
 // adapters/echarts/registry.ts
 import * as echarts from 'echarts/core'
-import { BarChart, LineChart, PieChart, ScatterChart, RadarChart, HeatmapChart } from 'echarts/charts'
+import {
+  BarChart,
+  LineChart,
+  PieChart,
+  ScatterChart,
+  RadarChart,
+  HeatmapChart,
+} from 'echarts/charts'
 import {
   GridComponent,
   TooltipComponent,
@@ -1007,8 +1027,8 @@ const initChart = async (options: EChartsOption) => {
 Invalid configs fail silently or cause cryptic ECharts errors:
 
 ```typescript
-const config = { series: [] }  // Empty series
-const config = { series: [{ data: 'not-an-array' }] }  // Invalid type
+const config = { series: [] } // Empty series
+const config = { series: [{ data: 'not-an-array' }] } // Invalid type
 ```
 
 ### Solution
@@ -1047,7 +1067,7 @@ const ChartSeriesSchema = z.object({
   name: z.string().min(1, 'Series name is required'),
   data: z.union([
     z.array(z.number()),
-    z.array(z.object({ x: z.union([z.string(), z.number()]), y: z.number().nullable() }))
+    z.array(z.object({ x: z.union([z.string(), z.number()]), y: z.number().nullable() })),
   ]),
   color: z.string().optional(),
   type: z.enum(['line', 'bar', 'area']).optional(),
@@ -1055,7 +1075,11 @@ const ChartSeriesSchema = z.object({
 
 export const MeldChartConfigSchema = z.object({
   series: z.array(ChartSeriesSchema).min(1, 'At least one series is required'),
-  xAxis: z.object({ /* ... */ }).optional(),
+  xAxis: z
+    .object({
+      /* ... */
+    })
+    .optional(),
   // ... other fields
 })
 ```
@@ -1105,9 +1129,11 @@ function buildHeatmapConfig(config: MeldChartConfig, resolvedColors: string[]): 
   let max = heatmapConfig.max
 
   if (min === undefined || max === undefined) {
-    const allValues = config.series.flatMap(s =>
-      Array.isArray(s.data) ? s.data.map(d => typeof d === 'number' ? d : d.y) : []
-    ).filter((v): v is number => v !== null)
+    const allValues = config.series
+      .flatMap((s) =>
+        Array.isArray(s.data) ? s.data.map((d) => (typeof d === 'number' ? d : d.y)) : [],
+      )
+      .filter((v): v is number => v !== null)
 
     min = min ?? Math.min(...allValues, 0)
     max = max ?? Math.max(...allValues, 100)
@@ -1119,7 +1145,7 @@ function buildHeatmapConfig(config: MeldChartConfig, resolvedColors: string[]): 
       max,
       calculable: true,
       // ...
-    }
+    },
   }
 }
 ```
@@ -1140,8 +1166,12 @@ function buildHeatmapConfig(config: MeldChartConfig, resolvedColors: string[]): 
 `useChartBase.ts` exports `showLoading`/`hideLoading` functions that are never used:
 
 ```typescript
-const showLoading = () => { /* ... */ }  // Exported but unused
-const hideLoading = () => { /* ... */ }  // Exported but unused
+const showLoading = () => {
+  /* ... */
+} // Exported but unused
+const hideLoading = () => {
+  /* ... */
+} // Exported but unused
 ```
 
 ### Solution
@@ -1176,7 +1206,7 @@ watch(
     if (chartInstance.value) {
       isLoading ? showLoading() : hideLoading()
     }
-  }
+  },
 )
 ```
 
@@ -1190,6 +1220,7 @@ watch(
 ## Improvement 14: Chart-Type-Specific Skeletons (LOW PRIORITY) - COMPLETED
 
 > **Implementation:** Updated `MeldChartSkeleton.vue` to render distinct skeleton shapes based on chart type:
+>
 > - **Cartesian** (bar, line, area, heatmap, mixed): Animated bars with axis labels
 > - **Pie**: Circular skeleton with segment divider lines (SVG overlay)
 > - **Donut**: Ring skeleton (circle with center hole cut out via bg-background) with segment lines
@@ -1232,7 +1263,7 @@ Render different skeleton shapes based on chart type:
 
 <script setup>
 const isCartesianType = computed(() =>
-  ['bar', 'line', 'area', 'heatmap', 'mixed'].includes(props.type || 'bar')
+  ['bar', 'line', 'area', 'heatmap', 'mixed'].includes(props.type || 'bar'),
 )
 </script>
 ```
@@ -1246,11 +1277,13 @@ const isCartesianType = computed(() =>
 ## Implementation Phases
 
 ### Phase 1: Critical Fixes (High Priority)
+
 - [x] Fix memory leak in `useChartTheme.ts`
 - [x] Fix type duplication in `seriesTransformer.ts`
 - [x] Implement `title` prop rendering (via slots: `header` and `footer`)
 
 ### Phase 2: Chart-Specific Configuration Types (High Priority - BREAKING) - COMPLETED
+
 > **Important:** This is a breaking change and should be done before v1.0 release.
 
 - [x] Design and document all chart-specific config interfaces
@@ -1271,6 +1304,7 @@ const isCartesianType = computed(() =>
 - [x] Write migration guide documentation
 
 ### Phase 3: Event System (High Priority) - COMPLETED
+
 - [x] Define event types in `types.ts`
 - [x] Create event normalization utilities (`useChartEvents.ts` composable)
 - [x] Update all chart components with event emits
@@ -1279,12 +1313,14 @@ const isCartesianType = computed(() =>
 - [x] Create Storybook story with event examples
 
 ### Phase 4: Code Quality (Medium Priority) - COMPLETED
+
 - [x] ~~Create `createChartSetup` factory composable~~ - **SKIPPED**: Current approach is simpler. Logic is already in composables (`useChartBase`, `useChartEvents`, `useChartResize`, `useChartTheme`). The remaining boilerplate in each component is stable and explicit. Factory would add abstraction without meaningful benefit.
 - [x] ~~Refactor all chart components to use factory~~ - **SKIPPED**: See above.
 - [x] Remove deep watch in favor of documented pattern - **DONE**: Consolidated two deep watches into single shallow watch on `[() => props.config, chartThemeConfig]`. Users should replace config objects, not mutate nested properties (standard Vue pattern).
 - [x] ~~Add `defineExpose` for chart instance access~~ - **SKIPPED**: For v1, charts are controlled entirely through props. Keeps API surface minimal. Can be added later if needed.
 
 ### Phase 5: Performance (Medium Priority) - COMPLETED
+
 - [x] Create modular ECharts registry - Added `VisualMapComponent` and `RadarComponent` to existing registry
 - [x] Update chart initialization to use registry - Updated `useChartBase.ts` to import from registry instead of full echarts
 - [x] Update type imports across composables - Changed `echarts` to `echarts/core` in `useChartEvents.ts`, `useChartResize.ts`
@@ -1292,6 +1328,7 @@ const isCartesianType = computed(() =>
 - [ ] Add bundle analysis to CI - Deferred (optional enhancement)
 
 ### Phase 6: Accessibility (Medium Priority) - PARTIAL
+
 - [x] Add ARIA attributes to chart containers - Added `role="img"` and `aria-label` to all chart components with auto-generated descriptions
 - [x] Add `ariaLabel` prop to `ChartComponentPropsBase` for custom labels
 - [ ] Create accessible data table component - Deferred
@@ -1299,6 +1336,7 @@ const isCartesianType = computed(() =>
 - [ ] Test with screen readers - Deferred
 
 ### Phase 7: Polish (Low Priority) - PARTIAL
+
 - [ ] Add config validation utilities - Deferred
 - [ ] Make heatmap min/max configurable - Deferred
 - [x] Remove unused loading functions - Removed `showLoading`/`hideLoading` from `useChartBase.ts`. Skeletons preferred for initial load.

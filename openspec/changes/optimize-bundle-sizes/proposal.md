@@ -12,6 +12,7 @@ Current bundle sizes are excessive and **tree-shaking is broken** for all packag
 | @meldui/charts-vue | 52KB | 10KB | Partially optimized |
 
 **The Problem:**
+
 ```typescript
 // Consumer imports single icon
 import { IconUser } from '@meldui/tabler-vue'
@@ -23,6 +24,7 @@ import { IconUser } from '@meldui/tabler-vue'
 ### @meldui/tabler-vue (Critical)
 
 **Individual Icon Files Architecture:**
+
 - Generate individual files for each icon in `src/icons/`
 - Each icon imports only its corresponding Tabler icon
 - Barrel `index.ts` re-exports all icons for backwards compatibility
@@ -30,6 +32,7 @@ import { IconUser } from '@meldui/tabler-vue'
 - Add `sideEffects: false` to package.json
 
 **Structure:**
+
 ```
 src/
 ├── icons/
@@ -42,12 +45,14 @@ src/
 ```
 
 ### @meldui/vue (High priority)
+
 - Enable `preserveModules: true` with dual ESM/CJS output
 - Add `sideEffects: ["**/*.css"]` to package.json
 - Enable minification with esbuild
 - Output structure: `dist/esm/` and `dist/cjs/`
 
 ### @meldui/charts-vue (Minor)
+
 - Add `sideEffects: false` to package.json
 - Enable minification
 
@@ -55,19 +60,19 @@ src/
 
 ### Verified with task-manager App
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Main JS (raw) | 3.8MB | 302KB | **92% reduction** |
-| Main JS (gzipped) | 597KB | 99KB | **83% reduction** |
-| Icons bundled | 6019 (all) | ~15 (used only) | **99.7% reduction** |
+| Metric            | Before     | After           | Improvement         |
+| ----------------- | ---------- | --------------- | ------------------- |
+| Main JS (raw)     | 3.8MB      | 302KB           | **92% reduction**   |
+| Main JS (gzipped) | 597KB      | 99KB            | **83% reduction**   |
+| Icons bundled     | 6019 (all) | ~15 (used only) | **99.7% reduction** |
 
 ### Package-Level Results
 
-| Package | Before | After | Change |
-|---------|--------|-------|--------|
-| @meldui/tabler-vue | Single 3.5MB file | 6019 individual ~0.3KB files | Tree-shakeable |
-| @meldui/vue | Single 592KB file | Preserved modules | Tree-shakeable |
-| @meldui/charts-vue | 52KB | 52KB + minified | Same (already optimized) |
+| Package            | Before            | After                        | Change                   |
+| ------------------ | ----------------- | ---------------------------- | ------------------------ |
+| @meldui/tabler-vue | Single 3.5MB file | 6019 individual ~0.3KB files | Tree-shakeable           |
+| @meldui/vue        | Single 592KB file | Preserved modules            | Tree-shakeable           |
+| @meldui/charts-vue | 52KB              | 52KB + minified              | Same (already optimized) |
 
 ## Impact
 

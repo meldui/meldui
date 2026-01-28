@@ -9,6 +9,7 @@
 Create a composable file upload component for `@meldui/vue` that handles file selection via drag-and-drop or file picker, with support for validation, previews, and upload progress tracking. The component follows a granular, composable architecture giving users full control over layout and behavior.
 
 **Key Design Decisions:**
+
 - Consumer handles actual uploads (component manages file selection/validation only)
 - Granular sub-components for maximum customization
 - Uses existing `Progress` component with slots for progress display
@@ -21,19 +22,19 @@ Create a composable file upload component for `@meldui/vue` that handles file se
 
 ### Components Overview
 
-| Component | Purpose |
-|-----------|---------|
-| `FileUpload` | Root - manages state, validation, provides context |
-| `FileUploadDropzone` | Drag-and-drop area with visual feedback |
-| `FileUploadTrigger` | Opens file picker dialog |
-| `FileUploadList` | Semantic container for items (no layout styling) |
-| `FileUploadItem` | Individual file wrapper, provides file context |
-| `FileUploadItemPreview` | Image preview (auto-generated) or custom fallback |
-| `FileUploadItemName` | File name display |
-| `FileUploadItemSize` | Formatted file size display |
-| `FileUploadItemProgress` | Upload progress (wraps Progress component) |
-| `FileUploadItemDelete` | Remove file button |
-| `FileUploadClear` | Remove all files button |
+| Component                | Purpose                                            |
+| ------------------------ | -------------------------------------------------- |
+| `FileUpload`             | Root - manages state, validation, provides context |
+| `FileUploadDropzone`     | Drag-and-drop area with visual feedback            |
+| `FileUploadTrigger`      | Opens file picker dialog                           |
+| `FileUploadList`         | Semantic container for items (no layout styling)   |
+| `FileUploadItem`         | Individual file wrapper, provides file context     |
+| `FileUploadItemPreview`  | Image preview (auto-generated) or custom fallback  |
+| `FileUploadItemName`     | File name display                                  |
+| `FileUploadItemSize`     | Formatted file size display                        |
+| `FileUploadItemProgress` | Upload progress (wraps Progress component)         |
+| `FileUploadItemDelete`   | Remove file button                                 |
+| `FileUploadClear`        | Remove all files button                            |
 
 ### Component Hierarchy
 
@@ -65,19 +66,19 @@ interface FileUploadProps {
   modelValue?: File[]
 
   /** Accepted file types (MIME types or extensions) */
-  accept?: string  // e.g., "image/*", ".pdf,.doc", "image/png,image/jpeg"
+  accept?: string // e.g., "image/*", ".pdf,.doc", "image/png,image/jpeg"
 
   /** Maximum number of files allowed */
-  maxFiles?: number  // Default: Infinity
+  maxFiles?: number // Default: Infinity
 
   /** Maximum file size in bytes per file */
-  maxSize?: number  // e.g., 10 * 1024 * 1024 (10MB)
+  maxSize?: number // e.g., 10 * 1024 * 1024 (10MB)
 
   /** Allow multiple file selection */
-  multiple?: boolean  // Default: true
+  multiple?: boolean // Default: true
 
   /** Disable file upload interactions */
-  disabled?: boolean  // Default: false
+  disabled?: boolean // Default: false
 
   /** Name attribute for form integration */
   name?: string
@@ -142,12 +143,12 @@ interface FileUploadDropzoneProps {
 
 **Data Attributes (for styling):**
 
-| Attribute | When Present |
-|-----------|--------------|
+| Attribute         | When Present                              |
+| ----------------- | ----------------------------------------- |
 | `[data-dragging]` | Files are being dragged over the dropzone |
-| `[data-disabled]` | Parent FileUpload is disabled |
-| `[data-accept]` | Dragged files match accept criteria |
-| `[data-reject]` | Dragged files don't match accept criteria |
+| `[data-disabled]` | Parent FileUpload is disabled             |
+| `[data-accept]`   | Dragged files match accept criteria       |
+| `[data-reject]`   | Dragged files don't match accept criteria |
 
 **Slot Props:**
 
@@ -213,8 +214,8 @@ interface FileUploadItemProps {
 
 **Data Attributes:**
 
-| Attribute | Value |
-|-----------|-------|
+| Attribute       | Value                                                     |
+| --------------- | --------------------------------------------------------- |
 | `[data-status]` | `"pending"` \| `"uploading"` \| `"complete"` \| `"error"` |
 
 **Context Provided (to children):**
@@ -225,7 +226,7 @@ interface FileUploadItemContext {
   progress: Ref<number | undefined>
   status: Ref<'pending' | 'uploading' | 'complete' | 'error'>
   error: Ref<string | undefined>
-  previewUrl: Ref<string | undefined>  // Auto-generated for images
+  previewUrl: Ref<string | undefined> // Auto-generated for images
   remove: () => void
 }
 ```
@@ -290,7 +291,7 @@ Renders the file name. Supports `as` and `asChild`.
 ```typescript
 interface FileUploadItemSizeProps extends PrimitiveProps {
   /** Number of decimal places for size formatting */
-  precision?: number  // Default: 1
+  precision?: number // Default: 1
 
   class?: string
 }
@@ -686,9 +687,9 @@ export function formatFileSize(bytes: number, precision = 1): string {
 export function isValidFileType(file: File, accept: string): boolean {
   if (!accept) return true
 
-  const acceptedTypes = accept.split(',').map(t => t.trim())
+  const acceptedTypes = accept.split(',').map((t) => t.trim())
 
-  return acceptedTypes.some(type => {
+  return acceptedTypes.some((type) => {
     // Handle MIME type wildcards like "image/*"
     if (type.endsWith('/*')) {
       const category = type.slice(0, -2)

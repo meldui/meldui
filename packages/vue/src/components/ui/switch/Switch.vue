@@ -25,10 +25,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-bind="forwarded"
     :class="cn(switchVariants.root({ variant }), props.class)"
   >
-    <SwitchThumb
-      data-slot="switch-thumb"
-      :class="cn(switchVariants.thumb({ variant }))"
-    >
+    <SwitchThumb data-slot="switch-thumb" :class="cn(switchVariants.thumb({ variant }))">
       <slot name="thumb" v-bind="slotProps" />
     </SwitchThumb>
   </SwitchRoot>

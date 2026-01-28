@@ -3,6 +3,7 @@
 ## Context
 
 This example app serves as living documentation for MeldUI consumers. It must balance:
+
 - **Comprehensiveness** - Show most components in realistic contexts
 - **Simplicity** - Easy to understand and copy patterns from
 - **Maintainability** - Updates when library changes
@@ -10,12 +11,14 @@ This example app serves as living documentation for MeldUI consumers. It must ba
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Demonstrate all three MeldUI packages working together
 - Provide copy-paste patterns for common use cases
 - Show proper TypeScript usage with components
 - Illustrate form validation, data tables, and charting
 
 **Non-Goals:**
+
 - Production backend (use LocalStorage instead)
 - Authentication/authorization flows
 - Complex state management (Pinia optional, not required)
@@ -76,6 +79,7 @@ apps/task-manager/
 **Decision:** Use Vue's native reactivity (`ref`, `reactive`, `computed`) with composables instead of Pinia.
 
 **Rationale:**
+
 - Simpler to understand for newcomers
 - Demonstrates that MeldUI doesn't require specific state library
 - LocalStorage sync via custom `useLocalStorage` composable
@@ -92,7 +96,7 @@ interface Task {
   priority: 'low' | 'medium' | 'high'
   projectId: string | null
   tags: string[]
-  dueDate: string | null  // ISO date string
+  dueDate: string | null // ISO date string
   createdAt: string
   updatedAt: string
 }
@@ -101,7 +105,7 @@ interface Project {
   id: string
   name: string
   description: string
-  color: string  // Tailwind color class
+  color: string // Tailwind color class
   createdAt: string
 }
 
@@ -114,23 +118,23 @@ interface Settings {
 
 ### 4. Component Mapping
 
-| App Feature | MeldUI Components |
-|-------------|-------------------|
-| Sidebar navigation | Sidebar, Button, Separator, Tooltip |
-| Task list | DataTable, Badge, Avatar, DropdownMenu, Checkbox |
-| Task form | Input, Textarea, Select, Combobox, Calendar, TagsInput, Button, Form |
-| Task card | Card, Badge, Avatar, Progress, DropdownMenu |
-| Dashboard stats | Card, Progress, CircularProgress |
-| Charts | @meldui/charts-vue components |
-| Dialogs | Dialog, AlertDialog, Sheet, Drawer |
-| Notifications | Sonner (toast) |
-| Loading states | Skeleton, Spinner |
-| Empty states | Empty |
-| Filters | Input, Select, Combobox, Button, Popover |
-| Breadcrumbs | Breadcrumb |
-| Tabs | Tabs |
-| Timeline | Timeline (task history) |
-| Settings | Switch, RadioGroup, Select |
+| App Feature        | MeldUI Components                                                    |
+| ------------------ | -------------------------------------------------------------------- |
+| Sidebar navigation | Sidebar, Button, Separator, Tooltip                                  |
+| Task list          | DataTable, Badge, Avatar, DropdownMenu, Checkbox                     |
+| Task form          | Input, Textarea, Select, Combobox, Calendar, TagsInput, Button, Form |
+| Task card          | Card, Badge, Avatar, Progress, DropdownMenu                          |
+| Dashboard stats    | Card, Progress, CircularProgress                                     |
+| Charts             | @meldui/charts-vue components                                        |
+| Dialogs            | Dialog, AlertDialog, Sheet, Drawer                                   |
+| Notifications      | Sonner (toast)                                                       |
+| Loading states     | Skeleton, Spinner                                                    |
+| Empty states       | Empty                                                                |
+| Filters            | Input, Select, Combobox, Button, Popover                             |
+| Breadcrumbs        | Breadcrumb                                                           |
+| Tabs               | Tabs                                                                 |
+| Timeline           | Timeline (task history)                                              |
+| Settings           | Switch, RadioGroup, Select                                           |
 
 ### 5. Routing Structure
 
@@ -155,10 +159,10 @@ const routes = [
 
 ## Risks / Trade-offs
 
-| Risk | Mitigation |
-|------|------------|
-| Example becomes outdated | Include in CI build to catch breaking changes |
-| Too complex for beginners | Add extensive code comments and README |
+| Risk                       | Mitigation                                      |
+| -------------------------- | ----------------------------------------------- |
+| Example becomes outdated   | Include in CI build to catch breaking changes   |
+| Too complex for beginners  | Add extensive code comments and README          |
 | Missing component coverage | Create checklist in tasks.md to verify coverage |
 
 ## Open Questions

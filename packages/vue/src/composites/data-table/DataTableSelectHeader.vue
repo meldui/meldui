@@ -12,19 +12,18 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-    <Checkbox
-        :model-value="
-            props.table.getIsAllPageRowsSelected()
-                ? true
-                : props.table.getIsSomePageRowsSelected()
-                  ? 'indeterminate'
-                  : false
-        "
-        @update:model-value="
-            (value: boolean | 'indeterminate') =>
-                props.table.toggleAllPageRowsSelected(!!value)
-        "
-        aria-label="Select all"
-        :class="cn(props.class)"
-    />
+  <Checkbox
+    :model-value="
+      props.table.getIsAllPageRowsSelected()
+        ? true
+        : props.table.getIsSomePageRowsSelected()
+          ? 'indeterminate'
+          : false
+    "
+    @update:model-value="
+      (value: boolean | 'indeterminate') => props.table.toggleAllPageRowsSelected(!!value)
+    "
+    aria-label="Select all"
+    :class="cn(props.class)"
+  />
 </template>
