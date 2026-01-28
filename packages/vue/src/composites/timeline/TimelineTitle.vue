@@ -22,11 +22,7 @@ const titleClass = computed(() =>
 </script>
 
 <template>
-  <h3
-    :data-status="timelineItem.status.value"
-    data-slot="timeline-title"
-    :class="titleClass"
-  >
+  <h3 :data-status="timelineItem.status.value" data-slot="timeline-title" :class="titleClass">
     <slot />
   </h3>
 </template>

@@ -4,6 +4,18 @@ import type { EChartsType } from 'echarts/core'
 import { onMounted, onUnmounted, type Ref, ref } from 'vue'
 
 /**
+ * Debounce utility for rate-limiting function calls
+ * Moved to module scope for better reusability and proper scoping
+ */
+function debounce<T extends (...args: unknown[]) => unknown>(fn: T, delay: number) {
+  let timeoutId: ReturnType<typeof setTimeout>
+  return ((...args: unknown[]) => {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => (fn as (...args: unknown[]) => unknown)(...args), delay)
+  }) as T
+}
+
+/**
  * Automatic chart resizing using ResizeObserver API
  * Falls back to window resize events for older browsers
  */
@@ -57,17 +69,6 @@ export function useChartResize(
       })
     } catch (error) {
       console.error('[MeldUI Charts] Failed to resize chart:', error)
-    }
-  }
-
-  /**
-   * Debounce helper for window resize
-   */
-  const debounce = <T extends (...args: any[]) => any>(fn: T, delay: number) => {
-    let timeoutId: ReturnType<typeof setTimeout>
-    return (...args: Parameters<T>) => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => fn(...args), delay)
     }
   }
 

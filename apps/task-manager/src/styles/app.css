@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "../../../../packages/vue/src/themes/default.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../../../../packages/vue/src/themes/default.css';
 
 /* Content sources for Tailwind to scan */
 @source "../**/*.{vue,js,ts,jsx,tsx}";
@@ -9,16 +9,16 @@
 /* Override font to use Poppins */
 @theme inline {
   --font-sans:
-    "Poppins", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 /* App-specific styles */
 body {
-    @apply bg-background text-foreground antialiased;
+  @apply bg-background text-foreground antialiased;
 }
 
 /* Ensure sidebar layout takes full viewport */
 #app {
-    @apply min-h-screen;
+  @apply min-h-screen;
 }

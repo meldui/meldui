@@ -38,12 +38,10 @@ const toggleTheme = () => {
     <div class="ml-auto flex items-center gap-4">
       <!-- Search -->
       <div class="relative hidden md:block">
-        <IconSearch class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          v-model="searchQuery"
-          placeholder="Search tasks..."
-          class="w-64 pl-9"
+        <IconSearch
+          class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
         />
+        <Input v-model="searchQuery" placeholder="Search tasks..." class="w-64 pl-9" />
       </div>
 
       <!-- Theme Toggle -->

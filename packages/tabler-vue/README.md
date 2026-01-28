@@ -61,6 +61,7 @@ import { IconX, IconUser, IconSettings } from '@meldui/tabler-vue'
 ## Default Configuration
 
 All icons use these defaults (can be overridden via props):
+
 - `size`: 24px
 - `strokeWidth`: 1.5
 

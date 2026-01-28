@@ -20,7 +20,12 @@ const { inputId, labelId } = context
   <label
     :id="labelId"
     :for="inputId"
-    :class="cn('text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70', props.class)"
+    :class="
+      cn(
+        'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        props.class,
+      )
+    "
     data-slot="mention-label"
   >
     <slot />

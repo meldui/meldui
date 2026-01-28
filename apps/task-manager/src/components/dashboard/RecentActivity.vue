@@ -22,7 +22,7 @@ import { allTasks } from '@/stores/tasks'
 
 const recentTasks = computed(() => {
   return [...allTasks.value]
-    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+    .toSorted((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 5)
 })
 

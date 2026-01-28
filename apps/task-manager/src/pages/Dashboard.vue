@@ -90,9 +90,7 @@ const stats = computed(() => [
     <div>
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-semibold">Projects</h2>
-        <Button variant="ghost" size="sm" @click="router.push('/projects')">
-          View all
-        </Button>
+        <Button variant="ghost" size="sm" @click="router.push('/projects')"> View all </Button>
       </div>
       <div class="grid gap-4 md:grid-cols-3">
         <Card

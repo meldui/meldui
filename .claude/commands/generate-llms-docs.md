@@ -12,6 +12,7 @@ Generate `llms.txt` and `llms-full.txt` files that help AI coding assistants und
 ## Output Location
 
 Write files to: `apps/vue-storybook/public/`
+
 - `llms.txt` - Index file with structure and links
 - `llms-full.txt` - Complete documentation in one file
 
@@ -22,13 +23,16 @@ Write files to: `apps/vue-storybook/public/`
 Read these sources to understand what to document:
 
 **MDX Documentation Files:**
+
 - `apps/vue-storybook/src/stories/*.mdx` - Introduction, Installation, Theming, Icons, Colors
 - `apps/vue-storybook/src/stories/Components/**/*.mdx` - Component overviews
 
 **Story Files:**
+
 - `apps/vue-storybook/src/stories/Components/**/*.stories.ts` - All component stories
 
 **Package Information:**
+
 - `packages/vue/package.json` - Main package info
 - `packages/tabler-vue/package.json` - Icons package info
 - `packages/charts-vue/package.json` - Charts package info
@@ -44,6 +48,7 @@ Create a concise index following this structure:
 > [One-line description of what MeldUI is]
 
 [2-3 sentences about the library, emphasizing key facts AI agents need to know:
+
 - It's built on shadcn-vue
 - Uses Tailwind CSS v4 (NOT v3)
 - Has three packages: @meldui/vue, @meldui/tabler-vue, @meldui/charts-vue]
@@ -66,27 +71,35 @@ Create a concise index following this structure:
 ## Components
 
 ### Form & Input
+
 [List all form components with brief descriptions]
 
 ### Navigation
+
 [List all navigation components]
 
 ### Data Display
+
 [List all data display components]
 
 ### Feedback
+
 [List all feedback components]
 
 ### Layout
+
 [List all layout components]
 
 ### Overlay
+
 [List all overlay components]
 
 ### Interactive
+
 [List all interactive components]
 
 ### Charts
+
 [List all chart components]
 
 ## Optional
@@ -99,7 +112,7 @@ Create a concise index following this structure:
 
 Create comprehensive documentation with this structure:
 
-```markdown
+````markdown
 # MeldUI - Complete Documentation for AI Assistants
 
 > [Same description as llms.txt]
@@ -113,31 +126,36 @@ needed to correctly use MeldUI components in Vue 3 projects.
 
 MeldUI consists of three packages that must be installed separately:
 
-| Package | Purpose | Install |
-|---------|---------|---------|
-| @meldui/vue | Core UI components | Required |
-| @meldui/tabler-vue | 5000+ Tabler icons | Required for icons |
-| @meldui/charts-vue | ECharts-based charts | Optional |
+| Package            | Purpose              | Install            |
+| ------------------ | -------------------- | ------------------ |
+| @meldui/vue        | Core UI components   | Required           |
+| @meldui/tabler-vue | 5000+ Tabler icons   | Required for icons |
+| @meldui/charts-vue | ECharts-based charts | Optional           |
 
 ### Common Mistakes to Avoid
 
 **1. Using Tailwind CSS v3 syntax**
+
 - WRONG: Creating `tailwind.config.js`
 - CORRECT: Use CSS-first config with `@import "tailwindcss"`
 
 **2. Wrong icon imports**
+
 - WRONG: `import { IconCheck } from '@meldui/vue'`
 - CORRECT: `import { IconCheck } from '@meldui/tabler-vue'`
 
 **3. Wrong chart imports**
+
 - WRONG: `import { MeldLineChart } from '@meldui/vue'`
 - CORRECT: `import { MeldLineChart } from '@meldui/charts-vue'`
 
 **4. Missing theme import**
+
 - WRONG: Only importing components
 - CORRECT: Also import `@meldui/vue/themes/default` in your CSS
 
 **5. Missing Tailwind source directive**
+
 - WRONG: Not scanning MeldUI dist files
 - CORRECT: Add `@source "../node_modules/@meldui/vue/dist/*.mjs";`
 
@@ -168,11 +186,13 @@ MeldUI consists of three packages that must be installed separately:
 ```typescript
 import { ComponentName } from '@meldui/vue'
 ```
+````
 
 #### Props
 
 | Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| ---- | ---- | ------- | ----------- |
+
 [Extract from argTypes in the story file]
 
 #### Basic Example
@@ -220,10 +240,10 @@ import { IconName } from '@meldui/tabler-vue'
 
 ### Icon Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| size | number | 24 | Icon size in pixels |
-| stroke | number | 1.5 | Stroke width |
+| Prop   | Type   | Default | Description         |
+| ------ | ------ | ------- | ------------------- |
+| size   | number | 24      | Icon size in pixels |
+| stroke | number | 1.5     | Stroke width        |
 
 ### Color Inheritance
 
@@ -238,7 +258,8 @@ Icons inherit color from `currentColor`. Use Tailwind text classes:
 ### Common Icons
 
 [List 20-30 most commonly used icons with their names]
-```
+
+````
 
 ### 4. Extraction Guidelines
 
@@ -279,3 +300,4 @@ Before writing files, verify:
 1. Write `apps/vue-storybook/public/llms.txt`
 2. Write `apps/vue-storybook/public/llms-full.txt`
 3. Report summary: number of components documented, file sizes, any issues found
+````

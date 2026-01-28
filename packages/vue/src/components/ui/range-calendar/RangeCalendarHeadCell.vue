@@ -15,7 +15,12 @@ const forwardedProps = useForwardProps(delegatedProps)
 <template>
   <RangeCalendarHeadCell
     data-slot="range-calendar-head-cell"
-    :class="cn('flex-1 rounded-md text-[0.8rem] font-normal text-muted-foreground text-center', props.class)"
+    :class="
+      cn(
+        'flex-1 rounded-md text-[0.8rem] font-normal text-muted-foreground text-center',
+        props.class,
+      )
+    "
     v-bind="forwardedProps"
   >
     <slot />

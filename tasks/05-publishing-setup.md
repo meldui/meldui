@@ -15,6 +15,7 @@ Set up Changesets for version management and changelogs.
 ### Sub-tasks
 
 #### 1.1 Install Changesets
+
 - [ ] Install at workspace root:
   ```bash
   cd /path/to/meldui  # Go to root
@@ -22,11 +23,13 @@ Set up Changesets for version management and changelogs.
   ```
 
 **Acceptance Criteria:**
+
 - @changesets/cli in root package.json devDependencies
 
 ---
 
 #### 1.2 Initialize Changesets
+
 - [ ] Run initialization command:
   ```bash
   pnpm changeset init
@@ -34,6 +37,7 @@ Set up Changesets for version management and changelogs.
 - [ ] This creates `.changeset/` directory with config
 
 **Expected Output:**
+
 ```
 🦋  Thanks for choosing changesets to help manage your versioning and publishing
 🦋
@@ -41,6 +45,7 @@ Set up Changesets for version management and changelogs.
 ```
 
 **Acceptance Criteria:**
+
 - .changeset/ directory created
 - .changeset/config.json exists
 - .changeset/README.md exists
@@ -48,6 +53,7 @@ Set up Changesets for version management and changelogs.
 ---
 
 #### 1.3 Configure Changesets
+
 - [ ] Edit `.changeset/config.json`:
   ```json
   {
@@ -67,6 +73,7 @@ Set up Changesets for version management and changelogs.
   ```
 
 **Configuration Explained:**
+
 - `access: "public"` - Packages are public on npm
 - `commit: false` - Don't auto-commit version bumps
 - `ignore` - Don't version Storybook apps (they're not published)
@@ -74,6 +81,7 @@ Set up Changesets for version management and changelogs.
 - `onlyUpdatePeerDependentsWhenOutOfRange` - Only update peer dependents if version range doesn't match
 
 **Acceptance Criteria:**
+
 - config.json has correct settings
 - Storybook apps are ignored
 
@@ -86,6 +94,7 @@ Ensure packages are properly configured for npm publishing.
 ### Sub-tasks
 
 #### 2.1 Verify package.json exports
+
 - [ ] Check `packages/tabler-vue/package.json`:
   ```json
   {
@@ -102,10 +111,7 @@ Ensure packages are properly configured for npm publishing.
         "types": "./dist/index.d.ts"
       }
     },
-    "files": [
-      "dist",
-      "README.md"
-    ],
+    "files": ["dist", "README.md"],
     "publishConfig": {
       "access": "public"
     }
@@ -113,12 +119,14 @@ Ensure packages are properly configured for npm publishing.
   ```
 
 **Key Fields:**
-- `name` - Scoped package name (@meldui/*)
+
+- `name` - Scoped package name (@meldui/\*)
 - `files` - Only ship dist/ and README
 - `publishConfig.access` - Make package public
 - `exports` - Proper ESM/CJS support
 
 **Acceptance Criteria:**
+
 - All required fields present
 - files array only includes dist/ and README.md
 - publishConfig.access is "public"
@@ -126,6 +134,7 @@ Ensure packages are properly configured for npm publishing.
 ---
 
 #### 2.2 Verify @meldui/vue package.json
+
 - [ ] Check `packages/vue/package.json` has same structure:
   ```json
   {
@@ -142,10 +151,7 @@ Ensure packages are properly configured for npm publishing.
         "require": "./dist/styles/index.css"
       }
     },
-    "files": [
-      "dist",
-      "README.md"
-    ],
+    "files": ["dist", "README.md"],
     "publishConfig": {
       "access": "public"
     }
@@ -155,6 +161,7 @@ Ensure packages are properly configured for npm publishing.
 **Note:** @meldui/vue also exports styles separately.
 
 **Acceptance Criteria:**
+
 - Exports includes both main module and styles
 - files array correct
 - publishConfig set
@@ -168,6 +175,7 @@ Add scripts for version management and publishing.
 ### Sub-tasks
 
 #### 3.1 Update root package.json scripts
+
 - [ ] Add/update scripts in root `package.json`:
   ```json
   {
@@ -190,12 +198,14 @@ Add scripts for version management and publishing.
   ```
 
 **Scripts Explained:**
+
 - `changeset` - Create a new changeset (records what changed)
 - `changeset:version` - Update package versions based on changesets
 - `changeset:publish` - Publish packages to npm
 - `release` - Full release flow: check code, build, publish
 
 **Acceptance Criteria:**
+
 - Scripts added to root package.json
 - release script includes code check and build
 
@@ -208,17 +218,20 @@ Practice creating a changeset to understand the workflow.
 ### Sub-tasks
 
 #### 4.1 Make a change
+
 - [ ] Make a small change to a package (e.g., update a README)
   ```bash
   echo "\n## Version 0.1.0\n\nInitial release" >> packages/vue/README.md
   ```
 
 **Acceptance Criteria:**
+
 - Some file is modified in a package
 
 ---
 
 #### 4.2 Create changeset
+
 - [ ] Run changeset command:
   ```bash
   pnpm changeset
@@ -229,6 +242,7 @@ Practice creating a changeset to understand the workflow.
   - **Summary:** "Initial release"
 
 **Interactive Example:**
+
 ```
 🦋  Which packages would you like to include?
 ◉ @meldui/vue
@@ -242,11 +256,13 @@ Initial release
 ```
 
 **What this does:**
+
 - Creates a markdown file in `.changeset/` directory
 - Records which packages changed and how
 - Stores the changelog message
 
 **Acceptance Criteria:**
+
 - New `.md` file created in .changeset/
 - File contains package name and summary
 - Correct bump type (patch/minor/major)
@@ -254,6 +270,7 @@ Initial release
 ---
 
 #### 4.3 Review changeset file
+
 - [ ] List changesets:
   ```bash
   ls .changeset/
@@ -265,15 +282,17 @@ Initial release
   ```
 
 **Expected Content:**
+
 ```markdown
 ---
-"@meldui/vue": patch
+'@meldui/vue': patch
 ---
 
 Initial release
 ```
 
 **Acceptance Criteria:**
+
 - Changeset file exists
 - Contains correct package and version bump
 - Has descriptive summary
@@ -287,6 +306,7 @@ Apply changesets to update package versions.
 ### Sub-tasks
 
 #### 5.1 Run version command
+
 - [ ] Update versions based on changesets:
   ```bash
   pnpm changeset:version
@@ -298,12 +318,14 @@ Apply changesets to update package versions.
   - Delete consumed changeset files
 
 **Expected Output:**
+
 ```
 🦋  All files have been updated. Review them and commit at your leisure
 🦋  If you want to release these changes, run `pnpm changeset publish`
 ```
 
 **Acceptance Criteria:**
+
 - Package versions updated in package.json files
 - CHANGELOG.md created/updated in packages
 - Changeset files deleted
@@ -311,6 +333,7 @@ Apply changesets to update package versions.
 ---
 
 #### 5.2 Review changes
+
 - [ ] Check what changed:
   ```bash
   git status
@@ -321,6 +344,7 @@ Apply changesets to update package versions.
   - Deleted changeset .md files
 
 **Acceptance Criteria:**
+
 - package.json versions incremented
 - CHANGELOG.md contains new entry
 - Changes are ready to commit
@@ -328,6 +352,7 @@ Apply changesets to update package versions.
 ---
 
 #### 5.3 Commit version changes
+
 - [ ] Commit the version bump:
   ```bash
   git add .
@@ -335,6 +360,7 @@ Apply changesets to update package versions.
   ```
 
 **Acceptance Criteria:**
+
 - Version changes committed to git
 
 ---
@@ -346,18 +372,21 @@ Set up npm credentials for publishing.
 ### Sub-tasks
 
 #### 6.1 Create npm account (if needed)
+
 - [ ] If you don't have an npm account:
   - Go to https://www.npmjs.com/signup
   - Create an account
   - Verify your email
 
 **Acceptance Criteria:**
+
 - npm account exists and is verified
 
 ---
 
 #### 6.2 Create npm organization (optional)
-- [ ] If using scoped packages (@meldui/*), create organization:
+
+- [ ] If using scoped packages (@meldui/\*), create organization:
   - Go to https://www.npmjs.com/org/create
   - Create organization named "meldui"
   - Or use your company's existing org
@@ -365,11 +394,13 @@ Set up npm credentials for publishing.
 **Note:** For internal-only packages, you might want to use a private registry instead.
 
 **Acceptance Criteria:**
+
 - Organization exists on npm (if using scoped packages)
 
 ---
 
 #### 6.3 Login to npm
+
 - [ ] Authenticate with npm:
   ```bash
   npm login
@@ -377,6 +408,7 @@ Set up npm credentials for publishing.
 - [ ] Enter your credentials when prompted
 
 **Acceptance Criteria:**
+
 - Logged into npm
 - Token stored in ~/.npmrc
 
@@ -389,6 +421,7 @@ Test publishing without actually publishing.
 ### Sub-tasks
 
 #### 7.1 Build packages
+
 - [ ] Build all packages:
   ```bash
   pnpm build
@@ -400,12 +433,14 @@ Test publishing without actually publishing.
   ```
 
 **Acceptance Criteria:**
+
 - All packages build successfully
 - dist/ directories contain output files
 
 ---
 
 #### 7.2 Dry run publish
+
 - [ ] Test publish command:
   ```bash
   pnpm --filter @meldui/vue publish --dry-run
@@ -417,6 +452,7 @@ Test publishing without actually publishing.
   - Confirm version numbers
 
 **Expected Output:**
+
 ```
 npm notice
 npm notice package: @meldui/vue@0.1.0
@@ -435,6 +471,7 @@ npm notice total files:   5
 ```
 
 **Acceptance Criteria:**
+
 - Dry run succeeds
 - Only dist/ and README.md included
 - No source files or config files in tarball
@@ -449,7 +486,9 @@ Create documentation for the release workflow.
 ### Sub-tasks
 
 #### 8.1 Create RELEASING.md
+
 - [ ] Create `RELEASING.md` in root:
+
   ```markdown
   # Release Process
 
@@ -474,6 +513,7 @@ Create documentation for the release workflow.
   \`\`\`
 
   Answer the prompts:
+
   1. **Which packages changed?** Select affected packages
   2. **What type of change?**
      - **patch** (0.0.x) - Bug fixes, minor improvements
@@ -497,6 +537,7 @@ Create documentation for the release workflow.
   \`\`\`
 
   This will:
+
   - Update package.json versions
   - Generate CHANGELOG.md entries
   - Delete consumed changesets
@@ -518,6 +559,7 @@ Create documentation for the release workflow.
   \`\`\`
 
   This command:
+
   1. Runs code quality checks
   2. Builds all packages
   3. Publishes to npm
@@ -541,6 +583,7 @@ Create documentation for the release workflow.
   ## Version Guidelines
 
   ### Patch (0.0.x)
+
   - Bug fixes
   - Documentation updates
   - Performance improvements
@@ -548,12 +591,14 @@ Create documentation for the release workflow.
   - No breaking changes
 
   ### Minor (0.x.0)
+
   - New features
   - New components
   - Backwards compatible
   - Deprecations (with migration path)
 
   ### Major (x.0.0)
+
   - Breaking API changes
   - Removed features
   - Major architecture changes
@@ -563,10 +608,13 @@ Create documentation for the release workflow.
   If something goes wrong:
 
   \`\`\`bash
+
   # Unpublish a version (only within 72 hours)
+
   npm unpublish @meldui/vue@0.1.1
 
   # Deprecate a version instead (preferred)
+
   npm deprecate @meldui/vue@0.1.1 "Please upgrade to 0.1.2"
   \`\`\`
 
@@ -577,16 +625,21 @@ Create documentation for the release workflow.
   ## Troubleshooting
 
   ### "You must be logged in to publish"
+
   Run `npm login` and authenticate.
 
   ### "You cannot publish over the previously published version"
+
   Version already exists. Update version in package.json or run `pnpm changeset:version`.
 
   ### "403 Forbidden"
+
   You don't have publish access to the @meldui org. Ask an admin to add you.
   \`\`\`
+  ```
 
 **Acceptance Criteria:**
+
 - RELEASING.md exists with complete release workflow
 - Includes step-by-step instructions
 - Covers version guidelines
@@ -612,6 +665,7 @@ Verify all tasks are complete:
 - [ ] RELEASING.md documentation created
 
 **Test Commands:**
+
 ```bash
 # Create a changeset
 pnpm changeset
@@ -627,6 +681,7 @@ pnpm release
 ```
 
 **Verification:**
+
 ```bash
 # Check changeset config
 cat .changeset/config.json

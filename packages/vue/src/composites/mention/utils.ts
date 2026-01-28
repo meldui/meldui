@@ -92,7 +92,7 @@ export function serializeFromDisplay(displayText: string, mentions: Mention[]): 
   if (mentions.length === 0) return displayText
 
   // Sort mentions by position (descending) to replace from end to start
-  const sortedMentions = [...mentions].sort((a, b) => b.start - a.start)
+  const sortedMentions = [...mentions].toSorted((a, b) => b.start - a.start)
 
   let serialized = displayText
   for (const mention of sortedMentions) {

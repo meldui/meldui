@@ -142,116 +142,78 @@ const handlePin = (position: 'left' | 'right' | false) => {
 </script>
 
 <template>
-    <!-- No dropdown - just show text -->
-    <div
-        v-if="!showDropdown"
-        :class="cn('flex items-center space-x-2', props.class)"
-    >
-        <span>{{ title }}</span>
-    </div>
+  <!-- No dropdown - just show text -->
+  <div v-if="!showDropdown" :class="cn('flex items-center space-x-2', props.class)">
+    <span>{{ title }}</span>
+  </div>
 
-    <!-- Show dropdown menu with available options -->
-    <div v-else :class="cn('flex items-center space-x-2', props.class)">
-        <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    class="-ml-3 h-8 data-[state=open]:bg-accent"
-                >
-                    <span>{{ title }}</span>
-                    <component
-                        v-if="canSort"
-                        :is="sortIcon"
-                        class="ml-2 h-4 w-4"
-                        :class="{ 'opacity-50': !isSorted }"
-                    />
-                    <IconPin
-                        v-if="isPinned && !isDefaultPinned"
-                        class="ml-1 h-3 w-3 text-primary"
-                    />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-                <!-- Sorting Options (only if column can be sorted) -->
-                <template v-if="canSort">
-                    <DropdownMenuItem @click="column.toggleSorting(false)">
-                        <IconArrowUp
-                            class="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
-                        />
-                        Asc
-                        <span v-if="isSorted === 'asc'" class="ml-auto"
-                            ><IconCheck class="size-4"
-                        /></span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem @click="column.toggleSorting(true)">
-                        <IconArrowDown
-                            class="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
-                        />
-                        Desc
-                        <span v-if="isSorted === 'desc'" class="ml-auto"
-                            ><IconCheck class="size-4"
-                        /></span>
-                    </DropdownMenuItem>
-                    <template v-if="isSorted">
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem @click="column.clearSorting()">
-                            <IconArrowsUpDown
-                                class="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
-                            />
-                            Clear
-                        </DropdownMenuItem>
-                    </template>
-                </template>
+  <!-- Show dropdown menu with available options -->
+  <div v-else :class="cn('flex items-center space-x-2', props.class)">
+    <DropdownMenu>
+      <DropdownMenuTrigger as-child>
+        <Button variant="ghost" size="sm" class="-ml-3 h-8 data-[state=open]:bg-accent">
+          <span>{{ title }}</span>
+          <component
+            v-if="canSort"
+            :is="sortIcon"
+            class="ml-2 h-4 w-4"
+            :class="{ 'opacity-50': !isSorted }"
+          />
+          <IconPin v-if="isPinned && !isDefaultPinned" class="ml-1 h-3 w-3 text-primary" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <!-- Sorting Options (only if column can be sorted) -->
+        <template v-if="canSort">
+          <DropdownMenuItem @click="column.toggleSorting(false)">
+            <IconArrowUp class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Asc
+            <span v-if="isSorted === 'asc'" class="ml-auto"><IconCheck class="size-4" /></span>
+          </DropdownMenuItem>
+          <DropdownMenuItem @click="column.toggleSorting(true)">
+            <IconArrowDown class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Desc
+            <span v-if="isSorted === 'desc'" class="ml-auto"><IconCheck class="size-4" /></span>
+          </DropdownMenuItem>
+          <template v-if="isSorted">
+            <DropdownMenuSeparator />
+            <DropdownMenuItem @click="column.clearSorting()">
+              <IconArrowsUpDown class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              Clear
+            </DropdownMenuItem>
+          </template>
+        </template>
 
-                <!-- Pin/Unpin Options -->
-                <template v-if="showPinOptions">
-                    <!-- Separator only if there are sort options above -->
-                    <DropdownMenuSeparator v-if="canSort" />
-                    <DropdownMenuItem
-                        v-if="isPinned !== 'left'"
-                        @click="handlePin('left')"
-                    >
-                        <IconPin
-                            class="mr-2 h-3.5 w-3.5 text-muted-foreground/70 rotate-45"
-                        />
-                        Pin Left
-                        <span v-if="isPinned === 'left'" class="ml-auto"
-                            ><IconCheck class="size-4"
-                        /></span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        v-if="isPinned !== 'right'"
-                        @click="handlePin('right')"
-                    >
-                        <IconPin
-                            class="mr-2 h-3.5 w-3.5 text-muted-foreground/70 rotate-[-45deg]"
-                        />
-                        Pin Right
-                        <span v-if="isPinned === 'right'" class="ml-auto"
-                            ><IconCheck class="size-4"
-                        /></span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem v-if="isPinned" @click="handlePin(false)">
-                        <IconPinnedOff
-                            class="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
-                        />
-                        Unpin
-                    </DropdownMenuItem>
-                </template>
+        <!-- Pin/Unpin Options -->
+        <template v-if="showPinOptions">
+          <!-- Separator only if there are sort options above -->
+          <DropdownMenuSeparator v-if="canSort" />
+          <DropdownMenuItem v-if="isPinned !== 'left'" @click="handlePin('left')">
+            <IconPin class="mr-2 h-3.5 w-3.5 text-muted-foreground/70 rotate-45" />
+            Pin Left
+            <span v-if="isPinned === 'left'" class="ml-auto"><IconCheck class="size-4" /></span>
+          </DropdownMenuItem>
+          <DropdownMenuItem v-if="isPinned !== 'right'" @click="handlePin('right')">
+            <IconPin class="mr-2 h-3.5 w-3.5 text-muted-foreground/70 rotate-[-45deg]" />
+            Pin Right
+            <span v-if="isPinned === 'right'" class="ml-auto"><IconCheck class="size-4" /></span>
+          </DropdownMenuItem>
+          <DropdownMenuItem v-if="isPinned" @click="handlePin(false)">
+            <IconPinnedOff class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Unpin
+          </DropdownMenuItem>
+        </template>
 
-                <!-- Hide Option (only if column can be hidden) -->
-                <template v-if="canHide">
-                    <!-- Separator only if there are sort or pin options above -->
-                    <DropdownMenuSeparator v-if="canSort || showPinOptions" />
-                    <DropdownMenuItem @click="column.toggleVisibility(false)">
-                        <IconEyeOff
-                            class="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
-                        />
-                        Hide
-                    </DropdownMenuItem>
-                </template>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    </div>
+        <!-- Hide Option (only if column can be hidden) -->
+        <template v-if="canHide">
+          <!-- Separator only if there are sort or pin options above -->
+          <DropdownMenuSeparator v-if="canSort || showPinOptions" />
+          <DropdownMenuItem @click="column.toggleVisibility(false)">
+            <IconEyeOff class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Hide
+          </DropdownMenuItem>
+        </template>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </div>
 </template>

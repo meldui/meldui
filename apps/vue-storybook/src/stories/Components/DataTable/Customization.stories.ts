@@ -45,6 +45,40 @@ These examples demonstrate:
 export default meta
 type Story = StoryObj<typeof meta>
 
+// Helper functions for row customization
+function refreshCustomAction() {
+  alert('Custom refresh action!')
+}
+
+function getRowClassByStatus(row: { original: User }) {
+  return {
+    'bg-red-50 dark:bg-red-950/30': row.original.status === 'inactive',
+    'bg-green-50 dark:bg-green-950/30': row.original.role === 'admin',
+  }
+}
+
+function getRowStyleByStatus(row: { original: User }) {
+  return {
+    opacity: row.original.status === 'inactive' ? 0.5 : 1,
+    fontWeight: row.original.role === 'admin' ? 600 : 400,
+  }
+}
+
+function getRowPropsWithHandlers(row: { original: User }) {
+  return {
+    'data-user-id': row.original.id,
+    'data-status': row.original.status,
+    onClick: () => console.log('Clicked:', row.original.name),
+    class: 'cursor-pointer',
+  }
+}
+
+function getStripedRowClass(row: { index: number }) {
+  return {
+    'bg-muted/50': row.index % 2 === 1,
+  }
+}
+
 // ============================================================================
 // Slot Examples
 // ============================================================================
@@ -193,15 +227,11 @@ export const CustomToolbarSlot: Story = {
         localData.value = simulateServerSide(MOCK_USERS, state)
       }
 
-      const refresh = () => {
-        alert('Custom refresh action!')
-      }
-
       return {
         localData,
         pageCount,
         handleChange,
-        refresh,
+        refresh: refreshCustomAction,
         columns: minimalColumns,
       }
     },
@@ -443,12 +473,13 @@ export const ConditionalRowClass: Story = {
         localData.value = simulateServerSide(MOCK_USERS, state)
       }
 
-      const getRowClass = (row: { original: User }) => ({
-        'bg-red-50 dark:bg-red-950/30': row.original.status === 'inactive',
-        'bg-green-50 dark:bg-green-950/30': row.original.role === 'admin',
-      })
-
-      return { localData, pageCount, handleChange, getRowClass, columns: minimalColumns }
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        getRowClass: getRowClassByStatus,
+        columns: minimalColumns,
+      }
     },
     template: `
       <div class="space-y-4">
@@ -491,12 +522,13 @@ export const ConditionalRowStyle: Story = {
         localData.value = simulateServerSide(MOCK_USERS, state)
       }
 
-      const getRowStyle = (row: { original: User }) => ({
-        opacity: row.original.status === 'inactive' ? 0.5 : 1,
-        fontWeight: row.original.role === 'admin' ? 600 : 400,
-      })
-
-      return { localData, pageCount, handleChange, getRowStyle, columns: minimalColumns }
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        getRowStyle: getRowStyleByStatus,
+        columns: minimalColumns,
+      }
     },
     template: `
       <div class="space-y-4">
@@ -537,14 +569,13 @@ export const ConditionalRowProps: Story = {
         localData.value = simulateServerSide(MOCK_USERS, state)
       }
 
-      const getRowProps = (row: { original: User }) => ({
-        'data-user-id': row.original.id,
-        'data-status': row.original.status,
-        onClick: () => console.log('Clicked:', row.original.name),
-        class: 'cursor-pointer',
-      })
-
-      return { localData, pageCount, handleChange, getRowProps, columns: minimalColumns }
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        getRowProps: getRowPropsWithHandlers,
+        columns: minimalColumns,
+      }
     },
     template: `
       <div class="space-y-4">
@@ -630,12 +661,13 @@ export const StripedRows: Story = {
         localData.value = simulateServerSide(MOCK_USERS, state)
       }
 
-      // Use row-class to apply striped styling based on row.index
-      const getRowClass = (row: { index: number }) => ({
-        'bg-muted/50': row.index % 2 === 1,
-      })
-
-      return { localData, pageCount, handleChange, columns: minimalColumns, getRowClass }
+      return {
+        localData,
+        pageCount,
+        handleChange,
+        columns: minimalColumns,
+        getRowClass: getStripedRowClass,
+      }
     },
     template: `
       <div class="space-y-4">

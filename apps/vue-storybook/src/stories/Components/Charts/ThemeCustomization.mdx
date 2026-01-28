@@ -15,9 +15,7 @@ Charts automatically use colors from your Tailwind CSS configuration:
 import { MeldLineChart } from '@meldui/charts-vue'
 
 const config = {
-  series: [
-    { name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }
-  ],
+  series: [{ name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }],
   xAxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
   // No color specified - uses theme colors automatically
 }
@@ -29,6 +27,7 @@ const config = {
 ```
 
 The chart will automatically use:
+
 - **Primary color** from `--color-primary`
 - **Text colors** from `--color-foreground`
 - **Border colors** from `--color-border`
@@ -46,6 +45,7 @@ Dark mode is automatically detected and applied:
 ```
 
 **How it works:**
+
 1. Charts detect the `.dark` class on `<html>`
 2. Colors, borders, and text automatically adjust
 3. Grid lines use appropriate opacity for each mode
@@ -66,14 +66,15 @@ const config = {
   series: [
     { name: 'Series 1', data: [30, 40, 45] },
     { name: 'Series 2', data: [20, 30, 35] },
-    { name: 'Series 3', data: [10, 20, 25] }
+    { name: 'Series 3', data: [10, 20, 25] },
   ],
   xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
-  colors: 'ocean' // Built-in palette
+  colors: 'ocean', // Built-in palette
 }
 ```
 
 **Available palettes:**
+
 - `'default'` - Blue, green, orange, red, purple, pink, cyan
 - `'ocean'` - Blue and teal shades
 - `'sunset'` - Warm oranges and reds
@@ -92,14 +93,15 @@ const config = {
   series: [
     { name: 'Product A', data: [30, 40, 45] },
     { name: 'Product B', data: [20, 30, 35] },
-    { name: 'Product C', data: [10, 20, 25] }
+    { name: 'Product C', data: [10, 20, 25] },
   ],
   xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
-  colors: ['#3b82f6', '#10b981', '#f59e0b'] // Custom hex colors
+  colors: ['#3b82f6', '#10b981', '#f59e0b'], // Custom hex colors
 }
 ```
 
 **Supported formats:**
+
 - Hex: `'#3b82f6'`
 - RGB: `'rgb(59, 130, 246)'`
 - HSL: `'hsl(217, 91%, 60%)'`
@@ -115,15 +117,15 @@ const config = {
     {
       name: 'Revenue',
       data: [30, 40, 45],
-      color: '#10b981' // Green for revenue
+      color: '#10b981', // Green for revenue
     },
     {
       name: 'Expenses',
       data: [20, 30, 35],
-      color: '#ef4444' // Red for expenses
-    }
+      color: '#ef4444', // Red for expenses
+    },
   ],
-  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
 }
 ```
 
@@ -139,8 +141,8 @@ const config = {
   xAxis: { categories: ['A', 'B', 'C'] },
   grid: {
     show: true,
-    strokeDashArray: 4 // Dashed grid lines
-  }
+    strokeDashArray: 4, // Dashed grid lines
+  },
 }
 ```
 
@@ -150,15 +152,13 @@ Customize line and area chart strokes:
 
 ```typescript
 const config = {
-  series: [
-    { name: 'Sales', data: [30, 40, 45] }
-  ],
+  series: [{ name: 'Sales', data: [30, 40, 45] }],
   xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
   stroke: {
-    width: 4,           // Line thickness
-    curve: 'smooth',    // 'smooth' | 'straight' | 'stepline'
-    dashArray: 5        // Dashed line (5px dash)
-  }
+    width: 4, // Line thickness
+    curve: 'smooth', // 'smooth' | 'straight' | 'stepline'
+    dashArray: 5, // Dashed line (5px dash)
+  },
 }
 ```
 
@@ -170,14 +170,14 @@ Position and customize the legend:
 const config = {
   series: [
     { name: 'Series A', data: [30, 40, 45] },
-    { name: 'Series B', data: [20, 30, 35] }
+    { name: 'Series B', data: [20, 30, 35] },
   ],
   xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
   legend: {
     show: true,
-    position: 'bottom',  // 'top' | 'bottom' | 'left' | 'right'
-    align: 'center'      // 'left' | 'center' | 'right'
-  }
+    position: 'bottom', // 'top' | 'bottom' | 'left' | 'right'
+    align: 'center', // 'left' | 'center' | 'right'
+  },
 }
 ```
 
@@ -194,8 +194,8 @@ const config = {
     shared: true, // Show all series in one tooltip
     formatter: (value, seriesName, dataPointIndex) => {
       return `${seriesName}: $${value}k`
-    }
-  }
+    },
+  },
 }
 ```
 
@@ -209,15 +209,15 @@ const config = {
     {
       name: 'Primary Metric',
       data: [30, 40, 45],
-      color: 'hsl(var(--primary))' // Use Tailwind color
+      color: 'hsl(var(--primary))', // Use Tailwind color
     },
     {
       name: 'Secondary Metric',
       data: [20, 30, 35],
-      color: 'hsl(var(--secondary))'
-    }
+      color: 'hsl(var(--secondary))',
+    },
   ],
-  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
 }
 ```
 
@@ -236,15 +236,15 @@ const config = {
     itemStyle: {
       borderRadius: [10, 10, 0, 0], // Rounded bar tops
       shadowBlur: 10,
-      shadowColor: 'rgba(0, 0, 0, 0.5)'
+      shadowColor: 'rgba(0, 0, 0, 0.5)',
     },
     emphasis: {
       itemStyle: {
         shadowBlur: 20,
-        shadowColor: 'rgba(0, 0, 0, 0.8)'
-      }
-    }
-  }
+        shadowColor: 'rgba(0, 0, 0, 0.8)',
+      },
+    },
+  },
 }
 ```
 
@@ -273,11 +273,11 @@ const config = {
     xAxis: {
       axisLine: {
         lineStyle: {
-          color: 'var(--chart-border-color)'
-        }
-      }
-    }
-  }
+          color: 'var(--chart-border-color)',
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -293,13 +293,11 @@ import { useMediaQuery } from '@vueuse/core'
 const isMobile = useMediaQuery('(max-width: 768px)')
 
 const config = computed(() => ({
-  series: [
-    { name: 'Data', data: [30, 40, 45] }
-  ],
+  series: [{ name: 'Data', data: [30, 40, 45] }],
   xAxis: { categories: ['A', 'B', 'C'] },
   colors: isMobile.value
     ? ['#3b82f6'] // Single color on mobile
-    : ['#3b82f6', '#10b981', '#f59e0b'] // Multiple on desktop
+    : ['#3b82f6', '#10b981', '#f59e0b'], // Multiple on desktop
 }))
 </script>
 
@@ -317,6 +315,7 @@ When customizing colors, ensure:
 3. **Test in dark mode** - Verify colors work in both themes
 
 **Good color contrast examples:**
+
 ```typescript
 // ✅ Good contrast
 colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
@@ -335,8 +334,8 @@ const config = {
   series: [
     { name: 'Success', data: [30], color: '#10b981' }, // Green
     { name: 'Warning', data: [20], color: '#f59e0b' }, // Orange
-    { name: 'Error', data: [10], color: '#ef4444' }    // Red
-  ]
+    { name: 'Error', data: [10], color: '#ef4444' }, // Red
+  ],
 }
 ```
 
@@ -347,8 +346,17 @@ const config = {
 colors: ['#3b82f6', '#10b981', '#f59e0b']
 
 // ❌ Avoid - Too many colors are confusing
-colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
-         '#ec4899', '#06b6d4', '#14b8a6', '#84cc16']
+colors: [
+  '#3b82f6',
+  '#10b981',
+  '#f59e0b',
+  '#ef4444',
+  '#8b5cf6',
+  '#ec4899',
+  '#06b6d4',
+  '#14b8a6',
+  '#84cc16',
+]
 ```
 
 ### 3. Consistent Palette
@@ -360,11 +368,11 @@ Use the same color for the same metric across all charts:
 const REVENUE_COLOR = '#3b82f6'
 
 const lineConfig = {
-  series: [{ name: 'Revenue', data: [30, 40], color: REVENUE_COLOR }]
+  series: [{ name: 'Revenue', data: [30, 40], color: REVENUE_COLOR }],
 }
 
 const barConfig = {
-  series: [{ name: 'Revenue', data: [50, 60], color: REVENUE_COLOR }]
+  series: [{ name: 'Revenue', data: [50, 60], color: REVENUE_COLOR }],
 }
 ```
 
@@ -385,15 +393,15 @@ const BRAND_COLORS = {
   secondary: '#8b5cf6',
   accent: '#f59e0b',
   success: '#10b981',
-  danger: '#ef4444'
+  danger: '#ef4444',
 }
 
 const config = {
   series: [
     { name: 'Primary', data: [30, 40, 45], color: BRAND_COLORS.primary },
-    { name: 'Secondary', data: [20, 30, 35], color: BRAND_COLORS.secondary }
+    { name: 'Secondary', data: [20, 30, 35], color: BRAND_COLORS.secondary },
   ],
-  xAxis: { categories: ['Q1', 'Q2', 'Q3'] }
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
 }
 ```
 
@@ -402,10 +410,10 @@ const config = {
 ```typescript
 const config = {
   series: [
-    { name: 'Good', data: [70], color: '#10b981' },   // Green
+    { name: 'Good', data: [70], color: '#10b981' }, // Green
     { name: 'Warning', data: [20], color: '#f59e0b' }, // Yellow
-    { name: 'Critical', data: [10], color: '#ef4444' } // Red
-  ]
+    { name: 'Critical', data: [10], color: '#ef4444' }, // Red
+  ],
 }
 ```
 

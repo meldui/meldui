@@ -83,11 +83,7 @@ const onSubmit = handleSubmit((formValues) => {
       <FormItem>
         <FormLabel>Description</FormLabel>
         <FormControl>
-          <Textarea
-            v-bind="componentField"
-            placeholder="Enter project description"
-            :rows="3"
-          />
+          <Textarea v-bind="componentField" placeholder="Enter project description" :rows="3" />
         </FormControl>
         <FormDescription>Optional description for the project</FormDescription>
         <FormMessage />

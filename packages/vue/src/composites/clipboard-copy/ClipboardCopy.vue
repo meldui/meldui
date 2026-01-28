@@ -61,12 +61,7 @@ const slotScope = computed(() => ({
 </script>
 
 <template>
-  <Primitive
-    :as="as"
-    :as-child="asChild"
-    :class="cn(props.class)"
-    @click="handleClick"
-  >
+  <Primitive :as="as" :as-child="asChild" :class="cn(props.class)" @click="handleClick">
     <slot v-bind="slotScope" />
   </Primitive>
 </template>

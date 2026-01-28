@@ -19,6 +19,27 @@ const meta: Meta<typeof MeldScatterChart> = {
 export default meta
 type Story = StoryObj<typeof MeldScatterChart>
 
+function generateHeightWeightData() {
+  const data = []
+  for (let i = 0; i < 50; i++) {
+    const height = 150 + Math.random() * 50
+    const weight = 50 + Math.random() * 40
+    data.push({ x: height, y: weight })
+  }
+  return data
+}
+
+function generateLargeScatterDataset() {
+  const data = []
+  for (let i = 0; i < 200; i++) {
+    data.push({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+    })
+  }
+  return data
+}
+
 export const Default: Story = {
   render: () => ({
     components: { MeldScatterChart },
@@ -117,21 +138,11 @@ export const HeightVsWeight: Story = {
   render: () => ({
     components: { MeldScatterChart },
     setup() {
-      const generateData = () => {
-        const data = []
-        for (let i = 0; i < 50; i++) {
-          const height = 150 + Math.random() * 50
-          const weight = 50 + Math.random() * 40
-          data.push({ x: height, y: weight })
-        }
-        return data
-      }
-
       const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Measurements',
-            data: generateData(),
+            data: generateHeightWeightData(),
           },
         ],
         xAxis: {
@@ -229,22 +240,11 @@ export const LargeDataset: Story = {
   render: () => ({
     components: { MeldScatterChart },
     setup() {
-      const generateLargeDataset = () => {
-        const data = []
-        for (let i = 0; i < 200; i++) {
-          data.push({
-            x: Math.random() * 100,
-            y: Math.random() * 100,
-          })
-        }
-        return data
-      }
-
       const config: MeldScatterChartConfig = {
         series: [
           {
             name: 'Data Points',
-            data: generateLargeDataset(),
+            data: generateLargeScatterDataset(),
           },
         ],
         xAxis: {

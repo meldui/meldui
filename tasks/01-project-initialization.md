@@ -15,6 +15,7 @@ Create the monorepo structure using pnpm workspaces.
 ### Sub-tasks
 
 #### 1.1 Create pnpm-workspace.yaml
+
 - [x] Create `pnpm-workspace.yaml` in the root directory
 - [x] Add workspace patterns:
   ```yaml
@@ -25,12 +26,14 @@ Create the monorepo structure using pnpm workspaces.
 - [x] This tells pnpm which directories contain workspace packages
 
 **Acceptance Criteria:**
+
 - File `pnpm-workspace.yaml` exists in root
 - Contains correct workspace patterns
 
 ---
 
 #### 1.2 Create root package.json
+
 - [x] Create `package.json` in the root directory
 - [x] Set name to "meldui" (private monorepo root)
 - [x] Mark as private: `"private": true`
@@ -53,12 +56,14 @@ Create the monorepo structure using pnpm workspaces.
   ```
 
 **Command:**
+
 ```bash
 pnpm init
 # Then edit the generated package.json
 ```
 
 **Acceptance Criteria:**
+
 - Root package.json exists with "private": true
 - Scripts are defined
 - No dependencies yet (will be added later)
@@ -66,8 +71,10 @@ pnpm init
 ---
 
 #### 1.3 Create .npmrc configuration
+
 - [x] Create `.npmrc` file in root directory
 - [x] Add pnpm-specific configuration:
+
   ```
   # Use workspaces protocol for local packages
   link-workspace-packages=true
@@ -83,6 +90,7 @@ pnpm init
   ```
 
 **Acceptance Criteria:**
+
 - `.npmrc` file exists
 - Configuration is properly formatted
 
@@ -95,6 +103,7 @@ Create base TypeScript configuration that all packages will extend.
 ### Sub-tasks
 
 #### 2.1 Install TypeScript
+
 - [x] Install TypeScript as a dev dependency at the root level:
   ```bash
   pnpm add -Dw typescript
@@ -103,12 +112,14 @@ Create base TypeScript configuration that all packages will extend.
 - [x] The `-D` flag installs as devDependency
 
 **Acceptance Criteria:**
+
 - TypeScript is listed in root package.json devDependencies
 - node_modules/.pnpm/typescript exists
 
 ---
 
 #### 2.2 Create base tsconfig.json
+
 - [x] Create `tsconfig.json` in root directory
 - [x] Configure for modern TypeScript and monorepo:
   ```json
@@ -137,6 +148,7 @@ Create base TypeScript configuration that all packages will extend.
   ```
 
 **Acceptance Criteria:**
+
 - tsconfig.json exists in root
 - Configuration uses modern TypeScript features
 - Strict mode is enabled
@@ -150,17 +162,20 @@ Set up Biome.js for linting and formatting (replaces ESLint + Prettier).
 ### Sub-tasks
 
 #### 3.1 Install Biome
+
 - [x] Install Biome at workspace root:
   ```bash
   pnpm add -Dw @biomejs/biome
   ```
 
 **Acceptance Criteria:**
+
 - Biome is in root package.json devDependencies
 
 ---
 
 #### 3.2 Create biome.json configuration
+
 - [x] Create `biome.json` in root directory
 - [x] Copy configuration from PRD.md (see PRD section "Biome.js Configuration")
 - [x] Key settings:
@@ -173,17 +188,20 @@ Set up Biome.js for linting and formatting (replaces ESLint + Prettier).
   - Organize imports enabled
 
 **Acceptance Criteria:**
+
 - biome.json exists with complete configuration
 - Running `pnpm check` should work (even with no files yet)
 
 ---
 
 #### 3.3 Test Biome commands
+
 - [x] Run `pnpm check` to verify Biome is working
 - [x] Run `pnpm format` to test formatting
 - [x] Run `pnpm lint` to test linting
 
 **Expected Result:**
+
 - Commands run without errors
 - May show "No files to process" if no source files exist yet
 
@@ -196,6 +214,7 @@ Set up Turborepo for build orchestration and caching.
 ### Sub-tasks
 
 #### 4.1 Install Turborepo
+
 - [x] Install Turborepo at workspace root:
   ```bash
   pnpm add -Dw turbo
@@ -204,11 +223,13 @@ Set up Turborepo for build orchestration and caching.
 **Note:** This is optional but recommended for better build performance.
 
 **Acceptance Criteria:**
+
 - turbo is in root package.json devDependencies
 
 ---
 
 #### 4.2 Create turbo.json configuration
+
 - [x] Create `turbo.json` in root directory
 - [x] Configure build pipeline:
   ```json
@@ -239,6 +260,7 @@ Set up Turborepo for build orchestration and caching.
   - Cache linting results
 
 **Acceptance Criteria:**
+
 - turbo.json exists with pipeline configuration
 - Running `turbo build` should work (even with no packages yet)
 
@@ -251,6 +273,7 @@ Automatically run Biome checks before commits.
 ### Sub-tasks
 
 #### 5.1 Install Husky
+
 - [x] Install Husky for git hooks:
   ```bash
   pnpm add -Dw husky
@@ -258,19 +281,23 @@ Automatically run Biome checks before commits.
   ```
 
 **Acceptance Criteria:**
+
 - husky is in root package.json devDependencies
 - .husky directory is created
 
 ---
 
 #### 5.2 Create pre-commit hook
+
 - [x] Create `.husky/pre-commit` file:
+
   ```bash
   #!/bin/sh
   . "$(dirname "$0")/_/husky.sh"
 
   pnpm check:fix
   ```
+
 - [x] Make it executable:
   ```bash
   chmod +x .husky/pre-commit
@@ -278,6 +305,7 @@ Automatically run Biome checks before commits.
 - [x] This automatically formats and lints code before each commit
 
 **Acceptance Criteria:**
+
 - .husky/pre-commit exists and is executable
 - Test by making a dummy commit (should run checks)
 
@@ -290,6 +318,7 @@ Set up the basic folder structure for packages and apps.
 ### Sub-tasks
 
 #### 6.1 Create packages directory
+
 - [x] Create `packages/` directory in root:
   ```bash
   mkdir -p packages
@@ -299,6 +328,7 @@ Set up the basic folder structure for packages and apps.
 ---
 
 #### 6.2 Create apps directory
+
 - [x] Create `apps/` directory in root:
   ```bash
   mkdir -p apps
@@ -308,7 +338,9 @@ Set up the basic folder structure for packages and apps.
 ---
 
 #### 6.3 Create .gitignore
+
 - [x] Create `.gitignore` in root:
+
   ```
   # Dependencies
   node_modules
@@ -341,6 +373,7 @@ Set up the basic folder structure for packages and apps.
   ```
 
 **Acceptance Criteria:**
+
 - packages/ and apps/ directories exist
 - .gitignore exists with proper patterns
 
@@ -353,6 +386,7 @@ Set up version control.
 ### Sub-tasks
 
 #### 7.1 Initialize git
+
 - [x] Initialize git repository:
   ```bash
   git init
@@ -367,6 +401,7 @@ Set up version control.
   ```
 
 **Acceptance Criteria:**
+
 - `.git` directory exists
 - Initial commit is created
 - All configuration files are tracked
@@ -389,6 +424,7 @@ Verify all tasks are complete:
 - [x] Git repository is initialized with initial commit
 
 **Test Commands:**
+
 ```bash
 # Should all run without errors
 pnpm check

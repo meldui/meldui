@@ -138,134 +138,113 @@ const handleKeyDown = (event: KeyboardEvent) => {
 </script>
 
 <template>
-    <div class="flex items-center">
-        <Popover v-model:open="isOpen">
-            <PopoverTrigger as-child>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :class="
-                        cn(
-                            'h-8',
-                            isFiltered && 'rounded-r-none border-r-0',
-                        )
-                    "
-                    :aria-label="`Filter by ${title || 'range'}`"
-                >
-                    <!-- Icon on the left -->
-                    <component
-                        :is="getFilterIcon(icon, 'range')"
-                        class="mr-2 h-4 w-4 shrink-0"
-                    />
-
-                    <!-- Title | Selected Range -->
-                    <span class="text-xs">
-                        {{ title || "Range" }}
-                        <template v-if="isFiltered && appliedValue">
-                            <span class="mx-1.5 text-muted-foreground">|</span>
-                            <span class="font-normal">
-                                {{ formatValue(appliedValue[0]) }} -
-                                {{ formatValue(appliedValue[1]) }}
-                            </span>
-                        </template>
-                    </span>
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                class="w-[280px]"
-                align="start"
-                @keydown="handleKeyDown"
-            >
-                <div class="space-y-4">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="font-medium">{{
-                                title || "Range"
-                            }}</span>
-                            <span class="text-muted-foreground">
-                                {{ formatValue(localValue[0]) }} -
-                                {{ formatValue(localValue[1]) }}
-                            </span>
-                        </div>
-                        <!-- Number inputs for direct entry -->
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 space-y-1">
-                                <div class="relative">
-                                    <Input
-                                        v-model.number="minValue"
-                                        type="number"
-                                        :min="range[0]"
-                                        :max="range[1]"
-                                        :step="step"
-                                        class="h-8 text-sm pr-8"
-                                    />
-                                    <span
-                                        v-if="unit"
-                                        class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none"
-                                    >
-                                        {{ unit }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex-1 space-y-1">
-                                <div class="relative">
-                                    <Input
-                                        v-model.number="maxValue"
-                                        type="number"
-                                        :min="range[0]"
-                                        :max="range[1]"
-                                        :step="step"
-                                        class="h-8 text-sm pr-8"
-                                    />
-                                    <span
-                                        v-if="unit"
-                                        class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none"
-                                    >
-                                        {{ unit }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slider -->
-                        <div class="space-y-2">
-                            <Slider
-                                v-model="localValue"
-                                :min="range[0]"
-                                :max="range[1]"
-                                :step="step"
-                                class="w-full"
-                            />
-                        </div>
-                    </div>
-                    <div
-                        class="flex items-center justify-between text-xs text-muted-foreground"
-                    >
-                        <span>{{ formatValue(range[0]) }}</span>
-                        <span>{{ formatValue(range[1]) }}</span>
-                    </div>
-                    <Button
-                        v-if="hasChanges"
-                        size="sm"
-                        class="w-full h-7 text-xs"
-                        @click="applyFilter"
-                    >
-                        Apply
-                    </Button>
-                </div>
-            </PopoverContent>
-        </Popover>
-
-        <!-- Clear button - shows when filtered, appears as part of single button -->
+  <div class="flex items-center">
+    <Popover v-model:open="isOpen">
+      <PopoverTrigger as-child>
         <Button
-            v-if="isFiltered"
-            variant="outline"
-            size="sm"
-            class="h-8 w-8 p-0 rounded-l-none border-l-0"
-            @click="clearFilter"
+          variant="outline"
+          size="sm"
+          :class="cn('h-8', isFiltered && 'rounded-r-none border-r-0')"
+          :aria-label="`Filter by ${title || 'range'}`"
         >
-            <IconX class="h-4 w-4" />
-            <span class="sr-only">Clear filter</span>
+          <!-- Icon on the left -->
+          <component :is="getFilterIcon(icon, 'range')" class="mr-2 h-4 w-4 shrink-0" />
+
+          <!-- Title | Selected Range -->
+          <span class="text-xs">
+            {{ title || 'Range' }}
+            <template v-if="isFiltered && appliedValue">
+              <span class="mx-1.5 text-muted-foreground">|</span>
+              <span class="font-normal">
+                {{ formatValue(appliedValue[0]) }} -
+                {{ formatValue(appliedValue[1]) }}
+              </span>
+            </template>
+          </span>
         </Button>
-    </div>
+      </PopoverTrigger>
+      <PopoverContent class="w-[280px]" align="start" @keydown="handleKeyDown">
+        <div class="space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-sm">
+              <span class="font-medium">{{ title || 'Range' }}</span>
+              <span class="text-muted-foreground">
+                {{ formatValue(localValue[0]) }} -
+                {{ formatValue(localValue[1]) }}
+              </span>
+            </div>
+            <!-- Number inputs for direct entry -->
+            <div class="flex items-center gap-2">
+              <div class="flex-1 space-y-1">
+                <div class="relative">
+                  <Input
+                    v-model.number="minValue"
+                    type="number"
+                    :min="range[0]"
+                    :max="range[1]"
+                    :step="step"
+                    class="h-8 text-sm pr-8"
+                  />
+                  <span
+                    v-if="unit"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none"
+                  >
+                    {{ unit }}
+                  </span>
+                </div>
+              </div>
+              <div class="flex-1 space-y-1">
+                <div class="relative">
+                  <Input
+                    v-model.number="maxValue"
+                    type="number"
+                    :min="range[0]"
+                    :max="range[1]"
+                    :step="step"
+                    class="h-8 text-sm pr-8"
+                  />
+                  <span
+                    v-if="unit"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none"
+                  >
+                    {{ unit }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slider -->
+            <div class="space-y-2">
+              <Slider
+                v-model="localValue"
+                :min="range[0]"
+                :max="range[1]"
+                :step="step"
+                class="w-full"
+              />
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-xs text-muted-foreground">
+            <span>{{ formatValue(range[0]) }}</span>
+            <span>{{ formatValue(range[1]) }}</span>
+          </div>
+          <Button v-if="hasChanges" size="sm" class="w-full h-7 text-xs" @click="applyFilter">
+            Apply
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+
+    <!-- Clear button - shows when filtered, appears as part of single button -->
+    <Button
+      v-if="isFiltered"
+      variant="outline"
+      size="sm"
+      class="h-8 w-8 p-0 rounded-l-none border-l-0"
+      @click="clearFilter"
+    >
+      <IconX class="h-4 w-4" />
+      <span class="sr-only">Clear filter</span>
+    </Button>
+  </div>
 </template>

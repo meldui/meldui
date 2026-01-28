@@ -18,8 +18,12 @@ MeldUI uses CSS variables with OKLCH colors for theming. The theme is designed f
   </thead>
   <tbody>
     <tr>
-      <td><code>default</code></td>
-      <td><code>@meldui/vue/themes/default</code></td>
+      <td>
+        <code>default</code>
+      </td>
+      <td>
+        <code>@meldui/vue/themes/default</code>
+      </td>
       <td>Slate-based neutral theme with light and dark modes</td>
     </tr>
   </tbody>
@@ -53,19 +57,19 @@ MeldUI themes define two layers of variables:
 Override base variables in your CSS **after** importing the theme:
 
 ```css
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "@meldui/vue/themes/default";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
 
 /* Your overrides */
 :root {
-  --primary: oklch(0.6 0.2 280);        /* Purple */
-  --primary-foreground: oklch(1 0 0);   /* White */
-  --radius: 0.5rem;                      /* Rounder corners */
+  --primary: oklch(0.6 0.2 280); /* Purple */
+  --primary-foreground: oklch(1 0 0); /* White */
+  --radius: 0.5rem; /* Rounder corners */
 }
 
 .dark {
-  --primary: oklch(0.7 0.2 280);        /* Lighter purple for dark mode */
+  --primary: oklch(0.7 0.2 280); /* Lighter purple for dark mode */
 }
 ```
 
@@ -81,21 +85,96 @@ Override base variables in your CSS **after** importing the theme:
     </tr>
   </thead>
   <tbody>
-    <tr><td><code>--background</code></td><td>Page background</td></tr>
-    <tr><td><code>--foreground</code></td><td>Default text color</td></tr>
-    <tr><td><code>--primary</code></td><td>Primary brand color</td></tr>
-    <tr><td><code>--primary-foreground</code></td><td>Text on primary</td></tr>
-    <tr><td><code>--secondary</code></td><td>Secondary actions</td></tr>
-    <tr><td><code>--secondary-foreground</code></td><td>Text on secondary</td></tr>
-    <tr><td><code>--muted</code></td><td>Subtle backgrounds</td></tr>
-    <tr><td><code>--muted-foreground</code></td><td>Subtle text</td></tr>
-    <tr><td><code>--accent</code></td><td>Accent/highlight</td></tr>
-    <tr><td><code>--accent-foreground</code></td><td>Text on accent</td></tr>
-    <tr><td><code>--destructive</code></td><td>Error/danger states</td></tr>
-    <tr><td><code>--success</code></td><td>Success states</td></tr>
-    <tr><td><code>--warning</code></td><td>Warning states</td></tr>
-    <tr><td><code>--info</code></td><td>Info states</td></tr>
-    <tr><td><code>--neutral</code></td><td>Neutral/gray states</td></tr>
+    <tr>
+      <td>
+        <code>--background</code>
+      </td>
+      <td>Page background</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--foreground</code>
+      </td>
+      <td>Default text color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--primary</code>
+      </td>
+      <td>Primary brand color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--primary-foreground</code>
+      </td>
+      <td>Text on primary</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--secondary</code>
+      </td>
+      <td>Secondary actions</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--secondary-foreground</code>
+      </td>
+      <td>Text on secondary</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--muted</code>
+      </td>
+      <td>Subtle backgrounds</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--muted-foreground</code>
+      </td>
+      <td>Subtle text</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--accent</code>
+      </td>
+      <td>Accent/highlight</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--accent-foreground</code>
+      </td>
+      <td>Text on accent</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--destructive</code>
+      </td>
+      <td>Error/danger states</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--success</code>
+      </td>
+      <td>Success states</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--warning</code>
+      </td>
+      <td>Warning states</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--info</code>
+      </td>
+      <td>Info states</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--neutral</code>
+      </td>
+      <td>Neutral/gray states</td>
+    </tr>
   </tbody>
 </table>
 
@@ -109,11 +188,36 @@ Override base variables in your CSS **after** importing the theme:
     </tr>
   </thead>
   <tbody>
-    <tr><td><code>--chart-1</code></td><td>First chart series color</td></tr>
-    <tr><td><code>--chart-2</code></td><td>Second chart series color</td></tr>
-    <tr><td><code>--chart-3</code></td><td>Third chart series color</td></tr>
-    <tr><td><code>--chart-4</code></td><td>Fourth chart series color</td></tr>
-    <tr><td><code>--chart-5</code></td><td>Fifth chart series color</td></tr>
+    <tr>
+      <td>
+        <code>--chart-1</code>
+      </td>
+      <td>First chart series color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--chart-2</code>
+      </td>
+      <td>Second chart series color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--chart-3</code>
+      </td>
+      <td>Third chart series color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--chart-4</code>
+      </td>
+      <td>Fourth chart series color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--chart-5</code>
+      </td>
+      <td>Fifth chart series color</td>
+    </tr>
   </tbody>
 </table>
 
@@ -127,13 +231,48 @@ Override base variables in your CSS **after** importing the theme:
     </tr>
   </thead>
   <tbody>
-    <tr><td><code>--card</code></td><td>Card background</td></tr>
-    <tr><td><code>--card-foreground</code></td><td>Card text</td></tr>
-    <tr><td><code>--popover</code></td><td>Popover/dropdown background</td></tr>
-    <tr><td><code>--popover-foreground</code></td><td>Popover text</td></tr>
-    <tr><td><code>--border</code></td><td>Border color</td></tr>
-    <tr><td><code>--input</code></td><td>Input border</td></tr>
-    <tr><td><code>--ring</code></td><td>Focus ring</td></tr>
+    <tr>
+      <td>
+        <code>--card</code>
+      </td>
+      <td>Card background</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--card-foreground</code>
+      </td>
+      <td>Card text</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--popover</code>
+      </td>
+      <td>Popover/dropdown background</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--popover-foreground</code>
+      </td>
+      <td>Popover text</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--border</code>
+      </td>
+      <td>Border color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--input</code>
+      </td>
+      <td>Input border</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--ring</code>
+      </td>
+      <td>Focus ring</td>
+    </tr>
   </tbody>
 </table>
 
@@ -147,14 +286,54 @@ Override base variables in your CSS **after** importing the theme:
     </tr>
   </thead>
   <tbody>
-    <tr><td><code>--sidebar</code></td><td>Sidebar background</td></tr>
-    <tr><td><code>--sidebar-foreground</code></td><td>Sidebar text</td></tr>
-    <tr><td><code>--sidebar-primary</code></td><td>Sidebar primary color</td></tr>
-    <tr><td><code>--sidebar-primary-foreground</code></td><td>Text on sidebar primary</td></tr>
-    <tr><td><code>--sidebar-accent</code></td><td>Sidebar accent/hover</td></tr>
-    <tr><td><code>--sidebar-accent-foreground</code></td><td>Text on sidebar accent</td></tr>
-    <tr><td><code>--sidebar-border</code></td><td>Sidebar border color</td></tr>
-    <tr><td><code>--sidebar-ring</code></td><td>Sidebar focus ring</td></tr>
+    <tr>
+      <td>
+        <code>--sidebar</code>
+      </td>
+      <td>Sidebar background</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--sidebar-foreground</code>
+      </td>
+      <td>Sidebar text</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--sidebar-primary</code>
+      </td>
+      <td>Sidebar primary color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--sidebar-primary-foreground</code>
+      </td>
+      <td>Text on sidebar primary</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--sidebar-accent</code>
+      </td>
+      <td>Sidebar accent/hover</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--sidebar-accent-foreground</code>
+      </td>
+      <td>Text on sidebar accent</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--sidebar-border</code>
+      </td>
+      <td>Sidebar border color</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--sidebar-ring</code>
+      </td>
+      <td>Sidebar focus ring</td>
+    </tr>
   </tbody>
 </table>
 
@@ -168,11 +347,46 @@ Override base variables in your CSS **after** importing the theme:
     </tr>
   </thead>
   <tbody>
-    <tr><td><code>--radius</code></td><td><code>0.625rem</code> (base)</td></tr>
-    <tr><td><code>--radius-sm</code></td><td><code>calc(var(--radius) - 4px)</code></td></tr>
-    <tr><td><code>--radius-md</code></td><td><code>calc(var(--radius) - 2px)</code></td></tr>
-    <tr><td><code>--radius-lg</code></td><td><code>var(--radius)</code></td></tr>
-    <tr><td><code>--radius-xl</code></td><td><code>calc(var(--radius) + 4px)</code></td></tr>
+    <tr>
+      <td>
+        <code>--radius</code>
+      </td>
+      <td>
+        <code>0.625rem</code> (base)
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--radius-sm</code>
+      </td>
+      <td>
+        <code>calc(var(--radius) - 4px)</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--radius-md</code>
+      </td>
+      <td>
+        <code>calc(var(--radius) - 2px)</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--radius-lg</code>
+      </td>
+      <td>
+        <code>var(--radius)</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--radius-xl</code>
+      </td>
+      <td>
+        <code>calc(var(--radius) + 4px)</code>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -233,6 +447,7 @@ MeldUI uses OKLCH colors for better perceptual uniformity:
 ```
 
 Benefits:
+
 - Consistent perceived brightness across hues
 - Better color manipulation
 - Modern CSS standard
@@ -250,8 +465,8 @@ Create a new theme file:
 }
 
 :root {
-  --primary: oklch(0.55 0.15 220);      /* Ocean blue */
-  --background: oklch(0.98 0.01 220);   /* Slight blue tint */
+  --primary: oklch(0.55 0.15 220); /* Ocean blue */
+  --background: oklch(0.98 0.01 220); /* Slight blue tint */
   /* ... other overrides ... */
 }
 
@@ -264,9 +479,9 @@ Create a new theme file:
 Then import it instead of the default:
 
 ```css
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "./themes/ocean.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './themes/ocean.css';
 ```
 
 ## See Also

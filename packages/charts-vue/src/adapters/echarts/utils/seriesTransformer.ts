@@ -4,13 +4,18 @@ import type { ChartDataLabels, ChartSeries, ChartStroke, ChartType } from '../..
 const BAR_BORDER_RADIUS = 2
 
 /**
+ * ECharts series configuration type
+ */
+type EChartsSeriesConfig = Record<string, unknown>
+
+/**
  * Transform series data for pie/donut charts
  */
 function transformPieSeries(
   series: ChartSeries[],
   resolvedColors: string[],
   chartType: 'pie' | 'donut',
-): any[] {
+): EChartsSeriesConfig[] {
   return [
     {
       type: 'pie',
@@ -49,7 +54,7 @@ function transformPieSeries(
 /**
  * Apply stroke configuration to line series
  */
-function applyStrokeConfig(baseSeries: any, stroke: ChartStroke): void {
+function applyStrokeConfig(baseSeries: EChartsSeriesConfig, stroke: ChartStroke): void {
   baseSeries.lineStyle = {
     width: stroke.width || 2,
     type: stroke.dashArray ? 'dashed' : 'solid',
@@ -65,7 +70,7 @@ function applyStrokeConfig(baseSeries: any, stroke: ChartStroke): void {
 /**
  * Apply area fill configuration
  */
-function applyAreaConfig(baseSeries: any): void {
+function applyAreaConfig(baseSeries: EChartsSeriesConfig): void {
   baseSeries.type = 'line'
   baseSeries.areaStyle = {}
   // Preserve area color on emphasis
@@ -79,7 +84,7 @@ function applyAreaConfig(baseSeries: any): void {
  * @param baseSeries - The series object to modify
  * @param horizontal - Whether the bar chart is horizontal
  */
-function applyBarStyling(baseSeries: any, horizontal: boolean = false): void {
+function applyBarStyling(baseSeries: EChartsSeriesConfig, horizontal: boolean = false): void {
   // Initialize itemStyle if not present
   if (!baseSeries.itemStyle) {
     baseSeries.itemStyle = {}
@@ -102,20 +107,24 @@ function applyBarStyling(baseSeries: any, horizontal: boolean = false): void {
 /**
  * Transform scatter chart data
  */
-function transformScatterData(s: ChartSeries, baseSeries: any): void {
+function transformScatterData(s: ChartSeries, baseSeries: EChartsSeriesConfig): void {
   baseSeries.type = 'scatter'
   // Convert {x, y} format to [x, y] format for ECharts
   if (Array.isArray(s.data) && s.data.length > 0 && typeof s.data[0] === 'object') {
-    baseSeries.data = s.data.map((point: any) =>
-      Array.isArray(point) ? point : [point.x, point.y],
-    )
+    baseSeries.data = s.data.map((point: unknown) => {
+      if (Array.isArray(point)) {
+        return point
+      }
+      const p = point as { x: number; y: number }
+      return [p.x, p.y]
+    })
   }
 }
 
 /**
  * Transform radar chart data
  */
-function transformRadarData(s: ChartSeries, baseSeries: any): void {
+function transformRadarData(s: ChartSeries, baseSeries: EChartsSeriesConfig): void {
   baseSeries.type = 'radar'
   // ECharts radar charts expect data in format: [{ value: [...], name: '...' }]
   baseSeries.data = [
@@ -131,7 +140,7 @@ function transformRadarData(s: ChartSeries, baseSeries: any): void {
 /**
  * Transform heatmap chart data
  */
-function transformHeatmapData(baseSeries: any): void {
+function transformHeatmapData(baseSeries: EChartsSeriesConfig): void {
   baseSeries.type = 'heatmap'
   baseSeries.label = {
     show: false,
@@ -147,7 +156,11 @@ function transformHeatmapData(baseSeries: any): void {
 /**
  * Apply data labels configuration
  */
-function applyDataLabels(baseSeries: any, dataLabels: ChartDataLabels, horizontal?: boolean): void {
+function applyDataLabels(
+  baseSeries: EChartsSeriesConfig,
+  dataLabels: ChartDataLabels,
+  horizontal?: boolean,
+): void {
   type LabelPosition = 'top' | 'inside' | 'bottom' | 'left' | 'right'
 
   // Map position for horizontal bar charts
@@ -165,11 +178,14 @@ function applyDataLabels(baseSeries: any, dataLabels: ChartDataLabels, horizonta
   }
 
   baseSeries.label = {
-    ...baseSeries.label,
+    ...(typeof baseSeries.label === 'object' && baseSeries.label !== null ? baseSeries.label : {}),
     show: dataLabels.show ?? true,
     position,
     formatter: dataLabels.formatter
-      ? (params: any) => dataLabels.formatter!(params.value)
+      ? (params: unknown) => {
+          const p = params as { value: unknown }
+          return dataLabels.formatter!(p.value)
+        }
       : undefined,
     fontSize: 12,
     fontFamily: 'inherit',
@@ -186,11 +202,11 @@ function transformCartesianSeries(
   stroke: ChartStroke | undefined,
   horizontal: boolean | undefined,
   dataLabels: ChartDataLabels | undefined,
-): any[] {
+): EChartsSeriesConfig[] {
   return series.map((s) => {
     const seriesType = s.type || (chartType === 'area' ? 'line' : chartType)
 
-    const baseSeries: any = {
+    const baseSeries: EChartsSeriesConfig = {
       name: s.name,
       data: s.data,
       type: seriesType,
@@ -274,7 +290,7 @@ export function transformSeries(
   stroke: ChartStroke | undefined,
   horizontal: boolean | undefined,
   dataLabels: ChartDataLabels | undefined,
-): any[] {
+): EChartsSeriesConfig[] {
   // Special handling for pie/donut charts
   if (chartType === 'pie' || chartType === 'donut') {
     return transformPieSeries(series, resolvedColors, chartType)

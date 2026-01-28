@@ -11,6 +11,7 @@ MeldUI is a design system for internal company use, built on top of shadcn compo
 ## Technology Stack
 
 ### Core Technologies
+
 - **Package Manager:** pnpm with workspaces
 - **Monorepo Tool:** Turborepo (optional but recommended for caching & parallel builds)
 - **Build Tool:** Vite (library mode)
@@ -20,6 +21,7 @@ MeldUI is a design system for internal company use, built on top of shadcn compo
 - **Version Management:** Changesets
 
 ### Vue Stack
+
 - **Framework:** Vue 3 with Composition API
 - **Component Library Base:** shadcn-vue (components copied into repo)
 - **UI Primitives:** Radix Vue (shadcn-vue dependency)
@@ -27,6 +29,7 @@ MeldUI is a design system for internal company use, built on top of shadcn compo
 - **Storybook:** @storybook/vue3-vite
 
 ### React Stack (Future)
+
 - **Framework:** React 18
 - **Component Library Base:** shadcn/ui
 - **UI Primitives:** Radix UI
@@ -120,12 +123,14 @@ meldui/
 ### Icon Package Architecture
 
 **@meldui/tabler-vue:**
+
 - Re-exports all Tabler icons with custom defaults
 - Wraps each icon component with design system defaults
 - Auto-generated via script when syncing with new Tabler versions
 - Can include custom icons alongside Tabler icons
 
 **Dependencies:**
+
 ```json
 {
   "name": "@meldui/tabler-vue",
@@ -143,14 +148,16 @@ meldui/
 **Option 3: Hybrid - Component defaults + CSS variables**
 
 **packages/tabler-vue/src/defaults.ts:**
+
 ```typescript
 export const ICON_DEFAULTS = {
-  size: 24,           // 24px base size
-  strokeWidth: 1.5,   // Medium stroke weight
+  size: 24, // 24px base size
+  strokeWidth: 1.5, // Medium stroke weight
 } as const
 ```
 
 **packages/tabler-vue/src/wrapper.ts:**
+
 ```typescript
 import { defineComponent, h } from 'vue'
 
@@ -163,20 +170,22 @@ export function createIcon(OriginalIcon: any) {
       color: { type: String, default: undefined },
     },
     setup(props, { attrs }) {
-      return () => h(OriginalIcon, {
-        ...props,
-        style: {
-          color: props.color ?? 'var(--icon-color, currentColor)',
-          ...attrs.style
-        },
-        ...attrs
-      })
-    }
+      return () =>
+        h(OriginalIcon, {
+          ...props,
+          style: {
+            color: props.color ?? 'var(--icon-color, currentColor)',
+            ...attrs.style,
+          },
+          ...attrs,
+        })
+    },
   })
 }
 ```
 
 **packages/tabler-vue/src/index.ts (Auto-generated):**
+
 ```typescript
 import { IconX, IconUser, IconSettings /* ... */ } from '@tabler/icons-vue'
 import { createIcon } from './wrapper'
@@ -189,6 +198,7 @@ export const IconSettings = createIcon(IconSettings)
 ```
 
 **packages/tabler-vue/scripts/generate.ts:**
+
 ```typescript
 // Script that:
 // 1. Reads all exports from @tabler/icons-vue
@@ -220,8 +230,9 @@ export const IconSettings = createIcon(IconSettings)
 ### CSS Variables Integration (Tailwind v4)
 
 **packages/vue/src/styles/index.css:**
+
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --icon-color: theme('colors.gray.700');
@@ -285,13 +296,7 @@ pnpm generate-icons  # Runs scripts/generate.ts
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "node_modules",
-      "dist",
-      "build",
-      ".turbo",
-      "storybook-static"
-    ]
+    "ignore": ["node_modules", "dist", "build", ".turbo", "storybook-static"]
   },
   "formatter": {
     "enabled": true,
@@ -320,11 +325,13 @@ pnpm generate-icons  # Runs scripts/generate.ts
 ### Development Workflow
 
 **Pre-commit:**
+
 ```bash
 biome check --write .  # Format, lint, and organize imports
 ```
 
 **CI Pipeline:**
+
 ```bash
 biome ci .            # Check formatting and linting (fails on errors)
 pnpm build            # Build all packages
@@ -343,33 +350,37 @@ pnpm build            # Build all packages
 ### Key Differences from v3
 
 **1. CSS-First Configuration:**
+
 ```css
 /* Instead of tailwind.config.js, use CSS imports */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Customize using CSS variables */
 @theme {
   --color-primary: #3b82f6;
-  --font-display: "Inter", sans-serif;
+  --font-display: 'Inter', sans-serif;
 }
 ```
 
 **2. No PostCSS Plugin Required:**
+
 - Tailwind v4 is a PostCSS plugin itself
 - Simplified build pipeline integration
 
 **3. Installation:**
+
 ```bash
 pnpm add tailwindcss@next @tailwindcss/vite@next
 ```
 
 **4. Vite Integration:**
+
 ```typescript
 // vite.config.ts
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss()]
+  plugins: [vue(), tailwindcss()],
 })
 ```
 
@@ -378,8 +389,9 @@ export default defineConfig({
 Each package that needs Tailwind should have:
 
 **packages/vue/src/styles/index.css:**
+
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Custom theme configuration */
 @theme {
@@ -397,6 +409,7 @@ Each package that needs Tailwind should have:
 Storybook apps must also configure Tailwind v4:
 
 **apps/vue-storybook/.storybook/preview.ts:**
+
 ```typescript
 import '../src/styles/tailwind.css' // Import Tailwind v4 styles
 
@@ -434,14 +447,14 @@ For internal team usage, Storybook serves as the primary documentation platform.
 ```json
 {
   "devDependencies": {
-    "@storybook/addon-docs": "^7.x",           // MDX docs
-    "@storybook/addon-controls": "^7.x",       // Interactive props
-    "@storybook/addon-a11y": "^7.x",          // Accessibility checks
-    "@storybook/addon-links": "^7.x",         // Link between stories
-    "@storybook/addon-measure": "^7.x",       // Measure elements
-    "@storybook/addon-outline": "^7.x",       // Show outlines
-    "@storybook/addon-viewport": "^7.x",      // Responsive testing
-    "@storybook/addon-backgrounds": "^7.x"    // Background variants
+    "@storybook/addon-docs": "^7.x", // MDX docs
+    "@storybook/addon-controls": "^7.x", // Interactive props
+    "@storybook/addon-a11y": "^7.x", // Accessibility checks
+    "@storybook/addon-links": "^7.x", // Link between stories
+    "@storybook/addon-measure": "^7.x", // Measure elements
+    "@storybook/addon-outline": "^7.x", // Show outlines
+    "@storybook/addon-viewport": "^7.x", // Responsive testing
+    "@storybook/addon-backgrounds": "^7.x" // Background variants
   }
 }
 ```
@@ -449,12 +462,14 @@ For internal team usage, Storybook serves as the primary documentation platform.
 ### Documentation Structure
 
 **1. Getting Started Pages (MDX):**
+
 - Introduction & philosophy
 - Installation guide
 - Quick start tutorial
 - Theming & customization
 
 **2. Component Documentation:**
+
 - Auto-generated prop tables
 - Interactive controls
 - Multiple variants/states
@@ -463,12 +478,14 @@ For internal team usage, Storybook serves as the primary documentation platform.
 - Accessibility notes
 
 **3. Design Tokens:**
+
 - Color palette showcase
 - Typography scale
 - Spacing system
 - Shadow/elevation
 
 **4. Patterns & Examples:**
+
 - Common form patterns
 - Layout compositions
 - Real-world examples
@@ -476,6 +493,7 @@ For internal team usage, Storybook serves as the primary documentation platform.
 ### Future Extension: VitePress (Optional)
 
 Add VitePress later if needed for:
+
 - 📱 Public marketing pages
 - 🔍 SEO for external users
 - 📚 Extensive guides
@@ -485,6 +503,7 @@ Add VitePress later if needed for:
 ## Implementation Phases
 
 ### Phase 1: Project Initialization
+
 1. Initialize pnpm workspace (pnpm-workspace.yaml)
 2. Set up base TypeScript configuration
 3. Install and configure Biome.js
@@ -492,6 +511,7 @@ Add VitePress later if needed for:
 5. Set up git hooks with Biome
 
 **Key Files:**
+
 - `pnpm-workspace.yaml`
 - `package.json` (root)
 - `biome.json`
@@ -500,6 +520,7 @@ Add VitePress later if needed for:
 - `.npmrc`
 
 ### Phase 2: Tabler Icon Package Setup
+
 1. Create `packages/tabler-vue` directory structure
 2. Set up Vite library configuration
 3. Add @tabler/icons-vue as dependency
@@ -511,6 +532,7 @@ Add VitePress later if needed for:
 9. Set up exports in package.json
 
 **Key Deliverables:**
+
 - Working @meldui/tabler-vue package
 - All Tabler icons re-exported with custom defaults
 - Generation script for syncing with Tabler updates
@@ -518,10 +540,12 @@ Add VitePress later if needed for:
 - Package.json with correct exports
 
 **Icon Defaults:**
+
 - `size: 24` (24px base size)
 - `strokeWidth: 1.5` (medium stroke weight)
 
 ### Phase 3: Vue Package Setup
+
 1. Create `packages/vue` directory structure
 2. Set up Vite library configuration with `@tailwindcss/vite` plugin
 3. Configure Tailwind CSS v4 (CSS-first with `@import "tailwindcss"`)
@@ -532,12 +556,14 @@ Add VitePress later if needed for:
 8. Set up exports in package.json
 
 **Key Deliverables:**
+
 - Vite config for library mode with Tailwind v4 plugin
 - Tailwind v4 CSS file with `@theme` configuration and icon variables
 - Package.json with @meldui/tabler-vue as peer dependency
 - TypeScript configuration
 
 ### Phase 4: Vue Storybook Setup
+
 1. Create `apps/vue-storybook` directory
 2. Initialize Storybook with Vue 3 + Vite
 3. Configure Tailwind CSS v4 in Storybook (import CSS with `@import "tailwindcss"`)
@@ -552,12 +578,14 @@ Add VitePress later if needed for:
 8. Create composite component examples
 
 **Storybook Configuration:**
+
 - Custom theme configuration
 - Addon setup (docs, controls, a11y, viewport, etc.)
 - Preview configuration with Tailwind v4 CSS import
 - Build optimization
 
 ### Phase 5: Publishing Setup
+
 1. Configure package.json exports correctly
 2. Install and configure Changesets
 3. Verify peer dependencies installation workflow
@@ -565,11 +593,13 @@ Add VitePress later if needed for:
 5. Set up npm publishing workflow (manual or CI/CD)
 
 **Version Management:**
+
 - Independent versioning per package
 - Automated changelog generation
 - Semantic versioning
 
 ### Phase 6: React Package (Future)
+
 - Mirror Phase 2-4 for React
 - Use @tabler/icons-react
 - Create React Storybook instance
@@ -580,6 +610,7 @@ Add VitePress later if needed for:
 ### Package Outputs
 
 Each package should output:
+
 - **ESM** - Modern bundlers (primary)
 - **CJS** - Node/legacy support
 - **Type definitions** - `.d.ts` files
@@ -600,17 +631,17 @@ export default defineConfig({
       entry: './src/index.ts',
       name: 'MeldUI',
       formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`
+      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
     },
     rollupOptions: {
       external: ['vue', '@tabler/icons-vue'],
       output: {
         globals: {
-          vue: 'Vue'
-        }
-      }
-    }
-  }
+          vue: 'Vue',
+        },
+      },
+    },
+  },
 })
 ```
 
@@ -638,12 +669,14 @@ export default defineConfig({
 ## CLI Tools Reference
 
 ### Development
+
 1. **pnpm** - Package management and workspaces
 2. **Vite** - Build tool and dev server
 3. **Biome CLI** - Linting, formatting, and code quality
 4. **Turborepo** - Build orchestration (optional)
 
 ### Scaffolding
+
 1. **shadcn-vue CLI** - Add shadcn components
    ```bash
    npx shadcn-vue@latest add button
@@ -654,6 +687,7 @@ export default defineConfig({
    ```
 
 ### Version Management
+
 1. **Changesets** - Version bumps and changelog
    ```bash
    npx changeset
@@ -709,6 +743,7 @@ export default defineConfig({
 ## Success Criteria
 
 ### Phase 1-3 Success
+
 - ✅ Monorepo structure set up with pnpm workspaces
 - ✅ Biome configured and working
 - ✅ Vue package can be built and imported
@@ -716,12 +751,14 @@ export default defineConfig({
 - ✅ Icon component working with Tabler icons
 
 ### Phase 4 Success
+
 - ✅ Storybook running locally
 - ✅ Component documentation complete
 - ✅ Interactive examples working
 - ✅ MDX guides created
 
 ### Phase 5 Success
+
 - ✅ Packages can be published to npm
 - ✅ Changesets workflow established
 - ✅ Internal teams can install and use packages

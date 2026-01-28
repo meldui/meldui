@@ -117,7 +117,7 @@ The theme uses OKLCH color space for better color perception and manipulation.
 Add the `dark` class to enable dark mode:
 
 ```html
-<html class="dark">
+<html class="dark"></html>
 ```
 
 Or toggle it dynamically:

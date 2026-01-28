@@ -15,6 +15,7 @@ Set up the directory structure for the icon package.
 ### Sub-tasks
 
 #### 1.1 Create package directory
+
 - [x] Create the package directory:
   ```bash
   mkdir -p packages/tabler-vue/src/custom
@@ -26,12 +27,14 @@ Set up the directory structure for the icon package.
   - `scripts/` for the icon generation script
 
 **Acceptance Criteria:**
+
 - Directory `packages/tabler-vue/` exists
 - Subdirectories `src/`, `src/custom/`, and `scripts/` exist
 
 ---
 
 #### 1.2 Create package.json
+
 - [x] Create `packages/tabler-vue/package.json`:
   ```json
   {
@@ -49,9 +52,7 @@ Set up the directory structure for the icon package.
         "types": "./dist/index.d.ts"
       }
     },
-    "files": [
-      "dist"
-    ],
+    "files": ["dist"],
     "scripts": {
       "dev": "vite build --watch",
       "build": "vite build && tsc --emitDeclarationOnly",
@@ -79,12 +80,14 @@ Set up the directory structure for the icon package.
   ```
 
 **Key Points:**
+
 - `@tabler/icons-vue` is a regular dependency (gets bundled)
 - `vue` is a peer dependency (user must install)
 - `@types/node` is needed for Node.js built-in module types (fs, path, url)
 - `exports` field provides proper ESM/CJS support
 
 **Acceptance Criteria:**
+
 - package.json exists with correct configuration
 - name is `@meldui/tabler-vue`
 - exports field is properly configured
@@ -92,6 +95,7 @@ Set up the directory structure for the icon package.
 ---
 
 #### 1.3 Install package dependencies
+
 - [x] Navigate to the package:
   ```bash
   cd packages/tabler-vue
@@ -103,6 +107,7 @@ Set up the directory structure for the icon package.
 - [x] This installs Tabler Icons and dev dependencies
 
 **Acceptance Criteria:**
+
 - node_modules exists in packages/tabler-vue
 - @tabler/icons-vue is installed
 - pnpm-lock.yaml is updated
@@ -116,25 +121,29 @@ Define the default icon properties.
 ### Sub-tasks
 
 #### 2.1 Create defaults.ts
+
 - [x] Create `packages/tabler-vue/src/defaults.ts`:
+
   ```typescript
   /**
    * Default configuration for all MeldUI icons.
    * These values can be overridden per-instance via props.
    */
   export const ICON_DEFAULTS = {
-    size: 24,           // 24px base size
-    strokeWidth: 1.5,   // Medium stroke weight
+    size: 24, // 24px base size
+    strokeWidth: 1.5, // Medium stroke weight
   } as const
 
   export type IconDefaults = typeof ICON_DEFAULTS
   ```
 
 **Why these defaults?**
+
 - `size: 24` - Standard icon size that works well at typical UI scales
 - `strokeWidth: 1.5` - Medium weight that balances clarity and aesthetics
 
 **Acceptance Criteria:**
+
 - defaults.ts exists in src/
 - ICON_DEFAULTS is exported as const
 - TypeScript type is exported
@@ -148,7 +157,9 @@ Build the wrapper that applies defaults to Tabler icons.
 ### Sub-tasks
 
 #### 3.1 Create wrapper.ts
+
 - [x] Create `packages/tabler-vue/src/wrapper.ts`:
+
   ```typescript
   import { defineComponent, h, type Component } from 'vue'
   import { ICON_DEFAULTS } from './defaults'
@@ -171,38 +182,41 @@ Build the wrapper that applies defaults to Tabler icons.
       props: {
         size: {
           type: Number,
-          default: ICON_DEFAULTS.size
+          default: ICON_DEFAULTS.size,
         },
         strokeWidth: {
           type: Number,
-          default: ICON_DEFAULTS.strokeWidth
+          default: ICON_DEFAULTS.strokeWidth,
         },
         color: {
           type: String,
-          default: undefined
+          default: undefined,
         },
       },
       setup(props, { attrs }) {
-        return () => h(OriginalIcon, {
-          ...props,
-          style: {
-            color: props.color ?? 'var(--icon-color, currentColor)',
-            ...(attrs.style as any)
-          },
-          ...attrs
-        })
-      }
+        return () =>
+          h(OriginalIcon, {
+            ...props,
+            style: {
+              color: props.color ?? 'var(--icon-color, currentColor)',
+              ...(attrs.style as any),
+            },
+            ...attrs,
+          })
+      },
     })
   }
   ```
 
 **What this does:**
+
 - Takes any Tabler icon component
 - Wraps it with default props
 - Adds CSS variable integration for theming
 - Preserves all attrs and functionality
 
 **Acceptance Criteria:**
+
 - wrapper.ts exists in src/
 - createIcon function is exported
 - Code has proper TypeScript types
@@ -217,7 +231,9 @@ Build a script to auto-generate icon re-exports.
 ### Sub-tasks
 
 #### 4.1 Create generate.ts script
+
 - [x] Create `packages/tabler-vue/scripts/generate.ts`:
+
   ```typescript
   #!/usr/bin/env tsx
   import { writeFileSync } from 'fs'
@@ -247,21 +263,19 @@ Build a script to auto-generate icon re-exports.
     const tablerIcons = await import('@tabler/icons-vue')
 
     // Get all icon names (exports starting with 'Icon')
-    const iconNames = Object.keys(tablerIcons).filter(name =>
-      name.startsWith('Icon') && name !== 'Icon'
+    const iconNames = Object.keys(tablerIcons).filter(
+      (name) => name.startsWith('Icon') && name !== 'Icon',
     )
 
     console.log(`📦 Found ${iconNames.length} icons from @tabler/icons-vue`)
 
     // Generate import statements with aliases to avoid conflicts
-    const imports = iconNames.map(name =>
-      `  ${name} as ${name}Original,`
-    ).join('\n')
+    const imports = iconNames.map((name) => `  ${name} as ${name}Original,`).join('\n')
 
     // Generate re-exports with wrapper
-    const exports = iconNames.map(name =>
-      `export const ${name} = createIcon(${name}Original)`
-    ).join('\n')
+    const exports = iconNames
+      .map((name) => `export const ${name} = createIcon(${name}Original)`)
+      .join('\n')
 
     // Build the complete file content
     const fileContent = `/**
@@ -275,15 +289,15 @@ Build a script to auto-generate icon re-exports.
    * Icons are wrapped using createIcon() to provide consistent sizing,
    * stroke width, and theme integration.
    */
-
+  
   import { createIcon } from './wrapper'
   import {
   ${imports}
   } from '@tabler/icons-vue'
-
+  
   // Re-export all icons with MeldUI defaults
   ${exports}
-
+  
   // Re-export utilities
   export { createIcon } from './wrapper'
   export { ICON_DEFAULTS } from './defaults'
@@ -303,6 +317,7 @@ Build a script to auto-generate icon re-exports.
   ```
 
 **What this does:**
+
 - Sets up ES module support with `import.meta.url` for `__dirname`
 - Reads all exports from @tabler/icons-vue
 - Imports icons with aliases (e.g., `IconX as IconXOriginal`) to avoid TypeScript conflicts
@@ -311,10 +326,12 @@ Build a script to auto-generate icon re-exports.
 - Adds helpful comments and metadata
 
 **Important Implementation Notes:**
+
 - Uses import aliases to prevent TypeScript declaration merging errors
 - Requires `@types/node` for Node.js built-in module types
 
 **Acceptance Criteria:**
+
 - generate.ts exists in scripts/
 - Script has proper imports and error handling
 - Script logs progress to console
@@ -323,6 +340,7 @@ Build a script to auto-generate icon re-exports.
 ---
 
 #### 4.2 Run the generation script
+
 - [x] Run the script to generate icons:
   ```bash
   pnpm --filter @meldui/tabler-vue generate-icons
@@ -330,6 +348,7 @@ Build a script to auto-generate icon re-exports.
 - [x] This creates `src/index.ts` with 6000+ icon exports
 
 **Expected Output:**
+
 ```
 🔄 Generating icon re-exports...
 📦 Found 6019 icons from @tabler/icons-vue
@@ -340,6 +359,7 @@ Build a script to auto-generate icon re-exports.
 **Note:** Use `pnpm --filter` to run commands from workspace root.
 
 **Acceptance Criteria:**
+
 - src/index.ts is created
 - File contains wrapped icon exports
 - File includes header comment with generation date
@@ -354,7 +374,9 @@ Set up Vite to build the package as a library.
 ### Sub-tasks
 
 #### 5.1 Create vite.config.ts
+
 - [x] Create `packages/tabler-vue/vite.config.ts`:
+
   ```typescript
   import { defineConfig } from 'vite'
   import vue from '@vitejs/plugin-vue'
@@ -367,7 +389,7 @@ Set up Vite to build the package as a library.
         entry: resolve(__dirname, 'src/index.ts'),
         name: 'MeldUITablerVue',
         formats: ['es', 'cjs'],
-        fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`
+        fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
       },
       rollupOptions: {
         // Externalize dependencies that shouldn't be bundled
@@ -375,20 +397,21 @@ Set up Vite to build the package as a library.
         output: {
           // Provide globals for UMD build (if needed later)
           globals: {
-            vue: 'Vue'
+            vue: 'Vue',
           },
           // Preserve the structure for better tree-shaking
           preserveModules: false,
-        }
+        },
       },
       sourcemap: true,
       // Clear output directory before build
-      emptyOutDir: true
-    }
+      emptyOutDir: true,
+    },
   })
   ```
 
 **Key Configuration:**
+
 - `lib` mode creates a library (not an app)
 - `external: ['vue']` - Vue is not bundled (peer dependency)
 - `@tabler/icons-vue` IS bundled (regular dependency)
@@ -396,6 +419,7 @@ Set up Vite to build the package as a library.
 - Source maps enabled for debugging
 
 **Acceptance Criteria:**
+
 - vite.config.ts exists
 - Configuration is for library mode
 - External dependencies are correct
@@ -403,6 +427,7 @@ Set up Vite to build the package as a library.
 ---
 
 #### 5.2 Create tsconfig.json
+
 - [x] Create `packages/tabler-vue/tsconfig.json`:
   ```json
   {
@@ -421,17 +446,20 @@ Set up Vite to build the package as a library.
   ```
 
 **Key Configuration Points:**
+
 - `moduleResolution: "node"` - Overrides root config's "Bundler" to support Node.js built-in modules
 - `types: ["node"]` - Enables Node.js type definitions for scripts
 - Includes both `src/` and `scripts/` directories
 - No `rootDir` restriction, allowing both src and scripts to be type-checked
 
 **Why this configuration?**
+
 - The root tsconfig uses `moduleResolution: "Bundler"` which doesn't understand Node.js built-in modules
 - Scripts need access to `fs`, `path`, `url` modules, requiring Node.js module resolution
 - Single tsconfig can handle both Vue components and Node.js scripts
 
 **Acceptance Criteria:**
+
 - tsconfig.json extends root config
 - Includes both src/ and scripts/ directories
 - No TypeScript errors when importing Node.js built-in modules
@@ -439,6 +467,7 @@ Set up Vite to build the package as a library.
 ---
 
 #### 5.3 Build the package
+
 - [x] Run the build command:
   ```bash
   pnpm --filter @meldui/tabler-vue build
@@ -450,6 +479,7 @@ Set up Vite to build the package as a library.
   - Output to `dist/` directory
 
 **Expected Output:**
+
 ```
 vite v5.x.x building for production...
 ✓ 5971 modules transformed.
@@ -461,6 +491,7 @@ dist/index.cjs  3,436.83 kB │ gzip: 456.14 kB
 **Note:** Build sizes are large due to bundling 6000+ icons. Tree-shaking at consumer level will only include used icons.
 
 **Acceptance Criteria:**
+
 - dist/ directory is created
 - dist/index.mjs exists (ESM build)
 - dist/index.cjs exists (CJS build)
@@ -477,23 +508,25 @@ Verify the icon package works correctly.
 ### Sub-tasks
 
 #### 6.1 Create a test file
+
 - [x] Create `packages/tabler-vue/test.html` for manual testing:
+
   ```html
   <!DOCTYPE html>
   <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Icon Package Test</title>
-    <script type="module">
-      import { createApp } from 'vue'
-      import { IconX, IconUser, IconSettings, ICON_DEFAULTS } from './src/index.ts'
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Icon Package Test</title>
+      <script type="module">
+        import { createApp } from 'vue'
+        import { IconX, IconUser, IconSettings, ICON_DEFAULTS } from './src/index.ts'
 
-      console.log('Icon defaults:', ICON_DEFAULTS)
+        console.log('Icon defaults:', ICON_DEFAULTS)
 
-      const app = createApp({
-        components: { IconX, IconUser, IconSettings },
-        template: `
+        const app = createApp({
+          components: { IconX, IconUser, IconSettings },
+          template: `
           <div style="padding: 20px; font-family: sans-serif;">
             <h2>Icon Package Test</h2>
             <div style="display: flex; gap: 20px; margin: 20px 0;">
@@ -515,15 +548,15 @@ Verify the icon package works correctly.
               </div>
             </div>
           </div>
-        `
-      })
+        `,
+        })
 
-      app.mount('#app')
-    </script>
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
+        app.mount('#app')
+      </script>
+    </head>
+    <body>
+      <div id="app"></div>
+    </body>
   </html>
   ```
 
@@ -532,6 +565,7 @@ Verify the icon package works correctly.
 ---
 
 #### 6.2 Verify icon properties
+
 - [x] Check that generated icons have correct defaults:
   - Default size should be 24
   - Default strokeWidth should be 1.5
@@ -539,6 +573,7 @@ Verify the icon package works correctly.
 - [x] Check that icons can be imported
 
 **Manual Testing:**
+
 ```bash
 # In packages/tabler-vue
 pnpm dev
@@ -546,6 +581,7 @@ pnpm dev
 ```
 
 **Acceptance Criteria:**
+
 - Icons render correctly
 - Default size is 24px
 - Props can override defaults
@@ -561,7 +597,9 @@ Document how to use the icon package.
 ### Sub-tasks
 
 #### 7.1 Create README.md
+
 - [x] Create `packages/tabler-vue/README.md`:
+
   ```markdown
   # @meldui/tabler-vue
 
@@ -576,6 +614,7 @@ Document how to use the icon package.
   ## Usage
 
   \`\`\`vue
+
   <script setup>
   import { IconX, IconUser, IconSettings } from '@meldui/tabler-vue'
   </script>
@@ -598,6 +637,7 @@ Document how to use the icon package.
 
       <!-- Explicit color -->
       <IconX color="#ff0000" />
+
     </div>
   </template>
   \`\`\`
@@ -605,6 +645,7 @@ Document how to use the icon package.
   ## Default Configuration
 
   All icons use these defaults (can be overridden via props):
+
   - `size`: 24px
   - `strokeWidth`: 1.5
 
@@ -614,11 +655,11 @@ Document how to use the icon package.
 
   \`\`\`css
   :root {
-    --icon-color: #374151; /* gray-700 */
+  --icon-color: #374151; /_ gray-700 _/
   }
 
   .dark {
-    --icon-color: #e5e7eb; /* gray-200 */
+  --icon-color: #e5e7eb; /_ gray-200 _/
   }
   \`\`\`
 
@@ -637,9 +678,11 @@ Document how to use the icon package.
   \`\`\`bash
   cd packages/tabler-vue
   pnpm update @tabler/icons-vue
-  pnpm generate-icons  # Regenerate src/index.ts
+  pnpm generate-icons # Regenerate src/index.ts
   pnpm build
+
   # Review changes, then publish new version
+
   \`\`\`
 
   Or from workspace root:
@@ -654,8 +697,10 @@ Document how to use the icon package.
 
   MIT (internal use only)
   \`\`\`
+  ```
 
 **Acceptance Criteria:**
+
 - README.md exists with usage examples
 - Installation instructions are clear
 - Maintainer instructions are included
@@ -680,6 +725,7 @@ Verify all tasks are complete:
 - [x] README documentation created
 
 **Test Commands:**
+
 ```bash
 # From workspace root (recommended)
 pnpm --filter @meldui/tabler-vue build  # Should complete without errors
@@ -691,6 +737,7 @@ ls packages/tabler-vue/dist/index.mjs packages/tabler-vue/dist/index.cjs package
 ```
 
 **File Structure Verification:**
+
 ```
 packages/tabler-vue/
 ├── dist/
@@ -718,6 +765,7 @@ packages/tabler-vue/
 ### Issue 1: TypeScript Declaration Conflicts
 
 **Problem:** Initial implementation caused TypeScript errors:
+
 ```
 error TS2395: Individual declarations in merged declaration 'IconX' must be all exported or all local.
 error TS2440: Import declaration conflicts with local declaration of 'IconX'.
@@ -726,11 +774,9 @@ error TS2440: Import declaration conflicts with local declaration of 'IconX'.
 **Root Cause:** Direct re-export pattern `export const IconX = createIcon(IconX)` caused TypeScript to see both an import and a const declaration with the same name, triggering declaration merging errors.
 
 **Solution:** Use import aliases to avoid name conflicts:
+
 ```typescript
-import {
-  IconX as IconXOriginal,
-  IconUser as IconUserOriginal,
-} from '@tabler/icons-vue'
+import { IconX as IconXOriginal, IconUser as IconUserOriginal } from '@tabler/icons-vue'
 
 export const IconX = createIcon(IconXOriginal)
 export const IconUser = createIcon(IconUserOriginal)
@@ -743,6 +789,7 @@ export const IconUser = createIcon(IconUserOriginal)
 **Root Cause:** ES modules (type: "module") don't have `__dirname` available.
 
 **Solution:** Manually create `__dirname` using `import.meta.url`:
+
 ```typescript
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -758,6 +805,7 @@ const __dirname = dirname(__filename)
 **Root Cause:** Root tsconfig uses `moduleResolution: "Bundler"` which doesn't understand Node.js built-in modules.
 
 **Solution:** Override module resolution in package tsconfig:
+
 ```json
 {
   "compilerOptions": {

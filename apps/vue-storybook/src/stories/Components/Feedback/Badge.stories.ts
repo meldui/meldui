@@ -304,14 +304,15 @@ export const LongText: Story = {
   }),
 }
 
+function handleRemoveBadge(label: string) {
+  alert(`Removing badge: ${label}`)
+}
+
 export const WithIconButton: Story = {
   render: () => ({
     components: { Badge, IconX },
     setup() {
-      const handleRemove = (label: string) => {
-        alert(`Removing badge: ${label}`)
-      }
-      return { handleRemove }
+      return { handleRemove: handleRemoveBadge }
     },
     template: `
       <div class="flex flex-wrap gap-2">

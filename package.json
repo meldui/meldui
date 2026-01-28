@@ -2,15 +2,15 @@
   "name": "meldui",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@10.13.1",
   "scripts": {
     "build": "turbo build --filter=!task-manager",
     "dev": "turbo dev",
-    "lint": "biome lint .",
-    "lint:fix": "biome lint --write .",
-    "format": "biome format --write .",
-    "check": "biome check .",
-    "check:fix": "biome check --write .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "check": "pnpm lint && pnpm format:check",
+    "check:fix": "pnpm lint:fix && pnpm format",
     "prepare": "husky",
     "storybook:vue": "pnpm --filter vue-storybook storybook",
     "build:storybook:vue": "pnpm --filter vue-storybook build-storybook",
@@ -22,10 +22,13 @@
     "release": "pnpm check:fix && pnpm build && changeset publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.6",
     "@changesets/cli": "^2.29.7",
     "husky": "^9.1.7",
+    "oxfmt": "^0.27.0",
+    "oxlint": "^1.42.0",
     "turbo": "^2.6.1",
-    "typescript": "^5.9.3"
-  }
+    "typescript": "^5.9.3",
+    "vite": "8.0.0-beta.10"
+  },
+  "packageManager": "pnpm@10.13.1"
 }

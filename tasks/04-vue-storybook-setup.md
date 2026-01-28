@@ -15,6 +15,7 @@ Set up a new Storybook application for Vue 3.
 ### Sub-tasks
 
 #### 1.1 Create app directory
+
 - [ ] Create apps directory structure:
   ```bash
   mkdir -p apps/vue-storybook
@@ -22,11 +23,13 @@ Set up a new Storybook application for Vue 3.
   ```
 
 **Acceptance Criteria:**
+
 - Directory apps/vue-storybook/ exists
 
 ---
 
 #### 1.2 Initialize Storybook
+
 - [ ] Run Storybook initialization:
   ```bash
   pnpm dlx storybook@latest init --type vue3
@@ -38,11 +41,13 @@ Set up a new Storybook application for Vue 3.
   - Add scripts to package.json
 
 **Interactive Prompts:**
+
 - Choose "vue3" as framework
 - Accept installation of required dependencies
 - Don't run Storybook yet (we need to configure it first)
 
 **Acceptance Criteria:**
+
 - .storybook/ directory created with main.ts and preview.ts
 - Storybook dependencies added to package.json
 - Sample stories created (we'll delete these later)
@@ -50,6 +55,7 @@ Set up a new Storybook application for Vue 3.
 ---
 
 #### 1.3 Update package.json
+
 - [ ] Modify generated `apps/vue-storybook/package.json` to add workspace dependencies:
   ```json
   {
@@ -92,11 +98,13 @@ Set up a new Storybook application for Vue 3.
   ```
 
 **Key Points:**
+
 - `workspace:*` links to local packages
 - Includes all useful Storybook addons
 - Includes Tailwind v4 for styling
 
 **Acceptance Criteria:**
+
 - package.json has workspace dependencies
 - All Storybook addons are included
 - Tailwind CSS v4 is included
@@ -104,12 +112,14 @@ Set up a new Storybook application for Vue 3.
 ---
 
 #### 1.4 Install dependencies
+
 - [ ] Install all dependencies:
   ```bash
   pnpm install
   ```
 
 **Acceptance Criteria:**
+
 - Dependencies installed successfully
 - @meldui/vue and @meldui/tabler-vue linked from workspace
 
@@ -122,11 +132,13 @@ Set up Tailwind CSS v4 so components render correctly.
 ### Sub-tasks
 
 #### 2.1 Create Tailwind CSS file
+
 - [ ] Create `apps/vue-storybook/src/styles/tailwind.css`:
   ```bash
   mkdir -p src/styles
   ```
 - [ ] Create the CSS file:
+
   ```css
   /**
    * Tailwind CSS v4 for Storybook
@@ -134,7 +146,7 @@ Set up Tailwind CSS v4 so components render correctly.
    * This imports Tailwind and extends the MeldUI theme.
    */
 
-  @import "tailwindcss";
+  @import 'tailwindcss';
 
   /**
    * Import MeldUI theme
@@ -214,6 +226,7 @@ Set up Tailwind CSS v4 so components render correctly.
 **Note:** This mirrors the theme from @meldui/vue so components look the same.
 
 **Acceptance Criteria:**
+
 - src/styles/tailwind.css exists
 - Uses Tailwind v4 syntax (@import, @theme)
 - Includes all theme variables
@@ -221,7 +234,9 @@ Set up Tailwind CSS v4 so components render correctly.
 ---
 
 #### 2.2 Configure Storybook preview
+
 - [ ] Update `.storybook/preview.ts` to import Tailwind:
+
   ```typescript
   import type { Preview } from '@storybook/vue3'
   import '../src/styles/tailwind.css' // Import Tailwind CSS
@@ -270,18 +285,22 @@ Set up Tailwind CSS v4 so components render correctly.
   ```
 
 **What this does:**
+
 - Imports Tailwind CSS globally
 - Configures background colors for testing
 - Sets up responsive viewports
 
 **Acceptance Criteria:**
+
 - preview.ts imports tailwind.css
 - Background and viewport options configured
 
 ---
 
 #### 2.3 Configure Storybook main
+
 - [ ] Update `.storybook/main.ts` to use Tailwind Vite plugin:
+
   ```typescript
   import type { StorybookConfig } from '@storybook/vue3-vite'
   import tailwindcss from '@tailwindcss/vite'
@@ -317,11 +336,13 @@ Set up Tailwind CSS v4 so components render correctly.
   ```
 
 **What this does:**
+
 - Registers all Storybook addons
 - Adds Tailwind CSS v4 Vite plugin to Storybook's build
 - Enables autodocs for components
 
 **Acceptance Criteria:**
+
 - main.ts includes @tailwindcss/vite plugin
 - All addons are registered
 - Stories glob pattern includes MDX files
@@ -335,6 +356,7 @@ Write guides for users of the design system.
 ### Sub-tasks
 
 #### 3.1 Create stories directory
+
 - [ ] Create directory structure:
   ```bash
   mkdir -p src/stories/Components
@@ -343,12 +365,15 @@ Write guides for users of the design system.
   ```
 
 **Acceptance Criteria:**
+
 - src/stories/ directory with subdirectories exists
 
 ---
 
 #### 3.2 Create Introduction.mdx
+
 - [ ] Create `src/stories/Introduction.mdx`:
+
   ```mdx
   import { Meta } from '@storybook/blocks'
 
@@ -370,7 +395,9 @@ Write guides for users of the design system.
   ## Quick Start
 
   \`\`\`bash
+
   # Install packages
+
   pnpm add @meldui/vue @meldui/tabler-vue vue
   \`\`\`
 
@@ -395,6 +422,7 @@ Write guides for users of the design system.
   ```
 
 **Acceptance Criteria:**
+
 - Introduction.mdx exists with welcome content
 - Includes quick start example
 - Links to other documentation pages
@@ -402,7 +430,9 @@ Write guides for users of the design system.
 ---
 
 #### 3.3 Create Installation.mdx
+
 - [ ] Create `src/stories/Installation.mdx`:
+
   ```mdx
   import { Meta } from '@storybook/blocks'
 
@@ -437,6 +467,7 @@ Write guides for users of the design system.
   ## Step 3: Use Components
 
   \`\`\`vue
+
   <script setup lang="ts">
   import { Button, Card, CardHeader, CardTitle, CardContent } from '@meldui/vue'
   import { IconCheck } from '@meldui/tabler-vue'
@@ -463,11 +494,11 @@ Write guides for users of the design system.
 
   \`\`\`json
   {
-    "compilerOptions": {
-      "module": "ESNext",
-      "moduleResolution": "Bundler",
-      "types": ["vue"]
-    }
+  "compilerOptions": {
+  "module": "ESNext",
+  "moduleResolution": "Bundler",
+  "types": ["vue"]
+  }
   }
   \`\`\`
 
@@ -486,6 +517,7 @@ Write guides for users of the design system.
   ```
 
 **Acceptance Criteria:**
+
 - Installation.mdx exists with step-by-step guide
 - Includes code examples
 - Covers TypeScript setup
@@ -493,7 +525,9 @@ Write guides for users of the design system.
 ---
 
 #### 3.4 Create Theming.mdx
+
 - [ ] Create `src/stories/Theming.mdx`:
+
   ```mdx
   import { Meta } from '@storybook/blocks'
 
@@ -509,26 +543,26 @@ Write guides for users of the design system.
 
   \`\`\`css
   :root {
-    /* Primary colors */
-    --color-primary: #3b82f6;
-    --color-primary-foreground: #ffffff;
+  /_ Primary colors _/
+  --color-primary: #3b82f6;
+  --color-primary-foreground: #ffffff;
 
-    /* Background */
-    --color-background: #ffffff;
-    --color-foreground: #0f172a;
+  /_ Background _/
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
 
-    /* Borders and inputs */
-    --color-border: #e5e7eb;
-    --color-input: #e5e7eb;
-    --color-ring: #3b82f6;
+  /_ Borders and inputs _/
+  --color-border: #e5e7eb;
+  --color-input: #e5e7eb;
+  --color-ring: #3b82f6;
 
-    /* Icon color */
-    --icon-color: #374151;
+  /_ Icon color _/
+  --icon-color: #374151;
 
-    /* Border radius */
-    --radius-sm: 0.25rem;
-    --radius-md: 0.375rem;
-    --radius-lg: 0.5rem;
+  /_ Border radius _/
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
   }
   \`\`\`
 
@@ -537,10 +571,10 @@ Write guides for users of the design system.
   Override variables in your own CSS:
 
   \`\`\`css
-  /* In your app's CSS file */
+  /_ In your app's CSS file _/
   :root {
-    --color-primary: #8b5cf6; /* Purple */
-    --color-primary-foreground: #ffffff;
+  --color-primary: #8b5cf6; /_ Purple _/
+  --color-primary-foreground: #ffffff;
   }
   \`\`\`
 
@@ -549,6 +583,7 @@ Write guides for users of the design system.
   Enable dark mode by adding the `dark` class to your root element:
 
   \`\`\`vue
+
   <template>
     <div class="dark">
       <!-- Your app content -->
@@ -569,9 +604,9 @@ Write guides for users of the design system.
 
   \`\`\`css
   :root {
-    --radius-sm: 0.125rem; /* More square */
-    --radius-md: 0.5rem;   /* More rounded */
-    --radius-lg: 1rem;     /* Very rounded */
+  --radius-sm: 0.125rem; /_ More square _/
+  --radius-md: 0.5rem; /_ More rounded _/
+  --radius-lg: 1rem; /_ Very rounded _/
   }
   \`\`\`
 
@@ -581,11 +616,11 @@ Write guides for users of the design system.
 
   \`\`\`css
   :root {
-    --icon-color: #3b82f6; /* Blue icons */
+  --icon-color: #3b82f6; /_ Blue icons _/
   }
 
   .dark {
-    --icon-color: #60a5fa; /* Lighter blue in dark mode */
+  --icon-color: #60a5fa; /_ Lighter blue in dark mode _/
   }
   \`\`\`
 
@@ -595,6 +630,7 @@ Write guides for users of the design system.
   ```
 
 **Acceptance Criteria:**
+
 - Theming.mdx exists with customization examples
 - Shows how to override CSS variables
 - Explains dark mode setup
@@ -602,7 +638,9 @@ Write guides for users of the design system.
 ---
 
 #### 3.5 Create Icons.mdx
+
 - [ ] Create `src/stories/Icons.mdx`:
+
   ```mdx
   import { Meta } from '@storybook/blocks'
 
@@ -623,6 +661,7 @@ Write guides for users of the design system.
   ## Usage
 
   \`\`\`vue
+
   <script setup>
   import { IconX, IconCheck, IconAlertCircle } from '@meldui/tabler-vue'
   </script>
@@ -632,12 +671,15 @@ Write guides for users of the design system.
     <IconCheck />
 
     <!-- Custom size -->
+
     <IconX :size="32" />
 
     <!-- Custom stroke width -->
+
     <IconAlertCircle :stroke-width="2" />
 
     <!-- Custom color -->
+
     <IconCheck color="#22c55e" />
   </template>
   \`\`\`
@@ -645,23 +687,25 @@ Write guides for users of the design system.
   ## Default Values
 
   All icons have these defaults:
+
   - **Size:** 24px
   - **Stroke Width:** 1.5
   - **Color:** Inherits from `currentColor` or `--icon-color` CSS variable
 
   ## Props
 
-  | Prop | Type | Default | Description |
-  |------|------|---------|-------------|
-  | `size` | number | 24 | Icon size in pixels |
-  | `strokeWidth` | number | 1.5 | Stroke thickness |
-  | `color` | string | undefined | Explicit color (otherwise uses currentColor) |
+  | Prop          | Type   | Default   | Description                                  |
+  | ------------- | ------ | --------- | -------------------------------------------- |
+  | `size`        | number | 24        | Icon size in pixels                          |
+  | `strokeWidth` | number | 1.5       | Stroke thickness                             |
+  | `color`       | string | undefined | Explicit color (otherwise uses currentColor) |
 
   ## Color Inheritance
 
   Icons inherit text color by default:
 
   \`\`\`vue
+
   <template>
     <span class="text-red-500">
       <IconX /> <!-- Red icon -->
@@ -675,7 +719,7 @@ Write guides for users of the design system.
 
   \`\`\`css
   :root {
-    --icon-color: #3b82f6; /* Blue */
+  --icon-color: #3b82f6; /_ Blue _/
   }
   \`\`\`
 
@@ -688,6 +732,7 @@ Write guides for users of the design system.
   ## Icon Names
 
   Tabler icons use the `Icon` prefix:
+
   - `IconX` - X/close icon
   - `IconCheck` - Checkmark
   - `IconUser` - User profile
@@ -696,6 +741,7 @@ Write guides for users of the design system.
   ```
 
 **Acceptance Criteria:**
+
 - Icons.mdx exists with usage guide
 - Explains default values and props
 - Links to Tabler Icons website
@@ -709,7 +755,9 @@ Write stories for the base components.
 ### Sub-tasks
 
 #### 4.1 Create Button.stories.ts
+
 - [ ] Create `src/stories/Components/Button.stories.ts`:
+
   ```typescript
   import type { Meta, StoryObj } from '@storybook/vue3'
   import { Button } from '@meldui/vue'
@@ -809,6 +857,7 @@ Write stories for the base components.
   ```
 
 **Acceptance Criteria:**
+
 - Button.stories.ts exists
 - Shows all variants and sizes
 - Includes icon examples
@@ -817,7 +866,9 @@ Write stories for the base components.
 ---
 
 #### 4.2 Create Card.stories.ts
+
 - [ ] Create `src/stories/Components/Card.stories.ts`:
+
   ```typescript
   import type { Meta, StoryObj } from '@storybook/vue3'
   import {
@@ -827,7 +878,7 @@ Write stories for the base components.
     CardDescription,
     CardContent,
     CardFooter,
-    Button
+    Button,
   } from '@meldui/vue'
 
   const meta: Meta<typeof Card> = {
@@ -878,6 +929,7 @@ Write stories for the base components.
   ```
 
 **Acceptance Criteria:**
+
 - Card.stories.ts exists
 - Shows card with all sub-components
 - Includes example with footer and buttons
@@ -885,6 +937,7 @@ Write stories for the base components.
 ---
 
 #### 4.3 Test Storybook
+
 - [ ] Start Storybook:
   ```bash
   cd apps/vue-storybook
@@ -899,6 +952,7 @@ Write stories for the base components.
   - No console errors
 
 **Acceptance Criteria:**
+
 - Storybook runs successfully
 - All stories and docs pages visible
 - Components styled correctly
@@ -913,7 +967,9 @@ Build a searchable icon browser.
 ### Sub-tasks
 
 #### 5.1 Create IconGallery.stories.ts
+
 - [ ] Create `src/stories/Icons/IconGallery.stories.ts`:
+
   ```typescript
   import type { Meta, StoryObj } from '@storybook/vue3'
   import { ref, computed } from 'vue'
@@ -941,9 +997,7 @@ Build a searchable icon browser.
         const filteredIcons = computed(() => {
           if (!search.value) return allIcons
           const query = search.value.toLowerCase()
-          return allIcons.filter(({ name }) =>
-            name.toLowerCase().includes(query)
-          )
+          return allIcons.filter(({ name }) => name.toLowerCase().includes(query))
         })
 
         return {
@@ -971,7 +1025,7 @@ Build a searchable icon browser.
               Showing {{ filteredIcons.length }} icons
             </p>
           </div>
-
+  
           <div style="
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -1011,19 +1065,21 @@ Build a searchable icon browser.
         copyIconName(name: string) {
           navigator.clipboard.writeText(name)
           alert(`Copied: ${name}`)
-        }
-      }
+        },
+      },
     }),
   }
   ```
 
 **What this does:**
+
 - Displays all available icons in a grid
 - Searchable/filterable by name
 - Click to copy icon name
 - Shows count of displayed icons
 
 **Acceptance Criteria:**
+
 - IconGallery.stories.ts exists
 - Displays all icons from @meldui/tabler-vue
 - Search functionality works
@@ -1038,6 +1094,7 @@ Create a production build to verify everything works.
 ### Sub-tasks
 
 #### 6.1 Build Storybook
+
 - [ ] Run build command:
   ```bash
   cd apps/vue-storybook
@@ -1046,6 +1103,7 @@ Create a production build to verify everything works.
 - [ ] This creates a static site in `storybook-static/`
 
 **Expected Output:**
+
 ```
 info => Building manager..
 info => Manager built (XXXms)
@@ -1055,6 +1113,7 @@ info => Output directory: storybook-static
 ```
 
 **Acceptance Criteria:**
+
 - Build completes without errors
 - storybook-static/ directory created
 - Static HTML files generated
@@ -1062,6 +1121,7 @@ info => Output directory: storybook-static
 ---
 
 #### 6.2 Preview built Storybook
+
 - [ ] Serve the static build:
   ```bash
   npx http-server storybook-static
@@ -1072,6 +1132,7 @@ info => Output directory: storybook-static
   - No 404 errors in console
 
 **Acceptance Criteria:**
+
 - Static build works correctly
 - All assets load
 - Navigation works
@@ -1095,6 +1156,7 @@ Verify all tasks are complete:
 - [ ] Static build can be served
 
 **Test Commands:**
+
 ```bash
 cd apps/vue-storybook
 pnpm storybook  # Should open at localhost:6006
@@ -1102,6 +1164,7 @@ pnpm build-storybook  # Should build to storybook-static/
 ```
 
 **File Structure Verification:**
+
 ```
 apps/vue-storybook/
 ├── .storybook/

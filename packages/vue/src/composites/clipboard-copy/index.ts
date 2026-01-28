@@ -4,8 +4,5 @@ export type { ClipboardCopyButtonProps } from './ClipboardCopyButton.vue'
 export { default as ClipboardCopyButton } from './ClipboardCopyButton.vue'
 export { default as CopyIdle } from './CopyIdle.vue'
 export { default as CopySuccess } from './CopySuccess.vue'
-export type {
-  UseCopyToClipboardOptions,
-  UseCopyToClipboardReturn,
-} from './useCopyToClipboard'
+export type { UseCopyToClipboardOptions, UseCopyToClipboardReturn } from './useCopyToClipboard'
 export { useCopyToClipboard } from './useCopyToClipboard'

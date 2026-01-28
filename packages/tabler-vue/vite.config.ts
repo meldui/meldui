@@ -10,7 +10,7 @@ export default defineConfig({
       name: 'MeldUITablerVue',
       formats: ['es', 'cjs'],
     },
-    rollupOptions: {
+    rolldownOptions: {
       // Externalize dependencies that shouldn't be bundled
       external: ['vue', /^@tabler\/icons-vue/],
       output: [
@@ -37,8 +37,7 @@ export default defineConfig({
       ],
     },
     sourcemap: true,
-    // Enable minification
-    minify: 'esbuild',
+    // Oxc minification is automatic via Rolldown
     // Clear output directory before build
     emptyOutDir: true,
   },

@@ -47,6 +47,27 @@ const meta: Meta<typeof Slider> = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+function formatPriceValue(value: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+  }).format(value)
+}
+
+function getQualityLabelForValue(value: number) {
+  if (value <= 30) return 'Low'
+  if (value <= 60) return 'Medium'
+  if (value <= 85) return 'High'
+  return 'Very High'
+}
+
+function formatTimeValue(hour: number) {
+  const period = hour >= 12 ? 'PM' : 'AM'
+  const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
+  return `${displayHour}:00 ${period}`
+}
+
 export const Default: Story = {
   render: () => ({
     components: { Slider },
@@ -410,15 +431,7 @@ export const PriceFilter: Story = {
       const minPrice = 0
       const maxPrice = 1000
 
-      const formatPrice = (value: number) => {
-        return new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 0,
-        }).format(value)
-      }
-
-      return { priceRange, minPrice, maxPrice, formatPrice }
+      return { priceRange, minPrice, maxPrice, formatPrice: formatPriceValue }
     },
     template: `
       <div class="flex flex-col gap-4 max-w-md p-6 border rounded-lg">
@@ -462,14 +475,7 @@ export const ImageQuality: Story = {
     setup() {
       const quality = ref([80])
 
-      const getQualityLabel = (value: number) => {
-        if (value <= 30) return 'Low'
-        if (value <= 60) return 'Medium'
-        if (value <= 85) return 'High'
-        return 'Very High'
-      }
-
-      return { quality, getQualityLabel }
+      return { quality, getQualityLabel: getQualityLabelForValue }
     },
     template: `
       <div class="flex flex-col gap-2 max-w-sm">
@@ -546,13 +552,7 @@ export const TimeRange: Story = {
     setup() {
       const timeRange = ref([9, 17])
 
-      const formatTime = (hour: number) => {
-        const period = hour >= 12 ? 'PM' : 'AM'
-        const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
-        return `${displayHour}:00 ${period}`
-      }
-
-      return { timeRange, formatTime }
+      return { timeRange, formatTime: formatTimeValue }
     },
     template: `
       <div class="flex flex-col gap-2 max-w-sm">

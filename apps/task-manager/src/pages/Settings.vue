@@ -184,9 +184,7 @@ const handleResetSettings = () => {
             <CardDescription>Restore all settings to their defaults</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" @click="handleResetSettings">
-              Reset to Defaults
-            </Button>
+            <Button variant="outline" @click="handleResetSettings"> Reset to Defaults </Button>
           </CardContent>
         </Card>
       </TabsContent>
@@ -212,11 +210,7 @@ const handleResetSettings = () => {
             <CardDescription>Restore data from a JSON backup</CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
-            <Textarea
-              v-model="importTextarea"
-              placeholder="Paste JSON data here..."
-              :rows="4"
-            />
+            <Textarea v-model="importTextarea" placeholder="Paste JSON data here..." :rows="4" />
             <Button @click="handleImport">
               <IconUpload class="mr-2 h-4 w-4" />
               Import Data
@@ -243,8 +237,8 @@ const handleResetSettings = () => {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently delete all your tasks, projects, and settings.
-                    This action cannot be undone.
+                    This will permanently delete all your tasks, projects, and settings. This action
+                    cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

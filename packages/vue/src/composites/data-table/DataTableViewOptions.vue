@@ -105,39 +105,33 @@ const getPinnedStatus = (columnId: string): string => {
 </script>
 
 <template>
-    <DropdownMenu>
-        <DropdownMenuTrigger as-child>
-            <Button
-                variant="outline"
-                size="sm"
-                class="ml-auto hidden h-8 lg:flex"
-            >
-                <IconSettings2 class="mr-1.5 h-4 w-4 shrink-0" />
-                <span class="text-xs">View</span>
-            </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="w-[200px]">
-            <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+  <DropdownMenu>
+    <DropdownMenuTrigger as-child>
+      <Button variant="outline" size="sm" class="ml-auto hidden h-8 lg:flex">
+        <IconSettings2 class="mr-1.5 h-4 w-4 shrink-0" />
+        <span class="text-xs">View</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end" class="w-[200px]">
+      <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+      <DropdownMenuSeparator />
 
-            <DropdownMenuCheckboxItem
-                v-for="item in columnItems"
-                :key="item.id"
-                v-model="visibilityState[item.id]"
-                @update:model-value="
-                    (value: boolean) => handleVisibilityChange(item.id, value)
-                "
-            >
-                <div class="flex items-center justify-between w-full">
-                    <span>{{ getColumnDisplayName(item.column) }}</span>
-                    <span
-                        v-if="getPinnedStatus(item.id)"
-                        class="text-[10px] text-muted-foreground ml-2 font-medium"
-                    >
-                        {{ getPinnedStatus(item.id) }}
-                    </span>
-                </div>
-            </DropdownMenuCheckboxItem>
-        </DropdownMenuContent>
-    </DropdownMenu>
+      <DropdownMenuCheckboxItem
+        v-for="item in columnItems"
+        :key="item.id"
+        v-model="visibilityState[item.id]"
+        @update:model-value="(value: boolean) => handleVisibilityChange(item.id, value)"
+      >
+        <div class="flex items-center justify-between w-full">
+          <span>{{ getColumnDisplayName(item.column) }}</span>
+          <span
+            v-if="getPinnedStatus(item.id)"
+            class="text-[10px] text-muted-foreground ml-2 font-medium"
+          >
+            {{ getPinnedStatus(item.id) }}
+          </span>
+        </div>
+      </DropdownMenuCheckboxItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
 </template>

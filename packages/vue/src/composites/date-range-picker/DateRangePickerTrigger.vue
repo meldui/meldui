@@ -74,11 +74,7 @@ const hasValue = computed(() => {
       data-slot="date-range-picker-trigger"
       :disabled="disabled"
       :class="
-        cn(
-          'w-full justify-start font-normal',
-          !hasValue && 'text-muted-foreground',
-          props.class,
-        )
+        cn('w-full justify-start font-normal', !hasValue && 'text-muted-foreground', props.class)
       "
     >
       <IconCalendar class="mr-2 size-4" />

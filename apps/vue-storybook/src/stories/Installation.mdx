@@ -56,9 +56,9 @@ export default defineConfig({
 Create `src/styles/app.css`:
 
 ```css
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "@meldui/vue/themes/default";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
 
 /* Tell Tailwind where to scan for classes */
 @source "../**/*.{vue,js,ts,jsx,tsx}";
@@ -178,9 +178,9 @@ Ensure your `tsconfig.json` includes:
 Override theme variables in your CSS **after** the imports:
 
 ```css
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "@meldui/vue/themes/default";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
 
 /* Your overrides */
 :root {
@@ -205,9 +205,24 @@ See the [Theming](/?path=/docs/theming--docs) guide for all available variables.
     </tr>
   </thead>
   <tbody>
-    <tr><td><code>@meldui/vue</code></td><td>Core component library (70+ components)</td></tr>
-    <tr><td><code>@meldui/tabler-vue</code></td><td>5000+ Tabler icons with custom defaults</td></tr>
-    <tr><td><code>@meldui/charts-vue</code></td><td>Chart components built on ECharts</td></tr>
+    <tr>
+      <td>
+        <code>@meldui/vue</code>
+      </td>
+      <td>Core component library (70+ components)</td>
+    </tr>
+    <tr>
+      <td>
+        <code>@meldui/tabler-vue</code>
+      </td>
+      <td>5000+ Tabler icons with custom defaults</td>
+    </tr>
+    <tr>
+      <td>
+        <code>@meldui/charts-vue</code>
+      </td>
+      <td>Chart components built on ECharts</td>
+    </tr>
   </tbody>
 </table>
 

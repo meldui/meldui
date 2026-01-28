@@ -16,9 +16,24 @@ MeldUI is an internal design system built on shadcn components, providing a cons
     </tr>
   </thead>
   <tbody>
-    <tr><td><code>@meldui/vue</code></td><td>70+ UI components built on shadcn-vue</td></tr>
-    <tr><td><code>@meldui/tabler-vue</code></td><td>5000+ Tabler icons with custom defaults</td></tr>
-    <tr><td><code>@meldui/charts-vue</code></td><td>Chart components built on ECharts</td></tr>
+    <tr>
+      <td>
+        <code>@meldui/vue</code>
+      </td>
+      <td>70+ UI components built on shadcn-vue</td>
+    </tr>
+    <tr>
+      <td>
+        <code>@meldui/tabler-vue</code>
+      </td>
+      <td>5000+ Tabler icons with custom defaults</td>
+    </tr>
+    <tr>
+      <td>
+        <code>@meldui/charts-vue</code>
+      </td>
+      <td>Chart components built on ECharts</td>
+    </tr>
   </tbody>
 </table>
 
@@ -41,9 +56,9 @@ pnpm add -D tailwindcss @tailwindcss/vite tw-animate-css
 
 ```css
 /* src/styles/app.css */
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "@meldui/vue/themes/default";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
 
 @source "../**/*.{vue,js,ts,jsx,tsx}";
 @source "../node_modules/@meldui/vue/dist/**/*.mjs";

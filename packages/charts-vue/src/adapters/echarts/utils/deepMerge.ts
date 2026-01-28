@@ -4,36 +4,42 @@
  * - Most arrays are replaced entirely (e.g., yAxis for dual-axis charts)
  * - Series array items are merged element-by-element (for markPoint, markLine, etc.)
  */
-export function deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>): T {
+export function deepMerge<T extends Record<string, unknown>>(target: T, source: Partial<T>): T {
   const output = { ...target }
 
   for (const key in source) {
-    // Special handling for 'series' array - merge each element
-    if (key === 'series' && Array.isArray(source[key]) && Array.isArray(target[key])) {
-      const targetSeries = target[key] as any[]
-      const sourceSeries = source[key] as any[]
+    const sourceValue = source[key]
+    const targetValue = target[key]
 
+    // Special handling for 'series' array - merge each element
+    if (key === 'series' && Array.isArray(sourceValue) && Array.isArray(targetValue)) {
       // Merge each series item
-      output[key] = targetSeries.map((targetItem, index) => {
-        if (index < sourceSeries.length && sourceSeries[index]) {
+      output[key] = (targetValue as Record<string, unknown>[]).map((targetItem, index) => {
+        const sourceItem = (sourceValue as Record<string, unknown>[])[index]
+        if (sourceItem) {
           // Deep merge this series item
-          return deepMerge(targetItem, sourceSeries[index])
+          return deepMerge(targetItem, sourceItem)
         }
         return targetItem
-      }) as any
+      }) as T[Extract<keyof T, string>]
     }
     // Replace other arrays entirely instead of merging
-    else if (Array.isArray(source[key])) {
-      output[key] = source[key] as any
+    else if (Array.isArray(sourceValue)) {
+      output[key] = sourceValue as T[Extract<keyof T, string>]
     } else if (
-      typeof source[key] === 'object' &&
-      source[key] !== null &&
+      typeof sourceValue === 'object' &&
+      sourceValue !== null &&
       key in target &&
-      !Array.isArray(target[key])
+      typeof targetValue === 'object' &&
+      targetValue !== null &&
+      !Array.isArray(targetValue)
     ) {
-      output[key] = deepMerge(target[key], source[key] as any)
+      output[key] = deepMerge(
+        targetValue as Record<string, unknown>,
+        sourceValue as Record<string, unknown>,
+      ) as T[Extract<keyof T, string>]
     } else {
-      output[key] = source[key] as any
+      output[key] = sourceValue as T[Extract<keyof T, string>]
     }
   }
 

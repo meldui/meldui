@@ -23,6 +23,7 @@ Mirror Phase 2 for React.
 ### Sub-tasks
 
 #### 1.1 Create package structure
+
 - [ ] Create directories:
   ```bash
   mkdir -p packages/tabler-react/src/custom
@@ -32,6 +33,7 @@ Mirror Phase 2 for React.
 ---
 
 #### 1.2 Create package.json
+
 - [ ] Similar to tabler-vue but with React dependencies:
   ```json
   {
@@ -75,6 +77,7 @@ Mirror Phase 2 for React.
 ---
 
 #### 1.3 Create defaults.ts
+
 - [ ] Same as Vue version:
   ```typescript
   export const ICON_DEFAULTS = {
@@ -86,7 +89,9 @@ Mirror Phase 2 for React.
 ---
 
 #### 1.4 Create wrapper.tsx
+
 - [ ] React wrapper using forwardRef:
+
   ```typescript
   import React, { forwardRef } from 'react'
   import { ICON_DEFAULTS } from './defaults'
@@ -120,7 +125,9 @@ Mirror Phase 2 for React.
 ---
 
 #### 1.5 Create generation script
+
 - [ ] Similar to Vue version but imports from @tabler/icons-react:
+
   ```typescript
   // scripts/generate.ts
   import { writeFileSync } from 'fs'
@@ -128,14 +135,10 @@ Mirror Phase 2 for React.
 
   async function generateIcons() {
     const tablerIcons = await import('@tabler/icons-react')
-    const iconNames = Object.keys(tablerIcons).filter(name =>
-      name.startsWith('Icon')
-    )
+    const iconNames = Object.keys(tablerIcons).filter((name) => name.startsWith('Icon'))
 
     const imports = `import { ${iconNames.join(', ')} } from '@tabler/icons-react'`
-    const exports = iconNames.map(name =>
-      `export const ${name} = createIcon(${name})`
-    ).join('\n')
+    const exports = iconNames.map((name) => `export const ${name} = createIcon(${name})`).join('\n')
 
     const fileContent = `/**
    * Auto-generated icon exports for @meldui/tabler-react
@@ -143,9 +146,9 @@ Mirror Phase 2 for React.
    */
   import { createIcon } from './wrapper'
   ${imports}
-
+  
   ${exports}
-
+  
   export { createIcon } from './wrapper'
   export { ICON_DEFAULTS } from './defaults'
   export type { IconDefaults } from './defaults'
@@ -162,12 +165,14 @@ Mirror Phase 2 for React.
 ---
 
 #### 1.6 Configure Vite and TypeScript
+
 - [ ] Create vite.config.ts with React plugin
 - [ ] Create tsconfig.json with React JSX settings
 
 ---
 
 #### 1.7 Build and test
+
 - [ ] Run `pnpm generate-icons`
 - [ ] Run `pnpm build`
 - [ ] Verify dist/ output
@@ -181,6 +186,7 @@ Mirror Phase 3 for React.
 ### Sub-tasks
 
 #### 2.1 Create package structure
+
 - [ ] Create directories:
   ```bash
   mkdir -p packages/react/src/components/ui
@@ -192,6 +198,7 @@ Mirror Phase 3 for React.
 ---
 
 #### 2.2 Create package.json
+
 - [ ] Similar to Vue but with React dependencies:
   ```json
   {
@@ -243,12 +250,15 @@ Mirror Phase 3 for React.
 ---
 
 #### 2.3 Create Tailwind CSS file
+
 - [ ] Create `src/styles/index.css` - same as Vue version
 
 ---
 
 #### 2.4 Create utilities
+
 - [ ] Create `src/lib/utils.ts`:
+
   ```typescript
   import { type ClassValue, clsx } from 'clsx'
   import { twMerge } from 'tailwind-merge'
@@ -261,6 +271,7 @@ Mirror Phase 3 for React.
 ---
 
 #### 2.5 Configure shadcn/ui
+
 - [ ] Create `components.json`:
   ```json
   {
@@ -283,6 +294,7 @@ Mirror Phase 3 for React.
 ---
 
 #### 2.6 Add shadcn components
+
 - [ ] Run:
   ```bash
   cd packages/react
@@ -294,23 +306,33 @@ Mirror Phase 3 for React.
 ---
 
 #### 2.7 Configure Vite and TypeScript
+
 - [ ] Create vite.config.ts with React and Tailwind v4 plugins
 - [ ] Create tsconfig.json with React settings
 
 ---
 
 #### 2.8 Create main export
+
 - [ ] Create `src/index.ts`:
   ```typescript
   export { cn } from './lib/utils'
   export { Button } from './components/ui/button'
-  export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './components/ui/card'
+  export {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+    CardFooter,
+  } from './components/ui/card'
   export { Input } from './components/ui/input'
   ```
 
 ---
 
 #### 2.9 Build and test
+
 - [ ] Run `pnpm build`
 - [ ] Verify dist/ outputs
 
@@ -323,6 +345,7 @@ Mirror Phase 4 for React.
 ### Sub-tasks
 
 #### 3.1 Initialize Storybook
+
 - [ ] Create `apps/react-storybook/`
 - [ ] Run:
   ```bash
@@ -333,24 +356,28 @@ Mirror Phase 4 for React.
 ---
 
 #### 3.2 Configure Tailwind CSS v4
+
 - [ ] Create `src/styles/tailwind.css` - same as Vue Storybook
 - [ ] Update `.storybook/preview.tsx` to import CSS
 
 ---
 
 #### 3.3 Configure Storybook
+
 - [ ] Update `.storybook/main.ts` with Tailwind v4 plugin
 - [ ] Add workspace dependencies to package.json
 
 ---
 
 #### 3.4 Create MDX documentation
+
 - [ ] Copy MDX files from Vue Storybook
 - [ ] Update code examples for React syntax
 
 ---
 
 #### 3.5 Create component stories
+
 - [ ] Create Button.stories.tsx
 - [ ] Create Card.stories.tsx
 - [ ] Create IconGallery.stories.tsx
@@ -358,6 +385,7 @@ Mirror Phase 4 for React.
 ---
 
 #### 3.6 Test and build
+
 - [ ] Run `pnpm storybook`
 - [ ] Run `pnpm build-storybook`
 
@@ -370,12 +398,14 @@ Add React packages to Changesets.
 ### Sub-tasks
 
 #### 4.1 Verify package configurations
+
 - [ ] Check @meldui/react package.json exports
 - [ ] Check @meldui/tabler-react package.json exports
 
 ---
 
 #### 4.2 Test publishing
+
 - [ ] Run dry-run publish for both packages
 - [ ] Verify file lists
 
@@ -384,22 +414,27 @@ Add React packages to Changesets.
 ## Key Differences from Vue
 
 ### 1. Icon Wrapper
+
 - Vue uses `defineComponent` and `h()` render function
 - React uses `forwardRef` and JSX
 
 ### 2. Component Syntax
+
 - Vue uses Composition API with `<script setup>`
 - React uses function components with hooks
 
 ### 3. Styling
+
 - Both use Tailwind CSS v4 (same approach)
 - Same CSS variables for theming
 
 ### 4. Dependencies
+
 - Vue: radix-vue, @vitejs/plugin-vue
-- React: @radix-ui/react-*, @vitejs/plugin-react
+- React: @radix-ui/react-\*, @vitejs/plugin-react
 
 ### 5. Storybook
+
 - Vue: @storybook/vue3
 - React: @storybook/react
 
@@ -424,12 +459,14 @@ Verify all tasks:
 When both Vue and React packages exist:
 
 ### Consistency Testing
+
 - [ ] Verify components look identical
 - [ ] Check that theme variables work the same
 - [ ] Test icon sizes and defaults match
 - [ ] Ensure Tailwind classes behave consistently
 
 ### Documentation
+
 - [ ] Update main README to mention both frameworks
 - [ ] Cross-link Vue and React docs in Storybook
 - [ ] Document framework-specific differences

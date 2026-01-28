@@ -39,12 +39,10 @@ import { MeldLineChart } from '@meldui/charts-vue'
 import type { MeldChartConfig } from '@meldui/charts-vue'
 
 const config: MeldChartConfig = {
-  series: [
-    { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }
-  ],
+  series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
   xAxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  }
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  },
 }
 </script>
 

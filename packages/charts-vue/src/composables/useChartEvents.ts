@@ -227,38 +227,32 @@ export function useChartEvents(chartInstance: ShallowRef<EChartsType | null>, em
     if (listenersAttached) return
 
     // Click event
-    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
-    instance.on('click', (params: any) => {
+    instance.on('click', (params: unknown) => {
       emit('click', normalizeClickEvent(params as EChartsEventParams))
     })
 
     // Hover event (mouseover)
-    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
-    instance.on('mouseover', (params: any) => {
+    instance.on('mouseover', (params: unknown) => {
       emit('hover', normalizeHoverEvent(params as EChartsEventParams))
     })
 
     // Mouseout event
-    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
-    instance.on('mouseout', (params: any) => {
+    instance.on('mouseout', (params: unknown) => {
       emit('mouseout', normalizeMouseOutEvent(params as EChartsEventParams))
     })
 
     // Legend selection change
-    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
-    instance.on('legendselectchanged', (params: any) => {
+    instance.on('legendselectchanged', (params: unknown) => {
       emit('legendSelect', normalizeLegendEvent(params as EChartsLegendParams))
     })
 
     // Data zoom change
-    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
-    instance.on('datazoom', (params: any) => {
+    instance.on('datazoom', (params: unknown) => {
       emit('dataZoom', normalizeDataZoomEvent(params as EChartsDataZoomParams))
     })
 
     // Brush selection (if brush tool is enabled)
-    // biome-ignore lint/suspicious/noExplicitAny: ECharts event types are incompatible with our normalized types
-    instance.on('brushselected', (params: any) => {
+    instance.on('brushselected', (params: unknown) => {
       emit('brushSelect', normalizeBrushEvent(params as EChartsBrushParams))
     })
 

@@ -20,6 +20,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 ## Component Inventory
 
 ### ✅ Completed (3 components)
+
 - Button
 - Card
 - IconGallery (custom)
@@ -27,6 +28,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 ### 🔨 To Be Implemented (61 components)
 
 #### Form Components (16)
+
 - [x] Checkbox
 - [x] Input
 - [x] InputGroup
@@ -45,6 +47,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Field
 
 #### Navigation & Menu (7)
+
 - [x] Breadcrumb
 - [x] NavigationMenu
 - [x] Menubar
@@ -54,6 +57,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Tabs
 
 #### Overlay & Modal (7)
+
 - [x] AlertDialog
 - [x] Dialog
 - [x] Drawer
@@ -63,6 +67,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Tooltip
 
 #### Feedback & Status (8)
+
 - [x] Alert
 - [x] Badge
 - [x] Progress
@@ -73,6 +78,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Empty
 
 #### Layout & Container (8)
+
 - [x] Accordion
 - [x] Collapsible
 - [x] Resizable
@@ -83,6 +89,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Table
 
 #### Data Display (5)
+
 - [x] Avatar
 - [x] Calendar
 - [ ] RangeCalendar
@@ -90,6 +97,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] Kbd
 
 #### Interactive (5)
+
 - [x] ButtonGroup
 - [x] Carousel
 - [x] Command
@@ -97,6 +105,7 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 - [x] ToggleGroup
 
 #### Utility Components (5)
+
 - [x] Combobox
 - [ ] Item (internal utility)
 - [ ] Portal
@@ -106,57 +115,75 @@ Create comprehensive Storybook stories for all 64 UI component groups in @meldui
 ## Implementation Strategy
 
 ### Phase 1: High Priority Components (Weeks 1-2)
+
 Focus on most commonly used components first:
 
 **Form Components:**
+
 - Input, Textarea, Select, Checkbox, RadioGroup, Switch, Label
 
 **Navigation:**
+
 - Tabs, Breadcrumb, Pagination
 
 **Feedback:**
+
 - Alert, Badge, Progress, Skeleton
 
 **Layout:**
+
 - Accordion, Separator, ScrollArea
 
 ### Phase 2: Medium Priority Components (Weeks 3-4)
+
 Interactive and data display components:
 
 **Interactive:**
+
 - ButtonGroup, Carousel, Command, Toggle, ToggleGroup
 
 **Data Display:**
+
 - Avatar, Calendar, RangeCalendar, Kbd
 
 **Overlay:**
+
 - Dialog, Sheet, Popover, Tooltip
 
 ### Phase 3: Complex Components (Week 5)
+
 Advanced components with more complex APIs:
 
 **Form Components:**
+
 - Form, Field, NumberField, InputOtp, PinInput, TagsInput, InputGroup, NativeSelect
 
 **Navigation:**
+
 - NavigationMenu, Menubar, ContextMenu, DropdownMenu
 
 **Overlay:**
+
 - AlertDialog, Drawer, HoverCard
 
 ### Phase 4: Advanced & Specialized (Week 6)
+
 Specialized and utility components:
 
 **Layout:**
+
 - Collapsible, Resizable, Sidebar, AspectRatio, Table
 
 **Data Display:**
+
 - Chart
 
 **Feedback:**
+
 - Stepper, Toast (Sonner), Empty, Spinner
 
 **Utility:**
+
 - Combobox, Item
 
 ## Story Template Structure
@@ -285,6 +312,7 @@ apps/vue-storybook/src/stories/
    - Check if there are existing examples in shadcn-vue docs
 
 2. **Create the story file**
+
    ```bash
    # Create appropriate directory if needed
    mkdir -p apps/vue-storybook/src/stories/Components/<Category>
@@ -313,9 +341,11 @@ apps/vue-storybook/src/stories/
    - Include usage guidelines
 
 6. **Test in Storybook**
+
    ```bash
    pnpm storybook:vue
    ```
+
    - Verify all stories render correctly
    - Test interactive controls
    - Check dark mode
@@ -332,23 +362,27 @@ apps/vue-storybook/src/stories/
 All stories must meet these standards:
 
 ### Code Quality
+
 - Pass Biome linting and formatting (`pnpm check:fix`)
 - Follow TypeScript strict mode
 - Use proper type imports from Storybook
 
 ### Documentation
+
 - Clear, concise descriptions
 - Proper categorization in story titles
 - Comprehensive prop documentation
 - Real-world usage examples
 
 ### Accessibility
+
 - All interactive elements keyboard accessible
 - Proper ARIA labels and roles
 - Screen reader friendly
 - Color contrast compliance
 
 ### Testing
+
 - All variants render without errors
 - Interactive controls work properly
 - Stories load quickly (<2s)

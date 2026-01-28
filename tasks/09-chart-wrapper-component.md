@@ -12,18 +12,18 @@ Create a dedicated chart component package (`@meldui/charts-vue`) that provides 
 
 ## Key Decisions Summary
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| **Package Location** | Separate `@meldui/charts-vue` | Optional dependency, independent versioning, follows icon package pattern |
-| **Library Abstraction** | Complete (users never see underlying library) | Can swap libraries without breaking changes, true abstraction |
-| **MVP Library** | **Apache ECharts (~50-100KB per chart)** | **Apache 2.0 license (no restrictions), excellent tree-shaking, 20+ chart types** |
-| **Licensing** | **Apache 2.0 (free redistribution)** | **No commercial restrictions, no OEM license needed, production-ready** |
-| **API Design** | Abstraction + escape hatch | Clean for 80% of cases, flexible for complex dashboards |
-| **Peer Dependencies** | Vue + @meldui/vue | Charts reuse UI components from @meldui/vue (Skeleton, Card, etc.) for consistency |
-| **Tree-Shaking** | Per-chart-type + ECharts modules | Import only chart types AND components you use |
-| **SSR Strategy** | Deferred init + skeleton | Works in Nuxt/SSG out of the box |
-| **Theming** | Auto Tailwind CSS v4 integration | Respects design system colors and dark mode |
-| **Resizing** | Automatic via ResizeObserver | No manual handling needed |
+| Decision                | Choice                                        | Rationale                                                                          |
+| ----------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **Package Location**    | Separate `@meldui/charts-vue`                 | Optional dependency, independent versioning, follows icon package pattern          |
+| **Library Abstraction** | Complete (users never see underlying library) | Can swap libraries without breaking changes, true abstraction                      |
+| **MVP Library**         | **Apache ECharts (~50-100KB per chart)**      | **Apache 2.0 license (no restrictions), excellent tree-shaking, 20+ chart types**  |
+| **Licensing**           | **Apache 2.0 (free redistribution)**          | **No commercial restrictions, no OEM license needed, production-ready**            |
+| **API Design**          | Abstraction + escape hatch                    | Clean for 80% of cases, flexible for complex dashboards                            |
+| **Peer Dependencies**   | Vue + @meldui/vue                             | Charts reuse UI components from @meldui/vue (Skeleton, Card, etc.) for consistency |
+| **Tree-Shaking**        | Per-chart-type + ECharts modules              | Import only chart types AND components you use                                     |
+| **SSR Strategy**        | Deferred init + skeleton                      | Works in Nuxt/SSG out of the box                                                   |
+| **Theming**             | Auto Tailwind CSS v4 integration              | Respects design system colors and dark mode                                        |
+| **Resizing**            | Automatic via ResizeObserver                  | No manual handling needed                                                          |
 
 ## Motivation
 
@@ -115,7 +115,7 @@ import type { MeldChartConfig } from '@meldui/charts-vue'
 // Same API regardless of internal library (ApexCharts, Chart.js, etc.)
 const config: MeldChartConfig = {
   series: [{ name: 'Revenue', data: [30, 40, 45] }],
-  xAxis: { categories: ['Jan', 'Feb', 'Mar'] }
+  xAxis: { categories: ['Jan', 'Feb', 'Mar'] },
 }
 ```
 
@@ -170,8 +170,16 @@ packages/charts-vue/
 // types.ts - Library-agnostic types
 
 /** Supported chart types */
-type ChartType = 'line' | 'bar' | 'area' | 'pie' | 'donut' |
-                 'scatter' | 'radar' | 'heatmap' | 'mixed'
+type ChartType =
+  | 'line'
+  | 'bar'
+  | 'area'
+  | 'pie'
+  | 'donut'
+  | 'scatter'
+  | 'radar'
+  | 'heatmap'
+  | 'mixed'
 
 /** Chart data series */
 interface ChartSeries {
@@ -347,65 +355,58 @@ interface MeldMixedChartProps extends MeldChartBaseProps {}
 
 ```vue
 <script setup lang="ts">
-import {
-  MeldLineChart,
-  MeldBarChart,
-  MeldChart,
-  type MeldChartConfig
-} from '@meldui/charts-vue'
+import { MeldLineChart, MeldBarChart, MeldChart, type MeldChartConfig } from '@meldui/charts-vue'
 
 // Simple line chart
 const simpleConfig: MeldChartConfig = {
-  series: [
-    { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }
-  ],
+  series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
   xAxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  }
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  },
 }
 
 // Multiple series with customization
 const multiSeriesConfig: MeldChartConfig = {
   series: [
     { name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] },
-    { name: 'Expenses', data: [20, 30, 35, 40, 39, 50, 60] }
+    { name: 'Expenses', data: [20, 30, 35, 40, 39, 50, 60] },
   ],
   xAxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   },
   stroke: {
     curve: 'smooth',
-    width: 3
+    width: 3,
   },
   legend: {
-    position: 'bottom'
+    position: 'bottom',
   },
-  colors: 'auto' // Use theme colors
+  colors: 'auto', // Use theme colors
 }
 
 // Advanced usage with escape hatch
 const advancedConfig: MeldChartConfig = {
-  series: [
-    { name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }
-  ],
+  series: [{ name: 'Sales', data: [30, 40, 45, 50, 49, 60, 70] }],
   xAxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   },
   // Direct ECharts config for edge cases
   advanced: {
     markPoint: {
-      data: [{
-        name: 'Target',
-        coord: ['Wed', 45],
-        itemStyle: {
-          color: 'red'
-        }
-      }]
+      data: [
+        {
+          name: 'Target',
+          coord: ['Wed', 45],
+          itemStyle: {
+            color: 'red',
+          },
+        },
+      ],
     },
     itemStyle: {
-      borderRadius: [10, 10, 0, 0]
-    }
-  }
+      borderRadius: [10, 10, 0, 0],
+    },
+  },
 }
 
 // Dynamic chart type
@@ -433,11 +434,13 @@ const chartType = ref<ChartType>('line')
 ## SSR Support Strategy
 
 ### Challenge
+
 ECharts requires browser APIs (`window`, `document`) and cannot execute in Node.js SSR environment.
 
 ### Solution
 
 1. **Environment Detection**
+
    ```typescript
    const isSSR = typeof window === 'undefined'
    ```
@@ -448,6 +451,7 @@ ECharts requires browser APIs (`window`, `document`) and cannot execute in Node.
    - Use dynamic imports to avoid bundling ECharts in SSR
 
 3. **Placeholder Rendering**
+
    ```vue
    <template>
      <div class="meld-chart-wrapper">
@@ -465,6 +469,7 @@ ECharts requires browser APIs (`window`, `document`) and cannot execute in Node.
    ```
 
 4. **Hydration Handling**
+
    ```typescript
    // composables/useChartBase.ts
    export function useChartBase() {
@@ -499,6 +504,7 @@ ECharts requires browser APIs (`window`, `document`) and cannot execute in Node.
    ```
 
 ### User Experience
+
 - **Nuxt/SSG Apps**: Works seamlessly with no configuration
 - **Initial Load**: Brief skeleton flash during hydration
 - **No Errors**: No "window is not defined" crashes
@@ -534,14 +540,14 @@ export function useChartTheme() {
       danger: style.getPropertyValue('--color-danger') || '#ef4444',
       info: style.getPropertyValue('--color-info') || '#06b6d4',
       purple: style.getPropertyValue('--color-purple') || '#8b5cf6',
-      pink: style.getPropertyValue('--color-pink') || '#ec4899'
+      pink: style.getPropertyValue('--color-pink') || '#ec4899',
     }
   })
 
   // Generate theme options for ECharts
   const chartThemeConfig = computed(() => ({
     mode: isDark.value ? 'dark' : 'light',
-    palette: Object.values(themeColors.value)
+    palette: Object.values(themeColors.value),
   }))
 
   return { isDark, themeColors, chartThemeConfig }
@@ -558,7 +564,9 @@ export function useChartTheme() {
 ## Automatic Chart Resizing
 
 ### Challenge
+
 Charts need to resize when:
+
 - Browser window resizes
 - Container size changes (sidebar collapse, grid layouts)
 - Parent element dimensions change dynamically
@@ -570,10 +578,7 @@ Charts need to resize when:
 // composables/useChartResize.ts
 import { ref, onMounted, onUnmounted } from 'vue'
 
-export function useChartResize(
-  containerRef: Ref<HTMLElement | null>,
-  chartInstance: Ref<any>
-) {
+export function useChartResize(containerRef: Ref<HTMLElement | null>, chartInstance: Ref<any>) {
   const resizeObserver = ref<ResizeObserver | null>(null)
   const containerWidth = ref(0)
   const containerHeight = ref(0)
@@ -588,12 +593,16 @@ export function useChartResize(
 
       // Resize chart if initialized
       if (chartInstance.value) {
-        chartInstance.value.updateOptions({
-          chart: {
-            width,
-            height: height || undefined
-          }
-        }, false, false) // redrawPaths: false, animate: false
+        chartInstance.value.updateOptions(
+          {
+            chart: {
+              width,
+              height: height || undefined,
+            },
+          },
+          false,
+          false,
+        ) // redrawPaths: false, animate: false
       }
     }
   }
@@ -612,7 +621,7 @@ export function useChartResize(
 
   return {
     containerWidth,
-    containerHeight
+    containerHeight,
   }
 }
 ```
@@ -638,12 +647,16 @@ const { chartThemeConfig } = useChartTheme()
 const { containerWidth } = useChartResize(containerRef, chartInstance)
 
 // Watch for config changes and update chart
-watch(() => props.config, (newConfig) => {
-  if (chartInstance.value) {
-    const echartsOptions = transformToEChartsOption(newConfig, chartThemeConfig.value)
-    chartInstance.value.setOption(echartsOptions)
-  }
-}, { deep: true })
+watch(
+  () => props.config,
+  (newConfig) => {
+    if (chartInstance.value) {
+      const echartsOptions = transformToEChartsOption(newConfig, chartThemeConfig.value)
+      chartInstance.value.setOption(echartsOptions)
+    }
+  },
+  { deep: true },
+)
 </script>
 
 <template>
@@ -690,7 +703,9 @@ export function useChartResize(/* ... */) {
 ## Loading Skeleton Component
 
 ### Purpose
+
 Provide a consistent, accessible loading state for charts during:
+
 - SSR hydration
 - Data fetching
 - Chart initialization
@@ -715,15 +730,15 @@ interface MeldChartSkeletonProps {
 const props = withDefaults(defineProps<MeldChartSkeletonProps>(), {
   height: 350,
   width: '100%',
-  animated: true
+  animated: true,
 })
 
 const computedHeight = computed(() =>
-  typeof props.height === 'number' ? `${props.height}px` : props.height
+  typeof props.height === 'number' ? `${props.height}px` : props.height,
 )
 
 const computedWidth = computed(() =>
-  typeof props.width === 'number' ? `${props.width}px` : props.width
+  typeof props.width === 'number' ? `${props.width}px` : props.width,
 )
 </script>
 
@@ -852,7 +867,8 @@ const computedWidth = computed(() =>
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -892,10 +908,7 @@ const computedWidth = computed(() =>
 ```vue
 <template>
   <!-- Automatic loading state -->
-  <MeldLineChart
-    :config="chartConfig"
-    :loading="isDataLoading"
-  />
+  <MeldLineChart :config="chartConfig" :loading="isDataLoading" />
 
   <!-- Standalone skeleton -->
   <MeldChartSkeleton :height="400" />
@@ -925,7 +938,7 @@ export const SKELETON_VARIANTS = {
   pie: 'skeleton-circle', // Circular segments
   donut: 'skeleton-donut',
   area: 'skeleton-bars',
-  scatter: 'skeleton-dots'
+  scatter: 'skeleton-dots',
 }
 ```
 
@@ -943,6 +956,7 @@ export const SKELETON_VARIANTS = {
    - Build tool can eliminate unused files
 
 2. **Dynamic Imports in Smart Wrapper**
+
    ```vue
    <!-- MeldChart.vue -->
    <script setup lang="ts">
@@ -979,13 +993,13 @@ export const SKELETON_VARIANTS = {
 
 ### Bundle Impact Analysis
 
-| Usage Pattern | Bundle Size (Gzipped) | Notes |
-|---------------|----------------------|-------|
-| `import { MeldLineChart }` | **~70-90 KB** | ECharts core + Line chart + Grid + Tooltip |
-| `import { MeldLineChart, MeldBarChart }` | **~85-105 KB** | Shared core, add Bar chart module |
-| `import { MeldChart }` + dynamic type | **~70 KB + ~15-25 KB per type** | Code-split chart components |
-| Using 5 different chart types | **~120-150 KB** | Excellent tree-shaking |
-| Full ECharts (no tree-shaking) | ~354 KB | ⚠️ Don't do this - use tree-shaking! |
+| Usage Pattern                            | Bundle Size (Gzipped)           | Notes                                      |
+| ---------------------------------------- | ------------------------------- | ------------------------------------------ |
+| `import { MeldLineChart }`               | **~70-90 KB**                   | ECharts core + Line chart + Grid + Tooltip |
+| `import { MeldLineChart, MeldBarChart }` | **~85-105 KB**                  | Shared core, add Bar chart module          |
+| `import { MeldChart }` + dynamic type    | **~70 KB + ~15-25 KB per type** | Code-split chart components                |
+| Using 5 different chart types            | **~120-150 KB**                 | Excellent tree-shaking                     |
+| Full ECharts (no tree-shaking)           | ~354 KB                         | ⚠️ Don't do this - use tree-shaking!       |
 
 **Key Insight:** ECharts with tree-shaking is **60-75% smaller** than ApexCharts for most use cases!
 
@@ -1002,7 +1016,7 @@ import type { EChartsOption } from 'echarts'
 export function transformToEChartsOption(
   config: MeldChartConfig,
   themeConfig: any,
-  defaults: Partial<EChartsOption>
+  defaults: Partial<EChartsOption>,
 ): EChartsOption {
   const {
     series,
@@ -1018,14 +1032,14 @@ export function transformToEChartsOption(
     zoom,
     stacked,
     horizontal,
-    advanced
+    advanced,
   } = config
 
   // Build ECharts options from our abstraction
   const echartsOption: EChartsOption = {
     ...defaults,
 
-    series: series.map(s => ({
+    series: series.map((s) => ({
       name: s.name,
       data: s.data,
       type: s.type || 'line',
@@ -1034,49 +1048,59 @@ export function transformToEChartsOption(
       ...(stroke?.width && { lineStyle: { width: stroke.width } }),
       ...(stroke?.curve && {
         smooth: stroke.curve === 'smooth',
-        step: stroke.curve === 'stepline' ? 'middle' : undefined
-      })
+        step: stroke.curve === 'stepline' ? 'middle' : undefined,
+      }),
     })),
 
-    xAxis: xAxis ? {
-      type: xAxis.type || 'category',
-      data: xAxis.categories,
-      name: xAxis.title,
-      min: xAxis.min,
-      max: xAxis.max,
-      axisLabel: xAxis.labels
-    } : { type: 'category' },
-
-    yAxis: yAxis ? {
-      type: yAxis.type || 'value',
-      name: yAxis.title,
-      min: yAxis.min,
-      max: yAxis.max,
-      axisLabel: yAxis.labels
-    } : { type: 'value' },
-
-    legend: legend ? {
-      show: legend.show ?? true,
-      top: legend.position === 'top' ? 0 : legend.position === 'bottom' ? 'bottom' : undefined,
-      left: legend.align || 'left'
-    } : { show: true },
-
-    tooltip: tooltip ? {
-      show: tooltip.enabled ?? true,
-      trigger: tooltip.shared ? 'axis' : 'item',
-      ...(tooltip.formatter && {
-        formatter: (params: any) => {
-          const data = Array.isArray(params) ? params[0] : params
-          return tooltip.formatter!(data.value, data.seriesName, data.dataIndex)
+    xAxis: xAxis
+      ? {
+          type: xAxis.type || 'category',
+          data: xAxis.categories,
+          name: xAxis.title,
+          min: xAxis.min,
+          max: xAxis.max,
+          axisLabel: xAxis.labels,
         }
-      })
-    } : { show: true, trigger: 'axis' },
+      : { type: 'category' },
 
-    grid: grid ? {
-      show: grid.show ?? true,
-      borderColor: 'var(--color-border, #e5e7eb)',
-      borderWidth: 1
-    } : { show: true },
+    yAxis: yAxis
+      ? {
+          type: yAxis.type || 'value',
+          name: yAxis.title,
+          min: yAxis.min,
+          max: yAxis.max,
+          axisLabel: yAxis.labels,
+        }
+      : { type: 'value' },
+
+    legend: legend
+      ? {
+          show: legend.show ?? true,
+          top: legend.position === 'top' ? 0 : legend.position === 'bottom' ? 'bottom' : undefined,
+          left: legend.align || 'left',
+        }
+      : { show: true },
+
+    tooltip: tooltip
+      ? {
+          show: tooltip.enabled ?? true,
+          trigger: tooltip.shared ? 'axis' : 'item',
+          ...(tooltip.formatter && {
+            formatter: (params: any) => {
+              const data = Array.isArray(params) ? params[0] : params
+              return tooltip.formatter!(data.value, data.seriesName, data.dataIndex)
+            },
+          }),
+        }
+      : { show: true, trigger: 'axis' },
+
+    grid: grid
+      ? {
+          show: grid.show ?? true,
+          borderColor: 'var(--color-border, #e5e7eb)',
+          borderWidth: 1,
+        }
+      : { show: true },
 
     color: colors === 'auto' ? themeConfig.palette : colors,
 
@@ -1084,13 +1108,13 @@ export function transformToEChartsOption(
       show: toolbar ?? false,
       feature: {
         dataZoom: zoom ? { yAxisIndex: 'none' } : undefined,
-        saveAsImage: toolbar ? {} : undefined
-      }
+        saveAsImage: toolbar ? {} : undefined,
+      },
     },
 
     animation: animations ?? true,
 
-    darkMode: themeConfig.mode === 'dark'
+    darkMode: themeConfig.mode === 'dark',
   }
 
   // Merge advanced config (escape hatch)
@@ -1116,17 +1140,17 @@ import type { EChartsOption } from 'echarts'
 export const CHART_DEFAULTS: Partial<EChartsOption> = {
   // Inherit font family from Tailwind
   textStyle: {
-    fontFamily: 'inherit'
+    fontFamily: 'inherit',
   },
 
   // Minimal toolbar by default
   toolbox: {
-    show: false
+    show: false,
   },
 
   // Clean data labels
   label: {
-    show: false
+    show: false,
   },
 
   // Smooth animations
@@ -1145,7 +1169,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
     top: '10%',
     containLabel: true,
     borderColor: 'var(--color-border, #e5e7eb)',
-    show: true
+    show: true,
   },
 
   // Tooltip configuration
@@ -1156,13 +1180,13 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
       lineStyle: {
         color: 'var(--color-border, #e5e7eb)',
         width: 1,
-        type: 'dashed'
-      }
+        type: 'dashed',
+      },
     },
     textStyle: {
       fontSize: 14,
-      fontFamily: 'inherit'
-    }
+      fontFamily: 'inherit',
+    },
   },
 
   // Legend configuration
@@ -1172,44 +1196,45 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
     left: 'left',
     textStyle: {
       fontSize: 14,
-      fontFamily: 'inherit'
-    }
+      fontFamily: 'inherit',
+    },
   },
 
   // Axis styling
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: 'var(--color-border, #e5e7eb)'
-      }
+        color: 'var(--color-border, #e5e7eb)',
+      },
     },
     axisLabel: {
       color: 'var(--color-foreground, #374151)',
-      fontFamily: 'inherit'
-    }
+      fontFamily: 'inherit',
+    },
   },
 
   yAxis: {
     axisLine: {
-      show: false
+      show: false,
     },
     axisLabel: {
       color: 'var(--color-foreground, #374151)',
-      fontFamily: 'inherit'
+      fontFamily: 'inherit',
     },
     splitLine: {
       lineStyle: {
         color: 'var(--color-border, #e5e7eb)',
-        type: 'dashed'
-      }
-    }
-  }
+        type: 'dashed',
+      },
+    },
+  },
 }
 ```
 
 ## Implementation Phases
 
 ### Phase 0: Package Setup
+
 - [x] Create `packages/charts-vue/` directory
 - [x] Set up `package.json` with correct metadata and exports
 - [x] Configure `vite.config.ts` for library build (ESM + CJS)
@@ -1218,6 +1243,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Configure build scripts in root package.json
 
 ### Phase 1: Foundation (MVP)
+
 - [x] Install dependencies (`echarts@^6.0.0`, `vue-echarts@^8.0.1`)
 - [x] Create library-agnostic type definitions (`types.ts`)
 - [x] Build base composables (`useChartBase`, `useChartTheme`, `useChartResize`)
@@ -1228,6 +1254,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Create `index.ts` with public exports (components + types only, NO adapters)
 
 ### Phase 1.5: MeldUI Vue Integration (Internal Component Reusability)
+
 - [x] Add `@meldui/vue` as peer dependency in `package.json`
 - [x] Update `vite.config.ts` to externalize `@meldui/vue` in build
 - [x] Refactor `MeldChartSkeleton.vue` to use `Skeleton` component from `@meldui/vue`
@@ -1239,6 +1266,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 **Rationale:** Charts should reuse components from `@meldui/vue` (Skeleton, Card, Badge, Button, etc.) to maintain design consistency and promote internal reusability. This ensures charts feel native to the MeldUI design system and reduces code duplication.
 
 ### Phase 2: Core Chart Components (MVP)
+
 - [x] `MeldLineChart.vue`
 - [x] Create Storybook story for `MeldLineChart`
 - [x] `MeldBarChart.vue`
@@ -1251,6 +1279,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Test imports from `@meldui/charts-vue`
 
 ### Phase 3: Smart Wrapper
+
 - [x] `MeldChart.vue` with dynamic imports
 - [x] Create Storybook story for `MeldChart` (dynamic type switching)
 - [x] Loading states and error handling
@@ -1258,6 +1287,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Verify tree-shaking works correctly
 
 ### Phase 4: Additional Chart Types
+
 - [x] `MeldDonutChart.vue`
 - [x] Create Storybook story for `MeldDonutChart`
 - [x] `MeldScatterChart.vue`
@@ -1270,6 +1300,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] Create Storybook story for `MeldMixedChart`
 
 ### Phase 5: Storybook Documentation
+
 - [x] Installation guide (MDX) - emphasize separate package
 - [x] Charts overview (MDX)
 - [x] Advanced configuration examples story
@@ -1278,6 +1309,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [x] ECharts escape hatch examples (advanced config)
 
 ### Phase 6: Testing & Polish
+
 - [ ] Unit tests for transformer
 - [ ] Integration tests for SSR
 - [ ] Accessibility audit (WCAG 2.1 AA)
@@ -1287,6 +1319,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - [ ] Test with example consumer app
 
 ### Phase 7: Publishing Setup
+
 - [ ] Configure changeset for independent versioning
 - [ ] Set up npm publish workflow
 - [ ] Create initial release (v0.1.0)
@@ -1297,6 +1330,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 ### Package: `@meldui/charts-vue`
 
 **Production Dependencies**
+
 ```json
 {
   "name": "@meldui/charts-vue",
@@ -1318,6 +1352,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 ```
 
 **Important Notes:**
+
 - **@meldui/vue** is a **peer dependency** - charts reuse components (Skeleton, Card, etc.) from the main package
 - **Apache ECharts** is a **regular dependency** (not peer) - users don't need to install it separately
 - **vue-echarts** provides official Vue 3 integration with TypeScript support
@@ -1326,6 +1361,7 @@ export const CHART_DEFAULTS: Partial<EChartsOption> = {
 - **Tree-shaking**: Users can configure Vite to tree-shake unused ECharts components automatically
 
 **User Installation:**
+
 ```bash
 # Users install these (@meldui/vue is a peer dependency)
 pnpm add @meldui/vue @meldui/charts-vue
@@ -1336,6 +1372,7 @@ pnpm add @meldui/vue @meldui/charts-vue
 ```
 
 **License Compliance:**
+
 - ✅ **Apache License 2.0** - Free for commercial use and redistribution
 - ✅ No revenue restrictions or OEM licensing required
 - ✅ Only requirement: Preserve copyright and license notices (automatically handled in build)
@@ -1371,28 +1408,34 @@ pnpm add @meldui/vue @meldui/charts-vue
 ## Future Enhancements (Post-MVP)
 
 ### V2: Advanced ECharts Features
+
 ECharts already includes these features - expose them through our API:
 
 **3D Charts**
+
 - 3D bar charts, 3D scatter plots, 3D surface charts
 - Add `Meld3DBarChart`, `Meld3DScatterChart` components
 
 **Chart Export**
+
 - PNG, SVG export (built into ECharts toolbox)
 - Expose via `exportable` prop
 
 **Advanced Visualizations**
+
 - Treemap, Sunburst diagrams
 - Sankey, Graph (network) charts
 - Parallel coordinates for multi-dimensional data
 - Calendar heatmaps
 
 **Real-time Data**
+
 - Streaming data updates
 - Auto-refresh and data polling
 - WebSocket integration helpers
 
 ### V3: Additional Features
+
 - Custom chart themes/presets (beyond Tailwind integration)
 - Chart data transformations (aggregations, filters)
 - Multi-axis support for complex dashboards
@@ -1402,6 +1445,7 @@ ECharts already includes these features - expose them through our API:
 - DataZoom sliders for large datasets
 
 ### V4: Alternative Adapters (If Needed)
+
 - uPlot adapter for ultra-lightweight time-series (~45 KB)
 - Chart.js adapter for simpler API surface
 - Only add if user demand requires it
@@ -1416,6 +1460,7 @@ ECharts already includes these features - expose them through our API:
 
 **Q: ApexCharts vs Chart.js vs ECharts - which to use?**
 **A:**
+
 - ❌ **ApexCharts** - Dual license model with commercial restrictions, OEM license required for redistribution
 - ✅ **Chart.js** - MIT licensed (good), but fewer features and chart types
 - ✅✅ **Apache ECharts** - Apache 2.0 license (perfect!), 20+ chart types, excellent tree-shaking, production-proven
@@ -1424,6 +1469,7 @@ ECharts already includes these features - expose them through our API:
 
 **Q: What about ApexCharts licensing issues?**
 **A:** ApexCharts requires:
+
 - Commercial license if organization earns $2M+/year
 - OEM/Redistribution license for embedding in libraries/platforms
 - This makes it unsuitable for a redistributable component library like MeldUI
@@ -1437,6 +1483,7 @@ ECharts already includes these features - expose them through our API:
 
 **Q: Bundle size concern?**
 **A:**
+
 - **ECharts with tree-shaking:** ~70-150KB for typical usage (1-5 chart types)
 - **Excellent optimization** - 60-75% smaller than ApexCharts
 - Tree-shaking is automatic when using Vite/Rollup
@@ -1457,6 +1504,7 @@ ECharts already includes these features - expose them through our API:
 ## References
 
 **Chart Libraries:**
+
 - [Apache ECharts Documentation](https://echarts.apache.org/) - MVP implementation
 - [ECharts Examples Gallery](https://echarts.apache.org/examples/en/index.html) - Interactive examples
 - [vue-echarts Official Integration](https://vue-echarts.dev/) - Vue 3 wrapper
@@ -1464,15 +1512,18 @@ ECharts already includes these features - expose them through our API:
 - [ECharts Tree-Shaking Guide](https://apache.github.io/echarts-handbook/en/basics/import/) - Bundle optimization
 
 **Vue & Build:**
+
 - [Vue 3 Composition API](https://vuejs.org/guide/extras/composition-api-faq.html)
 - [Vite Library Mode](https://vitejs.dev/guide/build.html#library-mode)
 - [Tree Shaking Best Practices](https://webpack.js.org/guides/tree-shaking/)
 
 **Styling & Accessibility:**
+
 - [Tailwind CSS v4 Theme](https://tailwindcss.com/docs/theme)
 - [ResizeObserver API](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
 - [WCAG 2.1 Accessibility Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 
 **Package Design:**
+
 - [pnpm Workspaces](https://pnpm.io/workspaces)
 - [Changesets for Versioning](https://github.com/changesets/changesets)

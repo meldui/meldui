@@ -22,7 +22,6 @@ import {
   FileUploadTrigger,
   ScrollArea,
   ScrollBar,
-  Textarea,
 } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
@@ -592,6 +591,11 @@ export const CustomDropzoneStyle: Story = {
   }),
 }
 
+function getDocumentFileIcon(file: File) {
+  if (file.type === 'application/pdf') return IconFileTypePdf
+  return IconFile
+}
+
 export const DocumentUpload: Story = {
   render: () => ({
     components: {
@@ -612,12 +616,7 @@ export const DocumentUpload: Story = {
     setup() {
       const files = ref<File[]>([])
 
-      const getFileIcon = (file: File) => {
-        if (file.type === 'application/pdf') return IconFileTypePdf
-        return IconFile
-      }
-
-      return { files, getFileIcon }
+      return { files, getFileIcon: getDocumentFileIcon }
     },
     template: `
       <FileUpload

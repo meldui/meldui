@@ -38,52 +38,53 @@ This example demonstrates the following MeldUI components:
 
 ### UI Components
 
-| Component | Usage Location |
-|-----------|----------------|
-| Accordion | - |
-| Alert | - |
-| AlertDialog | Task deletion, Data clearing |
-| Avatar | Header, Dashboard |
-| Badge | Task status, Task tags |
-| Breadcrumb | Navigation |
-| Button | Throughout |
-| Calendar | Task form due date |
-| Card | Dashboard stats, Project cards |
-| Checkbox | Task selection |
-| Dialog | Task creation/editing |
-| DropdownMenu | User menu, Task actions |
-| Empty | No tasks/projects state |
-| Form | Task form, Project form |
-| Input | Search, Task title |
-| Label | Form fields |
-| Pagination | Task list |
-| Popover | Filters, Date picker |
-| Progress | Project completion |
-| RadioGroup | Theme selection, Project colors |
-| Select | Status, Priority, Project filters |
-| Separator | Sidebar, Headers |
-| Sheet | Project form |
-| Sidebar | Main navigation |
-| Skeleton | Loading states |
-| Switch | Theme toggle |
-| Table | Task list |
-| Tabs | Settings page |
-| TagsInput | Task tags |
-| Textarea | Task description |
-| Timeline | Recent activity, Task history |
-| Tooltip | Sidebar icons |
+| Component    | Usage Location                    |
+| ------------ | --------------------------------- |
+| Accordion    | -                                 |
+| Alert        | -                                 |
+| AlertDialog  | Task deletion, Data clearing      |
+| Avatar       | Header, Dashboard                 |
+| Badge        | Task status, Task tags            |
+| Breadcrumb   | Navigation                        |
+| Button       | Throughout                        |
+| Calendar     | Task form due date                |
+| Card         | Dashboard stats, Project cards    |
+| Checkbox     | Task selection                    |
+| Dialog       | Task creation/editing             |
+| DropdownMenu | User menu, Task actions           |
+| Empty        | No tasks/projects state           |
+| Form         | Task form, Project form           |
+| Input        | Search, Task title                |
+| Label        | Form fields                       |
+| Pagination   | Task list                         |
+| Popover      | Filters, Date picker              |
+| Progress     | Project completion                |
+| RadioGroup   | Theme selection, Project colors   |
+| Select       | Status, Priority, Project filters |
+| Separator    | Sidebar, Headers                  |
+| Sheet        | Project form                      |
+| Sidebar      | Main navigation                   |
+| Skeleton     | Loading states                    |
+| Switch       | Theme toggle                      |
+| Table        | Task list                         |
+| Tabs         | Settings page                     |
+| TagsInput    | Task tags                         |
+| Textarea     | Task description                  |
+| Timeline     | Recent activity, Task history     |
+| Tooltip      | Sidebar icons                     |
 
 ### Composite Components
 
-| Component | Usage Location |
-|-----------|----------------|
-| DataTable | Task list (via Table + sorting) |
+| Component    | Usage Location                  |
+| ------------ | ------------------------------- |
+| DataTable    | Task list (via Table + sorting) |
 | RelativeTime | Task dates, Activity timestamps |
-| Timeline | Dashboard, Task detail |
+| Timeline     | Dashboard, Task detail          |
 
 ### Icon Package
 
 `@meldui/tabler-vue` icons are used throughout for:
+
 - Navigation icons (Dashboard, Tasks, Projects, Settings)
 - Action icons (Plus, Edit, Delete, Search)
 - Status icons (Check, Progress, Circle)

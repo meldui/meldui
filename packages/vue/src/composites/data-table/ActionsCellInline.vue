@@ -36,23 +36,23 @@ const isDisabled = (action: ActionDefinition<TData>) => {
 </script>
 
 <template>
-    <div v-if="visibleActions.length > 0" class="flex items-center gap-1">
-        <Button
-            v-for="(action, index) in visibleActions"
-            :key="`action-${index}`"
-            :variant="action.variant || 'ghost'"
-            size="sm"
-            :disabled="isDisabled(action)"
-            class="h-8"
-            @click="handleAction(action)"
-        >
-            <component
-                :is="action.icon"
-                v-if="action.icon"
-                class="h-4 w-4"
-                :class="{ 'mr-1': action.label }"
-            />
-            <span v-if="action.label">{{ action.label }}</span>
-        </Button>
-    </div>
+  <div v-if="visibleActions.length > 0" class="flex items-center gap-1">
+    <Button
+      v-for="(action, index) in visibleActions"
+      :key="`action-${index}`"
+      :variant="action.variant || 'ghost'"
+      size="sm"
+      :disabled="isDisabled(action)"
+      class="h-8"
+      @click="handleAction(action)"
+    >
+      <component
+        :is="action.icon"
+        v-if="action.icon"
+        class="h-4 w-4"
+        :class="{ 'mr-1': action.label }"
+      />
+      <span v-if="action.label">{{ action.label }}</span>
+    </Button>
+  </div>
 </template>

@@ -33,9 +33,14 @@ type NormalizedConfig = {
 }
 
 /**
+ * ECharts config type
+ */
+type EChartsConfig = Record<string, unknown>
+
+/**
  * Build radar chart specific configuration
  */
-function buildRadarConfig(config: NormalizedConfig): any {
+function buildRadarConfig(config: NormalizedConfig): EChartsConfig {
   const { xAxis, yAxis, grid } = config
 
   // Determine if axis lines should be shown (default to true unless grid.show is explicitly false)
@@ -76,7 +81,7 @@ function buildRadarConfig(config: NormalizedConfig): any {
 /**
  * Build heatmap chart specific configuration (visualMap)
  */
-function buildHeatmapConfig(resolvedColors: string[]): any {
+function buildHeatmapConfig(resolvedColors: string[]): EChartsConfig {
   return {
     visualMap: {
       min: 0,
@@ -167,7 +172,7 @@ export function transformToEChartsOption(
     yAxis: _defaultYAxis,
     grid: _defaultGrid,
     ...coreDefaults
-  } = CHART_DEFAULTS as any
+  } = CHART_DEFAULTS as EChartsConfig
 
   // For Cartesian charts, include the axis/grid defaults; for non-Cartesian, exclude them
   const defaultsWithoutLegend = isNonCartesian

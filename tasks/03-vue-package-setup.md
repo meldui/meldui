@@ -15,6 +15,7 @@ Set up the directory structure for the Vue component library.
 ### Sub-tasks
 
 #### 1.1 Create package directories
+
 - [ ] Create the directory structure:
   ```bash
   mkdir -p packages/vue/src/components/ui
@@ -29,11 +30,13 @@ Set up the directory structure for the Vue component library.
   - `lib/` - Utility functions
 
 **Acceptance Criteria:**
+
 - All directories exist under packages/vue/src/
 
 ---
 
 #### 1.2 Create package.json
+
 - [ ] Create `packages/vue/package.json`:
   ```json
   {
@@ -55,9 +58,7 @@ Set up the directory structure for the Vue component library.
         "require": "./dist/styles/index.css"
       }
     },
-    "files": [
-      "dist"
-    ],
+    "files": ["dist"],
     "scripts": {
       "dev": "vite build --watch",
       "build": "vite build && tsc --emitDeclarationOnly"
@@ -90,12 +91,14 @@ Set up the directory structure for the Vue component library.
   ```
 
 **Key Points:**
+
 - shadcn dependencies (class-variance-authority, clsx, tailwind-merge, radix-vue)
 - Tailwind CSS v4 (alpha version)
 - @meldui/tabler-vue as peer dependency
 - Exports both components and styles
 
 **Acceptance Criteria:**
+
 - package.json exists with correct dependencies
 - Tailwind CSS v4 and @tailwindcss/vite are included
 - peer dependencies include @meldui/tabler-vue
@@ -103,6 +106,7 @@ Set up the directory structure for the Vue component library.
 ---
 
 #### 1.3 Install dependencies
+
 - [ ] Navigate to package:
   ```bash
   cd packages/vue
@@ -113,6 +117,7 @@ Set up the directory structure for the Vue component library.
   ```
 
 **Acceptance Criteria:**
+
 - All dependencies installed successfully
 - node_modules exists
 - pnpm-lock.yaml updated
@@ -126,7 +131,9 @@ Configure Tailwind CSS v4 with CSS-first approach.
 ### Sub-tasks
 
 #### 2.1 Create Tailwind CSS file
+
 - [ ] Create `packages/vue/src/styles/index.css`:
+
   ```css
   /**
    * MeldUI Tailwind CSS v4 Configuration
@@ -135,7 +142,7 @@ Configure Tailwind CSS v4 with CSS-first approach.
    * No tailwind.config.js file is needed.
    */
 
-  @import "tailwindcss";
+  @import 'tailwindcss';
 
   /**
    * Design Tokens
@@ -216,7 +223,9 @@ Configure Tailwind CSS v4 with CSS-first approach.
 
     body {
       @apply bg-background text-foreground;
-      font-feature-settings: "rlig" 1, "calt" 1;
+      font-feature-settings:
+        'rlig' 1,
+        'calt' 1;
     }
   }
 
@@ -238,12 +247,14 @@ Configure Tailwind CSS v4 with CSS-first approach.
   ```
 
 **IMPORTANT:**
+
 - This uses `@import "tailwindcss"` (v4 syntax)
 - Uses `@theme` directive (v4 feature)
 - No tailwind.config.js needed
 - Includes icon color CSS variable for icon package integration
 
 **Acceptance Criteria:**
+
 - styles/index.css exists
 - Uses Tailwind v4 syntax (@import "tailwindcss", @theme)
 - Includes design tokens and dark mode
@@ -258,7 +269,9 @@ Set up utility functions needed by shadcn components.
 ### Sub-tasks
 
 #### 3.1 Create cn utility
+
 - [ ] Create `packages/vue/src/lib/utils.ts`:
+
   ```typescript
   import { type ClassValue, clsx } from 'clsx'
   import { twMerge } from 'tailwind-merge'
@@ -280,11 +293,13 @@ Set up utility functions needed by shadcn components.
   ```
 
 **What this does:**
+
 - Combines clsx (conditional classes) and tailwind-merge (deduplication)
 - Essential for shadcn components
 - Handles class conflicts properly
 
 **Acceptance Criteria:**
+
 - lib/utils.ts exists
 - cn function is exported
 - Has JSDoc documentation
@@ -298,7 +313,9 @@ Set up Vite to build the Vue package with Tailwind CSS v4.
 ### Sub-tasks
 
 #### 4.1 Create vite.config.ts
+
 - [ ] Create `packages/vue/vite.config.ts`:
+
   ```typescript
   import { defineConfig } from 'vite'
   import vue from '@vitejs/plugin-vue'
@@ -308,25 +325,25 @@ Set up Vite to build the Vue package with Tailwind CSS v4.
   export default defineConfig({
     plugins: [
       vue(),
-      tailwindcss() // Tailwind CSS v4 Vite plugin
+      tailwindcss(), // Tailwind CSS v4 Vite plugin
     ],
     build: {
       lib: {
         entry: resolve(__dirname, 'src/index.ts'),
         name: 'MeldUIVue',
         formats: ['es', 'cjs'],
-        fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`
+        fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
       },
       rollupOptions: {
         // External dependencies that shouldn't be bundled
         external: [
           'vue',
           '@meldui/tabler-vue',
-          /^@tabler\/icons-vue/ // Exclude all @tabler/icons-vue imports
+          /^@tabler\/icons-vue/, // Exclude all @tabler/icons-vue imports
         ],
         output: {
           globals: {
-            vue: 'Vue'
+            vue: 'Vue',
           },
           // Also export CSS
           assetFileNames: (assetInfo) => {
@@ -334,28 +351,30 @@ Set up Vite to build the Vue package with Tailwind CSS v4.
               return 'styles/index.css'
             }
             return assetInfo.name || ''
-          }
-        }
+          },
+        },
       },
       cssCodeSplit: false, // Bundle all CSS into one file
       sourcemap: true,
-      emptyOutDir: true
+      emptyOutDir: true,
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, 'src')
-      }
-    }
+        '@': resolve(__dirname, 'src'),
+      },
+    },
   })
   ```
 
 **Key Configuration:**
+
 - `tailwindcss()` plugin for Tailwind v4
 - External: vue and @meldui/tabler-vue (peer dependencies)
 - CSS bundled into dist/styles/index.css
 - Alias `@` points to src/ for imports
 
 **Acceptance Criteria:**
+
 - vite.config.ts exists
 - Uses @tailwindcss/vite plugin
 - External dependencies are correct
@@ -364,6 +383,7 @@ Set up Vite to build the Vue package with Tailwind CSS v4.
 ---
 
 #### 4.2 Create tsconfig.json
+
 - [ ] Create `packages/vue/tsconfig.json`:
   ```json
   {
@@ -384,6 +404,7 @@ Set up Vite to build the Vue package with Tailwind CSS v4.
   ```
 
 **Acceptance Criteria:**
+
 - tsconfig.json extends root config
 - Path alias `@/*` matches Vite config
 - Includes src/ directory
@@ -397,6 +418,7 @@ Use shadcn-vue CLI to add base components.
 ### Sub-tasks
 
 #### 5.1 Configure shadcn-vue
+
 - [ ] Create `components.json` in packages/vue/:
   ```json
   {
@@ -417,12 +439,14 @@ Use shadcn-vue CLI to add base components.
   ```
 
 **What this does:**
+
 - Configures shadcn-vue CLI
 - Points to Tailwind CSS file (v4)
 - Sets up aliases for imports
 - Enables CSS variables for theming
 
 **Acceptance Criteria:**
+
 - components.json exists
 - Points to correct CSS file
 - Aliases match tsconfig and vite config
@@ -430,6 +454,7 @@ Use shadcn-vue CLI to add base components.
 ---
 
 #### 5.2 Add initial components
+
 - [ ] Add Button component:
   ```bash
   cd packages/vue
@@ -445,11 +470,13 @@ Use shadcn-vue CLI to add base components.
   ```
 
 **What this does:**
+
 - Downloads component files from shadcn-vue
 - Copies them into src/components/ui/
 - Components are now part of your codebase (can be modified)
 
 **Expected Output:**
+
 ```
 ✔ Which components would you like to add? › button
 ✔ Checking registry...
@@ -459,6 +486,7 @@ Use shadcn-vue CLI to add base components.
 ```
 
 **Acceptance Criteria:**
+
 - src/components/ui/button/ directory exists with Button.vue
 - src/components/ui/card/ directory exists with Card.vue
 - src/components/ui/input/ directory exists with Input.vue
@@ -467,6 +495,7 @@ Use shadcn-vue CLI to add base components.
 ---
 
 #### 5.3 Verify component files
+
 - [ ] Check that components were added correctly:
   ```bash
   ls src/components/ui/
@@ -478,6 +507,7 @@ Use shadcn-vue CLI to add base components.
   - Written in TypeScript with Vue 3 Composition API
 
 **Acceptance Criteria:**
+
 - All three components exist
 - Components import from `@/lib/utils`
 - Components use proper TypeScript types
@@ -491,7 +521,9 @@ Set up the main entry point that exports all components.
 ### Sub-tasks
 
 #### 6.1 Create index.ts
+
 - [ ] Create `packages/vue/src/index.ts`:
+
   ```typescript
   /**
    * MeldUI Vue Component Library
@@ -523,6 +555,7 @@ Set up the main entry point that exports all components.
 **Note:** You may need to adjust the export names based on how shadcn-vue structures its components.
 
 **Acceptance Criteria:**
+
 - src/index.ts exists
 - Exports all added components
 - Exports cn utility
@@ -537,6 +570,7 @@ Build the package and verify it works.
 ### Sub-tasks
 
 #### 7.1 Build the package
+
 - [ ] Run build command:
   ```bash
   cd packages/vue
@@ -550,6 +584,7 @@ Build the package and verify it works.
   - Output CSS file
 
 **Expected Output:**
+
 ```
 vite v5.x.x building for production...
 ✓ XX modules transformed.
@@ -560,6 +595,7 @@ dist/styles/index.css  XX.XX kB │ gzip: XX.XX kB
 ```
 
 **Acceptance Criteria:**
+
 - Build completes without errors
 - dist/index.mjs exists
 - dist/index.cjs exists
@@ -569,6 +605,7 @@ dist/styles/index.css  XX.XX kB │ gzip: XX.XX kB
 ---
 
 #### 7.2 Verify build outputs
+
 - [ ] Check dist/ directory structure:
   ```bash
   ls -la dist/
@@ -581,6 +618,7 @@ dist/styles/index.css  XX.XX kB │ gzip: XX.XX kB
   - Source maps
 
 **Acceptance Criteria:**
+
 - All expected files exist
 - CSS file contains compiled Tailwind styles (check with `cat dist/styles/index.css`)
 - TypeScript definitions include all exports
@@ -588,7 +626,9 @@ dist/styles/index.css  XX.XX kB │ gzip: XX.XX kB
 ---
 
 #### 7.3 Test imports (optional)
+
 - [ ] Create a quick test to verify imports work:
+
   ```bash
   # In packages/vue, create test-import.mjs
   cat > test-import.mjs << 'EOF'
@@ -604,6 +644,7 @@ dist/styles/index.css  XX.XX kB │ gzip: XX.XX kB
   ```
 
 **Expected Output:**
+
 ```
 cn utility: function
 Test merge: py-1 px-4
@@ -611,6 +652,7 @@ Test merge: py-1 px-4
 ```
 
 **Acceptance Criteria:**
+
 - Import works without errors
 - cn function is available
 - Tailwind classes merge correctly
@@ -624,7 +666,9 @@ Create README for the Vue package.
 ### Sub-tasks
 
 #### 8.1 Create README.md
+
 - [ ] Create `packages/vue/README.md`:
+
   ```markdown
   # @meldui/vue
 
@@ -651,6 +695,7 @@ Create README for the Vue package.
   ### 2. Use components
 
   \`\`\`vue
+
   <script setup lang="ts">
   import { Button, Card, Input } from '@meldui/vue'
   import { IconX } from '@meldui/tabler-vue'
@@ -675,12 +720,14 @@ Create README for the Vue package.
   ## Available Components
 
   ### UI Components (shadcn-vue)
+
   - Button
   - Card (with CardHeader, CardTitle, CardContent, CardFooter)
   - Input
   - (More will be added via shadcn CLI)
 
   ### Utilities
+
   - `cn()` - Class name merge utility
 
   ## Theming
@@ -691,9 +738,9 @@ Create README for the Vue package.
 
   \`\`\`css
   :root {
-    --color-primary: #your-color;
-    --color-background: #your-color;
-    /* See src/styles/index.css for all variables */
+  --color-primary: #your-color;
+  --color-background: #your-color;
+  /_ See src/styles/index.css for all variables _/
   }
   \`\`\`
 
@@ -702,6 +749,7 @@ Create README for the Vue package.
   Add the `dark` class to enable dark mode:
 
   \`\`\`html
+
   <html class="dark">
   \`\`\`
 
@@ -719,10 +767,13 @@ Create README for the Vue package.
   ## Development
 
   \`\`\`bash
+
   # Build the package
+
   pnpm build
 
   # Watch mode for development
+
   pnpm dev
   \`\`\`
 
@@ -730,8 +781,10 @@ Create README for the Vue package.
 
   MIT (internal use only)
   \`\`\`
+  ```
 
 **Acceptance Criteria:**
+
 - README.md exists with usage examples
 - Installation and setup instructions are clear
 - Shows how to use with icon package
@@ -758,6 +811,7 @@ Verify all tasks are complete:
 - [ ] README documentation created
 
 **Test Commands:**
+
 ```bash
 cd packages/vue
 pnpm build  # Should complete without errors
@@ -770,6 +824,7 @@ grep "@tailwindcss" dist/styles/index.css  # Should be compiled (no @import)
 ```
 
 **File Structure Verification:**
+
 ```
 packages/vue/
 ├── dist/

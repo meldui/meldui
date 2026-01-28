@@ -9,6 +9,7 @@
 Create a composable mention/tagging component for `@meldui/vue` that allows users to trigger and select items from a dropdown by typing trigger characters (like `@`, `#`, `/`). Selected mentions render as styled inline tags within the input while maintaining a plain-text serialized value.
 
 **Key Design Decisions:**
+
 - Uses overlay technique (not contenteditable) for inline tag rendering
 - Real `<input>` or `<textarea>` handles all text input natively
 - Absolutely positioned highlighter mirrors input and renders styled mention spans
@@ -40,6 +41,7 @@ Instead of using contenteditable (which has numerous cross-browser issues), this
 ```
 
 **How it works:**
+
 1. A real `<input>` or `<textarea>` handles all text input (keyboard, IME, paste, etc.)
 2. An absolutely positioned overlay (`MentionHighlighter`) sits on top
 3. The overlay mirrors the input's styles (font, padding, scroll position)
@@ -48,6 +50,7 @@ Instead of using contenteditable (which has numerous cross-browser issues), this
 6. Scroll, resize, and style changes are synced via observers
 
 **Benefits:**
+
 - No contenteditable quirks
 - Full IME (international text input) support
 - Native paste, undo/redo behavior
@@ -80,6 +83,7 @@ User selects "John Doe" (value: "user:123")
 ### Serialization Format
 
 Plain text with markers:
+
 ```
 Hello @[user:123:John Doe] and #[channel:456:general]!
        └─────────────────┘     └───────────────────┘
@@ -87,6 +91,7 @@ Hello @[user:123:John Doe] and #[channel:456:general]!
 ```
 
 This format:
+
 - Is human-readable in raw form
 - Can be parsed to extract mention metadata
 - Works with any backend storage
@@ -98,17 +103,17 @@ This format:
 
 ### Components Overview
 
-| Component | Purpose |
-|-----------|---------|
-| `Mention` | Root - manages state, provides context via provide/inject |
-| `MentionInput` | Text input with trigger detection and cursor tracking |
-| `MentionHighlighter` | Overlay that renders styled mention tags |
-| `MentionPortal` | Teleports popover outside DOM hierarchy |
-| `MentionContent` | Positioned popover container for suggestions |
-| `MentionItem` | Individual selectable suggestion (slot-based) |
-| `MentionEmpty` | Shown when no matches found |
-| `MentionLabel` | Accessible label for the input |
-| `MentionLoading` | Loading indicator during async filtering |
+| Component            | Purpose                                                   |
+| -------------------- | --------------------------------------------------------- |
+| `Mention`            | Root - manages state, provides context via provide/inject |
+| `MentionInput`       | Text input with trigger detection and cursor tracking     |
+| `MentionHighlighter` | Overlay that renders styled mention tags                  |
+| `MentionPortal`      | Teleports popover outside DOM hierarchy                   |
+| `MentionContent`     | Positioned popover container for suggestions              |
+| `MentionItem`        | Individual selectable suggestion (slot-based)             |
+| `MentionEmpty`       | Shown when no matches found                               |
+| `MentionLabel`       | Accessible label for the input                            |
+| `MentionLoading`     | Loading indicator during async filtering                  |
 
 ### Component Hierarchy
 
@@ -139,7 +144,7 @@ interface MentionProps {
   modelValue?: string
 
   /** Trigger configurations */
-  triggers?: MentionTrigger[]  // Default: [{ char: '@' }]
+  triggers?: MentionTrigger[] // Default: [{ char: '@' }]
 
   /** Disable all interactions */
   disabled?: boolean
@@ -151,10 +156,10 @@ interface MentionProps {
   placeholder?: string
 
   /** Use textarea instead of input */
-  multiline?: boolean  // Default: false
+  multiline?: boolean // Default: false
 
   /** Enable keyboard navigation looping */
-  loop?: boolean  // Default: true
+  loop?: boolean // Default: true
 
   /** Custom CSS class */
   class?: string
@@ -168,7 +173,7 @@ interface MentionTrigger {
   char: string
 
   /** Allow spaces in the search query */
-  allowSpaces?: boolean  // Default: false
+  allowSpaces?: boolean // Default: false
 
   /** Custom regex pattern for matching (advanced) */
   pattern?: RegExp
@@ -183,19 +188,19 @@ interface MentionEmits {
   'update:modelValue': [value: string]
 
   /** Popover opened (trigger detected) */
-  'open': [trigger: string, query: string]
+  open: [trigger: string, query: string]
 
   /** Popover closed */
-  'close': []
+  close: []
 
   /** Search query changed */
-  'search': [trigger: string, query: string]
+  search: [trigger: string, query: string]
 
   /** Mention selected */
-  'select': [item: MentionItem, trigger: string]
+  select: [item: MentionItem, trigger: string]
 
   /** Mention removed */
-  'remove': [mention: Mention]
+  remove: [mention: Mention]
 }
 ```
 
@@ -280,13 +285,14 @@ interface MentionInputProps {
 
 **Data Attributes:**
 
-| Attribute | When Present |
-|-----------|--------------|
-| `[data-disabled]` | Input is disabled |
+| Attribute         | When Present       |
+| ----------------- | ------------------ |
+| `[data-disabled]` | Input is disabled  |
 | `[data-readonly]` | Input is read-only |
-| `[data-focused]` | Input has focus |
+| `[data-focused]`  | Input has focus    |
 
 Handles:
+
 - Text input and change events
 - Trigger character detection
 - Cursor position tracking for popover placement
@@ -308,6 +314,7 @@ interface MentionHighlighterProps {
 ```
 
 Internal component that:
+
 - Mirrors input dimensions and styling
 - Syncs scroll position with input
 - Renders text with mentions wrapped in `<span data-tag>`
@@ -334,7 +341,7 @@ Internal component that:
 ```typescript
 interface MentionPortalProps {
   /** Target container for teleport */
-  to?: string | HTMLElement  // Default: 'body'
+  to?: string | HTMLElement // Default: 'body'
 
   /** Disable teleporting */
   disabled?: boolean
@@ -352,16 +359,16 @@ Uses Vue's `<Teleport>` to render content outside DOM hierarchy.
 ```typescript
 interface MentionContentProps {
   /** Side of the anchor to render */
-  side?: 'top' | 'bottom'  // Default: 'bottom'
+  side?: 'top' | 'bottom' // Default: 'bottom'
 
   /** Offset from anchor */
-  sideOffset?: number  // Default: 4
+  sideOffset?: number // Default: 4
 
   /** Alignment relative to anchor */
-  align?: 'start' | 'center' | 'end'  // Default: 'start'
+  align?: 'start' | 'center' | 'end' // Default: 'start'
 
   /** Avoid collisions with viewport */
-  avoidCollisions?: boolean  // Default: true
+  avoidCollisions?: boolean // Default: true
 
   /** Custom CSS class */
   class?: string
@@ -370,10 +377,10 @@ interface MentionContentProps {
 
 **Data Attributes:**
 
-| Attribute | Value |
-|-----------|-------|
-| `[data-state]` | `"open"` \| `"closed"` |
-| `[data-side]` | `"top"` \| `"bottom"` |
+| Attribute      | Value                              |
+| -------------- | ---------------------------------- |
+| `[data-state]` | `"open"` \| `"closed"`             |
+| `[data-side]`  | `"top"` \| `"bottom"`              |
 | `[data-align]` | `"start"` \| `"center"` \| `"end"` |
 
 Uses Floating UI (via Reka UI) for positioning at cursor location.
@@ -396,10 +403,10 @@ interface MentionItemProps {
 
 **Data Attributes:**
 
-| Attribute | When Present |
-|-----------|--------------|
+| Attribute            | When Present                 |
+| -------------------- | ---------------------------- |
 | `[data-highlighted]` | Item is keyboard-highlighted |
-| `[data-disabled]` | Item is disabled |
+| `[data-disabled]`    | Item is disabled             |
 
 **Slot Props:**
 
@@ -619,8 +626,8 @@ const users = ref([
 const filteredUsers = ref(users.value)
 
 function handleSearch(trigger: string, query: string) {
-  filteredUsers.value = users.value.filter(user =>
-    user.label.toLowerCase().includes(query.toLowerCase())
+  filteredUsers.value = users.value.filter((user) =>
+    user.label.toLowerCase().includes(query.toLowerCase()),
   )
 }
 </script>
@@ -738,11 +745,7 @@ function handleOpen(trigger: string) {
 <template>
   <Mention
     v-model="value"
-    :triggers="[
-      { char: '@' },
-      { char: '#' },
-      { char: '/', allowSpaces: false }
-    ]"
+    :triggers="[{ char: '@' }, { char: '#' }, { char: '/', allowSpaces: false }]"
     @open="handleOpen"
   >
     <MentionInput placeholder="Type @user, #channel, or /command..." />
@@ -869,12 +872,12 @@ async function handleSearch(trigger: string, query: string) {
 }
 
 /* Different styles per trigger */
-.mention-input [data-tag][data-trigger="#"] {
+.mention-input [data-tag][data-trigger='#'] {
   background: hsl(var(--blue-500) / 0.1);
   color: hsl(var(--blue-500));
 }
 
-.mention-input [data-tag][data-trigger="/"] {
+.mention-input [data-tag][data-trigger='/'] {
   background: hsl(var(--amber-500) / 0.1);
   color: hsl(var(--amber-500));
   font-family: monospace;
@@ -892,7 +895,7 @@ async function handleSearch(trigger: string, query: string) {
 // utils.ts
 export function measureCursorPosition(
   input: HTMLInputElement | HTMLTextAreaElement,
-  position: number
+  position: number,
 ): { x: number; y: number } {
   // Create a hidden span with matching styles
   const span = document.createElement('span')
@@ -900,14 +903,24 @@ export function measureCursorPosition(
 
   // Copy relevant styles
   const styles = [
-    'font-family', 'font-size', 'font-weight', 'font-style',
-    'letter-spacing', 'word-spacing', 'line-height',
-    'padding-left', 'padding-right', 'padding-top', 'padding-bottom',
-    'border-left-width', 'border-right-width',
-    'text-transform', 'white-space'
+    'font-family',
+    'font-size',
+    'font-weight',
+    'font-style',
+    'letter-spacing',
+    'word-spacing',
+    'line-height',
+    'padding-left',
+    'padding-right',
+    'padding-top',
+    'padding-bottom',
+    'border-left-width',
+    'border-right-width',
+    'text-transform',
+    'white-space',
   ]
 
-  styles.forEach(style => {
+  styles.forEach((style) => {
     span.style.setProperty(style, computed.getPropertyValue(style))
   })
 
@@ -941,7 +954,11 @@ export function measureCursorPosition(
   // Calculate position relative to input
   return {
     x: inputRect.left + (markerRect.left - spanRect.left) - input.scrollLeft,
-    y: inputRect.top + (markerRect.top - spanRect.top) - input.scrollTop + parseFloat(computed.lineHeight)
+    y:
+      inputRect.top +
+      (markerRect.top - spanRect.top) -
+      input.scrollTop +
+      parseFloat(computed.lineHeight),
   }
 }
 ```
@@ -966,7 +983,7 @@ export function parseMentions(text: string): Mention[] {
       value: match[2],
       label: match[3],
       start: match.index,
-      end: match.index + match[0].length
+      end: match.index + match[0].length,
     })
   }
 

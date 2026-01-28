@@ -33,8 +33,8 @@ export interface AvatarGroupProps {
 }
 
 defineSlots<{
-  default(): any
-  overflow(props: { count: number }): any
+  default(): unknown
+  overflow(props: { count: number }): unknown
 }>()
 
 const props = defineProps<AvatarGroupProps>()
@@ -80,17 +80,10 @@ const overflowCount = computed(() => {
 
 <template>
   <div
-    :class="cn(
-      avatarGroupVariants({ orientation, spacing, reverse }),
-      props.class
-    )"
+    :class="cn(avatarGroupVariants({ orientation, spacing, reverse }), props.class)"
     :data-orientation="orientation"
   >
-    <component
-      :is="child"
-      v-for="(child, index) in visibleChildren"
-      :key="index"
-    />
+    <component :is="child" v-for="(child, index) in visibleChildren" :key="index" />
     <slot name="overflow" :count="overflowCount">
       <Avatar v-if="overflowCount > 0">
         <AvatarFallback class="bg-muted text-muted-foreground text-xs font-medium">

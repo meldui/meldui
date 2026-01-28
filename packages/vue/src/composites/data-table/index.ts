@@ -43,11 +43,7 @@ export type {
   RegisteredFilterPlugin,
 } from './filterPlugins'
 // Filter plugin system
-export {
-  BUILT_IN_FILTER_TYPES,
-  defineFilter,
-  isBuiltInFilterType,
-} from './filterPlugins'
+export { BUILT_IN_FILTER_TYPES, defineFilter, isBuiltInFilterType } from './filterPlugins'
 // Filter components
 export { default as BooleanFilter } from './filters/BooleanFilter.vue'
 export { default as DateFilter } from './filters/DateFilter.vue'
@@ -88,11 +84,7 @@ export type {
   TextOperator,
 } from './types'
 export { getBaseFilterType, isComplexFilterType } from './types'
-export type {
-  DataTableFilterField,
-  FilterOption,
-  UseDataTableProps,
-} from './useDataTable'
+export type { DataTableFilterField, FilterOption, UseDataTableProps } from './useDataTable'
 // Re-export composables
 export { useDataTable } from './useDataTable'
 export type { UseTableKeyboardOptions, UseTableKeyboardReturn } from './useTableKeyboard'

@@ -39,6 +39,9 @@ These examples demonstrate:
 export default meta
 type Story = StoryObj<typeof meta>
 
+// Empty handler for stories that don't need change handling
+function emptyChangeHandler() {}
+
 /**
  * Minimal DataTable setup with just data and columns.
  * Shows basic pagination and sorting out of the box.
@@ -299,9 +302,7 @@ export const EmptyState: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const handleChange = () => {}
-
-      return { handleChange, columns: minimalColumns }
+      return { handleChange: emptyChangeHandler, columns: minimalColumns }
     },
     template: `
       <DataTable
@@ -321,9 +322,7 @@ export const CustomEmptyMessage: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const handleChange = () => {}
-
-      return { handleChange, columns: minimalColumns }
+      return { handleChange: emptyChangeHandler, columns: minimalColumns }
     },
     template: `
       <DataTable

@@ -8,9 +8,9 @@
  * 4. Override as needed
  */
 
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "../../../../packages/vue/src/themes/default.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../../../../packages/vue/src/themes/default.css';
 
 /* Content sources for Storybook stories and MeldUI components */
 @source "../**/*.{vue,js,ts,jsx,tsx,mdx}";
@@ -19,6 +19,6 @@
 /* Storybook-specific: Override font to use Manrope */
 @theme inline {
   --font-sans:
-    "Manrope", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+    'Manrope', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 }

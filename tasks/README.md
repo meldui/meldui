@@ -5,6 +5,7 @@ This folder contains detailed task lists for implementing the MeldUI design syst
 ## Task List Structure
 
 Each task list follows this structure:
+
 - **Top-level tasks** - Major objectives for the phase
 - **Sub-tasks** - Specific, actionable steps to complete each objective
 - **Commands** - Exact commands to run
@@ -49,6 +50,7 @@ Follow these task lists in order:
 ## Getting Help
 
 If you encounter issues:
+
 1. Check the relevant section in PRD.md
 2. Review CLAUDE.md for commands and patterns
 3. Check package.json scripts for available commands

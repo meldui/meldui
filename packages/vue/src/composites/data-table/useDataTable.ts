@@ -94,6 +94,14 @@ export interface UseDataTableProps<TData> {
   getRowCanExpand?: (row: Row<TData>) => boolean
 }
 
+/**
+ * Helper to resolve getter or value
+ * Moved to module scope for better reusability
+ */
+function resolveValue<T>(value: T | (() => T)): T {
+  return typeof value === 'function' ? (value as () => T)() : value
+}
+
 export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   // Validate: No complex types in advanced mode
   if (props.advancedMode && props.filterFields) {
@@ -159,11 +167,6 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   const onExpandedChange: OnChangeFn<ExpandedState> = (updaterOrValue) => {
     valueUpdater(updaterOrValue, expanded as Ref<ExpandedState>)
-  }
-
-  // Helper to resolve getter or value
-  const resolveValue = <T>(value: T | (() => T)): T => {
-    return typeof value === 'function' ? (value as () => T)() : value
   }
 
   // Create table instance (server-side only)

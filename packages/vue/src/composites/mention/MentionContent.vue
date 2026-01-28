@@ -88,10 +88,12 @@ const align = computed(() => actualPlacement.value.split('-')[1] || 'center')
   <div
     v-if="open && virtualAnchor"
     ref="floatingEl"
-    :class="cn(
-      'bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border shadow-md',
-      props.class
-    )"
+    :class="
+      cn(
+        'bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border shadow-md',
+        props.class,
+      )
+    "
     :style="floatingStyles"
     :data-state="open ? 'open' : 'closed'"
     :data-side="side"

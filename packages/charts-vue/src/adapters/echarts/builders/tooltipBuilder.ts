@@ -1,16 +1,25 @@
 import type { ChartTooltip, ChartType } from '../../../types'
 
 /**
+ * ECharts tooltip configuration type
+ */
+type EChartsTooltipConfig = Record<string, unknown>
+
+/**
  * Build tooltip configuration
  */
-export function buildTooltip(tooltip: ChartTooltip | undefined, chartType: ChartType): any {
+export function buildTooltip(
+  tooltip: ChartTooltip | undefined,
+  chartType: ChartType,
+): EChartsTooltipConfig {
   if (tooltip) {
     return {
       show: tooltip.enabled ?? true,
       trigger: tooltip.shared ? 'axis' : 'item',
       formatter: tooltip.formatter
-        ? (params: any) => {
-            const data = Array.isArray(params) ? params[0] : params
+        ? (params: unknown) => {
+            const paramsArray = Array.isArray(params) ? params : [params]
+            const data = paramsArray[0] as { value: unknown; seriesName: string; dataIndex: number }
             return tooltip.formatter!(data.value, data.seriesName, data.dataIndex)
           }
         : undefined,

@@ -2,13 +2,18 @@ import { CHART_DEFAULTS } from '../../../config/defaults'
 import type { ChartGrid, ChartLegend, ChartType } from '../../../types'
 
 /**
+ * ECharts grid configuration type
+ */
+type EChartsGridConfig = Record<string, unknown>
+
+/**
  * Build grid configuration
  */
 export function buildGrid(
   grid: ChartGrid | undefined,
   legend: ChartLegend | undefined,
   chartType: ChartType,
-): any {
+): EChartsGridConfig {
   // Pie and donut charts don't use grid
   if (chartType === 'pie' || chartType === 'donut') {
     return { show: false }

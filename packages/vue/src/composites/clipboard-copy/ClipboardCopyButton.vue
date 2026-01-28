@@ -16,8 +16,7 @@ interface ButtonProps extends PrimitiveProps {
 }
 
 export interface ClipboardCopyButtonProps
-  extends Omit<ClipboardCopyProps, 'asChild' | 'as'>,
-    Pick<ButtonProps, 'variant' | 'size'> {
+  extends Omit<ClipboardCopyProps, 'asChild' | 'as'>, Pick<ButtonProps, 'variant' | 'size'> {
   /**
    * Custom label for idle state
    * @default 'Copy'
@@ -58,35 +57,27 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <ClipboardCopy
-        as-child
-        :text="props.text"
-        :copied-duration="props.copiedDuration"
-        @success="emit('success')"
-        @error="emit('error', $event)"
-        v-slot="{ isCopied }"
+  <ClipboardCopy
+    as-child
+    :text="props.text"
+    :copied-duration="props.copiedDuration"
+    @success="emit('success')"
+    @error="emit('error', $event)"
+    v-slot="{ isCopied }"
+  >
+    <Button
+      :variant="isCopied && props.copiedVariant ? props.copiedVariant : props.variant"
+      :size="props.size"
+      :class="props.class"
     >
-        <Button
-            :variant="isCopied && props.copiedVariant ? props.copiedVariant : props.variant"
-            :size="props.size"
-            :class="props.class"
-        >
-            <CopyIdle>
-                <IconCopy
-                    v-if="props.showIcon"
-                    :size="16"
-                    :class="{ 'mr-2': props.label }"
-                />
-                {{ props.label }}
-            </CopyIdle>
-            <CopySuccess>
-                <IconChecks
-                    v-if="props.showIcon"
-                    :size="16"
-                    :class="{ 'mr-2': props.copiedLabel }"
-                />
-                {{ props.copiedLabel }}
-            </CopySuccess>
-        </Button>
-    </ClipboardCopy>
+      <CopyIdle>
+        <IconCopy v-if="props.showIcon" :size="16" :class="{ 'mr-2': props.label }" />
+        {{ props.label }}
+      </CopyIdle>
+      <CopySuccess>
+        <IconChecks v-if="props.showIcon" :size="16" :class="{ 'mr-2': props.copiedLabel }" />
+        {{ props.copiedLabel }}
+      </CopySuccess>
+    </Button>
+  </ClipboardCopy>
 </template>
