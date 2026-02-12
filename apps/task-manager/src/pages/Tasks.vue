@@ -231,8 +231,10 @@ const columns: ColumnDef<Task, unknown>[] = [
             h(DataTableColumnHeader, { column, table, title: "Status" }),
         cell: ({ row }: CellContext<Task, unknown>) => {
             const status = row.getValue("status") as TaskStatus;
-            return h(Badge, { variant: getStatusBadgeVariant(status) }, () =>
-                getStatusLabel(status),
+            return h(
+                Badge,
+                { variant: getStatusBadgeVariant(status), outline: true },
+                () => getStatusLabel(status),
             );
         },
         meta: { displayName: "Status" },
