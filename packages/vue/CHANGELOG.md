@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.13
+
+### Patch Changes
+
+- b552608: Oxc integration and some bug fixes.
+
 ## 0.1.12
 
 ### Patch Changes
