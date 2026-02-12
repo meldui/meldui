@@ -8,9 +8,9 @@
  * @import "@meldui/vue/themes/default";
  */
 
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "../themes/default.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../themes/default.css';
 
 /* Configure Tailwind CSS v4 content sources (for MeldUI build only) */
 @source "../../packages/vue/src/**/*.{vue,ts,tsx,js,jsx}";

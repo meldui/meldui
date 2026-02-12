@@ -22,17 +22,14 @@ const slotProps = computed<FileUploadItemPreviewSlotProps>(() => ({
 </script>
 
 <template>
-  <div
-    data-slot="file-upload-item-preview"
-    :class="cn('overflow-hidden', props.class)"
-  >
+  <div data-slot="file-upload-item-preview" :class="cn('overflow-hidden', props.class)">
     <!-- Render image preview if available -->
     <img
       v-if="itemContext.isImage.value && itemContext.previewUrl.value"
       :src="itemContext.previewUrl.value"
       :alt="`Preview of ${itemContext.file.name}`"
       class="h-full w-full object-cover"
-    >
+    />
     <!-- Render slot content as fallback for non-images -->
     <slot v-else v-bind="slotProps" />
   </div>

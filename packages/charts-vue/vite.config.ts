@@ -18,7 +18,7 @@ export default defineConfig({
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
     },
-    rollupOptions: {
+    rolldownOptions: {
       // External dependencies that shouldn't be bundled
       external: [
         'vue',
@@ -35,8 +35,7 @@ export default defineConfig({
       },
     },
     sourcemap: true,
-    // Enable minification
-    minify: 'esbuild',
+    // Oxc minification is automatic via Rolldown
     emptyOutDir: true,
   },
   resolve: {

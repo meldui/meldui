@@ -6,10 +6,8 @@ import { IconDotsVertical, IconPencil, IconTrash } from '@meldui/tabler-vue'
 import {
   Badge,
   Button,
-  Checkbox,
   createColumnHelper,
   DataTableColumnHeader,
-  DataTableSelectHeader,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -271,7 +269,7 @@ export function simulateServerSide(data: User[], tableState: TableState): Server
 // Column Helper
 // ============================================================================
 
-export function createColumnHeader<TData, TValue>(
+function createColumnHeader<TData, TValue>(
   column: Column<TData, TValue>,
   title: string,
   table?: Table<TData>,

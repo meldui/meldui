@@ -26,11 +26,7 @@ const headerClass = computed(() =>
 </script>
 
 <template>
-  <div
-    :data-status="timelineItem.status.value"
-    data-slot="timeline-header"
-    :class="headerClass"
-  >
+  <div :data-status="timelineItem.status.value" data-slot="timeline-header" :class="headerClass">
     <slot />
   </div>
 </template>

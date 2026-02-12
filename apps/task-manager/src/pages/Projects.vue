@@ -91,7 +91,11 @@ const handleFormCancel = () => {
           <SheetHeader>
             <SheetTitle>{{ editingProject ? 'Edit' : 'Create' }} Project</SheetTitle>
             <SheetDescription>
-              {{ editingProject ? 'Update project details' : 'Add a new project to organize your tasks' }}
+              {{
+                editingProject
+                  ? 'Update project details'
+                  : 'Add a new project to organize your tasks'
+              }}
             </SheetDescription>
           </SheetHeader>
           <div class="flex-1 overflow-y-auto px-4 pb-4">
@@ -137,8 +141,8 @@ const handleFormCancel = () => {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Project</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete "{{ deletingProject?.name }}"?
-            Tasks in this project will not be deleted but will become unassigned.
+            Are you sure you want to delete "{{ deletingProject?.name }}"? Tasks in this project
+            will not be deleted but will become unassigned.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

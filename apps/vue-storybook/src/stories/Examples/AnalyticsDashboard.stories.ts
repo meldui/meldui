@@ -102,6 +102,15 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
+function formatNumberValue(num: number) {
+  return new Intl.NumberFormat('en-US').format(num)
+}
+
+function formatPercentValue(value: number) {
+  const sign = value > 0 ? '+' : ''
+  return `${sign}${value.toFixed(1)}%`
+}
+
 export const FullDashboard: Story = {
   render: () => ({
     components: {
@@ -466,15 +475,6 @@ export const FullDashboard: Story = {
         }, 1500)
       }
 
-      const formatNumber = (num: number) => {
-        return new Intl.NumberFormat('en-US').format(num)
-      }
-
-      const formatPercent = (value: number) => {
-        const sign = value > 0 ? '+' : ''
-        return `${sign}${value.toFixed(1)}%`
-      }
-
       return {
         activePage,
         selectedPeriod,
@@ -495,8 +495,8 @@ export const FullDashboard: Story = {
         topContent,
         topReferrers,
         refreshData,
-        formatNumber,
-        formatPercent,
+        formatNumber: formatNumberValue,
+        formatPercent: formatPercentValue,
       }
     },
     template: `

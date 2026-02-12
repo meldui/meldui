@@ -10,6 +10,7 @@ MeldUI packages had broken tree-shaking, causing consumers to bundle the entire 
 | @meldui/charts-vue | 52KB | 10KB | Partial |
 
 **Root Causes:**
+
 1. Icons were all imported and wrapped in a single index.ts file
 2. No `sideEffects` declaration in package.json files
 3. Single bundled output prevented module-level tree-shaking
@@ -17,12 +18,14 @@ MeldUI packages had broken tree-shaking, causing consumers to bundle the entire 
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Enable effective tree-shaking for all packages
 - Consumers bundle ONLY what they import
 - Target: 80%+ bundle size reduction for typical usage
 - Maintain full backwards compatibility
 
 **Non-Goals:**
+
 - Changing public API
 - Removing any existing exports
 
@@ -35,6 +38,7 @@ MeldUI packages had broken tree-shaking, causing consumers to bundle the entire 
 **Why:** This is the industry-standard approach used by @heroicons/vue, lucide-vue-next, and other popular icon libraries. It enables bundlers to completely eliminate unused icons.
 
 **Implementation:**
+
 ```
 src/icons/
 ├── IconUser.ts    → import { IconUser } from '@tabler/icons-vue'; export const IconUser = createIcon(...)
@@ -45,6 +49,7 @@ src/index.ts       → export { IconUser } from './icons/IconUser'; ...
 ```
 
 **Trade-offs:**
+
 - Pro: Perfect tree-shaking (only used icons bundled)
 - Pro: Same consumer API (backwards compatible)
 - Con: Many files in npm package (~12,000 with sourcemaps)
@@ -55,6 +60,7 @@ src/index.ts       → export { IconUser } from './icons/IconUser'; ...
 **What:** Generate both ESM and CJS formats in separate directories with preserved module structure.
 
 **Implementation:**
+
 ```
 dist/
 ├── esm/
@@ -76,6 +82,7 @@ dist/
 ### Decision 3: sideEffects Declarations
 
 **Configuration:**
+
 ```json
 // @meldui/tabler-vue, @meldui/charts-vue
 { "sideEffects": false }
@@ -91,6 +98,7 @@ dist/
 **What:** Use esbuild for minification instead of terser.
 
 **Why:**
+
 - 10-100x faster build times
 - Good compression ratio
 - Built into Vite
@@ -141,19 +149,19 @@ dist/cjs/icons/{IconName}.cjs (6019 files)
 
 The task-manager app uses ~15 icons and ~10 components from MeldUI.
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Main JS (raw) | 3.8MB | 302KB | **92%** |
-| Main JS (gzipped) | 597KB | 99KB | **83%** |
+| Metric            | Before | After | Improvement |
+| ----------------- | ------ | ----- | ----------- |
+| Main JS (raw)     | 3.8MB  | 302KB | **92%**     |
+| Main JS (gzipped) | 597KB  | 99KB  | **83%**     |
 
 ### Expected Results by Scenario
 
-| Scenario | Before (Gzipped) | After (Gzipped) | Improvement |
-|----------|------------------|-----------------|-------------|
-| 1 icon, 5 components | ~560KB | ~30KB | 95% |
-| 10 icons, 20 components | ~560KB | ~60KB | 89% |
-| 50 icons, all components | ~560KB | ~150KB | 73% |
-| All icons, all components | ~560KB | ~500KB | 11% |
+| Scenario                  | Before (Gzipped) | After (Gzipped) | Improvement |
+| ------------------------- | ---------------- | --------------- | ----------- |
+| 1 icon, 5 components      | ~560KB           | ~30KB           | 95%         |
+| 10 icons, 20 components   | ~560KB           | ~60KB           | 89%         |
+| 50 icons, all components  | ~560KB           | ~150KB          | 73%         |
+| All icons, all components | ~560KB           | ~500KB          | 11%         |
 
 ## Migration
 
@@ -168,16 +176,19 @@ import { Button, Card } from '@meldui/vue'
 ## Risks / Trade-offs
 
 ### Risk 1: Large File Count in npm Package
+
 - **Impact:** ~12,000 files in @meldui/tabler-vue
 - **Mitigation:** Standard practice for tree-shakeable icon libraries
 - **Severity:** Low
 
 ### Risk 2: Longer npm Install Time
+
 - **Impact:** Slightly longer install due to more files
 - **Mitigation:** Files are tiny (~0.3KB each)
 - **Severity:** Low
 
 ### Risk 3: Longer Build Time for Package
+
 - **Impact:** Build creates 12,000+ files
 - **Mitigation:** Still only ~4 seconds with esbuild
 - **Severity:** Low

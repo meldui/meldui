@@ -17,11 +17,13 @@ Perfect for showing trends over time or continuous data.
 ```
 
 **Use cases:**
+
 - Time-series data (stock prices, temperature, traffic)
 - Trend analysis and forecasting
 - Comparing multiple metrics over time
 
 **Key features:**
+
 - Smooth or straight lines
 - Multiple series support
 - Area fill options
@@ -40,12 +42,14 @@ Ideal for comparing discrete categories or showing rankings.
 ```
 
 **Use cases:**
+
 - Category comparisons (sales by region, product rankings)
 - Vertical or horizontal orientations
 - Grouped or stacked bars
 - Survey results and ratings
 
 **Key features:**
+
 - Vertical or horizontal orientation
 - Grouped or stacked bars
 - Custom bar widths and spacing
@@ -64,11 +68,13 @@ Similar to line charts but with filled areas, emphasizing volume and magnitude.
 ```
 
 **Use cases:**
+
 - Cumulative data (total sales, user growth)
 - Stacked area charts for part-to-whole relationships
 - Emphasizing magnitude of change
 
 **Key features:**
+
 - Filled areas under lines
 - Stacked area support
 - Gradient fills
@@ -88,12 +94,14 @@ Show part-to-whole relationships and proportional data.
 ```
 
 **Use cases:**
+
 - Market share distribution
 - Budget allocation
 - Survey response percentages
 - Device/browser usage statistics
 
 **Key features:**
+
 - Percentage or value labels
 - Custom colors per segment
 - Interactive legends
@@ -113,12 +121,14 @@ Display relationships between two variables, revealing correlations and patterns
 ```
 
 **Use cases:**
+
 - Correlation analysis
 - Data point distribution
 - Outlier detection
 - Bubble charts (with size dimension)
 
 **Key features:**
+
 - Multiple series with different colors
 - Point sizes and shapes
 - Regression lines
@@ -137,12 +147,14 @@ Compare multiple variables across different categories using a radial layout.
 ```
 
 **Use cases:**
+
 - Multi-dimensional comparisons
 - Performance metrics
 - Skill assessments
 - Feature comparisons
 
 **Key features:**
+
 - Multiple series overlay
 - Custom axis ranges
 - Area fill options
@@ -161,12 +173,14 @@ Visualize data density and patterns using color gradients in a matrix format.
 ```
 
 **Use cases:**
+
 - Correlation matrices
 - Time-of-day patterns
 - Geographic data visualization
 - Calendar heatmaps
 
 **Key features:**
+
 - Custom color scales
 - Automatic gradient generation
 - Label overlays
@@ -185,12 +199,14 @@ Combine multiple chart types in a single visualization for complex data storytel
 ```
 
 **Use cases:**
+
 - Dual-axis charts (e.g., revenue + profit margin)
 - Combining bar and line charts
 - Multiple metrics with different scales
 - Complex dashboards
 
 **Key features:**
+
 - Multiple chart types in one
 - Independent Y-axes
 - Custom styling per series
@@ -209,6 +225,7 @@ For dynamic chart types based on runtime data:
 ```
 
 This component lazy-loads the appropriate chart type, useful when:
+
 - Chart type is determined by user selection
 - Building chart configuration UIs
 - Reducing initial bundle size through code-splitting
@@ -227,8 +244,8 @@ interface MeldLineChartConfig {
   series: ChartSeries[]
   xAxis?: ChartAxis
   yAxis?: ChartAxis
-  stroke?: ChartStroke    // Line styling
-  showPoints?: boolean    // Show data points
+  stroke?: ChartStroke // Line styling
+  showPoints?: boolean // Show data points
   // ... other relevant options
 }
 
@@ -237,8 +254,8 @@ interface MeldBarChartConfig {
   series: ChartSeries[]
   xAxis?: ChartAxis
   yAxis?: ChartAxis
-  horizontal?: boolean    // Horizontal orientation
-  stacked?: boolean       // Stack bars
+  horizontal?: boolean // Horizontal orientation
+  stacked?: boolean // Stack bars
   barWidth?: number | string
   // ... other relevant options
 }
@@ -262,18 +279,18 @@ import type { MeldLineChartConfig } from '@meldui/charts-vue'
 const config: MeldLineChartConfig = {
   series: [
     { name: 'Sales', data: [30, 40, 35, 50, 49, 60, 70] },
-    { name: 'Revenue', data: [20, 30, 25, 40, 39, 50, 60] }
+    { name: 'Revenue', data: [20, 30, 25, 40, 39, 50, 60] },
   ],
   xAxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   },
   legend: {
-    position: 'bottom'
+    position: 'bottom',
   },
   stroke: {
     curve: 'smooth',
-    width: 3
-  }
+    width: 3,
+  },
 }
 </script>
 
@@ -284,49 +301,56 @@ const config: MeldLineChartConfig = {
 
 ## Props Available to All Charts
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `config` | `Meld[Type]ChartConfig` | required | Chart configuration (e.g., `MeldLineChartConfig`, `MeldBarChartConfig`) |
-| `height` | `number \| string` | `350` | Chart height in pixels or CSS units |
-| `width` | `number \| string` | `'100%'` | Chart width in pixels or CSS units |
-| `title` | `string` | - | Optional chart title |
-| `loading` | `boolean` | `false` | Show loading skeleton |
+| Prop      | Type                    | Default  | Description                                                             |
+| --------- | ----------------------- | -------- | ----------------------------------------------------------------------- |
+| `config`  | `Meld[Type]ChartConfig` | required | Chart configuration (e.g., `MeldLineChartConfig`, `MeldBarChartConfig`) |
+| `height`  | `number \| string`      | `350`    | Chart height in pixels or CSS units                                     |
+| `width`   | `number \| string`      | `'100%'` | Chart width in pixels or CSS units                                      |
+| `title`   | `string`                | -        | Optional chart title                                                    |
+| `loading` | `boolean`               | `false`  | Show loading skeleton                                                   |
 
 ## Features Included
 
 ### ✅ Automatic Theme Integration
+
 Charts automatically use your Tailwind CSS colors and respect dark mode.
 
 ### ✅ Responsive by Default
+
 Charts automatically resize when their container changes size—no manual handling needed.
 
 ### ✅ SSR Compatible
+
 Works seamlessly with Nuxt and other SSR frameworks with zero configuration.
 
 ### ✅ TypeScript First
+
 Full type definitions with IntelliSense for all configuration options.
 
 ### ✅ Accessible
+
 WCAG 2.1 AA compliant with proper ARIA labels and keyboard navigation.
 
 ### ✅ Loading States
+
 Built-in skeleton loaders for smooth data loading experiences.
 
 ## Choosing the Right Chart
 
-| Data Type | Recommended Charts |
-|-----------|-------------------|
-| Time series data | Line, Area |
-| Categories comparison | Bar, Column |
-| Part-to-whole | Pie, Donut |
-| Correlation/distribution | Scatter |
-| Multi-dimensional | Radar |
-| Matrix data | Heatmap |
-| Multiple metrics | Mixed |
+| Data Type                | Recommended Charts |
+| ------------------------ | ------------------ |
+| Time series data         | Line, Area         |
+| Categories comparison    | Bar, Column        |
+| Part-to-whole            | Pie, Donut         |
+| Correlation/distribution | Scatter            |
+| Multi-dimensional        | Radar              |
+| Matrix data              | Heatmap            |
+| Multiple metrics         | Mixed              |
 
 ## Performance Tips
 
 1. **Use specific imports** for better tree-shaking:
+
    ```typescript
    // ✅ Good
    import { MeldLineChart } from '@meldui/charts-vue'
@@ -341,8 +365,11 @@ Built-in skeleton loaders for smooth data loading experiences.
    - Consider pagination for time-series
 
 3. **Disable animations** for many charts:
+
    ```typescript
-   config: { animations: false }
+   config: {
+     animations: false
+   }
    ```
 
 4. **Use loading states** during data fetching:

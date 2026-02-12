@@ -80,243 +80,457 @@ const handleServerSideChange = (params) => {
   </thead>
   <tbody>
     <tr>
-      <td><code>columns</code></td>
-      <td><code>ColumnDef&lt;TData&gt;[]</code></td>
+      <td>
+        <code>columns</code>
+      </td>
+      <td>
+        <code>ColumnDef&lt;TData&gt;[]</code>
+      </td>
       <td>Required</td>
       <td>Column definitions from @tanstack/vue-table</td>
     </tr>
     <tr>
-      <td><code>data</code></td>
-      <td><code>TData[]</code></td>
+      <td>
+        <code>data</code>
+      </td>
+      <td>
+        <code>TData[]</code>
+      </td>
       <td>Required</td>
       <td>Array of data to display</td>
     </tr>
     <tr>
-      <td><code>pageCount</code></td>
-      <td><code>number</code></td>
+      <td>
+        <code>pageCount</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
       <td>Required</td>
       <td>Total number of pages (server-side)</td>
     </tr>
     <tr>
-      <td><code>onServerSideChange</code></td>
-      <td><code>Function</code></td>
+      <td>
+        <code>onServerSideChange</code>
+      </td>
+      <td>
+        <code>Function</code>
+      </td>
       <td>Required</td>
       <td>Callback when table state changes</td>
     </tr>
     <tr>
-      <td><code>enableRowSelection</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>enableRowSelection</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Enable row selection checkboxes</td>
     </tr>
     <tr>
-      <td><code>defaultPerPage</code></td>
-      <td><code>number</code></td>
-      <td><code>10</code></td>
+      <td>
+        <code>defaultPerPage</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>
+        <code>10</code>
+      </td>
       <td>Default page size</td>
     </tr>
     <tr>
-      <td><code>pageSizeOptions</code></td>
-      <td><code>number[]</code></td>
-      <td><code>[10,20,30,40,50]</code></td>
+      <td>
+        <code>pageSizeOptions</code>
+      </td>
+      <td>
+        <code>number[]</code>
+      </td>
+      <td>
+        <code>[10,20,30,40,50]</code>
+      </td>
       <td>Available page sizes</td>
     </tr>
     <tr>
-      <td><code>filterFields</code></td>
-      <td><code>DataTableFilterField[]</code></td>
-      <td><code>[]</code></td>
+      <td>
+        <code>filterFields</code>
+      </td>
+      <td>
+        <code>DataTableFilterField[]</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
       <td>Filter configurations</td>
     </tr>
     <tr>
-      <td><code>searchColumn</code></td>
-      <td><code>string</code></td>
+      <td>
+        <code>searchColumn</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
       <td>-</td>
       <td>Column to use for search input</td>
     </tr>
     <tr>
-      <td><code>searchPlaceholder</code></td>
-      <td><code>string</code></td>
-      <td><code>'Search...'</code></td>
+      <td>
+        <code>searchPlaceholder</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>'Search...'</code>
+      </td>
       <td>Placeholder for search input</td>
     </tr>
     <tr>
-      <td><code>showToolbar</code></td>
-      <td><code>boolean</code></td>
-      <td><code>true</code></td>
+      <td>
+        <code>showToolbar</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>true</code>
+      </td>
       <td>Show/hide toolbar</td>
     </tr>
     <tr>
-      <td><code>showPagination</code></td>
-      <td><code>boolean</code></td>
-      <td><code>true</code></td>
+      <td>
+        <code>showPagination</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>true</code>
+      </td>
       <td>Show/hide pagination</td>
     </tr>
     <tr>
-      <td><code>showSelectedCount</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>showSelectedCount</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Show selected row count</td>
     </tr>
     <tr>
-      <td><code>bulkSelectOptions</code></td>
-      <td><code>BulkActionOption[]</code></td>
+      <td>
+        <code>bulkSelectOptions</code>
+      </td>
+      <td>
+        <code>BulkActionOption[]</code>
+      </td>
       <td>-</td>
       <td>Bulk action buttons</td>
     </tr>
     <tr>
-      <td><code>emptyMessage</code></td>
-      <td><code>string</code></td>
-      <td><code>'No results found.'</code></td>
+      <td>
+        <code>emptyMessage</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>'No results found.'</code>
+      </td>
       <td>Empty state message</td>
     </tr>
     <tr>
-      <td><code>advancedMode</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>advancedMode</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Enable advanced filter operators</td>
     </tr>
     <tr>
-      <td><code>initialFilters</code></td>
-      <td><code>ColumnFiltersState</code></td>
-      <td><code>[]</code></td>
+      <td>
+        <code>initialFilters</code>
+      </td>
+      <td>
+        <code>ColumnFiltersState</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
       <td>Initial filter values for URL state restoration</td>
     </tr>
     <tr>
-      <td><code>initialSorting</code></td>
-      <td><code>SortingState</code></td>
-      <td><code>[]</code></td>
+      <td>
+        <code>initialSorting</code>
+      </td>
+      <td>
+        <code>SortingState</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
       <td>Initial sorting state for URL state restoration</td>
     </tr>
     <tr>
-      <td><code>initialPagination</code></td>
-      <td><code>Partial&lt;PaginationState&gt;</code></td>
+      <td>
+        <code>initialPagination</code>
+      </td>
+      <td>
+        <code>Partial&lt;PaginationState&gt;</code>
+      </td>
       <td>-</td>
       <td>Initial pagination for URL state restoration (pageIndex, pageSize)</td>
     </tr>
     <tr>
-      <td><code>defaultPinning</code></td>
-      <td><code>ColumnPinningState</code></td>
+      <td>
+        <code>defaultPinning</code>
+      </td>
+      <td>
+        <code>ColumnPinningState</code>
+      </td>
       <td>-</td>
       <td>Default pinned columns</td>
     </tr>
     <tr>
-      <td><code>enableColumnPinning</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>enableColumnPinning</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Enable column pinning</td>
     </tr>
     <tr>
-      <td><code>enableColumnHiding</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>enableColumnHiding</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Enable column hiding (shows View button in toolbar)</td>
     </tr>
     <tr>
-      <td><code>enableColumnResizing</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>enableColumnResizing</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Enable column resizing by dragging</td>
     </tr>
     <tr>
-      <td><code>columnResizeMode</code></td>
-      <td><code>'onChange' | 'onEnd'</code></td>
-      <td><code>'onChange'</code></td>
+      <td>
+        <code>columnResizeMode</code>
+      </td>
+      <td>
+        <code>'onChange' | 'onEnd'</code>
+      </td>
+      <td>
+        <code>'onChange'</code>
+      </td>
       <td>When to apply resize (during drag or after)</td>
     </tr>
     <tr>
-      <td><code>maxHeight</code></td>
-      <td><code>string</code></td>
-      <td><code>'600px'</code></td>
+      <td>
+        <code>maxHeight</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>'600px'</code>
+      </td>
       <td>Maximum table height</td>
     </tr>
     <tr>
-      <td><code>density</code></td>
-      <td><code>'compact' | 'comfortable' | 'spacious'</code></td>
-      <td><code>'comfortable'</code></td>
+      <td>
+        <code>density</code>
+      </td>
+      <td>
+        <code>'compact' | 'comfortable' | 'spacious'</code>
+      </td>
+      <td>
+        <code>'comfortable'</code>
+      </td>
       <td>Table density (affects cell padding and font size)</td>
     </tr>
     <tr>
-      <td><code>rowClass</code></td>
-      <td><code>(row: Row) =&gt; string | Record&lt;string, boolean&gt;</code></td>
+      <td>
+        <code>rowClass</code>
+      </td>
+      <td>
+        <code>(row: Row) =&gt; string | Record&lt;string, boolean&gt;</code>
+      </td>
       <td>-</td>
       <td>Function to add conditional CSS classes to rows</td>
     </tr>
     <tr>
-      <td><code>rowStyle</code></td>
-      <td><code>(row: Row) =&gt; CSSProperties</code></td>
+      <td>
+        <code>rowStyle</code>
+      </td>
+      <td>
+        <code>(row: Row) =&gt; CSSProperties</code>
+      </td>
       <td>-</td>
       <td>Function to add conditional inline styles to rows</td>
     </tr>
     <tr>
-      <td><code>rowProps</code></td>
-      <td><code>(row: Row) =&gt; HTMLAttributes</code></td>
+      <td>
+        <code>rowProps</code>
+      </td>
+      <td>
+        <code>(row: Row) =&gt; HTMLAttributes</code>
+      </td>
       <td>-</td>
       <td>Function to add custom attributes/handlers to rows</td>
     </tr>
     <tr>
-      <td><code>loading</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>loading</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Show loading skeleton state</td>
     </tr>
     <tr>
-      <td><code>loadingMessage</code></td>
-      <td><code>string</code></td>
-      <td><code>'Loading data...'</code></td>
+      <td>
+        <code>loadingMessage</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>'Loading data...'</code>
+      </td>
       <td>Message shown during loading</td>
     </tr>
     <tr>
-      <td><code>error</code></td>
-      <td><code>string | Error</code></td>
+      <td>
+        <code>error</code>
+      </td>
+      <td>
+        <code>string | Error</code>
+      </td>
       <td>-</td>
       <td>Error to display (shows error state)</td>
     </tr>
     <tr>
-      <td><code>showPageSizeSelector</code></td>
-      <td><code>boolean</code></td>
-      <td><code>true</code></td>
+      <td>
+        <code>showPageSizeSelector</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>true</code>
+      </td>
       <td>Show page size dropdown</td>
     </tr>
     <tr>
-      <td><code>showPageInfo</code></td>
-      <td><code>boolean</code></td>
-      <td><code>true</code></td>
+      <td>
+        <code>showPageInfo</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>true</code>
+      </td>
       <td>Show "Page X of Y" text indicator</td>
     </tr>
     <tr>
-      <td><code>paginationPosition</code></td>
-      <td><code>'bottom' | 'top' | 'both'</code></td>
-      <td><code>'bottom'</code></td>
+      <td>
+        <code>paginationPosition</code>
+      </td>
+      <td>
+        <code>'bottom' | 'top' | 'both'</code>
+      </td>
+      <td>
+        <code>'bottom'</code>
+      </td>
       <td>Where to render pagination</td>
     </tr>
     <tr>
-      <td><code>enableKeyboardNavigation</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>enableKeyboardNavigation</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Enable keyboard navigation for accessibility</td>
     </tr>
     <tr>
-      <td><code>showRefreshButton</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>showRefreshButton</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Show refresh button in toolbar</td>
     </tr>
     <tr>
-      <td><code>enableRowExpansion</code></td>
-      <td><code>boolean</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>enableRowExpansion</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>Enable row expansion for master-detail patterns</td>
     </tr>
     <tr>
-      <td><code>getRowCanExpand</code></td>
-      <td><code>(row: Row) =&gt; boolean</code></td>
+      <td>
+        <code>getRowCanExpand</code>
+      </td>
+      <td>
+        <code>(row: Row) =&gt; boolean</code>
+      </td>
       <td>-</td>
       <td>Function to determine if a row can be expanded</td>
     </tr>
     <tr>
-      <td><code>filterPlugins</code></td>
-      <td><code>RegisteredFilterPlugin[]</code></td>
-      <td><code>[]</code></td>
+      <td>
+        <code>filterPlugins</code>
+      </td>
+      <td>
+        <code>RegisteredFilterPlugin[]</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
       <td>Custom filter plugins for extending filter types</td>
     </tr>
   </tbody>
@@ -334,14 +548,23 @@ const handleServerSideChange = (params) => {
   </thead>
   <tbody>
     <tr>
-      <td><code>@retry</code></td>
+      <td>
+        <code>@retry</code>
+      </td>
       <td>-</td>
       <td>Emitted when retry button is clicked in error state</td>
     </tr>
     <tr>
-      <td><code>@rowActivate</code></td>
-      <td><code>Row&lt;TData&gt;</code></td>
-      <td>Emitted when Enter is pressed on a focused row (requires <code>enableKeyboardNavigation</code>)</td>
+      <td>
+        <code>@rowActivate</code>
+      </td>
+      <td>
+        <code>Row&lt;TData&gt;</code>
+      </td>
+      <td>
+        Emitted when Enter is pressed on a focused row (requires{' '}
+        <code>enableKeyboardNavigation</code>)
+      </td>
     </tr>
   </tbody>
 </table>
@@ -360,53 +583,95 @@ The DataTable provides several slots for customization:
   </thead>
   <tbody>
     <tr>
-      <td><code>#toolbar</code></td>
-      <td><code>{'{table, loading}'}</code></td>
+      <td>
+        <code>#toolbar</code>
+      </td>
+      <td>
+        <code>{'{table, loading}'}</code>
+      </td>
       <td>Replace the entire toolbar</td>
     </tr>
     <tr>
-      <td><code>#toolbar-start</code></td>
-      <td><code>{'{table}'}</code></td>
+      <td>
+        <code>#toolbar-start</code>
+      </td>
+      <td>
+        <code>{'{table}'}</code>
+      </td>
       <td>Content before search input</td>
     </tr>
     <tr>
-      <td><code>#toolbar-end</code></td>
-      <td><code>{'{table}'}</code></td>
+      <td>
+        <code>#toolbar-end</code>
+      </td>
+      <td>
+        <code>{'{table}'}</code>
+      </td>
       <td>Content after bulk actions</td>
     </tr>
     <tr>
-      <td><code>#empty</code></td>
-      <td><code>{'{message, columns}'}</code></td>
+      <td>
+        <code>#empty</code>
+      </td>
+      <td>
+        <code>{'{message, columns}'}</code>
+      </td>
       <td>Custom empty state</td>
     </tr>
     <tr>
-      <td><code>#error</code></td>
-      <td><code>{'{error, retry}'}</code></td>
+      <td>
+        <code>#error</code>
+      </td>
+      <td>
+        <code>{'{error, retry}'}</code>
+      </td>
       <td>Custom error state</td>
     </tr>
     <tr>
-      <td><code>#pagination</code></td>
-      <td><code>{'{table, pageCount, currentPage, pageSize, canPrevious, canNext}'}</code></td>
+      <td>
+        <code>#pagination</code>
+      </td>
+      <td>
+        <code>{'{table, pageCount, currentPage, pageSize, canPrevious, canNext}'}</code>
+      </td>
       <td>Custom pagination</td>
     </tr>
     <tr>
-      <td><code>#row</code></td>
-      <td><code>{'{row, cells, isSelected, index}'}</code></td>
+      <td>
+        <code>#row</code>
+      </td>
+      <td>
+        <code>{'{row, cells, isSelected, index}'}</code>
+      </td>
       <td>Custom row rendering</td>
     </tr>
     <tr>
-      <td><code>#cell-[columnId]</code></td>
-      <td><code>{'{cell, row, value}'}</code></td>
+      <td>
+        <code>#cell-[columnId]</code>
+      </td>
+      <td>
+        <code>{'{cell, row, value}'}</code>
+      </td>
       <td>Custom cell for specific column</td>
     </tr>
     <tr>
-      <td><code>#expanded-row</code></td>
-      <td><code>{'{row}'}</code></td>
-      <td>Content for expanded row (requires <code>enableRowExpansion</code>)</td>
+      <td>
+        <code>#expanded-row</code>
+      </td>
+      <td>
+        <code>{'{row}'}</code>
+      </td>
+      <td>
+        Content for expanded row (requires <code>enableRowExpansion</code>)
+      </td>
     </tr>
     <tr>
-      <td><code>#footer</code></td>
-      <td><code>{'{table, footerGroups}'}</code></td>
+      <td>
+        <code>#footer</code>
+      </td>
+      <td>
+        <code>{'{table, footerGroups}'}</code>
+      </td>
       <td>Custom footer content (replaces column footers)</td>
     </tr>
   </tbody>
@@ -452,44 +717,76 @@ The DataTable provides several slots for customization:
   </thead>
   <tbody>
     <tr>
-      <td><code>text</code></td>
+      <td>
+        <code>text</code>
+      </td>
       <td>Text input</td>
-      <td><code>string[]</code></td>
+      <td>
+        <code>string[]</code>
+      </td>
     </tr>
     <tr>
-      <td><code>select</code></td>
+      <td>
+        <code>select</code>
+      </td>
       <td>Single dropdown</td>
-      <td><code>string</code></td>
+      <td>
+        <code>string</code>
+      </td>
     </tr>
     <tr>
-      <td><code>multiselect</code></td>
+      <td>
+        <code>multiselect</code>
+      </td>
       <td>Multi checkbox</td>
-      <td><code>string[]</code></td>
+      <td>
+        <code>string[]</code>
+      </td>
     </tr>
     <tr>
-      <td><code>number</code></td>
+      <td>
+        <code>number</code>
+      </td>
       <td>Number input</td>
-      <td><code>number[]</code></td>
+      <td>
+        <code>number[]</code>
+      </td>
     </tr>
     <tr>
-      <td><code>range</code></td>
+      <td>
+        <code>range</code>
+      </td>
       <td>Range slider</td>
-      <td><code>{'{start, end}[]'}</code></td>
+      <td>
+        <code>{'{start, end}[]'}</code>
+      </td>
     </tr>
     <tr>
-      <td><code>boolean</code></td>
+      <td>
+        <code>boolean</code>
+      </td>
       <td>Toggle switch</td>
-      <td><code>boolean</code></td>
+      <td>
+        <code>boolean</code>
+      </td>
     </tr>
     <tr>
-      <td><code>date</code></td>
+      <td>
+        <code>date</code>
+      </td>
       <td>Date picker</td>
-      <td><code>DateValue[]</code></td>
+      <td>
+        <code>DateValue[]</code>
+      </td>
     </tr>
     <tr>
-      <td><code>daterange</code></td>
+      <td>
+        <code>daterange</code>
+      </td>
       <td>Date range</td>
-      <td><code>{'{start, end}[]'}</code></td>
+      <td>
+        <code>{'{start, end}[]'}</code>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -523,15 +820,15 @@ tableRef.value.resetFilters()
 tableRef.value.resetSorting()
 tableRef.value.resetSelection()
 tableRef.value.resetAll()
-tableRef.value.refresh()  // Trigger data reload with current state
+tableRef.value.refresh() // Trigger data reload with current state
 
 // Access state
 const selected = tableRef.value.selectedRows
 const hasSelection = tableRef.value.hasSelection
 
 // Keyboard navigation methods (when enableKeyboardNavigation is true)
-tableRef.value.focusTable()  // Focus the table
-tableRef.value.blurTable()   // Remove focus from table
+tableRef.value.focusTable() // Focus the table
+tableRef.value.blurTable() // Remove focus from table
 </script>
 ```
 
@@ -630,43 +927,67 @@ const handleRowActivate = (row) => {
   </thead>
   <tbody>
     <tr>
-      <td><code>↑</code> / <code>↓</code></td>
+      <td>
+        <code>↑</code> / <code>↓</code>
+      </td>
       <td>Navigate between rows</td>
     </tr>
     <tr>
-      <td><code>Home</code></td>
+      <td>
+        <code>Home</code>
+      </td>
       <td>Jump to first row</td>
     </tr>
     <tr>
-      <td><code>End</code></td>
+      <td>
+        <code>End</code>
+      </td>
       <td>Jump to last row</td>
     </tr>
     <tr>
-      <td><code>PageUp</code></td>
+      <td>
+        <code>PageUp</code>
+      </td>
       <td>Previous page</td>
     </tr>
     <tr>
-      <td><code>PageDown</code></td>
+      <td>
+        <code>PageDown</code>
+      </td>
       <td>Next page</td>
     </tr>
     <tr>
-      <td><code>Ctrl+PageUp</code></td>
+      <td>
+        <code>Ctrl+PageUp</code>
+      </td>
       <td>First page</td>
     </tr>
     <tr>
-      <td><code>Ctrl+PageDown</code></td>
+      <td>
+        <code>Ctrl+PageDown</code>
+      </td>
       <td>Last page</td>
     </tr>
     <tr>
-      <td><code>Space</code></td>
-      <td>Toggle row selection (when <code>enableRowSelection</code> is true)</td>
+      <td>
+        <code>Space</code>
+      </td>
+      <td>
+        Toggle row selection (when <code>enableRowSelection</code> is true)
+      </td>
     </tr>
     <tr>
-      <td><code>Enter</code></td>
-      <td>Activate row (emits <code>@rowActivate</code> event)</td>
+      <td>
+        <code>Enter</code>
+      </td>
+      <td>
+        Activate row (emits <code>@rowActivate</code> event)
+      </td>
     </tr>
     <tr>
-      <td><code>Escape</code></td>
+      <td>
+        <code>Escape</code>
+      </td>
       <td>Clear selection and focus</td>
     </tr>
   </tbody>
@@ -675,6 +996,7 @@ const handleRowActivate = (row) => {
 ### Focus Behavior
 
 When keyboard navigation is enabled:
+
 - The table container receives `tabindex="0"` to make it focusable
 - Pressing `↑`/`↓` when entering the table focuses the first row
 - The focused row is highlighted with a visible outline
@@ -725,9 +1047,9 @@ const columns = [
 
 ```typescript
 // Programmatic expansion control
-tableRef.value.expanded           // Current expansion state
-tableRef.value.resetExpanded()    // Collapse all rows
-tableRef.value.toggleAllRowsExpanded(true)  // Expand all
+tableRef.value.expanded // Current expansion state
+tableRef.value.resetExpanded() // Collapse all rows
+tableRef.value.toggleAllRowsExpanded(true) // Expand all
 tableRef.value.toggleAllRowsExpanded(false) // Collapse all
 ```
 
@@ -754,7 +1076,7 @@ const columns = [
   helper.accessor('id', {
     title: 'ID',
     // Count total rows
-    footer: aggregations.count({ format: '{count} invoices' })
+    footer: aggregations.count({ format: '{count} invoices' }),
   }),
   helper.accessor('description', {
     title: 'Description',
@@ -762,17 +1084,17 @@ const columns = [
   helper.accessor('amount', {
     title: 'Amount',
     // Sum with currency formatting
-    footer: aggregations.sum({ format: 'currency', currency: 'USD' })
+    footer: aggregations.sum({ format: 'currency', currency: 'USD' }),
   }),
   helper.accessor('tax', {
     title: 'Tax Rate',
     // Average with percent formatting
-    footer: aggregations.average({ format: 'percent', decimals: 1 })
+    footer: aggregations.average({ format: 'percent', decimals: 1 }),
   }),
   helper.accessor('date', {
     title: 'Date',
     // Show date range
-    footer: aggregations.min({ format: 'date' })
+    footer: aggregations.min({ format: 'date' }),
   }),
 ]
 ```
@@ -789,39 +1111,72 @@ const columns = [
   </thead>
   <tbody>
     <tr>
-      <td><code>aggregations.sum(options)</code></td>
+      <td>
+        <code>aggregations.sum(options)</code>
+      </td>
       <td>Sum of all values</td>
-      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>prefix</code>, <code>suffix</code></td>
+      <td>
+        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
+        <code>prefix</code>, <code>suffix</code>
+      </td>
     </tr>
     <tr>
-      <td><code>aggregations.count(options)</code></td>
+      <td>
+        <code>aggregations.count(options)</code>
+      </td>
       <td>Count of rows</td>
-      <td><code>format</code> (use <code>{'{count}'}</code> placeholder), <code>locale</code></td>
+      <td>
+        <code>format</code> (use <code>{'{count}'}</code> placeholder), <code>locale</code>
+      </td>
     </tr>
     <tr>
-      <td><code>aggregations.average(options)</code></td>
+      <td>
+        <code>aggregations.average(options)</code>
+      </td>
       <td>Average of all values</td>
-      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>prefix</code>, <code>suffix</code></td>
+      <td>
+        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
+        <code>prefix</code>, <code>suffix</code>
+      </td>
     </tr>
     <tr>
-      <td><code>aggregations.min(options)</code></td>
+      <td>
+        <code>aggregations.min(options)</code>
+      </td>
       <td>Minimum value</td>
-      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code></td>
+      <td>
+        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
+        <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code>
+      </td>
     </tr>
     <tr>
-      <td><code>aggregations.max(options)</code></td>
+      <td>
+        <code>aggregations.max(options)</code>
+      </td>
       <td>Maximum value</td>
-      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code></td>
+      <td>
+        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
+        <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code>
+      </td>
     </tr>
     <tr>
-      <td><code>aggregations.range(options)</code></td>
+      <td>
+        <code>aggregations.range(options)</code>
+      </td>
       <td>Range (min – max)</td>
-      <td><code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>, <code>prefix</code>, <code>suffix</code></td>
+      <td>
+        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
+        <code>prefix</code>, <code>suffix</code>
+      </td>
     </tr>
     <tr>
-      <td><code>aggregations.custom(fn)</code></td>
+      <td>
+        <code>aggregations.custom(fn)</code>
+      </td>
       <td>Custom aggregation</td>
-      <td>Function receiving <code>{'{table, column}'}</code> context</td>
+      <td>
+        Function receiving <code>{'{table, column}'}</code> context
+      </td>
     </tr>
   </tbody>
 </table>
@@ -829,6 +1184,7 @@ const columns = [
 ### Format Options
 
 The `format` option supports:
+
 - `'number'` - Plain number formatting (default)
 - `'currency'` - Currency formatting (requires `currency` option)
 - `'percent'` - Percentage formatting
@@ -841,9 +1197,9 @@ helper.accessor('status', {
   title: 'Status',
   footer: aggregations.custom(({ table }) => {
     const rows = table.getFilteredRowModel().rows
-    const completed = rows.filter(r => r.original.status === 'completed').length
+    const completed = rows.filter((r) => r.original.status === 'completed').length
     return `${completed}/${rows.length} completed`
-  })
+  }),
 })
 ```
 
@@ -885,9 +1241,12 @@ Control cell padding and font size with the `density` prop:
 
 ```vue
 <template>
-  <DataTable density="compact" ... />    <!-- Tight spacing -->
-  <DataTable density="comfortable" ... /> <!-- Default -->
-  <DataTable density="spacious" ... />   <!-- Relaxed spacing -->
+  <DataTable density="compact" ... />
+  <!-- Tight spacing -->
+  <DataTable density="comfortable" ... />
+  <!-- Default -->
+  <DataTable density="spacious" ... />
+  <!-- Relaxed spacing -->
 </template>
 ```
 
@@ -901,14 +1260,14 @@ The density system uses these CSS variables (customizable per density level):
   --dt-line-height: 1.5;
 }
 
-[data-density="compact"] {
+[data-density='compact'] {
   --dt-cell-padding-y: 0.25rem;
   --dt-cell-padding-x: 0.5rem;
   --dt-font-size: 0.75rem;
   --dt-line-height: 1.25;
 }
 
-[data-density="spacious"] {
+[data-density='spacious'] {
   --dt-cell-padding-y: 0.75rem;
   --dt-cell-padding-x: 1rem;
   --dt-font-size: 0.875rem;
@@ -925,17 +1284,23 @@ Use the `rowClass`, `rowStyle`, and `rowProps` props for dynamic row styling:
   <DataTable
     :columns="columns"
     :data="data"
-    :row-class="(row) => ({
-      'bg-red-50 dark:bg-red-950': row.original.isOverdue,
-      'bg-green-50 dark:bg-green-950': row.original.isCompleted,
-    })"
-    :row-style="(row) => ({
-      opacity: row.original.isArchived ? 0.5 : 1
-    })"
-    :row-props="(row) => ({
-      'data-status': row.original.status,
-      onClick: () => handleRowClick(row.original)
-    })"
+    :row-class="
+      (row) => ({
+        'bg-red-50 dark:bg-red-950': row.original.isOverdue,
+        'bg-green-50 dark:bg-green-950': row.original.isCompleted,
+      })
+    "
+    :row-style="
+      (row) => ({
+        opacity: row.original.isArchived ? 0.5 : 1,
+      })
+    "
+    :row-props="
+      (row) => ({
+        'data-status': row.original.status,
+        onClick: () => handleRowClick(row.original),
+      })
+    "
   />
 </template>
 ```
@@ -992,18 +1357,18 @@ const columns = [
   helper.accessor('status', {
     title: 'Status',
     cell: cellRenderers.badge({
-      variantMap: { active: 'default', inactive: 'secondary' }
-    })
+      variantMap: { active: 'default', inactive: 'secondary' },
+    }),
   }),
 
   helper.accessor('salary', {
     title: 'Salary',
-    cell: cellRenderers.currency({ currency: 'USD' })
+    cell: cellRenderers.currency({ currency: 'USD' }),
   }),
 
   helper.accessor('createdAt', {
     title: 'Created',
-    cell: cellRenderers.date({ format: 'medium' })
+    cell: cellRenderers.date({ format: 'medium' }),
   }),
 
   // Actions column (dropdown mode)
@@ -1012,15 +1377,15 @@ const columns = [
     actions: [
       {
         label: 'Edit',
-        onClick: (row) => console.log('Edit', row.original)
+        onClick: (row) => console.log('Edit', row.original),
       },
       {
         label: 'Delete',
         variant: 'destructive',
-        onClick: (row) => console.log('Delete', row.original)
-      }
-    ]
-  })
+        onClick: (row) => console.log('Delete', row.original),
+      },
+    ],
+  }),
 ]
 ```
 
@@ -1035,23 +1400,33 @@ const columns = [
   </thead>
   <tbody>
     <tr>
-      <td><code>helper.accessor(key, options)</code></td>
+      <td>
+        <code>helper.accessor(key, options)</code>
+      </td>
       <td>Creates an accessor column with auto-generated header</td>
     </tr>
     <tr>
-      <td><code>helper.display(options)</code></td>
+      <td>
+        <code>helper.display(options)</code>
+      </td>
       <td>Creates a display column (no data accessor)</td>
     </tr>
     <tr>
-      <td><code>helper.selection(options?)</code></td>
+      <td>
+        <code>helper.selection(options?)</code>
+      </td>
       <td>Creates a selection checkbox column</td>
     </tr>
     <tr>
-      <td><code>helper.expander(options?)</code></td>
+      <td>
+        <code>helper.expander(options?)</code>
+      </td>
       <td>Creates an expander toggle column for row expansion</td>
     </tr>
     <tr>
-      <td><code>helper.actions(options)</code></td>
+      <td>
+        <code>helper.actions(options)</code>
+      </td>
       <td>Creates an actions column (inline or dropdown)</td>
     </tr>
   </tbody>
@@ -1069,34 +1444,58 @@ const columns = [
   </thead>
   <tbody>
     <tr>
-      <td><code>cellRenderers.badge(options)</code></td>
+      <td>
+        <code>cellRenderers.badge(options)</code>
+      </td>
       <td>Renders a Badge component</td>
-      <td><code>variantMap</code>, <code>defaultVariant</code>, <code>format</code></td>
+      <td>
+        <code>variantMap</code>, <code>defaultVariant</code>, <code>format</code>
+      </td>
     </tr>
     <tr>
-      <td><code>cellRenderers.date(options)</code></td>
+      <td>
+        <code>cellRenderers.date(options)</code>
+      </td>
       <td>Formats date values</td>
-      <td><code>format</code>, <code>locale</code>, <code>fallback</code></td>
+      <td>
+        <code>format</code>, <code>locale</code>, <code>fallback</code>
+      </td>
     </tr>
     <tr>
-      <td><code>cellRenderers.currency(options)</code></td>
+      <td>
+        <code>cellRenderers.currency(options)</code>
+      </td>
       <td>Formats as currency</td>
-      <td><code>currency</code>, <code>locale</code>, <code>minimumFractionDigits</code></td>
+      <td>
+        <code>currency</code>, <code>locale</code>, <code>minimumFractionDigits</code>
+      </td>
     </tr>
     <tr>
-      <td><code>cellRenderers.number(options)</code></td>
+      <td>
+        <code>cellRenderers.number(options)</code>
+      </td>
       <td>Formats numbers</td>
-      <td><code>locale</code>, <code>useGrouping</code>, <code>compact</code></td>
+      <td>
+        <code>locale</code>, <code>useGrouping</code>, <code>compact</code>
+      </td>
     </tr>
     <tr>
-      <td><code>cellRenderers.boolean(options)</code></td>
+      <td>
+        <code>cellRenderers.boolean(options)</code>
+      </td>
       <td>Formats boolean values</td>
-      <td><code>trueText</code>, <code>falseText</code>, <code>asBadge</code></td>
+      <td>
+        <code>trueText</code>, <code>falseText</code>, <code>asBadge</code>
+      </td>
     </tr>
     <tr>
-      <td><code>cellRenderers.truncate(maxLength)</code></td>
+      <td>
+        <code>cellRenderers.truncate(maxLength)</code>
+      </td>
       <td>Truncates text with ellipsis</td>
-      <td><code>showTooltip</code></td>
+      <td>
+        <code>showTooltip</code>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -1106,19 +1505,19 @@ const columns = [
 ```typescript
 helper.actions({
   display: 'dropdown', // or 'inline'
-  id: 'actions',       // default: 'actions'
-  title: 'Actions',    // header title
+  id: 'actions', // default: 'actions'
+  title: 'Actions', // header title
   dropdownLabel: 'Open menu', // for dropdown trigger
   actions: [
     {
       label: 'Edit',
-      icon: IconEdit,           // optional icon
-      variant: 'ghost',         // button variant (inline mode)
-      onClick: (row) => {},     // handler
-      show: (row) => true,      // conditional visibility
+      icon: IconEdit, // optional icon
+      variant: 'ghost', // button variant (inline mode)
+      onClick: (row) => {}, // handler
+      show: (row) => true, // conditional visibility
       disabled: (row) => false, // conditional disable
-    }
-  ]
+    },
+  ],
 })
 ```
 
@@ -1157,17 +1556,19 @@ const currencyFilter = defineFilter({
 import type { FilterPluginComponentProps } from '@meldui/vue'
 
 // Extend with your custom props
-const props = defineProps<FilterPluginComponentProps & {
-  currency?: string
-  min?: number
-  max?: number
-}>()
+const props = defineProps<
+  FilterPluginComponentProps & {
+    currency?: string
+    min?: number
+    max?: number
+  }
+>()
 
 // Required emit events
 const emit = defineEmits<{
   'value-change': [value: number | undefined]
-  'remove': []
-  'close': []
+  remove: []
+  close: []
 }>()
 </script>
 
@@ -1188,38 +1589,66 @@ const emit = defineEmits<{
   </thead>
   <tbody>
     <tr>
-      <td><code>type</code></td>
-      <td><code>string</code></td>
+      <td>
+        <code>type</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
       <td>Unique filter type identifier</td>
     </tr>
     <tr>
-      <td><code>component</code></td>
-      <td><code>Component</code></td>
+      <td>
+        <code>component</code>
+      </td>
+      <td>
+        <code>Component</code>
+      </td>
       <td>Vue component that renders the filter</td>
     </tr>
     <tr>
-      <td><code>operators</code></td>
-      <td><code>FilterOperator[]</code></td>
+      <td>
+        <code>operators</code>
+      </td>
+      <td>
+        <code>FilterOperator[]</code>
+      </td>
       <td>Available operators (optional)</td>
     </tr>
     <tr>
-      <td><code>defaultOperator</code></td>
-      <td><code>FilterOperator</code></td>
+      <td>
+        <code>defaultOperator</code>
+      </td>
+      <td>
+        <code>FilterOperator</code>
+      </td>
       <td>Default operator (optional)</td>
     </tr>
     <tr>
-      <td><code>supportsMultiInstance</code></td>
-      <td><code>boolean</code></td>
+      <td>
+        <code>supportsMultiInstance</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
       <td>Allow multiple instances (default: false)</td>
     </tr>
     <tr>
-      <td><code>serialize</code></td>
-      <td><code>(value) =&gt; unknown</code></td>
+      <td>
+        <code>serialize</code>
+      </td>
+      <td>
+        <code>(value) =&gt; unknown</code>
+      </td>
       <td>Transform value for server (optional)</td>
     </tr>
     <tr>
-      <td><code>deserialize</code></td>
-      <td><code>(value) =&gt; T</code></td>
+      <td>
+        <code>deserialize</code>
+      </td>
+      <td>
+        <code>(value) =&gt; T</code>
+      </td>
       <td>Transform server value back (optional)</td>
     </tr>
   </tbody>
@@ -1239,53 +1668,93 @@ Your filter component will receive these props:
   </thead>
   <tbody>
     <tr>
-      <td><code>column</code></td>
-      <td><code>Column</code></td>
+      <td>
+        <code>column</code>
+      </td>
+      <td>
+        <code>Column</code>
+      </td>
       <td>The table column being filtered</td>
     </tr>
     <tr>
-      <td><code>title</code></td>
-      <td><code>string</code></td>
+      <td>
+        <code>title</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
       <td>Filter title/label</td>
     </tr>
     <tr>
-      <td><code>placeholder</code></td>
-      <td><code>string</code></td>
+      <td>
+        <code>placeholder</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
       <td>Placeholder text</td>
     </tr>
     <tr>
-      <td><code>icon</code></td>
-      <td><code>Component</code></td>
+      <td>
+        <code>icon</code>
+      </td>
+      <td>
+        <code>Component</code>
+      </td>
       <td>Icon component</td>
     </tr>
     <tr>
-      <td><code>defaultOpen</code></td>
-      <td><code>boolean</code></td>
+      <td>
+        <code>defaultOpen</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
       <td>Auto-open on mount</td>
     </tr>
     <tr>
-      <td><code>openTrigger</code></td>
-      <td><code>number</code></td>
+      <td>
+        <code>openTrigger</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
       <td>Trigger to re-open</td>
     </tr>
     <tr>
-      <td><code>advancedMode</code></td>
-      <td><code>boolean</code></td>
+      <td>
+        <code>advancedMode</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
       <td>Whether advanced mode is enabled</td>
     </tr>
     <tr>
-      <td><code>defaultOperator</code></td>
-      <td><code>FilterOperator</code></td>
+      <td>
+        <code>defaultOperator</code>
+      </td>
+      <td>
+        <code>FilterOperator</code>
+      </td>
       <td>Default operator</td>
     </tr>
     <tr>
-      <td><code>availableOperators</code></td>
-      <td><code>FilterOperator[]</code></td>
+      <td>
+        <code>availableOperators</code>
+      </td>
+      <td>
+        <code>FilterOperator[]</code>
+      </td>
       <td>Available operators</td>
     </tr>
     <tr>
-      <td><code>...custom</code></td>
-      <td><code>unknown</code></td>
+      <td>
+        <code>...custom</code>
+      </td>
+      <td>
+        <code>unknown</code>
+      </td>
       <td>Custom props from filter field</td>
     </tr>
   </tbody>
@@ -1304,22 +1773,27 @@ Your component must emit these events:
 Explore the following stories for detailed examples:
 
 ### Core Features
+
 - **Basic** - Simple table, search, pagination, and sorting
 - **Filters** - All filter types with examples
 - **Selection** - Row selection and bulk actions
 - **Advanced Filters** - Operator-based filtering
 
 ### Visual Customization
+
 - **States** - Loading skeleton, error with retry, empty with custom slot
 - **Customization** - Slots, density variants, conditional row styling, CSS theming
 
 ### Developer Experience
+
 - **ColumnHelpers** - `createColumnHelper`, selection column, actions column (inline/dropdown), cell renderers, aggregations
 - **Column Pinning** - Pinning columns left/right with sticky headers
 
 ### Advanced Interactions
+
 - **InteractiveFeatures** - Column resizing, keyboard navigation, refresh button
 - **Events** - Event handling and callbacks
 
 ### Complete Examples
+
 - **Full Example** - Complete implementation with all features

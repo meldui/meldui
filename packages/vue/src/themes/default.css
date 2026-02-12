@@ -8,7 +8,7 @@
  */
 
 /* vue-sonner styles for Toaster component positioning */
-@import "vue-sonner/style.css";
+@import 'vue-sonner/style.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -189,21 +189,21 @@
 }
 
 /* DataTable Density Variants */
-[data-density="compact"] {
+[data-density='compact'] {
   --dt-cell-padding-y: 0.25rem;
   --dt-cell-padding-x: 0.5rem;
   --dt-font-size: 0.75rem;
   --dt-line-height: 1.25;
 }
 
-[data-density="comfortable"] {
+[data-density='comfortable'] {
   --dt-cell-padding-y: 0.5rem;
   --dt-cell-padding-x: 0.75rem;
   --dt-font-size: 0.875rem;
   --dt-line-height: 1.5;
 }
 
-[data-density="spacious"] {
+[data-density='spacious'] {
   --dt-cell-padding-y: 0.75rem;
   --dt-cell-padding-x: 1rem;
   --dt-font-size: 0.875rem;
@@ -211,14 +211,14 @@
 }
 
 /* DataTable Cell Styles - Applied via data-density attribute on container */
-[data-density] th[data-slot="table-head"],
-[data-density] td[data-slot="table-cell"] {
+[data-density] th[data-slot='table-head'],
+[data-density] td[data-slot='table-cell'] {
   padding: var(--dt-cell-padding-y) var(--dt-cell-padding-x);
   font-size: var(--dt-font-size);
   line-height: var(--dt-line-height);
 }
 
-[data-density] th[data-slot="table-head"] {
+[data-density] th[data-slot='table-head'] {
   height: auto;
   min-height: 2.5rem;
 }
@@ -237,27 +237,27 @@
 }
 
 /* Focused row styling */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] {
+[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] {
   background-color: var(--accent);
   outline: 1px solid var(--ring);
   outline-offset: -1px;
 }
 
 /* Keyboard focused row - pinned cells need matching background and borders */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-left,
-[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-right {
+[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-left,
+[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-right {
   background-color: var(--accent);
   border-top: 1px solid var(--ring);
   border-bottom: 1px solid var(--ring);
 }
 
 /* First pinned-left cell needs left border */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-left:first-child {
+[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-left:first-child {
   border-left: 1px solid var(--ring);
 }
 
 /* Last pinned-right cell needs right border */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] td.pinned-right:last-child {
+[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-right:last-child {
   border-right: 1px solid var(--ring);
 }
 
@@ -327,8 +327,8 @@
 }
 
 /* Selected state for pinned cells */
-.table-container tbody tr[data-state="selected"] td.pinned-left,
-.table-container tbody tr[data-state="selected"] td.pinned-right {
+.table-container tbody tr[data-state='selected'] td.pinned-left,
+.table-container tbody tr[data-state='selected'] td.pinned-right {
   background-color: var(--muted);
 }
 

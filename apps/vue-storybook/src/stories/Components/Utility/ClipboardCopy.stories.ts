@@ -258,15 +258,16 @@ export const AsChildDynamicVariant: Story = {
   }),
 }
 
+function getTimestampText() {
+  const timestamp = new Date().toISOString()
+  return `Generated at: ${timestamp}`
+}
+
 export const FunctionText: Story = {
   render: () => ({
     components: { ClipboardCopyButton },
     setup() {
-      const getText = () => {
-        const timestamp = new Date().toISOString()
-        return `Generated at: ${timestamp}`
-      }
-      return { getText }
+      return { getText: getTimestampText }
     },
     template: `
       <div class="space-y-2">

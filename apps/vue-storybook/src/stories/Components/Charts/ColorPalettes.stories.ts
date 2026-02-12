@@ -277,23 +277,25 @@ export const DarkModeComparison: Story = {
   }),
 }
 
+function generateDynamicConfig(count: number): MeldBarChartConfig {
+  return {
+    series: Array.from({ length: count }, (_, i) => ({
+      name: `Series ${i + 1}`,
+      data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 100)),
+    })),
+    xAxis: {
+      categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    },
+    colors: 'vibrant',
+    legend: { position: 'bottom' },
+  }
+}
+
 export const DynamicSeriesCount: Story = {
   render: () => ({
     components: { MeldBarChart, Card, CardHeader, CardTitle, CardContent },
     setup() {
-      const generateConfig = (count: number): MeldBarChartConfig => ({
-        series: Array.from({ length: count }, (_, i) => ({
-          name: `Series ${i + 1}`,
-          data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 100)),
-        })),
-        xAxis: {
-          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        },
-        colors: 'vibrant',
-        legend: { position: 'bottom' },
-      })
-
-      return { generateConfig }
+      return { generateConfig: generateDynamicConfig }
     },
     template: `
       <div class="space-y-6">

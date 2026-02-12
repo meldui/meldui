@@ -58,6 +58,19 @@ interface ChartClickEvent {
 export default meta
 type Story = StoryObj<typeof MeldBarChart>
 
+function handleChartClick(event: ChartClickEvent) {
+  console.log('Click event:', {
+    seriesName: event.seriesName,
+    dataIndex: event.dataIndex,
+    value: event.value,
+    name: event.name,
+  })
+}
+
+function handleChartHover(event: ChartHoverEvent) {
+  console.log('Hover event:', event.seriesName, event.value)
+}
+
 export const ClickEvent: Story = {
   name: 'Click Event',
   render: () => ({
@@ -495,21 +508,7 @@ const handleClick = (event: ChartClickEvent) => {
         },
       }
 
-      // Fully typed event handlers
-      const handleClick = (event: ChartClickEvent) => {
-        console.log('Click event:', {
-          seriesName: event.seriesName,
-          dataIndex: event.dataIndex,
-          value: event.value,
-          name: event.name,
-        })
-      }
-
-      const handleHover = (event: ChartHoverEvent) => {
-        console.log('Hover event:', event.seriesName, event.value)
-      }
-
-      return { config, handleClick, handleHover }
+      return { config, handleClick: handleChartClick, handleHover: handleChartHover }
     },
     template: `
       <div class="space-y-4">

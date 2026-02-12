@@ -1,14 +1,17 @@
 <!-- OPENSPEC:START -->
+
 # OpenSpec Instructions
 
 These instructions are for AI assistants working in this project.
 
 Always open `@/openspec/AGENTS.md` when the request:
+
 - Mentions planning or proposals (words like proposal, spec, change, plan)
 - Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
 - Sounds ambiguous and you need the authoritative spec before coding
 
 Use `@/openspec/AGENTS.md` to learn:
+
 - How to create and apply change proposals
 - Spec format and conventions
 - Project structure and guidelines
@@ -26,6 +29,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 MeldUI is an internal design system monorepo built on shadcn components. It uses pnpm workspaces to manage multiple packages (Vue, React in the future) that re-export and customize shadcn components while providing additional composite components.
 
 **Key Characteristics:**
+
 - Internal use only (not public open source)
 - Independent versioning per package using Changesets
 - Shadcn components are bundled (copied and modified), not peer dependencies
@@ -37,6 +41,7 @@ MeldUI is an internal design system monorepo built on shadcn components. It uses
 This is a pnpm workspace monorepo with two main directories:
 
 ### `packages/` - Library packages published to npm
+
 - `packages/vue/` - @meldui/vue (Vue 3 component library)
   - `src/components/ui/` - Shadcn-vue base components (copied via CLI)
   - `src/composites/` - Custom composite components built from base components
@@ -61,6 +66,7 @@ This is a pnpm workspace monorepo with two main directories:
   - Framework-agnostic utilities and types
 
 ### `apps/` - Development and documentation applications
+
 - `apps/vue-storybook/` - Storybook instance for Vue components
   - MDX documentation pages (Installation, Theming, Icons, etc.)
   - Component stories with interactive controls
@@ -71,6 +77,7 @@ This is a pnpm workspace monorepo with two main directories:
 ## Essential Commands
 
 ### Package Management
+
 ```bash
 # Install all dependencies
 pnpm install
@@ -84,6 +91,7 @@ pnpm --filter <package-name> <command>
 ```
 
 ### Building
+
 ```bash
 # Build all packages (uses Turborepo if configured)
 pnpm build
@@ -96,6 +104,7 @@ pnpm dev
 ```
 
 ### Code Quality (Biome.js)
+
 ```bash
 # Lint code
 pnpm lint
@@ -116,6 +125,7 @@ pnpm check:fix
 **Note:** This project uses Biome.js instead of ESLint + Prettier. All formatting and linting is handled by Biome.
 
 ### Storybook
+
 ```bash
 # Run Vue Storybook dev server
 pnpm storybook:vue
@@ -125,6 +135,7 @@ pnpm build:storybook:vue
 ```
 
 ### Adding Shadcn Components
+
 ```bash
 # Navigate to the Vue package
 cd packages/vue
@@ -137,6 +148,7 @@ npx shadcn-vue@latest add card
 **Important:** Shadcn components are copied into the codebase, not installed as dependencies. This allows modification and customization.
 
 ### Version Management (Changesets)
+
 ```bash
 # Create a changeset (records what changed for next release)
 pnpm changeset
@@ -155,6 +167,7 @@ The icon system uses **dedicated icon packages** that wrap Tabler Icons with cus
 ### Package Structure
 
 **@meldui/tabler-vue** and **@meldui/tabler-react** are separate packages that:
+
 1. Re-export all Tabler icons with custom defaults
 2. Wrap each icon with design system integration
 3. Provide perfect tree-shaking (only used icons are bundled)
@@ -163,10 +176,11 @@ The icon system uses **dedicated icon packages** that wrap Tabler Icons with cus
 ### Icon Defaults
 
 Configured in `packages/tabler-vue/src/defaults.ts`:
+
 ```typescript
 export const ICON_DEFAULTS = {
-  size: 24,     // 24px base size
-  stroke: 1.5,  // Stroke weight (Tabler default is 2)
+  size: 24, // 24px base size
+  stroke: 1.5, // Stroke weight (Tabler default is 2)
 } as const
 ```
 
@@ -194,6 +208,7 @@ export const ICON_DEFAULTS = {
 ### Syncing with Tabler Updates
 
 When Tabler releases new icons:
+
 ```bash
 cd packages/tabler-vue
 pnpm update @tabler/icons-vue
@@ -213,7 +228,9 @@ pnpm generate-icons  # Runs scripts/generate.ts
 ## Build Configuration
 
 ### Vite Library Mode
+
 Packages are built using Vite in library mode with:
+
 - **Outputs:** ESM (.mjs) and CJS (.cjs)
 - **Externals:** Framework (vue/react) and icon libraries are external
 - **TypeScript:** Type definitions generated automatically
@@ -222,7 +239,9 @@ Packages are built using Vite in library mode with:
 **Key config location:** `packages/vue/vite.config.ts`
 
 ### Package Exports
+
 Each package's `package.json` must have correct `exports` field for proper module resolution:
+
 ```json
 {
   "exports": {
@@ -240,12 +259,14 @@ Each package's `package.json` must have correct `exports` field for proper modul
 **CRITICAL: This project uses Tailwind CSS v4, not v3.**
 
 ### Key Differences from v3
+
 - **CSS-first configuration** - No `tailwind.config.js` files
 - **Use `@import "tailwindcss"`** in CSS files
 - **Use `@theme` directive** for customization
 - **Vite plugin:** `@tailwindcss/vite` instead of PostCSS plugin
 
 ### Installation
+
 ```bash
 pnpm add tailwindcss @tailwindcss/vite
 ```
@@ -253,21 +274,23 @@ pnpm add tailwindcss @tailwindcss/vite
 ### Configuration Pattern
 
 **In Vite config:**
+
 ```typescript
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss()]
+  plugins: [vue(), tailwindcss()],
 })
 ```
 
 **In CSS files (e.g., `packages/vue/src/styles/index.css`):**
+
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-primary: #3b82f6;
-  --font-display: "Inter", sans-serif;
+  --font-display: 'Inter', sans-serif;
 }
 
 @layer components {
@@ -276,6 +299,7 @@ export default defineConfig({
 ```
 
 ### Important Constraints
+
 - **DO NOT create `tailwind.config.js` files** - Use CSS-first approach
 - **DO NOT use Tailwind v3 syntax** - Strictly v4 only
 - **Each package needing Tailwind** should have its own CSS file with `@import "tailwindcss"`
@@ -305,6 +329,7 @@ Storybook serves as the primary documentation. When documenting:
 ## Development Workflow Guidelines
 
 ### Adding a New Component
+
 1. If it's a shadcn component: `npx shadcn-vue@latest add <component>`
 2. Modify the copied component as needed for your design system
 3. Ensure component uses Tailwind CSS v4 classes (no v3-specific syntax)
@@ -313,6 +338,7 @@ Storybook serves as the primary documentation. When documenting:
 6. Run `pnpm check:fix` before committing
 
 ### Creating Composite Components
+
 1. Place in `packages/vue/src/composites/`
 2. Build using existing base components from `components/ui/`
 3. Follow Vue 3 Composition API patterns
@@ -320,6 +346,7 @@ Storybook serves as the primary documentation. When documenting:
 5. Document in Storybook with usage examples
 
 ### Version Bumping and Releasing
+
 1. Make changes to packages
 2. Run `pnpm changeset` and describe changes
 3. Run `pnpm version` to update package versions
@@ -330,21 +357,25 @@ Storybook serves as the primary documentation. When documenting:
 ### Peer Dependencies
 
 **For @meldui/vue users:**
+
 ```bash
 pnpm add @meldui/vue @meldui/tabler-vue vue
 ```
 
 **For @meldui/tabler-vue package:**
+
 - @tabler/icons-vue is a regular dependency (auto-installed)
 - Vue is a peer dependency
 
 **For @meldui/vue package:**
+
 - @meldui/tabler-vue is a peer dependency
 - Vue is a peer dependency
 
 Ensure peer dependencies are correctly declared in each package's `package.json`.
 
 ### Code Style
+
 - **Formatter:** Single quotes, 2 spaces, semicolons as needed
 - **Line width:** 100 characters
 - **Import organization:** Auto-sorted by Biome
@@ -353,10 +384,12 @@ Ensure peer dependencies are correctly declared in each package's `package.json`
 ### Don't Bundle These
 
 **In @meldui/vue and @meldui/react:**
+
 - Vue/React framework
 - @meldui/tabler-vue / @meldui/tabler-react
 
 **In @meldui/tabler-vue and @meldui/tabler-react:**
+
 - Vue/React framework
 - @tabler/icons-vue / @tabler/icons-react is bundled (regular dependency)
 
@@ -407,10 +440,11 @@ export { default as IconMyLogo } from './custom/IconMyLogo.vue'
 ### Changing Icon Defaults
 
 Edit `packages/tabler-vue/src/defaults.ts`:
+
 ```typescript
 export const ICON_DEFAULTS = {
-  size: 20,     // Change from 24 to 20
-  stroke: 2,    // Change from 1.5 to 2
+  size: 20, // Change from 24 to 20
+  stroke: 2, // Change from 1.5 to 2
 } as const
 ```
 

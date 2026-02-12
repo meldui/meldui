@@ -37,6 +37,18 @@ These examples demonstrate:
 export default meta
 type Story = StoryObj<typeof meta>
 
+// Empty handler for stories that don't need change handling
+function emptyChangeHandler() {}
+
+function handleRetryAction() {
+  console.log('Retry clicked')
+  alert('Retry action triggered! In a real app, this would refetch data.')
+}
+
+function handleAddNewAction() {
+  alert('Add new user clicked!')
+}
+
 /**
  * Loading state with skeleton animation.
  * When loading is true, the table displays skeleton rows matching the page size.
@@ -45,8 +57,7 @@ export const Loading: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const handleChange = () => {}
-      return { handleChange, columns: minimalColumns }
+      return { handleChange: emptyChangeHandler, columns: minimalColumns }
     },
     template: `
       <div class="space-y-4">
@@ -140,13 +151,11 @@ export const ErrorState: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const handleChange = () => {}
-      const handleRetry = () => {
-        console.log('Retry clicked')
-        alert('Retry action triggered! In a real app, this would refetch data.')
+      return {
+        handleChange: emptyChangeHandler,
+        handleRetry: handleRetryAction,
+        columns: minimalColumns,
       }
-
-      return { handleChange, handleRetry, columns: minimalColumns }
     },
     template: `
       <div class="space-y-4">
@@ -173,10 +182,9 @@ export const ErrorObject: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const handleChange = () => {}
       const error = new Error('Network request failed: ECONNREFUSED')
 
-      return { handleChange, error, columns: minimalColumns }
+      return { handleChange: emptyChangeHandler, error, columns: minimalColumns }
     },
     template: `
       <DataTable
@@ -261,8 +269,7 @@ export const Empty: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const handleChange = () => {}
-      return { handleChange, columns: minimalColumns }
+      return { handleChange: emptyChangeHandler, columns: minimalColumns }
     },
     template: `
       <DataTable
@@ -283,12 +290,11 @@ export const CustomEmptySlot: Story = {
   render: () => ({
     components: { DataTable, Button },
     setup() {
-      const handleChange = () => {}
-      const handleAddNew = () => {
-        alert('Add new user clicked!')
+      return {
+        handleChange: emptyChangeHandler,
+        handleAddNew: handleAddNewAction,
+        columns: minimalColumns,
       }
-
-      return { handleChange, handleAddNew, columns: minimalColumns }
     },
     template: `
       <DataTable
@@ -325,9 +331,7 @@ export const CustomErrorSlot: Story = {
   render: () => ({
     components: { DataTable, Button },
     setup() {
-      const handleChange = () => {}
-
-      return { handleChange, columns: minimalColumns }
+      return { handleChange: emptyChangeHandler, columns: minimalColumns }
     },
     template: `
       <DataTable

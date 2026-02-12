@@ -45,9 +45,9 @@
 
 ## Results Summary
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| task-manager main JS (raw) | 3.8MB | 302KB | 92% |
-| task-manager main JS (gzipped) | 597KB | 99KB | **83%** |
-| @meldui/tabler-vue structure | 1 file (3.5MB) | 6019 files (~0.3KB each) | Tree-shakeable |
-| @meldui/vue structure | 1 file (592KB) | Preserved modules | Tree-shakeable |
+| Metric                         | Before         | After                    | Improvement    |
+| ------------------------------ | -------------- | ------------------------ | -------------- |
+| task-manager main JS (raw)     | 3.8MB          | 302KB                    | 92%            |
+| task-manager main JS (gzipped) | 597KB          | 99KB                     | **83%**        |
+| @meldui/tabler-vue structure   | 1 file (3.5MB) | 6019 files (~0.3KB each) | Tree-shakeable |
+| @meldui/vue structure          | 1 file (592KB) | Preserved modules        | Tree-shakeable |

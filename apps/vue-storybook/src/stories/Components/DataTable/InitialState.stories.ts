@@ -61,6 +61,54 @@ and the page is refreshed, use these props to restore the table state from URL p
 export default meta
 type Story = StoryObj<typeof meta>
 
+// URL parsing helpers
+function parseSortingFromURL(params: Record<string, string>): SortingState {
+  if (!params.sort_by) return []
+  return [
+    {
+      id: params.sort_by,
+      desc: params.sort_order === 'desc',
+    },
+  ]
+}
+
+function parsePaginationFromURL(
+  params: Record<string, string>,
+  defaultPageSize = 10,
+): Partial<PaginationState> {
+  return {
+    pageIndex: Math.max(0, Number(params.page || 1) - 1),
+    pageSize: Number(params.per_page) || defaultPageSize,
+  }
+}
+
+function serializeStateToURL(state: TableState): URLSearchParams {
+  const params = new URLSearchParams()
+
+  // Pagination (always include)
+  params.set('page', String(state.pagination.pageIndex + 1))
+  params.set('per_page', String(state.pagination.pageSize))
+
+  // Sorting (only if applied)
+  if (state.sorting.length > 0) {
+    params.set('sort_by', state.sorting[0].id)
+    params.set('sort_order', state.sorting[0].desc ? 'desc' : 'asc')
+  }
+
+  // Filters (simplified - extend as needed)
+  for (const filter of state.filters) {
+    if (Array.isArray(filter.value)) {
+      for (const v of filter.value) {
+        params.append(String(filter.id), String(v))
+      }
+    } else if (filter.value !== undefined && filter.value !== null) {
+      params.set(String(filter.id), String(filter.value))
+    }
+  }
+
+  return params
+}
+
 // ============================================================================
 // Initial Sorting Examples
 // ============================================================================
@@ -491,64 +539,6 @@ export const URLParsingPattern: Story = {
       // ========================================
       // URL Parsing Utilities (copy to your app)
       // ========================================
-
-      /**
-       * Parse sorting from URL params
-       * URL format: ?sort_by=column&sort_order=asc|desc
-       */
-      function parseSortingFromURL(params: Record<string, string>): SortingState {
-        if (!params.sort_by) return []
-        return [
-          {
-            id: params.sort_by,
-            desc: params.sort_order === 'desc',
-          },
-        ]
-      }
-
-      /**
-       * Parse pagination from URL params
-       * URL format: ?page=1&per_page=10 (page is 1-indexed)
-       */
-      function parsePaginationFromURL(
-        params: Record<string, string>,
-        defaultPageSize = 10,
-      ): Partial<PaginationState> {
-        return {
-          pageIndex: Math.max(0, Number(params.page || 1) - 1),
-          pageSize: Number(params.per_page) || defaultPageSize,
-        }
-      }
-
-      /**
-       * Serialize state to URL params
-       */
-      function serializeStateToURL(state: TableState): URLSearchParams {
-        const params = new URLSearchParams()
-
-        // Pagination (always include)
-        params.set('page', String(state.pagination.pageIndex + 1))
-        params.set('per_page', String(state.pagination.pageSize))
-
-        // Sorting (only if applied)
-        if (state.sorting.length > 0) {
-          params.set('sort_by', state.sorting[0].id)
-          params.set('sort_order', state.sorting[0].desc ? 'desc' : 'asc')
-        }
-
-        // Filters (simplified - extend as needed)
-        for (const filter of state.filters) {
-          if (Array.isArray(filter.value)) {
-            for (const v of filter.value) {
-              params.append(String(filter.id), String(v))
-            }
-          } else {
-            params.set(String(filter.id), String(filter.value))
-          }
-        }
-
-        return params
-      }
 
       // ========================================
       // Usage

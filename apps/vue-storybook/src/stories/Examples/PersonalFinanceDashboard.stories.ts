@@ -102,6 +102,26 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
+function formatCurrencyValue(value: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  }).format(value)
+}
+
+function formatPercentValue(value: number) {
+  return (value > 0 ? '+' : '') + value.toFixed(2) + '%'
+}
+
+function formatDateValue(dateString: string) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
 // ============================================================================
 // Transaction Types and Mock Data for DataTable
 // ============================================================================
@@ -206,7 +226,7 @@ function generateMockTransactions(count: number = 75): Transaction[] {
   }
 
   // Sort by date descending
-  return transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  return transactions.toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 const MOCK_TRANSACTIONS = generateMockTransactions(75)
@@ -627,26 +647,6 @@ export const FullApplication: Story = {
       const twoFactorAuth = ref(true)
       const biometricLogin = ref(true)
 
-      const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2,
-        }).format(value)
-      }
-
-      const formatPercent = (value: number) => {
-        return (value > 0 ? '+' : '') + value.toFixed(2) + '%'
-      }
-
-      const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        })
-      }
-
       // ========================================================================
       // DataTable Configuration for Transactions
       // ========================================================================
@@ -953,9 +953,9 @@ export const FullApplication: Story = {
         darkMode,
         twoFactorAuth,
         biometricLogin,
-        formatCurrency,
-        formatPercent,
-        formatDate,
+        formatCurrency: formatCurrencyValue,
+        formatPercent: formatPercentValue,
+        formatDate: formatDateValue,
         // DataTable for Transactions
         transactionTableRef,
         transactionData,
