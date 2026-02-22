@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.1.14
+
+### Patch Changes
+
+- theme upgrades for outline button and sidebar active menu
+
 ## 0.1.13
 
 ### Patch Changes

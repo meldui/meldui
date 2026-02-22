@@ -1,6 +1,6 @@
 {
   "name": "@meldui/charts-vue",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "MeldUI Chart components for Vue built on Apache ECharts",
   "keywords": [
     "charts",
