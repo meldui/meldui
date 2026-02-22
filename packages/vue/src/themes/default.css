@@ -8,136 +8,132 @@
  */
 
 /* vue-sonner styles for Toaster component positioning */
-@import 'vue-sonner/style.css';
+@import "vue-sonner/style.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-info: var(--info);
-  --color-neutral: var(--neutral);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-info: var(--info);
+    --color-neutral: var(--neutral);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --success: oklch(0.6 0.15 145);
-  --warning: oklch(0.7 0.15 85);
-  --info: oklch(0.55 0.15 250);
-  --neutral: oklch(0.5 0.02 260);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.829 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+    --radius: 0.625rem;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.129 0.042 264.695);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.129 0.042 264.695);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.129 0.042 264.695);
+    --primary: oklch(0.208 0.042 265.755);
+    --primary-foreground: oklch(0.984 0.003 247.858);
+    --secondary: oklch(0.968 0.007 247.896);
+    --secondary-foreground: oklch(0.208 0.042 265.755);
+    --muted: oklch(0.968 0.007 247.896);
+    --muted-foreground: oklch(0.554 0.046 257.417);
+    --accent: oklch(0.968 0.007 247.896);
+    --accent-foreground: oklch(0.208 0.042 265.755);
+    --destructive: oklch(0.577 0.245 27.325);
+    --success: oklch(0.6 0.15 145);
+    --warning: oklch(0.7 0.15 85);
+    --info: oklch(0.55 0.15 250);
+    --neutral: oklch(0.5 0.02 260);
+    --border: oklch(0.929 0.013 255.508);
+    --input: oklch(0.829 0.013 255.508);
+    --ring: oklch(0.704 0.04 256.788);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --sidebar: oklch(0.984 0.003 247.858);
+    --sidebar-foreground: oklch(0.129 0.042 264.695);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: oklch(0.929 0.013 255.508);
+    --sidebar-ring: oklch(0.704 0.04 256.788);
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --success: oklch(0.7 0.15 145);
-  --warning: oklch(0.75 0.15 85);
-  --info: oklch(0.65 0.15 250);
-  --neutral: oklch(0.65 0.02 260);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 20%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+    --background: oklch(0.129 0.042 264.695);
+    --foreground: oklch(0.984 0.003 247.858);
+    --card: oklch(0.208 0.042 265.755);
+    --card-foreground: oklch(0.984 0.003 247.858);
+    --popover: oklch(0.208 0.042 265.755);
+    --popover-foreground: oklch(0.984 0.003 247.858);
+    --primary: oklch(0.929 0.013 255.508);
+    --primary-foreground: oklch(0.208 0.042 265.755);
+    --secondary: oklch(0.279 0.041 260.031);
+    --secondary-foreground: oklch(0.984 0.003 247.858);
+    --muted: oklch(0.279 0.041 260.031);
+    --muted-foreground: oklch(0.704 0.04 256.788);
+    --accent: oklch(0.279 0.041 260.031);
+    --accent-foreground: oklch(0.984 0.003 247.858);
+    --destructive: oklch(0.704 0.191 22.216);
+    --success: oklch(0.7 0.15 145);
+    --warning: oklch(0.75 0.15 85);
+    --info: oklch(0.65 0.15 250);
+    --neutral: oklch(0.65 0.02 260);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 20%);
+    --ring: oklch(0.551 0.027 264.364);
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --sidebar: oklch(0.208 0.042 265.755);
+    --sidebar-foreground: oklch(0.984 0.003 247.858);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
 }
 
 /* ==========================================================================
@@ -146,34 +142,34 @@
    ========================================================================== */
 
 .custom-scrollbar {
-  scrollbar-width: auto;
-  scrollbar-color: var(--border) transparent;
+    scrollbar-width: auto;
+    scrollbar-color: var(--border) transparent;
 
-  /* Webkit browsers (Chrome, Safari, Edge) */
-  &::-webkit-scrollbar {
-    width: 14px;
-    height: 14px;
-  }
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    &::-webkit-scrollbar {
+        width: 14px;
+        height: 14px;
+    }
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--border);
-    border-radius: 9999px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    min-height: 40px;
-  }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 9999px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        min-height: 40px;
+    }
 
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: var(--muted-foreground);
-  }
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--muted-foreground);
+    }
 
-  &::-webkit-scrollbar-corner {
-    background: transparent;
-  }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+    }
 }
 
 /**
@@ -181,84 +177,96 @@
  * Minimal configuration - uses Tailwind classes for most styling
  */
 :root {
-  /* Density - Default (comfortable) */
-  --dt-cell-padding-y: 0.5rem;
-  --dt-cell-padding-x: 0.75rem;
-  --dt-font-size: 0.875rem;
-  --dt-line-height: 1.5;
+    /* Density - Default (comfortable) */
+    --dt-cell-padding-y: 0.5rem;
+    --dt-cell-padding-x: 0.75rem;
+    --dt-font-size: 0.875rem;
+    --dt-line-height: 1.5;
 }
 
 /* DataTable Density Variants */
-[data-density='compact'] {
-  --dt-cell-padding-y: 0.25rem;
-  --dt-cell-padding-x: 0.5rem;
-  --dt-font-size: 0.75rem;
-  --dt-line-height: 1.25;
+[data-density="compact"] {
+    --dt-cell-padding-y: 0.25rem;
+    --dt-cell-padding-x: 0.5rem;
+    --dt-font-size: 0.75rem;
+    --dt-line-height: 1.25;
 }
 
-[data-density='comfortable'] {
-  --dt-cell-padding-y: 0.5rem;
-  --dt-cell-padding-x: 0.75rem;
-  --dt-font-size: 0.875rem;
-  --dt-line-height: 1.5;
+[data-density="comfortable"] {
+    --dt-cell-padding-y: 0.5rem;
+    --dt-cell-padding-x: 0.75rem;
+    --dt-font-size: 0.875rem;
+    --dt-line-height: 1.5;
 }
 
-[data-density='spacious'] {
-  --dt-cell-padding-y: 0.75rem;
-  --dt-cell-padding-x: 1rem;
-  --dt-font-size: 0.875rem;
-  --dt-line-height: 1.75;
+[data-density="spacious"] {
+    --dt-cell-padding-y: 0.75rem;
+    --dt-cell-padding-x: 1rem;
+    --dt-font-size: 0.875rem;
+    --dt-line-height: 1.75;
 }
 
 /* DataTable Cell Styles - Applied via data-density attribute on container */
-[data-density] th[data-slot='table-head'],
-[data-density] td[data-slot='table-cell'] {
-  padding: var(--dt-cell-padding-y) var(--dt-cell-padding-x);
-  font-size: var(--dt-font-size);
-  line-height: var(--dt-line-height);
+[data-density] th[data-slot="table-head"],
+[data-density] td[data-slot="table-cell"] {
+    padding: var(--dt-cell-padding-y) var(--dt-cell-padding-x);
+    font-size: var(--dt-font-size);
+    line-height: var(--dt-line-height);
 }
 
-[data-density] th[data-slot='table-head'] {
-  height: auto;
-  min-height: 2.5rem;
+[data-density] th[data-slot="table-head"] {
+    height: auto;
+    min-height: 2.5rem;
 }
 
 /* Dark mode handled via Tailwind's dark: variant */
 
 /* DataTable Keyboard Navigation */
 [data-keyboard-navigation]:focus {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
 }
 
 [data-keyboard-navigation]:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
 }
 
 /* Focused row styling */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] {
-  background-color: var(--accent);
-  outline: 1px solid var(--ring);
-  outline-offset: -1px;
+[data-keyboard-navigation] tbody tr[data-keyboard-focused="true"] {
+    background-color: var(--accent);
+    outline: 1px solid var(--ring);
+    outline-offset: -1px;
 }
 
 /* Keyboard focused row - pinned cells need matching background and borders */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-left,
-[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-right {
-  background-color: var(--accent);
-  border-top: 1px solid var(--ring);
-  border-bottom: 1px solid var(--ring);
+[data-keyboard-navigation]
+    tbody
+    tr[data-keyboard-focused="true"]
+    td.pinned-left,
+[data-keyboard-navigation]
+    tbody
+    tr[data-keyboard-focused="true"]
+    td.pinned-right {
+    background-color: var(--accent);
+    border-top: 1px solid var(--ring);
+    border-bottom: 1px solid var(--ring);
 }
 
 /* First pinned-left cell needs left border */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-left:first-child {
-  border-left: 1px solid var(--ring);
+[data-keyboard-navigation]
+    tbody
+    tr[data-keyboard-focused="true"]
+    td.pinned-left:first-child {
+    border-left: 1px solid var(--ring);
 }
 
 /* Last pinned-right cell needs right border */
-[data-keyboard-navigation] tbody tr[data-keyboard-focused='true'] td.pinned-right:last-child {
-  border-right: 1px solid var(--ring);
+[data-keyboard-navigation]
+    tbody
+    tr[data-keyboard-focused="true"]
+    td.pinned-right:last-child {
+    border-right: 1px solid var(--ring);
 }
 
 /* ==========================================================================
@@ -273,91 +281,91 @@
 
 /* Table must use border-collapse: separate for sticky positioning to work */
 .table-container table {
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color: var(--background);
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--background);
 }
 
 /* Row borders - applied to cells since border-collapse: separate doesn't support tr borders */
 .table-container tbody td {
-  border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 
 /* Sticky header for vertical scroll */
 .table-container thead th {
-  position: sticky;
-  top: 0;
-  z-index: 15;
-  background-color: var(--muted);
-  color: var(--foreground);
-  border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 15;
+    background-color: var(--muted);
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border);
 }
 
 /* Base pinned column styles - sticky positioning */
 .table-container .pinned-left,
 .table-container .pinned-right {
-  position: sticky;
-  z-index: 10;
+    position: sticky;
+    z-index: 10;
 }
 
 .table-container .pinned-left {
-  left: var(--col-left-offset, 0);
+    left: var(--col-left-offset, 0);
 }
 
 .table-container .pinned-right {
-  right: var(--col-right-offset, 0);
+    right: var(--col-right-offset, 0);
 }
 
 /* Pinned header cells need higher z-index */
 .table-container thead th.pinned-left,
 .table-container thead th.pinned-right {
-  z-index: 20;
+    z-index: 20;
 }
 
 /* Pinned body cells need solid background to hide scrolling content */
 .table-container tbody td.pinned-left,
 .table-container tbody td.pinned-right {
-  background-color: var(--background);
+    background-color: var(--background);
 }
 
 /* Hover state for pinned cells */
 .table-container tbody tr:hover td.pinned-left,
 .table-container tbody tr:hover td.pinned-right {
-  background-color: var(--accent);
+    background-color: var(--accent);
 }
 
 /* Selected state for pinned cells */
-.table-container tbody tr[data-state='selected'] td.pinned-left,
-.table-container tbody tr[data-state='selected'] td.pinned-right {
-  background-color: var(--muted);
+.table-container tbody tr[data-state="selected"] td.pinned-left,
+.table-container tbody tr[data-state="selected"] td.pinned-right {
+    background-color: var(--muted);
 }
 
 /* Border separator for last left-pinned column */
 .table-container .pinned-left-last {
-  border-right: 1px solid var(--border);
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
+    border-right: 1px solid var(--border);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
 }
 
 /* Border separator for first right-pinned column */
 .table-container .pinned-right-first {
-  border-left: 1px solid var(--border);
-  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.06);
+    border-left: 1px solid var(--border);
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.06);
 }
 
 /* Dark mode shadow adjustments */
 .dark .table-container .pinned-left-last {
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
 }
 
 .dark .table-container .pinned-right-first {
-  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.2);
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Footer pinned columns */
 .table-container tfoot td.pinned-left,
 .table-container tfoot td.pinned-right {
-  background-color: var(--muted);
-  z-index: 19;
+    background-color: var(--muted);
+    z-index: 19;
 }
 
 /* ==========================================================================
@@ -366,49 +374,49 @@
 
 /* Column resize handle - positioned at right edge of header cells */
 .table-container .resize-handle {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 1px;
-  cursor: col-resize;
-  user-select: none;
-  touch-action: none;
-  background-color: var(--border);
-  transition: background-color 0.15s ease;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 1px;
+    cursor: col-resize;
+    user-select: none;
+    touch-action: none;
+    background-color: var(--border);
+    transition: background-color 0.15s ease;
 }
 
 .table-container .resize-handle:hover {
-  background-color: var(--muted-foreground);
+    background-color: var(--muted-foreground);
 }
 
 .table-container .resize-handle[data-resizing] {
-  background-color: var(--ring);
+    background-color: var(--ring);
 }
 
 /* Column resizing - use fixed table layout for consistent resizing */
 .table-container[data-column-resizing] table {
-  table-layout: fixed;
-  width: 100%;
+    table-layout: fixed;
+    width: 100%;
 }
 
 /* Column resizing - prevent content overflow in cells */
 .table-container[data-column-resizing] th,
 .table-container[data-column-resizing] td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* Add extra padding to header cells for resize handle clearance */
 .table-container[data-column-resizing] th {
-  padding-right: calc(var(--dt-cell-padding-x) + 8px);
+    padding-right: calc(var(--dt-cell-padding-x) + 8px);
 }
 
 /* Apply overflow handling to body cell content (nested elements) */
 .table-container[data-column-resizing] td > * {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
