@@ -1,5 +1,11 @@
 # @meldui/charts-vue
 
+## 0.1.14
+
+### Patch Changes
+
+- improve chart transformer and theme handling
+
 ## 0.1.13
 
 ### Patch Changes

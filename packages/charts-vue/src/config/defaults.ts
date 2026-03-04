@@ -1,5 +1,5 @@
 // Default ECharts configuration
-import type { EChartsOption } from "echarts";
+import type { EChartsOption } from 'echarts'
 
 /**
  * Minimal sensible defaults for all charts
@@ -9,7 +9,7 @@ export const CHART_DEFAULTS: EChartsOption = {
   // Inherit font family from Tailwind
   textStyle: {
     fontSize: 16,
-    fontFamily: "inherit",
+    fontFamily: 'inherit',
   },
 
   // Minimal toolbar by default
@@ -25,48 +25,48 @@ export const CHART_DEFAULTS: EChartsOption = {
   // Smooth animations
   animation: true,
   animationDuration: 400,
-  animationEasing: "cubicOut",
+  animationEasing: 'cubicOut',
 
   // Transparent background
-  backgroundColor: "transparent",
+  backgroundColor: 'transparent',
 
   // Grid configuration
   grid: {
-    left: "3%",
-    right: "4%",
-    bottom: "3%",
-    top: "10%",
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    top: '10%',
     containLabel: true,
     show: false,
   },
 
   // Tooltip configuration
   tooltip: {
-    trigger: "axis",
-    backgroundColor: "var(--popover)",
-    borderColor: "var(--border)",
+    trigger: 'axis',
+    backgroundColor: 'var(--popover)',
+    borderColor: 'var(--border)',
     borderWidth: 1,
     axisPointer: {
-      type: "line",
+      type: 'line',
       lineStyle: {
-        color: "var(--border)",
+        color: 'var(--border)',
         width: 1,
-        type: "dashed",
+        type: 'dashed',
       },
     },
     textStyle: {
-      color: "var(--popover-foreground)",
+      color: 'var(--popover-foreground)',
       fontSize: 14,
-      fontFamily: "inherit",
+      fontFamily: 'inherit',
     },
     // Ensure tooltip text is always visible
-    extraCssText: "box-shadow: 0 2px 8px rgba(0,0,0,0.15);",
+    extraCssText: 'box-shadow: 0 2px 8px rgba(0,0,0,0.15);',
   },
 
   // Emphasis/hover state configuration
   emphasis: {
-    focus: "series",
-    blurScope: "coordinateSystem",
+    focus: 'series',
+    blurScope: 'coordinateSystem',
     // Disable default color changes on hover - we handle this per series
     disabled: false,
   },
@@ -75,11 +75,11 @@ export const CHART_DEFAULTS: EChartsOption = {
   legend: {
     show: true,
     top: 10,
-    left: "center",
+    left: 'center',
     textStyle: {
-      color: "var(--foreground)",
+      color: 'var(--foreground)',
       fontSize: 14,
-      fontFamily: "inherit",
+      fontFamily: 'inherit',
     },
   },
 
@@ -87,12 +87,12 @@ export const CHART_DEFAULTS: EChartsOption = {
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: "rgba(128, 128, 128, 0.30)", // Subtle light gray with 30% opacity
+        color: 'rgba(128, 128, 128, 0.30)', // Subtle light gray with 30% opacity
       },
     },
     axisLabel: {
-      color: "var(--muted-foreground)",
-      fontFamily: "inherit",
+      color: 'var(--muted-foreground)',
+      fontFamily: 'inherit',
       fontSize: 14,
     },
   },
@@ -102,20 +102,20 @@ export const CHART_DEFAULTS: EChartsOption = {
     axisLine: {
       show: true,
       lineStyle: {
-        color: "rgba(128, 128, 128, 0.30)", // Subtle light gray with 30% opacity
+        color: 'rgba(128, 128, 128, 0.30)', // Subtle light gray with 30% opacity
       },
     },
     axisLabel: {
-      color: "var(--muted-foreground)",
-      fontFamily: "inherit",
+      color: 'var(--muted-foreground)',
+      fontFamily: 'inherit',
       fontSize: 14,
     },
     splitLine: {
       lineStyle: {
-        color: "rgba(128, 128, 128, 0.25)", // Very subtle grid lines with 25% opacity
-        type: "dashed",
+        color: 'rgba(128, 128, 128, 0.25)', // Very subtle grid lines with 25% opacity
+        type: 'dashed',
         width: 1,
       },
     },
   },
-};
+}

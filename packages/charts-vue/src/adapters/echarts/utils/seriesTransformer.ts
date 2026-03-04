@@ -25,9 +25,7 @@ export interface SeriesTransformConfig {
 /**
  * Transform series data for pie/donut charts
  */
-function transformPieSeries(
-  config: SeriesTransformConfig,
-): EChartsSeriesConfig[] {
+function transformPieSeries(config: SeriesTransformConfig): EChartsSeriesConfig[] {
   const { series, chartType, resolvedColors, resolvedForeground } = config
   return [
     {
