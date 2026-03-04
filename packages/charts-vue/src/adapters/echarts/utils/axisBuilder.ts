@@ -13,6 +13,7 @@ export function buildXAxis(
   xAxis: ChartAxis | undefined,
   chartType: ChartType,
   _horizontal?: boolean | undefined, // Unused - kept for compatibility
+  resolvedLabelColor?: string,
 ): EChartsAxisConfig {
   // Pie and donut charts don't need axes
   if (chartType === 'pie' || chartType === 'donut') {
@@ -22,10 +23,28 @@ export function buildXAxis(
   // Start with default xAxis styling
   const defaultXAxis = (CHART_DEFAULTS.xAxis as EChartsAxisConfig) || {}
 
+  // Build label config with resolved color override
+  const buildAxisLabel = (labels?: ChartAxis['labels']) => {
+    const base = labels
+      ? {
+          ...defaultXAxis.axisLabel,
+          show: labels.show ?? true,
+          rotate: labels.rotate,
+          formatter: labels.format,
+        }
+      : defaultXAxis.axisLabel
+
+    if (resolvedLabelColor && base && typeof base === 'object') {
+      return { ...base, color: resolvedLabelColor }
+    }
+    return base
+  }
+
+  const nameTextStyle = resolvedLabelColor ? { color: resolvedLabelColor } : undefined
+
   if (xAxis) {
     return {
-      ...defaultXAxis, // Preserve default styling (colors, fonts, etc.)
-      // Heatmap charts MUST have category axes
+      ...defaultXAxis,
       type:
         chartType === 'heatmap'
           ? 'category'
@@ -38,20 +57,16 @@ export function buildXAxis(
       name: xAxis.title,
       min: xAxis.min,
       max: xAxis.max,
-      axisLabel: xAxis.labels
-        ? {
-            ...defaultXAxis.axisLabel, // Preserve default label styling
-            show: xAxis.labels.show ?? true,
-            rotate: xAxis.labels.rotate,
-            formatter: xAxis.labels.format,
-          }
-        : defaultXAxis.axisLabel,
+      axisLabel: buildAxisLabel(xAxis.labels),
+      ...(nameTextStyle && { nameTextStyle }),
     }
   }
 
   return {
-    ...defaultXAxis, // Preserve default styling
+    ...defaultXAxis,
     type: chartType === 'heatmap' ? 'category' : 'category',
+    axisLabel: buildAxisLabel(),
+    ...(nameTextStyle && { nameTextStyle }),
   }
 }
 
@@ -62,6 +77,7 @@ export function buildYAxis(
   yAxis: ChartAxis | undefined,
   chartType: ChartType,
   _horizontal?: boolean | undefined, // Unused - kept for compatibility
+  resolvedLabelColor?: string,
 ): EChartsAxisConfig {
   // Pie and donut charts don't need axes
   if (chartType === 'pie' || chartType === 'donut') {
@@ -71,10 +87,28 @@ export function buildYAxis(
   // Start with default yAxis styling
   const defaultYAxis = (CHART_DEFAULTS.yAxis as EChartsAxisConfig) || {}
 
+  // Build label config with resolved color override
+  const buildAxisLabel = (labels?: ChartAxis['labels']) => {
+    const base = labels
+      ? {
+          ...defaultYAxis.axisLabel,
+          show: labels.show ?? true,
+          rotate: labels.rotate,
+          formatter: labels.format,
+        }
+      : defaultYAxis.axisLabel
+
+    if (resolvedLabelColor && base && typeof base === 'object') {
+      return { ...base, color: resolvedLabelColor }
+    }
+    return base
+  }
+
+  const nameTextStyle = resolvedLabelColor ? { color: resolvedLabelColor } : undefined
+
   if (yAxis) {
     return {
-      ...defaultYAxis, // Preserve default styling (colors, fonts, split lines, etc.)
-      // Heatmap charts MUST have category axes
+      ...defaultYAxis,
       type:
         chartType === 'heatmap'
           ? 'category'
@@ -89,19 +123,15 @@ export function buildYAxis(
       name: yAxis.title,
       min: yAxis.min,
       max: yAxis.max,
-      axisLabel: yAxis.labels
-        ? {
-            ...defaultYAxis.axisLabel, // Preserve default label styling
-            show: yAxis.labels.show ?? true,
-            rotate: yAxis.labels.rotate,
-            formatter: yAxis.labels.format,
-          }
-        : defaultYAxis.axisLabel,
+      axisLabel: buildAxisLabel(yAxis.labels),
+      ...(nameTextStyle && { nameTextStyle }),
     }
   }
 
   return {
-    ...defaultYAxis, // Preserve default styling
+    ...defaultYAxis,
     type: chartType === 'heatmap' ? 'category' : 'value',
+    axisLabel: buildAxisLabel(),
+    ...(nameTextStyle && { nameTextStyle }),
   }
 }

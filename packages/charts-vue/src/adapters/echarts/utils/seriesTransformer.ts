@@ -9,13 +9,26 @@ const BAR_BORDER_RADIUS = 2
 type EChartsSeriesConfig = Record<string, unknown>
 
 /**
+ * Config object for series transformation
+ */
+export interface SeriesTransformConfig {
+  series: ChartSeries[]
+  chartType: ChartType
+  resolvedColors: string[]
+  stacked?: boolean
+  stroke?: ChartStroke
+  horizontal?: boolean
+  dataLabels?: ChartDataLabels
+  resolvedForeground?: string
+}
+
+/**
  * Transform series data for pie/donut charts
  */
 function transformPieSeries(
-  series: ChartSeries[],
-  resolvedColors: string[],
-  chartType: 'pie' | 'donut',
+  config: SeriesTransformConfig,
 ): EChartsSeriesConfig[] {
+  const { series, chartType, resolvedColors, resolvedForeground } = config
   return [
     {
       type: 'pie',
@@ -39,11 +52,11 @@ function transformPieSeries(
         },
       })),
       label: {
-        color: 'hsl(var(--foreground))',
+        color: resolvedForeground || 'var(--foreground)',
       },
       emphasis: {
         label: {
-          color: 'hsl(var(--foreground))',
+          color: resolvedForeground || 'var(--foreground)',
           fontWeight: 'bold',
         },
       },
@@ -195,14 +208,9 @@ function applyDataLabels(
 /**
  * Transform series data for cartesian charts (line, bar, area, scatter, etc.)
  */
-function transformCartesianSeries(
-  series: ChartSeries[],
-  chartType: ChartType,
-  stacked: boolean | undefined,
-  stroke: ChartStroke | undefined,
-  horizontal: boolean | undefined,
-  dataLabels: ChartDataLabels | undefined,
-): EChartsSeriesConfig[] {
+function transformCartesianSeries(config: SeriesTransformConfig): EChartsSeriesConfig[] {
+  const { series, chartType, stacked, stroke, horizontal, dataLabels, resolvedForeground } = config
+
   return series.map((s) => {
     const seriesType = s.type || (chartType === 'area' ? 'line' : chartType)
 
@@ -211,14 +219,14 @@ function transformCartesianSeries(
       data: s.data,
       type: seriesType,
       label: {
-        color: 'hsl(var(--foreground))',
+        color: resolvedForeground || 'var(--foreground)',
       },
       emphasis: {
         // Disable scale effect to preserve colors
         scale: false,
         scaleSize: 1,
         label: {
-          color: 'hsl(var(--foreground))',
+          color: resolvedForeground || 'var(--foreground)',
           fontWeight: 'bold',
         },
         // Preserve original color on hover
@@ -282,20 +290,12 @@ function transformCartesianSeries(
 /**
  * Transform series configuration based on chart type
  */
-export function transformSeries(
-  series: ChartSeries[],
-  chartType: ChartType,
-  resolvedColors: string[],
-  stacked: boolean | undefined,
-  stroke: ChartStroke | undefined,
-  horizontal: boolean | undefined,
-  dataLabels: ChartDataLabels | undefined,
-): EChartsSeriesConfig[] {
+export function transformSeries(config: SeriesTransformConfig): EChartsSeriesConfig[] {
   // Special handling for pie/donut charts
-  if (chartType === 'pie' || chartType === 'donut') {
-    return transformPieSeries(series, resolvedColors, chartType)
+  if (config.chartType === 'pie' || config.chartType === 'donut') {
+    return transformPieSeries(config)
   }
 
   // Cartesian and other chart types
-  return transformCartesianSeries(series, chartType, stacked, stroke, horizontal, dataLabels)
+  return transformCartesianSeries(config)
 }
