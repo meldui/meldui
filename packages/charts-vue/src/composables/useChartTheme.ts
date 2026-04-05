@@ -78,6 +78,10 @@ export function useChartTheme() {
   // Extract Tailwind CSS v4 theme colors
   // Access isDark.value to create reactive dependency — recompute when theme changes
   const themeColors = computed(() => {
+    // Access isDark.value to create reactive dependency — forces recomputation when theme changes
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    isDark.value
+
     if (typeof window === 'undefined') {
       return { ...DEFAULT_PALETTE, ...DEFAULT_TEXT_COLORS } // Fallback for SSR
     }
