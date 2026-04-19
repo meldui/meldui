@@ -17,6 +17,14 @@ export default defineConfig({
     resolve: {
       dedupe: ['vue'],
     },
+    optimizeDeps: {
+      include: ['@meldui/vue', '@meldui/tabler-vue', 'vue-sonner'],
+    },
+    ssr: {
+      optimizeDeps: {
+        include: ['@meldui/vue', '@meldui/tabler-vue', 'vue-sonner'],
+      },
+    },
     define: {
       __VUE_OPTIONS_API__: 'true',
       __VUE_PROD_DEVTOOLS__: 'false',

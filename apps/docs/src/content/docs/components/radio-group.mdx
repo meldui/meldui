@@ -1,0 +1,41 @@
+---
+title: Radio Group
+description: A set of radio buttons where only one can be selected at a time.
+category: components
+subcategory: Form
+order: 14
+package: '@meldui/vue'
+componentName: RadioGroup
+---
+
+## Usage
+
+```vue
+<script setup>
+import { RadioGroup, RadioGroupItem, Label } from '@meldui/vue'
+</script>
+
+<template>
+  <RadioGroup default-value="comfortable">
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem id="default" value="default" />
+      <Label for="default">Default</Label>
+    </div>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem id="comfortable" value="comfortable" />
+      <Label for="comfortable">Comfortable</Label>
+    </div>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem id="compact" value="compact" />
+      <Label for="compact">Compact</Label>
+    </div>
+  </RadioGroup>
+</template>
+```
+
+## Sub-components
+
+| Component        | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| `RadioGroup`     | Root container with value state                                |
+| `RadioGroupItem` | Individual radio option. Props: `value` (required), `disabled` |

@@ -1,0 +1,56 @@
+---
+title: Circular Progress
+description: A circular progress indicator with customizable size, thickness, and color variants.
+category: components
+subcategory: Feedback
+order: 72
+package: '@meldui/vue'
+componentName: CircularProgress
+props:
+  - name: value
+    type: number
+    default: '0'
+    description: The progress value.
+  - name: min
+    type: number
+    default: '0'
+    description: Minimum value.
+  - name: max
+    type: number
+    default: '100'
+    description: Maximum value.
+  - name: size
+    type: number
+    default: '48'
+    description: The diameter in pixels.
+  - name: thickness
+    type: number
+    default: '4'
+    description: The stroke thickness in pixels.
+  - name: variant
+    type: "'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'"
+    default: "'default'"
+    description: The color variant.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { CircularProgress } from '@meldui/vue'
+</script>
+
+<template>
+  <CircularProgress :value="75" />
+</template>
+```
+
+## Sub-components
+
+| Component                   | Description         |
+| --------------------------- | ------------------- |
+| `CircularProgress`          | Root SVG container  |
+| `CircularProgressTrack`     | Background circle   |
+| `CircularProgressRange`     | Filled progress arc |
+| `CircularProgressIndicator` | Animated indicator  |
+| `CircularProgressLabel`     | Center text label   |

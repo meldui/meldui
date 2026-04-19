@@ -1,0 +1,61 @@
+---
+title: Dropdown Menu
+description: A menu that appears on trigger click with items, groups, checkboxes, and nested sub-menus.
+category: components
+subcategory: Navigation
+order: 41
+package: '@meldui/vue'
+componentName: DropdownMenu
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from '@meldui/vue'
+import { Button } from '@meldui/vue'
+</script>
+
+<template>
+  <DropdownMenu>
+    <DropdownMenuTrigger as-child>
+      <Button variant="outline">Open</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent class="w-56">
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenuItem>Billing</DropdownMenuItem>
+      <DropdownMenuItem>Settings</DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>Log out</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</template>
+```
+
+## Sub-components
+
+| Component                  | Description                                          |
+| -------------------------- | ---------------------------------------------------- |
+| `DropdownMenu`             | Root with open state                                 |
+| `DropdownMenuTrigger`      | Element that opens the menu                          |
+| `DropdownMenuContent`      | Menu content container. Props: `align`, `sideOffset` |
+| `DropdownMenuItem`         | Menu item. Props: `disabled`, `textValue`            |
+| `DropdownMenuCheckboxItem` | Item with checkbox. Props: `checked`                 |
+| `DropdownMenuRadioGroup`   | Radio group container. Props: `modelValue`           |
+| `DropdownMenuRadioItem`    | Radio option. Props: `value`                         |
+| `DropdownMenuLabel`        | Group label. Props: `inset`                          |
+| `DropdownMenuSeparator`    | Visual divider                                       |
+| `DropdownMenuShortcut`     | Keyboard shortcut display                            |
+| `DropdownMenuGroup`        | Groups items semantically                            |
+| `DropdownMenuSub`          | Sub-menu root                                        |
+| `DropdownMenuSubTrigger`   | Sub-menu trigger                                     |
+| `DropdownMenuSubContent`   | Sub-menu content                                     |

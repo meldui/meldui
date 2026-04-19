@@ -1,0 +1,55 @@
+---
+title: Input
+description: A text input field for capturing user input.
+category: components
+subcategory: Form
+order: 10
+package: '@meldui/vue'
+componentName: Input
+props:
+  - name: modelValue
+    type: string | number
+    description: The input value. Use with v-model.
+  - name: defaultValue
+    type: string | number
+    description: The default value for uncontrolled usage.
+events:
+  - name: update:modelValue
+    payload: string | number
+    description: Emitted when the input value changes.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Input } from '@meldui/vue'
+</script>
+
+<template>
+  <Input placeholder="Enter your email" />
+</template>
+```
+
+## With Label
+
+```vue
+<script setup>
+import { Input, Label } from '@meldui/vue'
+</script>
+
+<template>
+  <div class="grid w-full max-w-sm gap-1.5">
+    <Label for="email">Email</Label>
+    <Input id="email" type="email" placeholder="Email" />
+  </div>
+</template>
+```
+
+## Disabled
+
+```vue
+<template>
+  <Input disabled placeholder="Disabled input" />
+</template>
+```

@@ -1,0 +1,48 @@
+---
+title: Command
+description: A command palette for searching and executing actions, similar to Cmd+K interfaces.
+category: components
+subcategory: Interactive
+order: 5
+package: '@meldui/vue'
+componentName: Command
+props:
+  - name: modelValue
+    type: string
+    default: "''"
+    description: The current search value. Use with v-model.
+events:
+  - name: update:modelValue
+    payload: string
+    description: Emitted when the search value changes.
+  - name: highlight
+    payload: '{ ref: HTMLElement, value: string } | undefined'
+    description: Emitted when the highlighted element changes.
+---
+
+import CommandDemo from '../../../demos/command/CommandDemo.vue'
+import CommandDialogDemo from '../../../demos/command/CommandDialogDemo.vue'
+
+## Usage
+
+<CommandDemo client:only="vue" />
+
+## Command Dialog
+
+Use `CommandDialog` to render the command palette in a modal dialog:
+
+<CommandDialogDemo client:only="vue" />
+
+## Sub-components
+
+| Component          | Description                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| `Command`          | Root container                                               |
+| `CommandDialog`    | Command palette in a modal. Props: `title`, `description`    |
+| `CommandInput`     | Search input with icon                                       |
+| `CommandList`      | Scrollable list container                                    |
+| `CommandGroup`     | Group of items. Props: `heading`                             |
+| `CommandItem`      | Selectable item. Props: `value`, `disabled`. Event: `select` |
+| `CommandEmpty`     | Empty state when no results match                            |
+| `CommandSeparator` | Visual separator between groups                              |
+| `CommandShortcut`  | Keyboard shortcut display                                    |

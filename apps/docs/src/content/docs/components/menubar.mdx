@@ -1,0 +1,50 @@
+---
+title: Menubar
+description: A horizontal menu bar with dropdown menus, similar to desktop application menus.
+category: components
+subcategory: Navigation
+order: 43
+package: '@meldui/vue'
+componentName: Menubar
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarShortcut,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <Menubar>
+    <MenubarMenu>
+      <MenubarTrigger>File</MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem>New Tab <MenubarShortcut>⌘T</MenubarShortcut></MenubarItem>
+        <MenubarItem>New Window <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem>Print <MenubarShortcut>⌘P</MenubarShortcut></MenubarItem>
+      </MenubarContent>
+    </MenubarMenu>
+    <MenubarMenu>
+      <MenubarTrigger>Edit</MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem>Undo <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+        <MenubarItem>Redo <MenubarShortcut>⌘Y</MenubarShortcut></MenubarItem>
+      </MenubarContent>
+    </MenubarMenu>
+  </Menubar>
+</template>
+```
+
+## Sub-components
+
+Same structure as [DropdownMenu](/docs/components/dropdown-menu) but namespaced with `Menubar` prefix. Includes `MenubarCheckboxItem`, `MenubarRadioGroup`, `MenubarRadioItem`, `MenubarSub`, `MenubarSubTrigger`, `MenubarSubContent`.

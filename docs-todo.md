@@ -41,87 +41,86 @@
 
 ### 3.1 Interactive (7 components)
 
-- [ ] Button — demo + MDX + API
-- [ ] ButtonGroup — demo + MDX + API
-- [ ] Toggle — demo + MDX + API
-- [ ] ToggleGroup — demo + MDX + API
-- [ ] Command — demo + MDX + API
-- [ ] Carousel — demo + MDX + API
-- [ ] Combobox — demo + MDX + API
+- [x] Button — demo + MDX + API
+- [x] ButtonGroup — MDX + API
+- [x] Toggle — MDX + API
+- [x] ToggleGroup — MDX + API
+- [x] Command — MDX + API
+- [x] Carousel — MDX + API
+- [x] Combobox — MDX + API
 
 ### 3.2 Form & Input (17 components)
 
-- [ ] Input — demo + MDX + API
-- [ ] Select — demo + MDX + API
-- [ ] Checkbox — demo + MDX + API
-- [ ] RadioGroup — demo + MDX + API
-- [ ] Switch — demo + MDX + API
-- [ ] Textarea — demo + MDX + API
-- [ ] Slider — demo + MDX + API
-- [ ] NumberField — demo + MDX + API
-- [ ] Label — demo + MDX + API
-- [ ] Field — demo + MDX + API
-- [ ] Form — demo + MDX + API
-- [ ] NativeSelect — demo + MDX + API
-- [ ] InputGroup — demo + MDX + API
-- [ ] InputOtp — demo + MDX + API
-- [ ] PinInput — demo + MDX + API
-- [ ] TagsInput — demo + MDX + API
-- [ ] FileUpload — demo + MDX + API
+- [x] Input — MDX + API
+- [x] Select — MDX + API
+- [x] Checkbox — MDX + API
+- [x] RadioGroup — MDX + API
+- [x] Switch — MDX + API
+- [x] Textarea — MDX + API
+- [x] Slider — MDX + API
+- [x] NumberField — MDX + API
+- [x] Label — MDX + API
+- [x] Field — MDX + API
+- [x] Form — MDX + API
+- [x] NativeSelect — MDX + API
+- [x] InputGroup — MDX + API
+- [x] InputOtp — MDX + API
+- [x] PinInput — MDX + API
+- [x] TagsInput — MDX + API
+- [x] FileUpload — MDX + API
 
 ### 3.3 Layout (9 components)
 
-- [ ] Accordion — demo + MDX + API
-- [ ] Table — demo + MDX + API
-- [ ] Tabs — demo + MDX + API
-- [ ] Separator — demo + MDX + API
-- [ ] ScrollArea — demo + MDX + API
-- [ ] Resizable — demo + MDX + API
-- [ ] AspectRatio — demo + MDX + API
-- [ ] Collapsible — demo + MDX + API
-- [ ] Sidebar — demo + MDX + API
+- [x] Accordion — MDX + API
+- [x] Table — MDX + API
+- [x] Tabs — MDX + API
+- [x] Separator — MDX + API
+- [x] ScrollArea — MDX + API
+- [x] Resizable — MDX + API
+- [x] AspectRatio — MDX + API
+- [x] Collapsible — MDX + API
+- [x] Sidebar — MDX + API
 
-### 3.4 Navigation (7 components)
+### 3.4 Navigation (6 components)
 
-- [ ] Breadcrumb — demo + MDX + API
-- [ ] DropdownMenu — demo + MDX + API
-- [ ] ContextMenu — demo + MDX + API
-- [ ] Menubar — demo + MDX + API
-- [ ] NavigationMenu — demo + MDX + API
-- [ ] Pagination — demo + MDX + API
-- [ ] Tabs (if not already in Layout)
+- [x] Breadcrumb — MDX + API
+- [x] DropdownMenu — MDX + API
+- [x] ContextMenu — MDX + API
+- [x] Menubar — MDX + API
+- [x] NavigationMenu — MDX + API
+- [x] Pagination — MDX + API
 
 ### 3.5 Overlay (7 components)
 
-- [ ] Dialog — demo + MDX + API
-- [ ] AlertDialog — demo + MDX + API
-- [ ] Sheet — demo + MDX + API
-- [ ] Drawer — demo + MDX + API
-- [ ] Popover — demo + MDX + API
-- [ ] Tooltip — demo + MDX + API
-- [ ] HoverCard — demo + MDX + API
+- [x] Dialog — MDX + API
+- [x] AlertDialog — MDX + API
+- [x] Sheet — MDX + API
+- [x] Drawer — MDX + API
+- [x] Popover — MDX + API
+- [x] Tooltip — MDX + API
+- [x] HoverCard — MDX + API
 
 ### 3.6 Data Display (6 components)
 
-- [ ] Card — demo + MDX + API
-- [ ] Avatar — demo + MDX + API
-- [ ] Badge — demo + MDX + API
-- [ ] Calendar — demo + MDX + API
-- [ ] RangeCalendar — demo + MDX + API
-- [ ] Kbd — demo + MDX + API
+- [x] Card — MDX + API
+- [x] Avatar — MDX + API
+- [x] Badge — MDX + API
+- [x] Calendar — MDX + API
+- [x] RangeCalendar — MDX + API
+- [x] Kbd — MDX + API
 
 ### 3.7 Feedback (10 components)
 
-- [ ] Alert — demo + MDX + API
-- [ ] Progress — demo + MDX + API
-- [ ] CircularProgress — demo + MDX + API
-- [ ] Skeleton — demo + MDX + API
-- [ ] Spinner — demo + MDX + API
-- [ ] Dot — demo + MDX + API
-- [ ] Empty — demo + MDX + API
-- [ ] Stepper — demo + MDX + API
-- [ ] Sonner — demo + MDX + API
-- [ ] Item — demo + MDX + API
+- [x] Alert — MDX + API
+- [x] Progress — MDX + API
+- [x] CircularProgress — MDX + API
+- [x] Skeleton — MDX + API
+- [x] Spinner — MDX + API
+- [x] Dot — MDX + API
+- [x] Empty — MDX + API
+- [x] Stepper — MDX + API
+- [x] Sonner — MDX + API
+- [x] Item — MDX + API
 
 ## Phase 4: Composites
 

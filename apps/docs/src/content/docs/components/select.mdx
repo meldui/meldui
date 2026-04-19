@@ -1,0 +1,81 @@
+---
+title: Select
+description: A custom select component with keyboard navigation and grouping support.
+category: components
+subcategory: Form
+order: 12
+package: '@meldui/vue'
+componentName: Select
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@meldui/vue'
+</script>
+
+<template>
+  <Select>
+    <SelectTrigger class="w-[180px]">
+      <SelectValue placeholder="Select a fruit" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="apple">Apple</SelectItem>
+      <SelectItem value="banana">Banana</SelectItem>
+      <SelectItem value="cherry">Cherry</SelectItem>
+    </SelectContent>
+  </Select>
+</template>
+```
+
+## With Groups
+
+```vue
+<script setup>
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+  SelectSeparator,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <Select>
+    <SelectTrigger class="w-[180px]">
+      <SelectValue placeholder="Select..." />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>Fruits</SelectLabel>
+        <SelectItem value="apple">Apple</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+      </SelectGroup>
+      <SelectSeparator />
+      <SelectGroup>
+        <SelectLabel>Vegetables</SelectLabel>
+        <SelectItem value="carrot">Carrot</SelectItem>
+        <SelectItem value="potato">Potato</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+</template>
+```
+
+## Sub-components
+
+| Component         | Description                                       |
+| ----------------- | ------------------------------------------------- |
+| `Select`          | Root with state management                        |
+| `SelectTrigger`   | Trigger button. Props: `size` ('sm' \| 'default') |
+| `SelectContent`   | Dropdown content. Props: `position`               |
+| `SelectItem`      | Selectable option. Props: `value`, `disabled`     |
+| `SelectValue`     | Displays the selected value. Props: `placeholder` |
+| `SelectGroup`     | Groups items together                             |
+| `SelectLabel`     | Group label                                       |
+| `SelectSeparator` | Visual separator                                  |

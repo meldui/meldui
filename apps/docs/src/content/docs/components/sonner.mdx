@@ -1,0 +1,60 @@
+---
+title: Sonner
+description: Toast notification system for success, error, and informational messages.
+category: components
+subcategory: Feedback
+order: 78
+package: '@meldui/vue'
+componentName: Toaster
+---
+
+## Setup
+
+Add the `Toaster` component once in your app root:
+
+```vue
+<script setup>
+import { Toaster } from '@meldui/vue'
+</script>
+
+<template>
+  <RouterView />
+  <Toaster position="bottom-right" />
+</template>
+```
+
+## Usage
+
+```typescript
+import { toast } from '@meldui/vue'
+
+// Basic
+toast('Event has been created.')
+
+// Variants
+toast.success('Changes saved successfully!')
+toast.error('Something went wrong.')
+toast.warning('Please check your input.')
+toast.info('New update available.')
+
+// With description
+toast.success('File uploaded', {
+  description: 'Your file has been uploaded successfully.',
+})
+
+// With action
+toast('Undo action?', {
+  action: {
+    label: 'Undo',
+    onClick: () => console.log('Undo'),
+  },
+})
+```
+
+## Exports
+
+| Export         | Description                                                                      |
+| -------------- | -------------------------------------------------------------------------------- |
+| `Toaster`      | Toast container component. Props: `position`, `richColors`, `expand`, `duration` |
+| `toast`        | Toast function with `.success()`, `.error()`, `.warning()`, `.info()` methods    |
+| `useVueSonner` | Composable for programmatic control                                              |

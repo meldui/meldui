@@ -1,0 +1,30 @@
+---
+title: Aspect Ratio
+description: Displays content within a desired aspect ratio.
+category: components
+subcategory: Layout
+order: 36
+package: '@meldui/vue'
+componentName: AspectRatio
+props:
+  - name: ratio
+    type: number
+    default: '1'
+    description: 'The desired aspect ratio (e.g., 16/9 for widescreen).'
+---
+
+## Usage
+
+```vue
+<script setup>
+import { AspectRatio } from '@meldui/vue'
+</script>
+
+<template>
+  <div class="w-[450px]">
+    <AspectRatio :ratio="16 / 9">
+      <img src="..." alt="Photo" class="h-full w-full rounded-md object-cover" />
+    </AspectRatio>
+  </div>
+</template>
+```

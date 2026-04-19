@@ -1,0 +1,28 @@
+---
+title: Label
+description: An accessible label associated with form controls.
+category: components
+subcategory: Form
+order: 18
+package: '@meldui/vue'
+componentName: Label
+props:
+  - name: for
+    type: string
+    description: The id of the form element the label is associated with.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Label, Input } from '@meldui/vue'
+</script>
+
+<template>
+  <div class="grid w-full max-w-sm gap-1.5">
+    <Label for="email">Email</Label>
+    <Input id="email" type="email" placeholder="Email" />
+  </div>
+</template>
+```

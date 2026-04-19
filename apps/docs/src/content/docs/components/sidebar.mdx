@@ -1,0 +1,111 @@
+---
+title: Sidebar
+description: A complex sidebar navigation component with collapsible sections, menus, and responsive behavior.
+category: components
+subcategory: Layout
+order: 38
+package: '@meldui/vue'
+componentName: Sidebar
+props:
+  - name: side
+    type: "'left' | 'right'"
+    default: "'left'"
+    description: Which side the sidebar appears on.
+  - name: variant
+    type: "'sidebar' | 'floating' | 'inset'"
+    default: "'sidebar'"
+    description: The visual style variant.
+  - name: collapsible
+    type: "'offcanvas' | 'icon' | 'none'"
+    default: "'offcanvas'"
+    description: How the sidebar collapses.
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarTrigger,
+  SidebarInset,
+} from '@meldui/vue'
+import { IconHome, IconSettings } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <SidebarProvider>
+    <Sidebar>
+      <SidebarHeader>
+        <h2>My App</h2>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <IconHome class="size-4" />
+                  <span>Home</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <IconSettings class="size-4" />
+                  <span>Settings</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+    <SidebarInset>
+      <SidebarTrigger />
+      <main>Content</main>
+    </SidebarInset>
+  </SidebarProvider>
+</template>
+```
+
+## Sub-components
+
+| Component              | Description                                                             |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `SidebarProvider`      | Root state provider. Props: `defaultOpen`, `open`. Event: `update:open` |
+| `Sidebar`              | Main sidebar container. Props: `side`, `variant`, `collapsible`         |
+| `SidebarContent`       | Scrollable content area                                                 |
+| `SidebarHeader`        | Top section                                                             |
+| `SidebarFooter`        | Bottom section                                                          |
+| `SidebarGroup`         | Section grouping                                                        |
+| `SidebarGroupLabel`    | Group heading                                                           |
+| `SidebarGroupContent`  | Group content                                                           |
+| `SidebarGroupAction`   | Action button in group header                                           |
+| `SidebarMenu`          | Menu container                                                          |
+| `SidebarMenuItem`      | Menu item wrapper                                                       |
+| `SidebarMenuButton`    | Clickable menu button. Props: `variant`, `size`, `tooltip`              |
+| `SidebarMenuSub`       | Nested sub-menu                                                         |
+| `SidebarMenuSubItem`   | Sub-menu item                                                           |
+| `SidebarMenuSubButton` | Sub-menu button                                                         |
+| `SidebarMenuAction`    | Action within a menu item                                               |
+| `SidebarMenuBadge`     | Badge indicator                                                         |
+| `SidebarMenuSkeleton`  | Loading skeleton                                                        |
+| `SidebarTrigger`       | Toggle button                                                           |
+| `SidebarRail`          | Slim rail for collapsed state                                           |
+| `SidebarInset`         | Main content area next to sidebar                                       |
+| `SidebarInput`         | Search input                                                            |
+| `SidebarSeparator`     | Visual separator                                                        |
+
+## Composable
+
+`useSidebar()` — returns `{ state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar }`.

@@ -1,0 +1,26 @@
+---
+title: Range Calendar
+description: A calendar for selecting date ranges with start and end dates.
+category: components
+subcategory: Data Display
+order: 64
+package: '@meldui/vue'
+componentName: RangeCalendar
+---
+
+## Usage
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { RangeCalendar } from '@meldui/vue'
+
+const range = ref()
+</script>
+
+<template>
+  <RangeCalendar v-model="range" />
+</template>
+```
+
+Same sub-component structure as [Calendar](/docs/components/calendar) but with `RangeCalendar` prefix.

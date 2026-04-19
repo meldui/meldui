@@ -1,0 +1,3 @@
+# Demo files contain code strings with </script> tags inside template literals
+# which confuse formatters
+apps/docs/src/demos/

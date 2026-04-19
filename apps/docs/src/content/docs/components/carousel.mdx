@@ -1,0 +1,45 @@
+---
+title: Carousel
+description: A carousel component for cycling through elements with navigation controls.
+category: components
+subcategory: Interactive
+order: 6
+package: '@meldui/vue'
+componentName: Carousel
+props:
+  - name: orientation
+    type: "'horizontal' | 'vertical'"
+    default: "'horizontal'"
+    description: The scroll direction of the carousel.
+  - name: opts
+    type: EmblaCarouselVueOptions
+    description: Embla Carousel options for fine-tuning behavior.
+  - name: plugins
+    type: EmblaCarouselVuePlugin[]
+    description: Embla Carousel plugins for extended functionality.
+events:
+  - name: init-api
+    payload: CarouselApi
+    description: Emitted when the carousel API is initialized.
+---
+
+import CarouselDemo from '../../../demos/carousel/CarouselDemo.vue'
+import CarouselVerticalDemo from '../../../demos/carousel/CarouselVerticalDemo.vue'
+
+## Usage
+
+<CarouselDemo client:only="vue" />
+
+## Vertical
+
+<CarouselVerticalDemo client:only="vue" />
+
+## Sub-components
+
+| Component          | Description                               |
+| ------------------ | ----------------------------------------- |
+| `Carousel`         | Root container with scroll state          |
+| `CarouselContent`  | Scrollable track for items                |
+| `CarouselItem`     | Individual slide                          |
+| `CarouselPrevious` | Previous button. Props: `variant`, `size` |
+| `CarouselNext`     | Next button. Props: `variant`, `size`     |

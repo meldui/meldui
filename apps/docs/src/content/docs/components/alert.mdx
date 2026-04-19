@@ -1,0 +1,56 @@
+---
+title: Alert
+description: Displays a callout message for important information with color variants.
+category: components
+subcategory: Feedback
+order: 70
+package: '@meldui/vue'
+componentName: Alert
+props:
+  - name: variant
+    type: "'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'"
+    default: "'default'"
+    description: The color variant of the alert.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Alert, AlertTitle, AlertDescription } from '@meldui/vue'
+</script>
+
+<template>
+  <Alert>
+    <AlertTitle>Heads up!</AlertTitle>
+    <AlertDescription>You can add components to your app using the cli.</AlertDescription>
+  </Alert>
+</template>
+```
+
+## Variants
+
+```vue
+<template>
+  <Alert variant="destructive">
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>Something went wrong.</AlertDescription>
+  </Alert>
+  <Alert variant="success">
+    <AlertTitle>Success</AlertTitle>
+    <AlertDescription>Operation completed.</AlertDescription>
+  </Alert>
+  <Alert variant="warning">
+    <AlertTitle>Warning</AlertTitle>
+    <AlertDescription>Please check your input.</AlertDescription>
+  </Alert>
+</template>
+```
+
+## Sub-components
+
+| Component          | Description                      |
+| ------------------ | -------------------------------- |
+| `Alert`            | Root container. Props: `variant` |
+| `AlertTitle`       | Bold title text                  |
+| `AlertDescription` | Description text                 |

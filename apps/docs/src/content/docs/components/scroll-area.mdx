@@ -1,0 +1,30 @@
+---
+title: Scroll Area
+description: A custom scrollable area with styled scrollbars.
+category: components
+subcategory: Layout
+order: 34
+package: '@meldui/vue'
+componentName: ScrollArea
+---
+
+## Usage
+
+```vue
+<script setup>
+import { ScrollArea } from '@meldui/vue'
+</script>
+
+<template>
+  <ScrollArea class="h-[200px] w-[350px] rounded-md border p-4">
+    <div>Long scrollable content here...</div>
+  </ScrollArea>
+</template>
+```
+
+## Sub-components
+
+| Component    | Description                      |
+| ------------ | -------------------------------- |
+| `ScrollArea` | Root scrollable container        |
+| `ScrollBar`  | Custom scrollbar track and thumb |

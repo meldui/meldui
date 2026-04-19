@@ -1,0 +1,42 @@
+---
+title: Native Select
+description: A styled native HTML select element.
+category: components
+subcategory: Form
+order: 21
+package: '@meldui/vue'
+componentName: NativeSelect
+props:
+  - name: modelValue
+    type: 'AcceptableValue | AcceptableValue[]'
+    description: The selected value. Use with v-model.
+events:
+  - name: update:modelValue
+    payload: AcceptableValue
+    description: Emitted when the selection changes.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { NativeSelect, NativeSelectOption, NativeSelectOptGroup } from '@meldui/vue'
+</script>
+
+<template>
+  <NativeSelect>
+    <NativeSelectOption value="" disabled>Select a fruit</NativeSelectOption>
+    <NativeSelectOption value="apple">Apple</NativeSelectOption>
+    <NativeSelectOption value="banana">Banana</NativeSelectOption>
+    <NativeSelectOption value="cherry">Cherry</NativeSelectOption>
+  </NativeSelect>
+</template>
+```
+
+## Sub-components
+
+| Component              | Description               |
+| ---------------------- | ------------------------- |
+| `NativeSelect`         | Styled `<select>` wrapper |
+| `NativeSelectOption`   | `<option>` element        |
+| `NativeSelectOptGroup` | `<optgroup>` element      |

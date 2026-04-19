@@ -1,0 +1,32 @@
+---
+title: Avatar
+description: An image element with a fallback for representing the user.
+category: components
+subcategory: Data Display
+order: 61
+package: '@meldui/vue'
+componentName: Avatar
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Avatar, AvatarImage, AvatarFallback } from '@meldui/vue'
+</script>
+
+<template>
+  <Avatar>
+    <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue" />
+    <AvatarFallback>RV</AvatarFallback>
+  </Avatar>
+</template>
+```
+
+## Sub-components
+
+| Component        | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `Avatar`         | Root container with size styling                          |
+| `AvatarImage`    | The image element. Props: `src`, `alt`                    |
+| `AvatarFallback` | Fallback shown when image fails to load. Props: `delayMs` |

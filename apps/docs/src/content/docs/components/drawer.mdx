@@ -1,0 +1,64 @@
+---
+title: Drawer
+description: A touch-friendly drawer component that slides from the bottom of the screen.
+category: components
+subcategory: Overlay
+order: 53
+package: '@meldui/vue'
+componentName: Drawer
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerClose,
+} from '@meldui/vue'
+import { Button } from '@meldui/vue'
+</script>
+
+<template>
+  <Drawer>
+    <DrawerTrigger as-child>
+      <Button variant="outline">Open Drawer</Button>
+    </DrawerTrigger>
+    <DrawerContent>
+      <DrawerHeader>
+        <DrawerTitle>Move Goal</DrawerTitle>
+        <DrawerDescription>Set your daily activity goal.</DrawerDescription>
+      </DrawerHeader>
+      <div class="p-4">
+        <!-- Content -->
+      </div>
+      <DrawerFooter>
+        <Button>Submit</Button>
+        <DrawerClose as-child>
+          <Button variant="outline">Cancel</Button>
+        </DrawerClose>
+      </DrawerFooter>
+    </DrawerContent>
+  </Drawer>
+</template>
+```
+
+## Sub-components
+
+| Component           | Description                                                             |
+| ------------------- | ----------------------------------------------------------------------- |
+| `Drawer`            | Root. Props: `shouldScaleBackground` (default: true). Built on vaul-vue |
+| `DrawerTrigger`     | Opens the drawer                                                        |
+| `DrawerContent`     | Drawer panel with drag handle                                           |
+| `DrawerHeader`      | Header layout                                                           |
+| `DrawerTitle`       | Title                                                                   |
+| `DrawerDescription` | Description                                                             |
+| `DrawerFooter`      | Footer layout                                                           |
+| `DrawerClose`       | Close button                                                            |
+| `DrawerOverlay`     | Background overlay                                                      |

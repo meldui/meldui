@@ -1,0 +1,62 @@
+---
+title: Slider
+description: A range slider for selecting numeric values with color variants.
+category: components
+subcategory: Form
+order: 16
+package: '@meldui/vue'
+componentName: Slider
+props:
+  - name: modelValue
+    type: 'number[]'
+    description: The slider value(s). Use with v-model.
+  - name: variant
+    type: "'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'"
+    default: "'default'"
+    description: The color variant.
+  - name: min
+    type: number
+    default: '0'
+    description: Minimum value.
+  - name: max
+    type: number
+    default: '100'
+    description: Maximum value.
+  - name: step
+    type: number
+    default: '1'
+    description: Step increment.
+  - name: disabled
+    type: boolean
+    description: Whether the slider is disabled.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { Slider } from '@meldui/vue'
+
+const value = ref([50])
+</script>
+
+<template>
+  <Slider v-model="value" :max="100" :step="1" />
+</template>
+```
+
+## Range Slider
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { Slider } from '@meldui/vue'
+
+const range = ref([25, 75])
+</script>
+
+<template>
+  <Slider v-model="range" :max="100" :step="1" />
+</template>
+```

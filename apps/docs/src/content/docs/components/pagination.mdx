@@ -1,0 +1,51 @@
+---
+title: Pagination
+description: Navigation controls for paginated content with page numbers, previous/next, and first/last buttons.
+category: components
+subcategory: Navigation
+order: 45
+package: '@meldui/vue'
+componentName: Pagination
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <Pagination :total="100" :sibling-count="1" show-edges :default-page="1">
+    <PaginationContent>
+      <PaginationFirst />
+      <PaginationPrevious />
+      <!-- Page links rendered automatically via slot -->
+      <PaginationNext />
+      <PaginationLast />
+    </PaginationContent>
+  </Pagination>
+</template>
+```
+
+## Sub-components
+
+| Component            | Description                                                              |
+| -------------------- | ------------------------------------------------------------------------ |
+| `Pagination`         | Root. Props: `total`, `defaultPage`, `page`, `siblingCount`, `showEdges` |
+| `PaginationContent`  | Layout container                                                         |
+| `PaginationItem`     | Item wrapper                                                             |
+| `PaginationLink`     | Page number link                                                         |
+| `PaginationPrevious` | Previous page button                                                     |
+| `PaginationNext`     | Next page button                                                         |
+| `PaginationFirst`    | First page button                                                        |
+| `PaginationLast`     | Last page button                                                         |
+| `PaginationEllipsis` | Collapsed page indicator                                                 |

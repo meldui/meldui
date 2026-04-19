@@ -1,0 +1,31 @@
+---
+title: Kbd
+description: Displays keyboard key indicators for shortcuts and key combinations.
+category: components
+subcategory: Data Display
+order: 65
+package: '@meldui/vue'
+componentName: Kbd
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Kbd, KbdGroup } from '@meldui/vue'
+</script>
+
+<template>
+  <KbdGroup>
+    <Kbd>⌘</Kbd>
+    <Kbd>K</Kbd>
+  </KbdGroup>
+</template>
+```
+
+## Sub-components
+
+| Component  | Description            |
+| ---------- | ---------------------- |
+| `Kbd`      | Individual key display |
+| `KbdGroup` | Groups multiple keys   |

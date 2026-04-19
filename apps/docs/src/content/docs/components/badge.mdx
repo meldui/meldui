@@ -1,0 +1,48 @@
+---
+title: Badge
+description: A small label for status indicators, categories, or counts.
+category: components
+subcategory: Data Display
+order: 62
+package: '@meldui/vue'
+componentName: Badge
+props:
+  - name: variant
+    type: "'default' | 'secondary' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'"
+    default: "'default'"
+    description: The color variant.
+  - name: shape
+    type: "'pill' | 'tag'"
+    default: "'pill'"
+    description: The shape style.
+  - name: outline
+    type: boolean
+    default: 'false'
+    description: Whether to use outline style.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Badge } from '@meldui/vue'
+</script>
+
+<template>
+  <Badge>Default</Badge>
+  <Badge variant="secondary">Secondary</Badge>
+  <Badge variant="destructive">Destructive</Badge>
+  <Badge variant="success">Success</Badge>
+  <Badge variant="warning">Warning</Badge>
+  <Badge variant="outline" outline>Outline</Badge>
+</template>
+```
+
+## Shapes
+
+```vue
+<template>
+  <Badge shape="pill">Pill</Badge>
+  <Badge shape="tag">Tag</Badge>
+</template>
+```

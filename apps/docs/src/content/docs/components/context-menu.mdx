@@ -1,0 +1,45 @@
+---
+title: Context Menu
+description: A right-click context menu with items, groups, and sub-menus.
+category: components
+subcategory: Navigation
+order: 42
+package: '@meldui/vue'
+componentName: ContextMenu
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <ContextMenu>
+    <ContextMenuTrigger
+      class="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm"
+    >
+      Right click here
+    </ContextMenuTrigger>
+    <ContextMenuContent class="w-64">
+      <ContextMenuItem>Back</ContextMenuItem>
+      <ContextMenuItem>Forward</ContextMenuItem>
+      <ContextMenuItem>Reload</ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem>Save As...</ContextMenuItem>
+      <ContextMenuItem>Print...</ContextMenuItem>
+    </ContextMenuContent>
+  </ContextMenu>
+</template>
+```
+
+## Sub-components
+
+Same structure as [DropdownMenu](/docs/components/dropdown-menu) — supports `ContextMenuCheckboxItem`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`, `ContextMenuLabel`, `ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubTrigger`, and `ContextMenuSubContent`.

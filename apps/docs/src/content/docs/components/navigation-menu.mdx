@@ -1,0 +1,64 @@
+---
+title: Navigation Menu
+description: A complex navigation menu with rich content areas, suitable for site-wide navigation.
+category: components
+subcategory: Navigation
+order: 44
+package: '@meldui/vue'
+componentName: NavigationMenu
+props:
+  - name: viewport
+    type: boolean
+    default: 'true'
+    description: Whether to render the viewport container for content panels.
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <NavigationMenu>
+    <NavigationMenuList>
+      <NavigationMenuItem>
+        <NavigationMenuTrigger>Getting Started</NavigationMenuTrigger>
+        <NavigationMenuContent>
+          <ul class="grid gap-3 p-4 w-[400px]">
+            <li>
+              <NavigationMenuLink href="/docs/getting-started"> Introduction </NavigationMenuLink>
+            </li>
+            <li>
+              <NavigationMenuLink href="/docs/getting-started/installation">
+                Installation
+              </NavigationMenuLink>
+            </li>
+          </ul>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
+    </NavigationMenuList>
+  </NavigationMenu>
+</template>
+```
+
+## Sub-components
+
+| Component                 | Description                       |
+| ------------------------- | --------------------------------- |
+| `NavigationMenu`          | Root container. Props: `viewport` |
+| `NavigationMenuList`      | List of menu items                |
+| `NavigationMenuItem`      | Individual menu item              |
+| `NavigationMenuTrigger`   | Dropdown trigger button           |
+| `NavigationMenuContent`   | Dropdown content panel            |
+| `NavigationMenuLink`      | Navigation link                   |
+| `NavigationMenuIndicator` | Active indicator bar              |
+| `NavigationMenuViewport`  | Content viewport container        |

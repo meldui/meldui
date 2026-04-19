@@ -1,0 +1,52 @@
+---
+title: Combobox
+description: An autocomplete input with a filterable dropdown list for selecting values.
+category: components
+subcategory: Interactive
+order: 7
+package: '@meldui/vue'
+componentName: Combobox
+props:
+  - name: modelValue
+    type: 'T | Array<T>'
+    description: The selected value. Use with v-model.
+  - name: multiple
+    type: boolean
+    description: Whether multiple items can be selected.
+  - name: open
+    type: boolean
+    description: Controlled open state. Use with v-model:open.
+  - name: disabled
+    type: boolean
+    default: 'false'
+    description: Whether the combobox is disabled.
+events:
+  - name: update:modelValue
+    payload: T
+    description: Emitted when the selected value changes.
+  - name: update:open
+    payload: boolean
+    description: Emitted when the open state changes.
+---
+
+import ComboboxDemo from '../../../demos/combobox/ComboboxDemo.vue'
+
+## Usage
+
+<ComboboxDemo client:only="vue" />
+
+## Sub-components
+
+| Component               | Description                                                 |
+| ----------------------- | ----------------------------------------------------------- |
+| `Combobox`              | Root container with state management                        |
+| `ComboboxAnchor`        | Positions the dropdown relative to the input                |
+| `ComboboxInput`         | Filterable text input. Props: `displayValue`, `placeholder` |
+| `ComboboxTrigger`       | Toggle button to open/close                                 |
+| `ComboboxList`          | Dropdown list. Props: `position`, `align`, `sideOffset`     |
+| `ComboboxItem`          | Selectable item. Props: `value` (required), `disabled`      |
+| `ComboboxItemIndicator` | Checkmark for selected items                                |
+| `ComboboxGroup`         | Group of items. Props: `heading`                            |
+| `ComboboxEmpty`         | Empty state when no items match                             |
+| `ComboboxSeparator`     | Visual separator                                            |
+| `ComboboxCancel`        | Clear selection button                                      |

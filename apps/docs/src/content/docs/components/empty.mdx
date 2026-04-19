@@ -1,0 +1,50 @@
+---
+title: Empty
+description: An empty state placeholder for when there is no content to display.
+category: components
+subcategory: Feedback
+order: 76
+package: '@meldui/vue'
+componentName: Empty
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyContent,
+  EmptyTitle,
+  EmptyDescription,
+} from '@meldui/vue'
+import { IconInbox } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <Empty>
+    <EmptyHeader>
+      <EmptyMedia variant="icon">
+        <IconInbox class="size-10" />
+      </EmptyMedia>
+    </EmptyHeader>
+    <EmptyContent>
+      <EmptyTitle>No items found</EmptyTitle>
+      <EmptyDescription>Try adjusting your search or filters.</EmptyDescription>
+    </EmptyContent>
+  </Empty>
+</template>
+```
+
+## Sub-components
+
+| Component          | Description                                                |
+| ------------------ | ---------------------------------------------------------- |
+| `Empty`            | Root container                                             |
+| `EmptyHeader`      | Top section                                                |
+| `EmptyMedia`       | Icon or image area. Props: `variant` ('default' \| 'icon') |
+| `EmptyContent`     | Text content area                                          |
+| `EmptyTitle`       | Title text                                                 |
+| `EmptyDescription` | Description text                                           |

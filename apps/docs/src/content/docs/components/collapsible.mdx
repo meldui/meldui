@@ -1,0 +1,37 @@
+---
+title: Collapsible
+description: An interactive component that expands and collapses content.
+category: components
+subcategory: Layout
+order: 37
+package: '@meldui/vue'
+componentName: Collapsible
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@meldui/vue'
+import { Button } from '@meldui/vue'
+</script>
+
+<template>
+  <Collapsible>
+    <CollapsibleTrigger as-child>
+      <Button variant="ghost">Toggle</Button>
+    </CollapsibleTrigger>
+    <CollapsibleContent>
+      <p>This content can be collapsed.</p>
+    </CollapsibleContent>
+  </Collapsible>
+</template>
+```
+
+## Sub-components
+
+| Component            | Description                                                           |
+| -------------------- | --------------------------------------------------------------------- |
+| `Collapsible`        | Root with open/closed state. Props: `open`, `defaultOpen`, `disabled` |
+| `CollapsibleTrigger` | Toggle button                                                         |
+| `CollapsibleContent` | Animated content area                                                 |

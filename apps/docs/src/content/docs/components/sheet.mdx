@@ -1,0 +1,61 @@
+---
+title: Sheet
+description: A panel that slides in from the edge of the screen.
+category: components
+subcategory: Overlay
+order: 52
+package: '@meldui/vue'
+componentName: Sheet
+props:
+  - name: side
+    type: "'top' | 'right' | 'bottom' | 'left'"
+    default: "'right'"
+    description: The edge the sheet slides from (set on SheetContent).
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetClose,
+} from '@meldui/vue'
+import { Button } from '@meldui/vue'
+</script>
+
+<template>
+  <Sheet>
+    <SheetTrigger as-child>
+      <Button variant="outline">Open Sheet</Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Edit Profile</SheetTitle>
+        <SheetDescription>Make changes to your profile.</SheetDescription>
+      </SheetHeader>
+      <div class="py-4">
+        <!-- Content -->
+      </div>
+    </SheetContent>
+  </Sheet>
+</template>
+```
+
+## Sub-components
+
+| Component          | Description                                                           |
+| ------------------ | --------------------------------------------------------------------- |
+| `Sheet`            | Root state container                                                  |
+| `SheetTrigger`     | Opens the sheet                                                       |
+| `SheetContent`     | Sliding panel. Props: `side` ('top' \| 'right' \| 'bottom' \| 'left') |
+| `SheetHeader`      | Header layout                                                         |
+| `SheetTitle`       | Title                                                                 |
+| `SheetDescription` | Description                                                           |
+| `SheetFooter`      | Footer layout                                                         |
+| `SheetClose`       | Close button                                                          |

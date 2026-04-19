@@ -1,0 +1,46 @@
+---
+title: Tags Input
+description: An input for managing multiple tags or keywords.
+category: components
+subcategory: Form
+order: 25
+package: '@meldui/vue'
+componentName: TagsInput
+---
+
+## Usage
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import {
+  TagsInput,
+  TagsInputInput,
+  TagsInputItem,
+  TagsInputItemText,
+  TagsInputItemDelete,
+} from '@meldui/vue'
+
+const tags = ref(['Vue', 'TypeScript'])
+</script>
+
+<template>
+  <TagsInput v-model="tags">
+    <TagsInputItem v-for="tag in tags" :key="tag" :value="tag">
+      <TagsInputItemText />
+      <TagsInputItemDelete />
+    </TagsInputItem>
+    <TagsInputInput placeholder="Add tag..." />
+  </TagsInput>
+</template>
+```
+
+## Sub-components
+
+| Component             | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| `TagsInput`           | Root with tag list state. Props from reka-ui TagsInputRoot |
+| `TagsInputInput`      | Text input for adding new tags                             |
+| `TagsInputItem`       | Individual tag. Props: `value` (required)                  |
+| `TagsInputItemText`   | Tag text display                                           |
+| `TagsInputItemDelete` | Remove button for the tag                                  |

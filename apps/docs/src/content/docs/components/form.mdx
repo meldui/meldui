@@ -1,0 +1,75 @@
+---
+title: Form
+description: Form components with vee-validate integration for validation and error handling.
+category: components
+subcategory: Form
+order: 20
+package: '@meldui/vue'
+componentName: Form
+---
+
+## Usage
+
+```vue
+<script setup>
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from '@meldui/vue'
+import { Input } from '@meldui/vue'
+
+const formSchema = toTypedSchema(
+  z.object({
+    username: z.string().min(2).max(50),
+  }),
+)
+
+const { handleSubmit } = useForm({
+  validationSchema: formSchema,
+})
+
+const onSubmit = handleSubmit((values) => {
+  console.log(values)
+})
+</script>
+
+<template>
+  <form @submit="onSubmit">
+    <FormField v-slot="{ componentField }" name="username">
+      <FormItem>
+        <FormLabel>Username</FormLabel>
+        <FormControl>
+          <Input placeholder="username" v-bind="componentField" />
+        </FormControl>
+        <FormDescription>Your public display name.</FormDescription>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+  </form>
+</template>
+```
+
+## Sub-components
+
+| Component         | Description                                               |
+| ----------------- | --------------------------------------------------------- |
+| `Form`            | Re-export of vee-validate's Form                          |
+| `FormField`       | Re-export of vee-validate's Field. Provides field context |
+| `FormFieldArray`  | Re-export of vee-validate's FieldArray                    |
+| `FormItem`        | Wrapper for a single form field                           |
+| `FormLabel`       | Label with error state styling                            |
+| `FormControl`     | Wraps the input with ARIA attributes                      |
+| `FormDescription` | Help text for the field                                   |
+| `FormMessage`     | Validation error message (auto-populated by vee-validate) |
+
+## Composable
+
+`useFormField()` — provides access to field error state, IDs, and name within a FormItem context.

@@ -1,0 +1,43 @@
+---
+title: Number Field
+description: A numeric input with increment and decrement buttons.
+category: components
+subcategory: Form
+order: 17
+package: '@meldui/vue'
+componentName: NumberField
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  NumberField,
+  NumberFieldContent,
+  NumberFieldInput,
+  NumberFieldIncrement,
+  NumberFieldDecrement,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <NumberField :default-value="5" :min="0" :max="100">
+    <NumberFieldContent>
+      <NumberFieldDecrement />
+      <NumberFieldInput />
+      <NumberFieldIncrement />
+    </NumberFieldContent>
+  </NumberField>
+</template>
+```
+
+## Sub-components
+
+| Component              | Description                                               |
+| ---------------------- | --------------------------------------------------------- |
+| `NumberField`          | Root with value state. Props from reka-ui NumberFieldRoot |
+| `NumberFieldContent`   | Layout wrapper for input and buttons                      |
+| `NumberFieldInput`     | The numeric input element                                 |
+| `NumberFieldIncrement` | Increment button (default: plus icon)                     |
+| `NumberFieldDecrement` | Decrement button (default: minus icon)                    |

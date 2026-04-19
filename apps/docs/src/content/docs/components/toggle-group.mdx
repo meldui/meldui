@@ -1,0 +1,48 @@
+---
+title: Toggle Group
+description: A set of two-state buttons that can be toggled on or off, supporting single or multiple selection.
+category: components
+subcategory: Interactive
+order: 4
+package: '@meldui/vue'
+componentName: ToggleGroup
+props:
+  - name: modelValue
+    type: 'AcceptableValue | AcceptableValue[]'
+    description: The controlled value. Use with v-model.
+  - name: multiple
+    type: boolean
+    description: Whether multiple items can be selected at once.
+  - name: variant
+    type: "'default' | 'outline'"
+    default: "'default'"
+    description: The visual style variant for all items.
+  - name: size
+    type: "'default' | 'sm' | 'lg'"
+    default: "'default'"
+    description: The size of all items.
+  - name: disabled
+    type: boolean
+    default: 'false'
+    description: Whether the entire group is disabled.
+  - name: orientation
+    type: "'horizontal' | 'vertical'"
+    description: The layout direction.
+events:
+  - name: update:modelValue
+    payload: 'AcceptableValue | AcceptableValue[]'
+    description: Emitted when the value changes.
+---
+
+import ToggleGroupDemo from '../../../demos/toggle-group/ToggleGroupDemo.vue'
+
+## Usage
+
+<ToggleGroupDemo client:only="vue" />
+
+## Sub-components
+
+| Component         | Description                                                                      |
+| ----------------- | -------------------------------------------------------------------------------- |
+| `ToggleGroup`     | Root container with selection state                                              |
+| `ToggleGroupItem` | Individual toggle item. Props: `value` (required), `disabled`, `variant`, `size` |

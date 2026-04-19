@@ -1,0 +1,47 @@
+---
+title: Switch
+description: A toggle switch control for boolean values with color variants.
+category: components
+subcategory: Form
+order: 15
+package: '@meldui/vue'
+componentName: Switch
+props:
+  - name: modelValue
+    type: boolean
+    description: The switch state. Use with v-model.
+  - name: variant
+    type: "'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'"
+    default: "'default'"
+    description: The color variant when checked.
+  - name: disabled
+    type: boolean
+    description: Whether the switch is disabled.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Switch, Label } from '@meldui/vue'
+</script>
+
+<template>
+  <div class="flex items-center space-x-2">
+    <Switch id="airplane-mode" />
+    <Label for="airplane-mode">Airplane Mode</Label>
+  </div>
+</template>
+```
+
+## Variants
+
+```vue
+<template>
+  <Switch variant="default" />
+  <Switch variant="success" />
+  <Switch variant="warning" />
+  <Switch variant="destructive" />
+  <Switch variant="info" />
+</template>
+```

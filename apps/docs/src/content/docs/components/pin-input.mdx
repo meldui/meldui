@@ -1,0 +1,45 @@
+---
+title: Pin Input
+description: A PIN code input with individual boxes for each character.
+category: components
+subcategory: Form
+order: 24
+package: '@meldui/vue'
+componentName: PinInput
+props:
+  - name: otp
+    type: boolean
+    default: 'true'
+    description: Whether to use OTP mode (one-time password autocomplete).
+---
+
+## Usage
+
+```vue
+<script setup>
+import { PinInput, PinInputGroup, PinInputSlot, PinInputSeparator } from '@meldui/vue'
+</script>
+
+<template>
+  <PinInput>
+    <PinInputGroup>
+      <PinInputSlot :index="0" />
+      <PinInputSlot :index="1" />
+      <PinInputSlot :index="2" />
+      <PinInputSeparator />
+      <PinInputSlot :index="3" />
+      <PinInputSlot :index="4" />
+      <PinInputSlot :index="5" />
+    </PinInputGroup>
+  </PinInput>
+</template>
+```
+
+## Sub-components
+
+| Component           | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `PinInput`          | Root with value state. Extends reka-ui PinInputRoot |
+| `PinInputGroup`     | Visual container                                    |
+| `PinInputSlot`      | Individual input slot. Props: `index` (required)    |
+| `PinInputSeparator` | Separator between slots                             |

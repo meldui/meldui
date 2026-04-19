@@ -1,0 +1,54 @@
+---
+title: Breadcrumb
+description: Navigation breadcrumbs showing the current page location in a hierarchy.
+category: components
+subcategory: Navigation
+order: 40
+package: '@meldui/vue'
+componentName: Breadcrumb
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <Breadcrumb>
+    <BreadcrumbList>
+      <BreadcrumbItem>
+        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator />
+      <BreadcrumbItem>
+        <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator />
+      <BreadcrumbItem>
+        <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+      </BreadcrumbItem>
+    </BreadcrumbList>
+  </Breadcrumb>
+</template>
+```
+
+## Sub-components
+
+| Component             | Description                                |
+| --------------------- | ------------------------------------------ |
+| `Breadcrumb`          | Root `<nav>` element                       |
+| `BreadcrumbList`      | Ordered list of breadcrumb items           |
+| `BreadcrumbItem`      | Individual breadcrumb                      |
+| `BreadcrumbLink`      | Clickable link. Props: `href`, `asChild`   |
+| `BreadcrumbPage`      | Current page (non-clickable)               |
+| `BreadcrumbSeparator` | Separator between items (default: chevron) |
+| `BreadcrumbEllipsis`  | Collapsed items indicator                  |

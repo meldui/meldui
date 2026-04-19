@@ -1,0 +1,35 @@
+---
+title: Dot
+description: A small status indicator dot with color variants and animation effects.
+category: components
+subcategory: Feedback
+order: 75
+package: '@meldui/vue'
+componentName: Dot
+props:
+  - name: variant
+    type: "'primary' | 'success' | 'warning' | 'destructive' | 'info' | 'neutral'"
+    default: "'primary'"
+    description: The color variant.
+  - name: size
+    type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+    default: "'md'"
+    description: The dot size.
+  - name: effect
+    type: "'pulse' | 'ping'"
+    description: Animation effect.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Dot } from '@meldui/vue'
+</script>
+
+<template>
+  <Dot variant="success" />
+  <Dot variant="warning" effect="pulse" />
+  <Dot variant="destructive" effect="ping" />
+</template>
+```

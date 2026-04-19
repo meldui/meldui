@@ -1,0 +1,33 @@
+---
+title: Button Group
+description: Groups multiple buttons together with consistent spacing and visual connection.
+category: components
+subcategory: Interactive
+order: 2
+package: '@meldui/vue'
+componentName: ButtonGroup
+props:
+  - name: orientation
+    type: "'horizontal' | 'vertical'"
+    default: "'horizontal'"
+    description: The layout direction of the button group.
+---
+
+import ButtonGroupDemo from '../../../demos/button-group/ButtonGroupDemo.vue'
+import ButtonGroupVerticalDemo from '../../../demos/button-group/ButtonGroupVerticalDemo.vue'
+
+## Usage
+
+<ButtonGroupDemo client:only="vue" />
+
+## Vertical
+
+<ButtonGroupVerticalDemo client:only="vue" />
+
+## Sub-components
+
+| Component              | Description                      |
+| ---------------------- | -------------------------------- |
+| `ButtonGroup`          | Root container                   |
+| `ButtonGroupSeparator` | Visual separator between buttons |
+| `ButtonGroupText`      | Text element within the group    |

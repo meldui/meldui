@@ -1,0 +1,52 @@
+---
+title: Toggle
+description: A two-state button that can be either on or off.
+category: components
+subcategory: Interactive
+order: 3
+package: '@meldui/vue'
+componentName: Toggle
+props:
+  - name: modelValue
+    type: boolean
+    description: The controlled toggle state. Use with v-model.
+  - name: defaultValue
+    type: boolean
+    description: The default toggle state for uncontrolled usage.
+  - name: variant
+    type: "'default' | 'outline'"
+    default: "'default'"
+    description: The visual style variant.
+  - name: size
+    type: "'default' | 'sm' | 'lg'"
+    default: "'default'"
+    description: The size of the toggle.
+  - name: disabled
+    type: boolean
+    default: 'false'
+    description: Whether the toggle is disabled.
+events:
+  - name: update:modelValue
+    payload: boolean
+    description: Emitted when the toggle state changes.
+slots:
+  - name: default
+    props: "{ modelValue: boolean, state: 'on' | 'off', pressed: boolean, disabled: boolean }"
+    description: Toggle content with access to the toggle state.
+---
+
+import ToggleDemo from '../../../demos/toggle/ToggleDemo.vue'
+import ToggleVariantsDemo from '../../../demos/toggle/ToggleVariantsDemo.vue'
+import ToggleSizesDemo from '../../../demos/toggle/ToggleSizesDemo.vue'
+
+## Usage
+
+<ToggleDemo client:only="vue" />
+
+## Variants
+
+<ToggleVariantsDemo client:only="vue" />
+
+## Sizes
+
+<ToggleSizesDemo client:only="vue" />

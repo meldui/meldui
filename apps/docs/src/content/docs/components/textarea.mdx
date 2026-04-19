@@ -1,0 +1,52 @@
+---
+title: Textarea
+description: A multi-line text input with optional auto-sizing support.
+category: components
+subcategory: Form
+order: 11
+package: '@meldui/vue'
+componentName: Textarea
+props:
+  - name: modelValue
+    type: string | number
+    description: The textarea value. Use with v-model.
+  - name: autosize
+    type: boolean
+    default: 'false'
+    description: Automatically resize the textarea to fit content.
+  - name: maxHeight
+    type: string
+    description: Maximum height when autosize is enabled (CSS value).
+events:
+  - name: update:modelValue
+    payload: string | number
+    description: Emitted when the value changes.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Textarea } from '@meldui/vue'
+</script>
+
+<template>
+  <Textarea placeholder="Type your message here." />
+</template>
+```
+
+## Autosize
+
+```vue
+<template>
+  <Textarea autosize placeholder="This textarea grows as you type..." />
+</template>
+```
+
+## With Max Height
+
+```vue
+<template>
+  <Textarea autosize max-height="200px" placeholder="Grows up to 200px..." />
+</template>
+```

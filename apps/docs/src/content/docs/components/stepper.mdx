@@ -1,0 +1,71 @@
+---
+title: Stepper
+description: A step-by-step progress indicator for multi-step workflows.
+category: components
+subcategory: Feedback
+order: 77
+package: '@meldui/vue'
+componentName: Stepper
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Stepper,
+  StepperItem,
+  StepperTrigger,
+  StepperIndicator,
+  StepperTitle,
+  StepperDescription,
+  StepperSeparator,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <Stepper :default-value="2">
+    <StepperItem :step="1">
+      <StepperTrigger>
+        <StepperIndicator>1</StepperIndicator>
+        <div>
+          <StepperTitle>Step 1</StepperTitle>
+          <StepperDescription>Account details</StepperDescription>
+        </div>
+      </StepperTrigger>
+      <StepperSeparator />
+    </StepperItem>
+    <StepperItem :step="2">
+      <StepperTrigger>
+        <StepperIndicator>2</StepperIndicator>
+        <div>
+          <StepperTitle>Step 2</StepperTitle>
+          <StepperDescription>Preferences</StepperDescription>
+        </div>
+      </StepperTrigger>
+      <StepperSeparator />
+    </StepperItem>
+    <StepperItem :step="3">
+      <StepperTrigger>
+        <StepperIndicator>3</StepperIndicator>
+        <div>
+          <StepperTitle>Step 3</StepperTitle>
+          <StepperDescription>Confirmation</StepperDescription>
+        </div>
+      </StepperTrigger>
+    </StepperItem>
+  </Stepper>
+</template>
+```
+
+## Sub-components
+
+| Component            | Description                              |
+| -------------------- | ---------------------------------------- |
+| `Stepper`            | Root. Props from reka-ui StepperRoot     |
+| `StepperItem`        | Step container. Props: `step` (required) |
+| `StepperTrigger`     | Clickable step header                    |
+| `StepperIndicator`   | Step number/icon display                 |
+| `StepperTitle`       | Step title                               |
+| `StepperDescription` | Step description                         |
+| `StepperSeparator`   | Connector line between steps             |

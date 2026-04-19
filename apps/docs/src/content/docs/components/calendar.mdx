@@ -1,0 +1,32 @@
+---
+title: Calendar
+description: A date picker calendar for selecting individual dates.
+category: components
+subcategory: Data Display
+order: 63
+package: '@meldui/vue'
+componentName: Calendar
+props:
+  - name: layout
+    type: "'month-and-year' | 'month-only' | 'year-only'"
+    description: The calendar picker layout mode.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { Calendar } from '@meldui/vue'
+
+const date = ref()
+</script>
+
+<template>
+  <Calendar v-model="date" />
+</template>
+```
+
+## Sub-components
+
+Built on reka-ui CalendarRoot. All sub-components are exported for custom layouts: `CalendarHeader`, `CalendarHeading`, `CalendarGrid`, `CalendarGridHead`, `CalendarGridBody`, `CalendarGridRow`, `CalendarHeadCell`, `CalendarCell`, `CalendarCellTrigger`, `CalendarPrevButton`, `CalendarNextButton`.

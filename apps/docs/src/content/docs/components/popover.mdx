@@ -1,0 +1,41 @@
+---
+title: Popover
+description: A floating content panel that appears on trigger click.
+category: components
+subcategory: Overlay
+order: 54
+package: '@meldui/vue'
+componentName: Popover
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Popover, PopoverTrigger, PopoverContent } from '@meldui/vue'
+import { Button } from '@meldui/vue'
+</script>
+
+<template>
+  <Popover>
+    <PopoverTrigger as-child>
+      <Button variant="outline">Open Popover</Button>
+    </PopoverTrigger>
+    <PopoverContent class="w-80">
+      <div class="grid gap-4">
+        <h4 class="font-medium leading-none">Dimensions</h4>
+        <p class="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+      </div>
+    </PopoverContent>
+  </Popover>
+</template>
+```
+
+## Sub-components
+
+| Component        | Description                                            |
+| ---------------- | ------------------------------------------------------ |
+| `Popover`        | Root state container. Props: `open`, `defaultOpen`     |
+| `PopoverTrigger` | Element that opens the popover                         |
+| `PopoverContent` | Floating content. Props: `align`, `side`, `sideOffset` |
+| `PopoverAnchor`  | Custom anchor element                                  |

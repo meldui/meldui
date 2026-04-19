@@ -1,0 +1,63 @@
+---
+title: Tabs
+description: Tabbed navigation with line and pill variants for organizing content.
+category: components
+subcategory: Layout
+order: 32
+package: '@meldui/vue'
+componentName: Tabs
+props:
+  - name: variant
+    type: "'line' | 'pill'"
+    default: "'line'"
+    description: The visual style of the tabs.
+  - name: defaultValue
+    type: string
+    description: The default active tab value.
+  - name: modelValue
+    type: string
+    description: The controlled active tab. Use with v-model.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@meldui/vue'
+</script>
+
+<template>
+  <Tabs default-value="account">
+    <TabsList>
+      <TabsTrigger value="account">Account</TabsTrigger>
+      <TabsTrigger value="password">Password</TabsTrigger>
+    </TabsList>
+    <TabsContent value="account">Account settings here.</TabsContent>
+    <TabsContent value="password">Change your password here.</TabsContent>
+  </Tabs>
+</template>
+```
+
+## Pill Variant
+
+```vue
+<template>
+  <Tabs default-value="tab1" variant="pill">
+    <TabsList>
+      <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+      <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+    </TabsList>
+    <TabsContent value="tab1">Content 1</TabsContent>
+    <TabsContent value="tab2">Content 2</TabsContent>
+  </Tabs>
+</template>
+```
+
+## Sub-components
+
+| Component     | Description                                                     |
+| ------------- | --------------------------------------------------------------- |
+| `Tabs`        | Root container. Props: `variant`, `defaultValue`, `orientation` |
+| `TabsList`    | Tab button container                                            |
+| `TabsTrigger` | Tab button. Props: `value` (required), `disabled`               |
+| `TabsContent` | Tab panel. Props: `value` (required)                            |

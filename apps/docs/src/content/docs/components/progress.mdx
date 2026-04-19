@@ -1,0 +1,45 @@
+---
+title: Progress
+description: A horizontal progress bar indicating completion status.
+category: components
+subcategory: Feedback
+order: 71
+package: '@meldui/vue'
+componentName: Progress
+props:
+  - name: modelValue
+    type: number
+    default: '0'
+    description: The progress value (0-100).
+  - name: variant
+    type: "'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'"
+    default: "'default'"
+    description: The color variant.
+  - name: max
+    type: number
+    default: '100'
+    description: The maximum value.
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Progress } from '@meldui/vue'
+</script>
+
+<template>
+  <Progress :model-value="60" />
+</template>
+```
+
+## Variants
+
+```vue
+<template>
+  <Progress :model-value="60" variant="default" />
+  <Progress :model-value="60" variant="success" />
+  <Progress :model-value="60" variant="warning" />
+  <Progress :model-value="60" variant="destructive" />
+</template>
+```

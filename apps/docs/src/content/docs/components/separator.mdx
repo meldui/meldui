@@ -1,0 +1,48 @@
+---
+title: Separator
+description: A visual divider between content sections.
+category: components
+subcategory: Layout
+order: 33
+package: '@meldui/vue'
+componentName: Separator
+props:
+  - name: orientation
+    type: "'horizontal' | 'vertical'"
+    default: "'horizontal'"
+    description: The direction of the separator.
+  - name: decorative
+    type: boolean
+    default: 'true'
+    description: Whether the separator is purely decorative (no semantic meaning).
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Separator } from '@meldui/vue'
+</script>
+
+<template>
+  <div>
+    <p>Content above</p>
+    <Separator class="my-4" />
+    <p>Content below</p>
+  </div>
+</template>
+```
+
+## Vertical
+
+```vue
+<template>
+  <div class="flex h-5 items-center space-x-4">
+    <span>Blog</span>
+    <Separator orientation="vertical" />
+    <span>Docs</span>
+    <Separator orientation="vertical" />
+    <span>Source</span>
+  </div>
+</template>
+```

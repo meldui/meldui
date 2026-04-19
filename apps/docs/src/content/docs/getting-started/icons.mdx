@@ -39,19 +39,19 @@ import { IconX, IconCheck, IconAlertCircle } from '@meldui/tabler-vue'
 
 All icons ship with these defaults:
 
-| Prop | Default | Tabler Default |
-|------|---------|----------------|
-| `size` | 24 | 24 |
-| `stroke` | 1.5 | 2 |
+| Prop     | Default | Tabler Default |
+| -------- | ------- | -------------- |
+| `size`   | 24      | 24             |
+| `stroke` | 1.5     | 2              |
 
 The stroke weight is intentionally thinner than Tabler's default for a cleaner look that matches MeldUI's design system.
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `size` | `number` | `24` | Icon size in pixels |
-| `stroke` | `number` | `1.5` | Stroke thickness |
+| Prop     | Type     | Default | Description         |
+| -------- | -------- | ------- | ------------------- |
+| `size`   | `number` | `24`    | Icon size in pixels |
+| `stroke` | `number` | `1.5`   | Stroke thickness    |
 
 ## Color
 
@@ -61,7 +61,8 @@ Icons use `currentColor` and inherit from the parent's text color. Control color
 <template>
   <!-- Via parent -->
   <span class="text-red-500">
-    <IconX /> <!-- Red icon -->
+    <IconX />
+    <!-- Red icon -->
   </span>
 
   <!-- Directly on icon -->
@@ -80,13 +81,13 @@ Browse all 5000+ icons at [tabler.io/icons](https://tabler.io/icons).
 
 Icon names use the `Icon` prefix followed by PascalCase:
 
-| Tabler Name | Import Name |
-|-------------|-------------|
-| `x` | `IconX` |
-| `check` | `IconCheck` |
-| `user` | `IconUser` |
-| `settings` | `IconSettings` |
-| `arrow-right` | `IconArrowRight` |
+| Tabler Name    | Import Name       |
+| -------------- | ----------------- |
+| `x`            | `IconX`           |
+| `check`        | `IconCheck`       |
+| `user`         | `IconUser`        |
+| `settings`     | `IconSettings`    |
+| `arrow-right`  | `IconArrowRight`  |
 | `alert-circle` | `IconAlertCircle` |
 
 ## Tree Shaking

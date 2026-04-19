@@ -1,0 +1,41 @@
+---
+title: Resizable
+description: Resizable panel groups with draggable handles for flexible layouts.
+category: components
+subcategory: Layout
+order: 35
+package: '@meldui/vue'
+componentName: ResizablePanelGroup
+---
+
+## Usage
+
+```vue
+<script setup>
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@meldui/vue'
+</script>
+
+<template>
+  <ResizablePanelGroup direction="horizontal" class="max-w-md rounded-lg border">
+    <ResizablePanel :default-size="50">
+      <div class="flex h-[200px] items-center justify-center p-6">
+        <span class="font-semibold">One</span>
+      </div>
+    </ResizablePanel>
+    <ResizableHandle with-handle />
+    <ResizablePanel :default-size="50">
+      <div class="flex h-[200px] items-center justify-center p-6">
+        <span class="font-semibold">Two</span>
+      </div>
+    </ResizablePanel>
+  </ResizablePanelGroup>
+</template>
+```
+
+## Sub-components
+
+| Component             | Description                                                                |
+| --------------------- | -------------------------------------------------------------------------- |
+| `ResizablePanelGroup` | Root container. Props: `direction` ('horizontal' \| 'vertical')            |
+| `ResizablePanel`      | Resizable panel. Props: `defaultSize`, `minSize`, `maxSize`, `collapsible` |
+| `ResizableHandle`     | Drag handle between panels. Props: `withHandle` (shows grip icon)          |

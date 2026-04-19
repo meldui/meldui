@@ -3,7 +3,7 @@
 @import '../../../../packages/vue/src/themes/default.css';
 
 @source "../**/*.{vue,ts,tsx,js,jsx,astro,mdx}";
-@source "../../../../packages/vue/src/**/*.{vue,ts,tsx,js,jsx}";
+@source "../../../../packages/vue/dist/**/*.mjs";
 
 @theme inline {
   --font-sans:

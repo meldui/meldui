@@ -1,0 +1,45 @@
+---
+title: Button
+description: Displays a button or a component that looks like a button.
+category: components
+subcategory: Interactive
+order: 1
+package: '@meldui/vue'
+componentName: Button
+props:
+  - name: variant
+    type: "'default' | 'destructive' | 'success' | 'warning' | 'info' | 'outline' | 'secondary' | 'ghost' | 'link'"
+    default: "'default'"
+    description: The visual style variant of the button.
+  - name: size
+    type: "'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg'"
+    default: "'default'"
+    description: The size of the button.
+  - name: as
+    type: string
+    default: "'button'"
+    description: The element or component to render as.
+  - name: asChild
+    type: boolean
+    default: 'false'
+    description: Render as child element, merging props onto the child.
+slots:
+  - name: default
+    description: Button content (text, icons, etc.)
+---
+
+import ButtonDemo from '../../../demos/button/ButtonDemo.vue'
+import ButtonSizesDemo from '../../../demos/button/ButtonSizesDemo.vue'
+import ButtonIconDemo from '../../../demos/button/ButtonIconDemo.vue'
+
+## Variants
+
+<ButtonDemo client:only="vue" />
+
+## Sizes
+
+<ButtonSizesDemo client:only="vue" />
+
+## With Icon
+
+<ButtonIconDemo client:only="vue" />

@@ -1,0 +1,46 @@
+---
+title: Card
+description: A container for grouping related content with header, body, and footer sections.
+category: components
+subcategory: Data Display
+order: 60
+package: '@meldui/vue'
+componentName: Card
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@meldui/vue'
+import { Button } from '@meldui/vue'
+</script>
+
+<template>
+  <Card class="w-[350px]">
+    <CardHeader>
+      <CardTitle>Create project</CardTitle>
+      <CardDescription>Deploy your new project in one-click.</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <p>Card content goes here.</p>
+    </CardContent>
+    <CardFooter class="flex justify-between">
+      <Button variant="outline">Cancel</Button>
+      <Button>Deploy</Button>
+    </CardFooter>
+  </Card>
+</template>
+```
+
+## Sub-components
+
+| Component         | Description                  |
+| ----------------- | ---------------------------- |
+| `Card`            | Root container               |
+| `CardHeader`      | Header section               |
+| `CardTitle`       | Card title                   |
+| `CardDescription` | Subtitle or description      |
+| `CardContent`     | Main content area            |
+| `CardFooter`      | Footer with actions          |
+| `CardAction`      | Action element in the header |

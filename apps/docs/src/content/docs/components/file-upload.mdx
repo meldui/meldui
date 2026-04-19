@@ -1,0 +1,92 @@
+---
+title: File Upload
+description: A file upload component with drag and drop, previews, and progress tracking.
+category: components
+subcategory: Form
+order: 26
+package: '@meldui/vue'
+componentName: FileUpload
+props:
+  - name: modelValue
+    type: 'File[]'
+    description: The list of selected files. Use with v-model.
+  - name: accept
+    type: string
+    description: Accepted MIME types or file extensions.
+  - name: maxFiles
+    type: number
+    default: Infinity
+    description: Maximum number of files allowed.
+  - name: maxSize
+    type: number
+    description: Maximum file size in bytes.
+  - name: multiple
+    type: boolean
+    default: 'true'
+    description: Whether multiple files can be selected.
+  - name: disabled
+    type: boolean
+    default: 'false'
+    description: Whether the upload is disabled.
+events:
+  - name: update:modelValue
+    payload: 'File[]'
+    description: Emitted when files change.
+  - name: file-accept
+    payload: File
+    description: Emitted when a file passes validation.
+  - name: file-reject
+    payload: '{ file: File, errors: FileError[] }'
+    description: Emitted when a file fails validation.
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadTrigger,
+  FileUploadList,
+  FileUploadItem,
+  FileUploadItemName,
+  FileUploadItemSize,
+  FileUploadItemDelete,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <FileUpload accept="image/*" :max-files="5">
+    <FileUploadDropzone>
+      <p>Drag & drop files here, or</p>
+      <FileUploadTrigger>Browse Files</FileUploadTrigger>
+    </FileUploadDropzone>
+    <FileUploadList>
+      <template #default="{ files }">
+        <FileUploadItem v-for="file in files" :key="file.name" :file="file">
+          <FileUploadItemName />
+          <FileUploadItemSize />
+          <FileUploadItemDelete />
+        </FileUploadItem>
+      </template>
+    </FileUploadList>
+  </FileUpload>
+</template>
+```
+
+## Sub-components
+
+| Component                | Description                                                           |
+| ------------------------ | --------------------------------------------------------------------- |
+| `FileUpload`             | Root with file state management                                       |
+| `FileUploadDropzone`     | Drag and drop area. Slot props: `isDragging`, `isDisabled`            |
+| `FileUploadTrigger`      | Button to open file picker                                            |
+| `FileUploadList`         | Container for file items                                              |
+| `FileUploadItem`         | Individual file display. Props: `file`, `progress`, `status`, `error` |
+| `FileUploadItemName`     | File name display                                                     |
+| `FileUploadItemSize`     | File size display. Props: `precision`                                 |
+| `FileUploadItemPreview`  | Image preview                                                         |
+| `FileUploadItemProgress` | Upload progress bar. Props: `variant`                                 |
+| `FileUploadItemDelete`   | Remove file button                                                    |
+| `FileUploadClear`        | Clear all files button                                                |

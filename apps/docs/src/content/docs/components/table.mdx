@@ -1,0 +1,59 @@
+---
+title: Table
+description: A semantic HTML table with consistent styling for displaying tabular data.
+category: components
+subcategory: Layout
+order: 31
+package: '@meldui/vue'
+componentName: Table
+---
+
+## Usage
+
+```vue
+<script setup>
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCaption,
+} from '@meldui/vue'
+</script>
+
+<template>
+  <Table>
+    <TableCaption>A list of recent invoices.</TableCaption>
+    <TableHeader>
+      <TableRow>
+        <TableHead>Invoice</TableHead>
+        <TableHead>Status</TableHead>
+        <TableHead class="text-right">Amount</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow>
+        <TableCell class="font-medium">INV001</TableCell>
+        <TableCell>Paid</TableCell>
+        <TableCell class="text-right">$250.00</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</template>
+```
+
+## Sub-components
+
+| Component      | Description            |
+| -------------- | ---------------------- |
+| `Table`        | Root `<table>` wrapper |
+| `TableHeader`  | `<thead>` element      |
+| `TableBody`    | `<tbody>` element      |
+| `TableFooter`  | `<tfoot>` element      |
+| `TableRow`     | `<tr>` element         |
+| `TableHead`    | `<th>` element         |
+| `TableCell`    | `<td>` element         |
+| `TableCaption` | `<caption>` element    |
+| `TableEmpty`   | Empty state row        |

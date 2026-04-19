@@ -1,0 +1,42 @@
+---
+title: Tooltip
+description: A popup that displays information when hovering over an element.
+category: components
+subcategory: Overlay
+order: 55
+package: '@meldui/vue'
+componentName: Tooltip
+---
+
+## Usage
+
+```vue
+<script setup>
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@meldui/vue'
+import { Button } from '@meldui/vue'
+</script>
+
+<template>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger as-child>
+        <Button variant="outline">Hover me</Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Add to library</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+</template>
+```
+
+> **Note:** Wrap your app or layout with `TooltipProvider` once to configure all tooltips.
+
+## Sub-components
+
+| Component         | Description                                                       |
+| ----------------- | ----------------------------------------------------------------- |
+| `TooltipProvider` | Global configuration. Props: `delayDuration`, `skipDelayDuration` |
+| `Tooltip`         | Root state container                                              |
+| `TooltipTrigger`  | Element that triggers the tooltip                                 |
+| `TooltipContent`  | Tooltip popup. Props: `side`, `sideOffset`, `align`               |
