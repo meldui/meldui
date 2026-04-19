@@ -6,6 +6,21 @@ subcategory: Form
 order: 20
 package: '@meldui/vue'
 componentName: Form
+subComponents:
+  - name: FormField
+    description: Re-export of vee-validate Field. Provides field context via scoped slot.
+  - name: FormFieldArray
+    description: Re-export of vee-validate FieldArray for dynamic field lists.
+  - name: FormItem
+    description: Wrapper for a single form field with auto-generated IDs.
+  - name: FormLabel
+    description: Label with automatic error state styling.
+  - name: FormControl
+    description: Wraps the input element with ARIA attributes for accessibility.
+  - name: FormDescription
+    description: Help text for the field.
+  - name: FormMessage
+    description: Validation error message (auto-populated by vee-validate).
 ---
 
 import FormDemo from '../../../demos/form/FormDemo.vue'
@@ -13,19 +28,6 @@ import FormDemo from '../../../demos/form/FormDemo.vue'
 ## Usage
 
 <FormDemo client:only="vue" />
-
-## Sub-components
-
-| Component         | Description                                               |
-| ----------------- | --------------------------------------------------------- |
-| `Form`            | Re-export of vee-validate's Form                          |
-| `FormField`       | Re-export of vee-validate's Field. Provides field context |
-| `FormFieldArray`  | Re-export of vee-validate's FieldArray                    |
-| `FormItem`        | Wrapper for a single form field                           |
-| `FormLabel`       | Label with error state styling                            |
-| `FormControl`     | Wraps the input with ARIA attributes                      |
-| `FormDescription` | Help text for the field                                   |
-| `FormMessage`     | Validation error message (auto-populated by vee-validate) |
 
 ## Composable
 

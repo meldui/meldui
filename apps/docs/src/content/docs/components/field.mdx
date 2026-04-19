@@ -11,6 +11,33 @@ props:
     type: "'vertical' | 'horizontal' | 'responsive'"
     default: "'vertical'"
     description: The layout direction of the field.
+subComponents:
+  - name: FieldLabel
+    description: Label text for the field.
+  - name: FieldContent
+    description: Wrapper for the input element.
+  - name: FieldDescription
+    description: Help text displayed below the input.
+  - name: FieldError
+    description: Error message display.
+    props:
+      - name: errors
+        type: "Array<string | { message: string }>"
+        description: Array of error messages to display.
+  - name: FieldGroup
+    description: Groups multiple fields together.
+  - name: FieldSet
+    description: Fieldset wrapper element.
+  - name: FieldLegend
+    description: Legend for a fieldset.
+    props:
+      - name: variant
+        type: "'legend' | 'label'"
+        description: Render as legend or styled label.
+  - name: FieldTitle
+    description: Section title within a field group.
+  - name: FieldSeparator
+    description: Visual separator between fields.
 ---
 
 import FieldDemo from '../../../demos/field/FieldDemo.vue'
@@ -29,17 +56,3 @@ import FieldHorizontalDemo from '../../../demos/field/FieldHorizontalDemo.vue'
 
 <FieldHorizontalDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                                                 |
-| ------------------ | ----------------------------------------------------------- |
-| `Field`            | Root container. Props: `orientation`                        |
-| `FieldLabel`       | Label text                                                  |
-| `FieldContent`     | Input wrapper                                               |
-| `FieldDescription` | Help text below the input                                   |
-| `FieldError`       | Error message display. Props: `errors`                      |
-| `FieldGroup`       | Groups multiple fields                                      |
-| `FieldSet`         | Fieldset wrapper                                            |
-| `FieldLegend`      | Legend for fieldset. Props: `variant` ('legend' \| 'label') |
-| `FieldTitle`       | Section title                                               |
-| `FieldSeparator`   | Visual separator between fields                             |

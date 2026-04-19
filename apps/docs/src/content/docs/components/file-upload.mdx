@@ -38,6 +38,56 @@ events:
   - name: file-reject
     payload: '{ file: File, errors: FileError[] }'
     description: Emitted when a file fails validation.
+subComponents:
+  - name: FileUploadDropzone
+    description: Drag and drop target area.
+    slots:
+      - name: default
+        props: "{ isDragging: boolean, isDisabled: boolean, openFilePicker: () => void }"
+        description: Content with drag state access.
+  - name: FileUploadTrigger
+    description: Button that opens the file picker dialog.
+  - name: FileUploadList
+    description: Container for uploaded file items.
+  - name: FileUploadItem
+    description: Individual file display with status.
+    props:
+      - name: file
+        type: File
+        required: true
+        description: The file object.
+      - name: progress
+        type: number
+        description: Upload progress percentage (0-100).
+      - name: status
+        type: "'pending' | 'uploading' | 'complete' | 'error'"
+        default: "'pending'"
+        description: Upload status.
+      - name: error
+        type: string
+        description: Error message for failed uploads.
+  - name: FileUploadItemName
+    description: Displays the file name.
+  - name: FileUploadItemSize
+    description: Displays the file size.
+    props:
+      - name: precision
+        type: number
+        default: '1'
+        description: Decimal places for size display.
+  - name: FileUploadItemPreview
+    description: Image preview thumbnail.
+  - name: FileUploadItemProgress
+    description: Upload progress bar.
+    props:
+      - name: variant
+        type: "'default' | 'success' | 'destructive'"
+        default: "'default'"
+        description: Progress bar color variant.
+  - name: FileUploadItemDelete
+    description: Button to remove the file.
+  - name: FileUploadClear
+    description: Button to clear all files.
 ---
 
 import FileUploadDemo from '../../../demos/file-upload/FileUploadDemo.vue'
@@ -46,18 +96,3 @@ import FileUploadDemo from '../../../demos/file-upload/FileUploadDemo.vue'
 
 <FileUploadDemo client:only="vue" />
 
-## Sub-components
-
-| Component                | Description                                                           |
-| ------------------------ | --------------------------------------------------------------------- |
-| `FileUpload`             | Root with file state management                                       |
-| `FileUploadDropzone`     | Drag and drop area. Slot props: `isDragging`, `isDisabled`            |
-| `FileUploadTrigger`      | Button to open file picker                                            |
-| `FileUploadList`         | Container for file items                                              |
-| `FileUploadItem`         | Individual file display. Props: `file`, `progress`, `status`, `error` |
-| `FileUploadItemName`     | File name display                                                     |
-| `FileUploadItemSize`     | File size display. Props: `precision`                                 |
-| `FileUploadItemPreview`  | Image preview                                                         |
-| `FileUploadItemProgress` | Upload progress bar. Props: `variant`                                 |
-| `FileUploadItemDelete`   | Remove file button                                                    |
-| `FileUploadClear`        | Clear all files button                                                |

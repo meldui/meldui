@@ -210,10 +210,10 @@ Enrich sub-component tables with full props, events, and slots data via frontmat
 
 ### 8.4 Form (4 components)
 
-- [ ] Select — SelectTrigger (size), SelectContent (position), SelectItem (value, disabled), SelectValue (placeholder), SelectGroup, SelectLabel, SelectSeparator
-- [ ] Field — FieldLabel, FieldContent, FieldDescription, FieldError (errors), FieldGroup, FieldSet, FieldLegend (variant), FieldTitle, FieldSeparator
-- [ ] Form — FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage
-- [ ] FileUpload — FileUploadDropzone (slot props), FileUploadTrigger, FileUploadList, FileUploadItem (file, progress, status, error), FileUploadItemName, FileUploadItemSize (precision), FileUploadItemPreview, FileUploadItemProgress (variant), FileUploadItemDelete, FileUploadClear
+- [x] Select — 9 sub-components (SelectTrigger size, SelectItem value/disabled, SelectValue placeholder)
+- [x] Field — 9 sub-components (FieldError errors, FieldLegend variant)
+- [x] Form — 7 sub-components (FormField, FormControl, FormMessage)
+- [x] FileUpload — 11 sub-components (FileUploadItem file/progress/status/error, FileUploadItemSize precision, FileUploadItemProgress variant, FileUploadDropzone slot props)
 
 ### 8.5 Data Display (3 components)
 

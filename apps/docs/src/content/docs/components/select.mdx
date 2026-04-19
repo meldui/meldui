@@ -6,6 +6,47 @@ subcategory: Form
 order: 12
 package: '@meldui/vue'
 componentName: Select
+subComponents:
+  - name: SelectTrigger
+    description: Button that opens the dropdown.
+    props:
+      - name: size
+        type: "'sm' | 'default'"
+        default: "'default'"
+        description: Trigger button size.
+  - name: SelectContent
+    description: Dropdown panel containing options.
+    props:
+      - name: position
+        type: "'popper'"
+        default: "'popper'"
+        description: Positioning strategy.
+  - name: SelectItem
+    description: Individual selectable option.
+    props:
+      - name: value
+        type: string
+        required: true
+        description: The option value.
+      - name: disabled
+        type: boolean
+        description: Disable this option.
+  - name: SelectValue
+    description: Displays the currently selected value.
+    props:
+      - name: placeholder
+        type: string
+        description: Text shown when no value is selected.
+  - name: SelectGroup
+    description: Groups related options together.
+  - name: SelectLabel
+    description: Label heading for a group.
+  - name: SelectSeparator
+    description: Visual divider between groups.
+  - name: SelectScrollUpButton
+    description: Scroll-up button for long option lists.
+  - name: SelectScrollDownButton
+    description: Scroll-down button for long option lists.
 ---
 
 import SelectDemo from '../../../demos/select/SelectDemo.vue'
@@ -19,15 +60,3 @@ import SelectGroupsDemo from '../../../demos/select/SelectGroupsDemo.vue'
 
 <SelectGroupsDemo client:only="vue" />
 
-## Sub-components
-
-| Component         | Description                                       |
-| ----------------- | ------------------------------------------------- |
-| `Select`          | Root with state management                        |
-| `SelectTrigger`   | Trigger button. Props: `size` ('sm' \| 'default') |
-| `SelectContent`   | Dropdown content. Props: `position`               |
-| `SelectItem`      | Selectable option. Props: `value`, `disabled`     |
-| `SelectValue`     | Displays the selected value. Props: `placeholder` |
-| `SelectGroup`     | Groups items together                             |
-| `SelectLabel`     | Group label                                       |
-| `SelectSeparator` | Visual separator                                  |
