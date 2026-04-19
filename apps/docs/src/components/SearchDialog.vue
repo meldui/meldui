@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
-import { Dialog, DialogContent, DialogTitle } from '@meldui/vue'
-import { IconSearch } from '@meldui/tabler-vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import {
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from '@meldui/vue'
+import { IconFileText } from '@meldui/tabler-vue'
 
 const open = ref(false)
 const query = ref('')
-const results = ref<any[]>([])
+const results = ref<{ url: string; title: string; excerpt: string }[]>([])
 const pagefind = ref<any>(null)
 const searchUnavailable = ref(false)
-const inputRef = ref<HTMLInputElement | null>(null)
 
 async function loadPagefind() {
   if (pagefind.value) return
@@ -27,8 +33,14 @@ async function search(q: string) {
     return
   }
   const searchResult = await pagefind.value.search(q)
-  const data = await Promise.all(searchResult.results.slice(0, 8).map((r: any) => r.data()))
-  results.value = data
+  const data = await Promise.all(
+    searchResult.results.slice(0, 10).map((r: any) => r.data()),
+  )
+  results.value = data.map((d: any) => ({
+    url: d.url,
+    title: d.meta?.title || d.url,
+    excerpt: d.excerpt || '',
+  }))
 }
 
 watch(query, (q) => search(q))
@@ -36,8 +48,6 @@ watch(query, (q) => search(q))
 watch(open, async (isOpen) => {
   if (isOpen) {
     await loadPagefind()
-    await nextTick()
-    inputRef.value?.focus()
   } else {
     query.value = ''
     results.value = []
@@ -51,9 +61,13 @@ function handleKeydown(e: KeyboardEvent) {
   }
 }
 
+function navigate(url: string) {
+  open.value = false
+  window.location.href = url
+}
+
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
-  // Wire up the header search button
   const trigger = document.getElementById('search-trigger')
   if (trigger) {
     trigger.addEventListener('click', () => {
@@ -65,59 +79,38 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
 })
-
-function navigate(url: string) {
-  open.value = false
-  window.location.href = url
-}
 </script>
 
 <template>
-  <Dialog v-model:open="open">
-    <DialogContent class="top-[20%] translate-y-0 p-0 gap-0 max-w-lg">
-      <DialogTitle class="sr-only">Search documentation</DialogTitle>
-      <div class="flex items-center border-b px-3">
-        <IconSearch class="size-4 shrink-0 text-muted-foreground" />
-        <input
-          ref="inputRef"
-          v-model="query"
-          placeholder="Search documentation..."
-          class="flex h-11 w-full bg-transparent py-3 px-2 text-sm outline-none placeholder:text-muted-foreground"
-        />
+  <CommandDialog v-model:open="open" title="Search Documentation" description="Search across all component pages, guides, and API docs.">
+    <CommandInput v-model="query" placeholder="Search documentation..." />
+    <CommandList>
+      <div v-if="searchUnavailable" class="py-6 text-center text-sm text-muted-foreground">
+        Search is only available in the production build.<br />
+        <span class="text-xs">
+          Run <code class="rounded bg-muted px-1 py-0.5">pnpm docs:build</code> then
+          <code class="rounded bg-muted px-1 py-0.5">pnpm --filter docs preview</code>
+        </span>
       </div>
-      <div class="max-h-[300px] overflow-y-auto p-2">
-        <div v-if="searchUnavailable" class="py-6 text-center text-sm text-muted-foreground">
-          Search is only available in the production build.<br />
-          <span class="text-xs"
-            >Run <code class="rounded bg-muted px-1 py-0.5">pnpm docs:build</code> then
-            <code class="rounded bg-muted px-1 py-0.5">pnpm --filter docs preview</code></span
-          >
-        </div>
-        <div
-          v-else-if="query && results.length === 0"
-          class="py-6 text-center text-sm text-muted-foreground"
+      <CommandEmpty v-else-if="query">No results found.</CommandEmpty>
+      <CommandGroup v-if="results.length > 0" heading="Results">
+        <CommandItem
+          v-for="result in results"
+          :key="result.url"
+          :value="result.title"
+          @select="navigate(result.url)"
         >
-          No results found.
-        </div>
-        <div v-else-if="!query" class="py-6 text-center text-sm text-muted-foreground">
-          Type to search...
-        </div>
-        <div v-else class="space-y-1">
-          <button
-            v-for="result in results"
-            :key="result.url"
-            class="flex w-full flex-col gap-1 rounded-md px-3 py-2 text-left text-sm hover:bg-accent transition-colors"
-            @click="navigate(result.url)"
-          >
-            <span class="font-medium text-foreground">{{ result.meta?.title || result.url }}</span>
+          <IconFileText class="mr-2 size-4 shrink-0" />
+          <div class="flex flex-col gap-0.5 overflow-hidden">
+            <span class="truncate font-medium">{{ result.title }}</span>
             <span
               v-if="result.excerpt"
-              class="text-xs text-muted-foreground line-clamp-2"
+              class="truncate text-xs text-muted-foreground"
               v-html="result.excerpt"
             />
-          </button>
-        </div>
-      </div>
-    </DialogContent>
-  </Dialog>
+          </div>
+        </CommandItem>
+      </CommandGroup>
+    </CommandList>
+  </CommandDialog>
 </template>
