@@ -25,6 +25,11 @@ export default defineConfig({
         include: ['@meldui/vue', '@meldui/tabler-vue', 'vue-sonner'],
       },
     },
+    build: {
+      rollupOptions: {
+        external: ['/pagefind/pagefind.js'],
+      },
+    },
     define: {
       __VUE_OPTIONS_API__: 'true',
       __VUE_PROD_DEVTOOLS__: 'false',

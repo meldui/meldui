@@ -1,0 +1,3885 @@
+# MeldUI
+
+> A Vue 3 component library built on shadcn-vue with Tailwind CSS v4, providing consistent and beautiful UI components.
+
+MeldUI is a design system monorepo that re-exports and customizes shadcn components. It consists of three packages: `@meldui/vue` for UI components, `@meldui/tabler-vue` for icons, and `@meldui/charts-vue` for data visualization. Uses Tailwind CSS v4 (NOT v3) with CSS-first configuration.
+
+## Critical: Common Mistakes
+
+1. **Using Tailwind CSS v3 syntax** - Do NOT create `tailwind.config.js`. Use CSS-first config with `@import "tailwindcss"`
+2. **Wrong icon imports** - Icons are in `@meldui/tabler-vue`, NOT `@meldui/vue`
+3. **Wrong chart imports** - Charts are in `@meldui/charts-vue`, NOT `@meldui/vue`
+4. **Missing theme import** - Must import `@meldui/vue/themes/default` in your CSS
+5. **Missing Tailwind source directive** - Add `@source "../node_modules/@meldui/vue/dist/*.mjs";`
+
+## Packages
+
+- [@meldui/vue](/docs/charts/installation): Core UI components
+- [@meldui/tabler-vue](/docs/getting-started/icons): 5000+ Tabler icons with custom defaults
+- [@meldui/charts-vue](/docs/charts/installation): Apache ECharts components
+
+## Pages
+
+- [Area Chart](/docs/charts/area-chart): Visualize volume and cumulative data with filled areas beneath lines.
+- [Bar Chart](/docs/charts/bar-chart): Compare values across categories with vertical, horizontal, and stacked bars.
+- [Chart Events](/docs/charts/events): Handle user interactions with chart click, hover, legend, and selection events.
+- [Chart Theme Customization](/docs/charts/theme-customization): Customize chart appearance with CSS variables, color palettes, and dark mode.
+- [Charts Installation](/docs/charts/installation): How to install and configure @meldui/charts-vue in your project.
+- [Charts Overview](/docs/charts): A comprehensive charting library for Vue 3, built on ECharts with MeldUI theming and dark mode support.
+- [Donut Chart](/docs/charts/donut-chart): A pie chart with a hollow center, ideal for displaying a summary metric.
+- [Heatmap Chart](/docs/charts/heatmap-chart): Visualize density and intensity across two categorical or numeric dimensions.
+- [Line Chart](/docs/charts/line-chart): Display trends and continuous data with line and step interpolation.
+- [Mixed Chart](/docs/charts/mixed-chart): Combine multiple chart types (line, bar, area) in a single visualization.
+- [Pie Chart](/docs/charts/pie-chart): Show proportions of a whole with a circular chart.
+- [Radar Chart](/docs/charts/radar-chart): Compare multiple dimensions on a radial grid.
+- [Scatter Chart](/docs/charts/scatter-chart): Plot correlations between two numeric variables.
+- [Accordion](/docs/components/accordion): A vertically stacked set of interactive headings that reveal or hide sections of content.
+- [Alert](/docs/components/alert): Displays a callout message for important information with color variants.
+- [Alert Dialog](/docs/components/alert-dialog): A modal confirmation dialog that interrupts the user for important decisions.
+- [Aspect Ratio](/docs/components/aspect-ratio): Displays content within a desired aspect ratio.
+- [Avatar](/docs/components/avatar): An image element with a fallback for representing the user.
+- [Badge](/docs/components/badge): A small label for status indicators, categories, or counts.
+- [Breadcrumb](/docs/components/breadcrumb): Navigation breadcrumbs showing the current page location in a hierarchy.
+- [Button](/docs/components/button): Displays a button or a component that looks like a button.
+- [Button Group](/docs/components/button-group): Groups multiple buttons together with consistent spacing and visual connection.
+- [Calendar](/docs/components/calendar): A date picker calendar for selecting individual dates.
+- [Card](/docs/components/card): A container for grouping related content with header, body, and footer sections.
+- [Carousel](/docs/components/carousel): A carousel component for cycling through elements with navigation controls.
+- [Checkbox](/docs/components/checkbox): A control that allows the user to toggle between checked and unchecked states.
+- [Circular Progress](/docs/components/circular-progress): A circular progress indicator with customizable size, thickness, and color variants.
+- [Collapsible](/docs/components/collapsible): An interactive component that expands and collapses content.
+- [Combobox](/docs/components/combobox): An autocomplete input with a filterable dropdown list for selecting values.
+- [Command](/docs/components/command): A command palette for searching and executing actions, similar to Cmd+K interfaces.
+- [Context Menu](/docs/components/context-menu): A right-click context menu with items, groups, and sub-menus.
+- [Dialog](/docs/components/dialog): A modal dialog that overlays content and requires user interaction.
+- [Dot](/docs/components/dot): A small status indicator dot with color variants and animation effects.
+- [Drawer](/docs/components/drawer): A touch-friendly drawer component that slides from the bottom of the screen.
+- [Dropdown Menu](/docs/components/dropdown-menu): A menu that appears on trigger click with items, groups, checkboxes, and nested sub-menus.
+- [Empty](/docs/components/empty): An empty state placeholder for when there is no content to display.
+- [Field](/docs/components/field): A form field layout component with label, content, description, and error display.
+- [File Upload](/docs/components/file-upload): A file upload component with drag and drop, previews, and progress tracking.
+- [Form](/docs/components/form): Form components with vee-validate integration for validation and error handling.
+- [Hover Card](/docs/components/hover-card): A rich content card that appears when hovering over a trigger element.
+- [Input](/docs/components/input): A text input field for capturing user input.
+- [Input Group](/docs/components/input-group): Groups an input with addons, buttons, and text elements.
+- [Input OTP](/docs/components/input-otp): A one-time password input with individual character slots.
+- [Item](/docs/components/item): A flexible list item component for displaying structured content with media, text, and actions.
+- [Kbd](/docs/components/kbd): Displays keyboard key indicators for shortcuts and key combinations.
+- [Label](/docs/components/label): An accessible label associated with form controls.
+- [Menubar](/docs/components/menubar): A horizontal menu bar with dropdown menus, similar to desktop application menus.
+- [Native Select](/docs/components/native-select): A styled native HTML select element.
+- [Navigation Menu](/docs/components/navigation-menu): A complex navigation menu with rich content areas, suitable for site-wide navigation.
+- [Number Field](/docs/components/number-field): A numeric input with increment and decrement buttons.
+- [Pagination](/docs/components/pagination): Navigation controls for paginated content with page numbers, previous/next, and first/last buttons.
+- [Pin Input](/docs/components/pin-input): A PIN code input with individual boxes for each character.
+- [Popover](/docs/components/popover): A floating content panel that appears on trigger click.
+- [Progress](/docs/components/progress): A horizontal progress bar indicating completion status.
+- [Radio Group](/docs/components/radio-group): A set of radio buttons where only one can be selected at a time.
+- [Range Calendar](/docs/components/range-calendar): A calendar for selecting date ranges with start and end dates.
+- [Resizable](/docs/components/resizable): Resizable panel groups with draggable handles for flexible layouts.
+- [Scroll Area](/docs/components/scroll-area): A custom scrollable area with styled scrollbars.
+- [Select](/docs/components/select): A custom select component with keyboard navigation and grouping support.
+- [Separator](/docs/components/separator): A visual divider between content sections.
+- [Sheet](/docs/components/sheet): A panel that slides in from the edge of the screen.
+- [Sidebar](/docs/components/sidebar): A complex sidebar navigation component with collapsible sections, menus, and responsive behavior.
+- [Skeleton](/docs/components/skeleton): A placeholder loading animation for content that is still loading.
+- [Slider](/docs/components/slider): A range slider for selecting numeric values with color variants.
+- [Sonner](/docs/components/sonner): Toast notification system for success, error, and informational messages.
+- [Spinner](/docs/components/spinner): An animated loading spinner indicator.
+- [Stepper](/docs/components/stepper): A step-by-step progress indicator for multi-step workflows.
+- [Switch](/docs/components/switch): A toggle switch control for boolean values with color variants.
+- [Table](/docs/components/table): A semantic HTML table with consistent styling for displaying tabular data.
+- [Tabs](/docs/components/tabs): Tabbed navigation with line and pill variants for organizing content.
+- [Tags Input](/docs/components/tags-input): An input for managing multiple tags or keywords.
+- [Textarea](/docs/components/textarea): A multi-line text input with optional auto-sizing support.
+- [Toggle](/docs/components/toggle): A two-state button that can be either on or off.
+- [Toggle Group](/docs/components/toggle-group): A set of two-state buttons that can be toggled on or off, supporting single or multiple selection.
+- [Tooltip](/docs/components/tooltip): A popup that displays information when hovering over an element.
+- [Avatar Group](/docs/composites/avatar-group): Displays a stack of avatars with an overflow indicator.
+- [Clipboard Copy](/docs/composites/clipboard-copy): A component for copying text to the clipboard with visual feedback.
+- [Data Table](/docs/data-table): A powerful, feature-rich data table with server-side operations, filtering, sorting, pagination, row selection, column pinning, and keyboard navigation.
+- [Data Table: Basic Usage](/docs/data-table/basic): Setting up a basic data table with sorting, pagination, and search.
+- [Data Table: Column Pinning](/docs/data-table/pinning): Pin columns to the left or right edge for horizontal scroll tables.
+- [Data Table: Columns & Cells](/docs/data-table/columns): Type-safe column definitions with createColumnHelper, cell renderers, and aggregation helpers.
+- [Data Table: Filtering](/docs/data-table/filtering): Configure filter types, advanced mode with operators, and custom filter fields.
+- [Data Table: Row Expansion](/docs/data-table/expansion): Expand rows to show detail content using the master-detail pattern.
+- [Data Table: Selection & Actions](/docs/data-table/selection): Row selection with checkboxes, bulk actions, and per-row action menus.
+- [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
+- [Date Range Picker](/docs/composites/date-range-picker): A composite date picker with presets, calendar, and support for single or range date selection.
+- [Mention](/docs/composites/mention): A rich text input that supports @-mention suggestions with customizable triggers and serialization.
+- [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
+- [Relative Time](/docs/composites/relative-time): Displays a human-readable relative timestamp that updates automatically.
+- [Timeline](/docs/composites/timeline): A vertical or horizontal timeline for displaying chronological events.
+- [Dark Mode](/docs/getting-started/dark-mode): How to enable and configure dark mode in your MeldUI application.
+- [Icons](/docs/getting-started/icons): MeldUI uses Tabler Icons with custom defaults for size and stroke, provided via the @meldui/tabler-vue package.
+- [Installation](/docs/getting-started/installation): How to install and configure MeldUI in your Vue 3 project.
+- [Introduction](/docs/getting-started): MeldUI is a Vue 3 component library built on shadcn-vue with Tailwind CSS v4, providing consistent and beautiful UI components.
+- [Theming](/docs/getting-started/theming): Customize MeldUI's appearance using CSS variables with OKLCH colors and Tailwind CSS v4.
+
+---
+
+# Full API Reference
+
+## Area Chart
+
+Visualize volume and cumulative data with filled areas beneath lines.
+
+## Usage
+
+
+
+## Config Reference
+
+| Property      | Type                                                 | Default                         | Description                         |
+| ------------- | ---------------------------------------------------- | ------------------------------- | ----------------------------------- |
+| `series`      | `{ name: string; data: number[] }[]`                 | required                        | Array of data series                |
+| `xAxis`       | `{ categories: string[] }`                           | required                        | Category labels for the X axis      |
+| `stacked`     | `boolean`                                            | `false`                         | Stack areas on top of each other    |
+| `stroke`      | `{ curve?: 'smooth' \| 'straight'; width?: number }` | `{ curve: 'smooth', width: 2 }` | Line interpolation and width        |
+| `fillOpacity` | `number`                                             | `0.3`                           | Opacity of the filled area (0 to 1) |
+
+---
+
+## Bar Chart
+
+Compare values across categories with vertical, horizontal, and stacked bars.
+
+## Usage
+
+
+
+## Stacked & Horizontal
+
+Use `stacked` and `horizontal` props.
+
+
+
+## Config Reference
+
+| Property     | Type                                 | Default              | Description                              |
+| ------------ | ------------------------------------ | -------------------- | ---------------------------------------- |
+| `series`     | `{ name: string; data: number[] }[]` | required             | Array of data series                     |
+| `xAxis`      | `{ categories: string[] }`           | required             | Category labels for the X axis           |
+| `stacked`    | `boolean`                            | `false`              | Stack bars on top of each other          |
+| `horizontal` | `boolean`                            | `false`              | Render bars horizontally                 |
+| `barWidth`   | `string \| number`                   | -                    | Width of each bar (e.g. `'50%'` or `20`) |
+| `barGap`     | `string`                             | -                    | Gap between bars in the same category    |
+| `dataLabels` | `{ enabled?: boolean }`              | `{ enabled: false }` | Show values on bars                      |
+
+---
+
+## Chart Events
+
+Handle user interactions with chart click, hover, legend, and selection events.
+
+## Event Reference
+
+All chart components emit the following events:
+
+| Event           | Payload                                                                    | Description                                   |
+| --------------- | -------------------------------------------------------------------------- | --------------------------------------------- |
+| `@click`        | `{ seriesName: string; dataIndex: number; value: any; event: MouseEvent }` | Fired when a data point or element is clicked |
+| `@hover`        | `{ seriesName: string; dataIndex: number; value: any }`                    | Fired when hovering over a data point         |
+| `@mouseout`     | `{ seriesName: string }`                                                   | Fired when the cursor leaves a data point     |
+| `@legendSelect` | `{ name: string; selected: Record<string, boolean> }`                      | Fired when a legend item is toggled           |
+| `@dataZoom`     | `{ start: number; end: number }`                                           | Fired when the visible data range changes     |
+| `@brushSelect`  | `{ areas: { coordRange: number[][] }[] }`                                  | Fired when a brush selection is made          |
+
+## Usage Example
+
+```vue
+<script setup lang="ts">
+
+
+
+const config: MeldBarChartConfig = {
+  series: [{ name: 'Sales', data: [120, 200, 150, 80, 70] }],
+  xAxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] },
+}
+
+function handleClick(payload: { seriesName: string; dataIndex: number; value: any }) {
+  console.log(`Clicked ${payload.seriesName} at index ${payload.dataIndex}: ${payload.value}`)
+}
+
+function handleLegendSelect(payload: { name: string; selected: Record<string, boolean> }) {
+  console.log(`Legend toggled: ${payload.name}`, payload.selected)
+}
+</script>
+
+<template>
+  <MeldBarChart :config="config" @click="handleClick" @legend-select="handleLegendSelect" />
+</template>
+```
+
+---
+
+## Chart Theme Customization
+
+Customize chart appearance with CSS variables, color palettes, and dark mode.
+
+## Tailwind CSS Integration
+
+All chart components read your project's Tailwind CSS theme variables for foreground colors, background colors, borders, and font styles. This means charts automatically match the rest of your MeldUI components without any extra configuration.
+
+Key CSS variables used by charts:
+
+| Variable                   | Used For                   |
+| -------------------------- | -------------------------- |
+| `--color-foreground`       | Axis labels, tick text     |
+| `--color-muted-foreground` | Grid lines, secondary text |
+| `--color-background`       | Chart background           |
+| `--color-border`           | Axis lines, chart borders  |
+| `--color-card`             | Tooltip background         |
+| `--color-card-foreground`  | Tooltip text               |
+
+## Dark Mode
+
+Charts detect dark mode automatically by reading the `dark` class on the `<html>` element. When dark mode is active, axis labels, grid lines, tooltips, and backgrounds all adapt to use the dark theme variables. No additional props are required.
+
+## Color Palettes
+
+Pass a palette name as a string to the `colors` config property:
+
+```vue
+<MeldLineChart :config="{ ...config, colors: 'ocean' }" />
+```
+
+### Available Palettes
+
+| Palette      | Description                                           |
+| ------------ | ----------------------------------------------------- |
+| `default`    | Balanced palette suitable for most use cases          |
+| `vibrant`    | High-saturation colors for emphasis                   |
+| `pastel`     | Soft, muted tones for lighter designs                 |
+| `monochrome` | Shades of a single hue                                |
+| `earth`      | Warm, natural tones (browns, greens, ambers)          |
+| `ocean`      | Cool blues and teals                                  |
+| `sunset`     | Warm gradient from orange to purple                   |
+| `corporate`  | Professional, subdued palette for business dashboards |
+| `neon`       | Bright, electric colors for dark backgrounds          |
+| `accessible` | High-contrast palette optimized for color blindness   |
+
+## Custom Color Arrays
+
+For full control, pass an array of hex color strings instead of a palette name:
+
+```vue
+<script setup lang="ts">
+const config = {
+  series: [
+    { name: 'Alpha', data: [10, 20, 30] },
+    { name: 'Beta', data: [15, 25, 35] },
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  colors: ['#6366f1', '#f59e0b', '#10b981'],
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" />
+</template>
+```
+
+Colors are assigned to series in order. If there are more series than colors, the palette cycles.
+
+---
+
+## Charts Installation
+
+How to install and configure @meldui/charts-vue in your project.
+
+## Install the Package
+
+```bash
+pnpm add @meldui/charts-vue
+```
+
+> **Note:** `@meldui/charts-vue` requires `@meldui/vue` and `vue` as peer dependencies. Make sure you have the core MeldUI setup completed first — see the [main Installation guide](/docs/getting-started/installation).
+
+## Import a Chart Component
+
+Each chart has a dedicated component and a TypeScript config type:
+
+```typescript
+
+
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+
+
+
+const config: MeldLineChartConfig = {
+  series: [
+    { name: 'Sales', data: [100, 150, 200, 180, 250] },
+    { name: 'Revenue', data: [200, 280, 350, 320, 400] },
+  ],
+  xAxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+  },
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" height="400px" />
+</template>
+```
+
+## Available Components
+
+| Component          | Config Type              | Description             |
+| ------------------ | ------------------------ | ----------------------- |
+| `MeldLineChart`    | `MeldLineChartConfig`    | Line and step charts    |
+| `MeldBarChart`     | `MeldBarChartConfig`     | Vertical and horizontal |
+| `MeldAreaChart`    | `MeldAreaChartConfig`    | Filled area charts      |
+| `MeldPieChart`     | `MeldPieChartConfig`     | Pie charts              |
+| `MeldDonutChart`   | `MeldDonutChartConfig`   | Donut charts            |
+| `MeldScatterChart` | `MeldScatterChartConfig` | Scatter plots           |
+| `MeldRadarChart`   | `MeldRadarChartConfig`   | Radar/spider charts     |
+| `MeldHeatmapChart` | `MeldHeatmapChartConfig` | Heatmap grids           |
+| `MeldMixedChart`   | `MeldMixedChartConfig`   | Combined chart types    |
+
+## CSS Setup
+
+Charts inherit theme variables from your MeldUI CSS. No additional CSS imports are needed beyond what the [main Installation guide](/docs/getting-started/installation) covers. Dark mode is detected automatically.
+
+---
+
+## Charts Overview
+
+A comprehensive charting library for Vue 3, built on ECharts with MeldUI theming and dark mode support.
+
+## Overview
+
+`@meldui/charts-vue` provides 9 chart components that integrate seamlessly with MeldUI's design system. Charts automatically read your Tailwind CSS theme variables and support dark mode out of the box.
+
+### Available Chart Types
+
+| Chart                                       | Component          | Best For                                    |
+| ------------------------------------------- | ------------------ | ------------------------------------------- |
+| [Line Chart](/docs/charts/line-chart)       | `MeldLineChart`    | Trends over time, continuous data           |
+| [Bar Chart](/docs/charts/bar-chart)         | `MeldBarChart`     | Comparisons across categories               |
+| [Area Chart](/docs/charts/area-chart)       | `MeldAreaChart`    | Volume and cumulative values over time      |
+| [Pie Chart](/docs/charts/pie-chart)         | `MeldPieChart`     | Proportions of a whole                      |
+| [Donut Chart](/docs/charts/donut-chart)     | `MeldDonutChart`   | Proportions with a center metric            |
+| [Scatter Chart](/docs/charts/scatter-chart) | `MeldScatterChart` | Correlations between two variables          |
+| [Radar Chart](/docs/charts/radar-chart)     | `MeldRadarChart`   | Multi-dimensional comparisons               |
+| [Heatmap Chart](/docs/charts/heatmap-chart) | `MeldHeatmapChart` | Density and intensity across two dimensions |
+| [Mixed Chart](/docs/charts/mixed-chart)     | `MeldMixedChart`   | Combining multiple chart types              |
+
+### Installation
+
+```bash
+pnpm add @meldui/charts-vue
+```
+
+See the [Installation](/docs/charts/installation) page for full setup instructions.
+
+### Common Props
+
+All chart components accept these shared props:
+
+| Prop        | Type      | Default   | Description                           |
+| ----------- | --------- | --------- | ------------------------------------- |
+| `config`    | `object`  | required  | Chart-specific configuration object   |
+| `height`    | `string`  | `'350px'` | CSS height of the chart container     |
+| `width`     | `string`  | `'100%'`  | CSS width of the chart container      |
+| `title`     | `string`  | -         | Chart title displayed above the chart |
+| `loading`   | `boolean` | `false`   | Show a loading spinner overlay        |
+| `ariaLabel` | `string`  | -         | Accessible label for screen readers   |
+
+### Color Palettes
+
+Charts support named color palettes via the `colors` config property. Pass a palette name string or a custom array of hex colors.
+
+| Palette      | Description                                           |
+| ------------ | ----------------------------------------------------- |
+| `default`    | Balanced palette suitable for most use cases          |
+| `vibrant`    | High-saturation colors for emphasis                   |
+| `pastel`     | Soft, muted tones for lighter designs                 |
+| `monochrome` | Shades of a single hue                                |
+| `earth`      | Warm, natural tones (browns, greens, ambers)          |
+| `ocean`      | Cool blues and teals                                  |
+| `sunset`     | Warm gradient from orange to purple                   |
+| `corporate`  | Professional, subdued palette for business dashboards |
+| `neon`       | Bright, electric colors for dark backgrounds          |
+| `accessible` | High-contrast palette optimized for color blindness   |
+
+### Additional Resources
+
+- [Theme Customization](/docs/charts/theme-customization) — dark mode, CSS variables, custom colors
+- [Chart Events](/docs/charts/events) — click, hover, and selection event handling
+
+---
+
+## Donut Chart
+
+A pie chart with a hollow center, ideal for displaying a summary metric.
+
+## Usage
+
+
+
+## Config Reference
+
+| Property      | Type                                                  | Default          | Description                                                       |
+| ------------- | ----------------------------------------------------- | ---------------- | ----------------------------------------------------------------- |
+| `series`      | `{ name: string; data: number[] }[]`                  | required         | Each series represents a slice; use a single-element `data` array |
+| `legend`      | `{ show?: boolean; position?: string }`               | `{ show: true }` | Legend visibility and placement                                   |
+| `innerRadius` | `string \| number`                                    | `'55%'`          | Inner radius that creates the donut hole                          |
+| `centerLabel` | `{ show?: boolean; text?: string; subText?: string }` | -                | Content displayed in the center of the donut                      |
+
+---
+
+## Heatmap Chart
+
+Visualize density and intensity across two categorical or numeric dimensions.
+
+## Usage
+
+
+
+## Config Reference
+
+| Property     | Type                                                                       | Default  | Description                              |
+| ------------ | -------------------------------------------------------------------------- | -------- | ---------------------------------------- |
+| `series`     | `{ name: string; data: [number \| string, number \| string, number][] }[]` | required | Each data point is `[x, y, value]`       |
+| `xAxis`      | `{ categories?: string[]; type?: string }`                                 | -        | X axis labels or type                    |
+| `yAxis`      | `{ categories?: string[]; type?: string }`                                 | -        | Y axis labels or type                    |
+| `colorRange` | `{ min?: number; max?: number; colors?: string[] }`                        | -        | Color scale mapping for intensity values |
+
+---
+
+## Line Chart
+
+Display trends and continuous data with line and step interpolation.
+
+## Usage
+
+
+
+## Step Line
+
+Use `stroke.curve: 'stepline'` for step interpolation.
+
+
+
+## Config Reference
+
+| Property     | Type                                                               | Default                         | Description                        |
+| ------------ | ------------------------------------------------------------------ | ------------------------------- | ---------------------------------- |
+| `series`     | `{ name: string; data: number[] }[]`                               | required                        | Array of data series               |
+| `xAxis`      | `{ categories: string[] }`                                         | required                        | Category labels for the X axis     |
+| `stroke`     | `{ curve?: 'smooth' \| 'straight' \| 'stepline'; width?: number }` | `{ curve: 'smooth', width: 2 }` | Line interpolation and thickness   |
+| `legend`     | `{ show?: boolean; position?: string }`                            | `{ show: true }`                | Legend visibility and placement    |
+| `colors`     | `string \| string[]`                                               | `'default'`                     | Palette name or custom color array |
+| `dataLabels` | `{ enabled?: boolean }`                                            | `{ enabled: false }`            | Show values on data points         |
+| `tooltip`    | `{ enabled?: boolean; shared?: boolean }`                          | `{ enabled: true }`             | Tooltip behavior                   |
+
+---
+
+## Mixed Chart
+
+Combine multiple chart types (line, bar, area) in a single visualization.
+
+## Usage
+
+
+
+## Config Reference
+
+| Property   | Type                                                                  | Default  | Description                                    |
+| ---------- | --------------------------------------------------------------------- | -------- | ---------------------------------------------- |
+| `series`   | `{ name: string; type: 'line' \| 'bar' \| 'area'; data: number[] }[]` | required | Each series specifies its own chart type       |
+| `xAxis`    | `{ categories: string[] }`                                            | required | Category labels for the X axis                 |
+| `stacked`  | `boolean`                                                             | `false`  | Stack bar/area series                          |
+| `advanced` | `{ dualYAxis?: boolean; yAxisConfig?: object[] }`                     | -        | Advanced options including dual Y-axis support |
+
+---
+
+## Pie Chart
+
+Show proportions of a whole with a circular chart.
+
+## Usage
+
+
+
+## Config Reference
+
+| Property     | Type                                    | Default          | Description                                                       |
+| ------------ | --------------------------------------- | ---------------- | ----------------------------------------------------------------- |
+| `series`     | `{ name: string; data: number[] }[]`    | required         | Each series represents a slice; use a single-element `data` array |
+| `legend`     | `{ show?: boolean; position?: string }` | `{ show: true }` | Legend visibility and placement                                   |
+| `startAngle` | `number`                                | `0`              | Rotation angle in degrees for the first slice                     |
+| `radius`     | `string \| number`                      | `'75%'`          | Outer radius of the pie (e.g. `'60%'` or `150`)                   |
+| `showLabels` | `boolean`                               | `true`           | Display percentage or value labels on slices                      |
+
+---
+
+## Radar Chart
+
+Compare multiple dimensions on a radial grid.
+
+## Usage
+
+
+
+## Config Reference
+
+| Property   | Type                                 | Default     | Description                             |
+| ---------- | ------------------------------------ | ----------- | --------------------------------------- |
+| `series`   | `{ name: string; data: number[] }[]` | required    | Values for each indicator per series    |
+| `xAxis`    | `{ categories: string[] }`           | required    | Category names used as radar indicators |
+| `yAxis`    | `{ max?: number }`                   | -           | Maximum value for the radial axis       |
+| `shape`    | `'polygon' \| 'circle'`              | `'polygon'` | Shape of the radar grid lines           |
+| `fillArea` | `boolean`                            | `true`      | Fill the area enclosed by each series   |
+
+---
+
+## Scatter Chart
+
+Plot correlations between two numeric variables.
+
+## Usage
+
+
+
+## Config Reference
+
+| Property     | Type                                                               | Default               | Description                              |
+| ------------ | ------------------------------------------------------------------ | --------------------- | ---------------------------------------- |
+| `series`     | `{ name: string; data: { x: number; y: number }[] }[]`             | required              | Each data point is an `{ x, y }` object  |
+| `xAxis`      | `{ type?: 'numeric'; title?: string; min?: number; max?: number }` | `{ type: 'numeric' }` | Numeric X axis configuration             |
+| `yAxis`      | `{ title?: string; min?: number; max?: number }`                   | -                     | Y axis configuration                     |
+| `pointSize`  | `number`                                                           | `6`                   | Diameter of each scatter point in pixels |
+| `pointShape` | `'circle' \| 'rect' \| 'triangle' \| 'diamond'`                    | `'circle'`            | Shape of each scatter point              |
+
+---
+
+## Accordion
+
+A vertically stacked set of interactive headings that reveal or hide sections of content.
+
+## Usage
+
+
+
+## Multiple & Disabled
+
+Use `type="multiple"` to allow several items open at once. Individual items can be `disabled`.
+
+
+
+## Sub-components
+
+| Component          | Description                                                                 |
+| ------------------ | --------------------------------------------------------------------------- |
+| `Accordion`        | Root. Props: `type` ('single' \| 'multiple'), `collapsible`, `defaultValue` |
+| `AccordionItem`    | Individual section. Props: `value` (required), `disabled`                   |
+| `AccordionTrigger` | Clickable header. Slot: `icon` for custom expand indicator                  |
+| `AccordionContent` | Collapsible content area                                                    |
+
+---
+
+## Alert
+
+Displays a callout message for important information with color variants.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant of the alert. |
+
+## Usage
+
+
+
+## Variants
+
+
+
+## Sub-components
+
+| Component          | Description                      |
+| ------------------ | -------------------------------- |
+| `Alert`            | Root container. Props: `variant` |
+| `AlertTitle`       | Bold title text                  |
+| `AlertDescription` | Description text                 |
+
+---
+
+## Alert Dialog
+
+A modal confirmation dialog that interrupts the user for important decisions.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component                | Description                        |
+| ------------------------ | ---------------------------------- |
+| `AlertDialog`            | Root. Props: `open`, `defaultOpen` |
+| `AlertDialogTrigger`     | Opens the dialog                   |
+| `AlertDialogContent`     | Modal content with overlay         |
+| `AlertDialogHeader`      | Header layout                      |
+| `AlertDialogTitle`       | Title (required for accessibility) |
+| `AlertDialogDescription` | Description text                   |
+| `AlertDialogFooter`      | Footer for actions                 |
+| `AlertDialogAction`      | Confirm action button              |
+| `AlertDialogCancel`      | Cancel button                      |
+
+---
+
+## Aspect Ratio
+
+Displays content within a desired aspect ratio.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `ratio` | `number` | `1` | 'The desired aspect ratio (e.g., 16/9 for widescreen).' |
+
+## Usage
+
+
+
+## Different Ratios
+
+Pass any number as the `ratio` prop — common values include `1` (square), `4/3`, and `21/9`.
+
+---
+
+## Avatar
+
+An image element with a fallback for representing the user.
+
+## Usage
+
+
+
+## Sizes
+
+Control avatar size with Tailwind size classes (`size-6`, `size-8`, `size-14`, `size-20`).
+
+
+
+## Sub-components
+
+| Component        | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `Avatar`         | Root container with size styling                          |
+| `AvatarImage`    | The image element. Props: `src`, `alt`                    |
+| `AvatarFallback` | Fallback shown when image fails to load. Props: `delayMs` |
+
+---
+
+## Badge
+
+A small label for status indicators, categories, or counts.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'secondary' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant. |
+| `shape` | `'pill' | 'tag'` | `'pill'` | The shape style. |
+| `outline` | `boolean` | `false` | Whether to use outline style. |
+
+## Usage
+
+
+
+## Shapes
+
+
+
+## Outline Variants
+
+Use the `outline` prop for a bordered style across all color variants.
+
+---
+
+## Breadcrumb
+
+Navigation breadcrumbs showing the current page location in a hierarchy.
+
+## Usage
+
+
+
+## With Ellipsis
+
+Use `BreadcrumbEllipsis` to indicate collapsed intermediate items.
+
+
+
+## Sub-components
+
+| Component             | Description                                |
+| --------------------- | ------------------------------------------ |
+| `Breadcrumb`          | Root `<nav>` element                       |
+| `BreadcrumbList`      | Ordered list of breadcrumb items           |
+| `BreadcrumbItem`      | Individual breadcrumb                      |
+| `BreadcrumbLink`      | Clickable link. Props: `href`, `asChild`   |
+| `BreadcrumbPage`      | Current page (non-clickable)               |
+| `BreadcrumbSeparator` | Separator between items (default: chevron) |
+| `BreadcrumbEllipsis`  | Collapsed items indicator                  |
+
+---
+
+## Button
+
+Displays a button or a component that looks like a button.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'outline' | 'secondary' | 'ghost' | 'link'` | `'default'` | The visual style variant of the button. |
+| `size` | `'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg'` | `'default'` | The size of the button. |
+| `as` | `string` | `'button'` | The element or component to render as. |
+| `asChild` | `boolean` | `false` | Render as child element, merging props onto the child. |
+
+### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | Button content (text, icons, etc.) |
+
+## Variants
+
+
+
+## Sizes
+
+
+
+## With Icon
+
+---
+
+## Button Group
+
+Groups multiple buttons together with consistent spacing and visual connection.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'horizontal' | 'vertical'` | `'horizontal'` | The layout direction of the button group. |
+
+## Usage
+
+
+
+## Vertical
+
+
+
+## Sub-components
+
+| Component              | Description                      |
+| ---------------------- | -------------------------------- |
+| `ButtonGroup`          | Root container                   |
+| `ButtonGroupSeparator` | Visual separator between buttons |
+| `ButtonGroupText`      | Text element within the group    |
+
+---
+
+## Calendar
+
+A date picker calendar for selecting individual dates.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `layout` | `'month-and-year' | 'month-only' | 'year-only'` | - | The calendar picker layout mode. |
+
+## Usage
+
+
+
+## Month & Year Picker
+
+Use `layout="month-and-year"` for a compact month/year selection mode.
+
+
+
+## Sub-components
+
+Built on reka-ui CalendarRoot. All sub-components are exported for custom layouts: `CalendarHeader`, `CalendarHeading`, `CalendarGrid`, `CalendarGridHead`, `CalendarGridBody`, `CalendarGridRow`, `CalendarHeadCell`, `CalendarCell`, `CalendarCellTrigger`, `CalendarPrevButton`, `CalendarNextButton`.
+
+---
+
+## Card
+
+A container for grouping related content with header, body, and footer sections.
+
+## Usage
+
+
+
+## With Form
+
+Cards can contain form elements like inputs and selects.
+
+
+
+## Sub-components
+
+| Component         | Description                  |
+| ----------------- | ---------------------------- |
+| `Card`            | Root container               |
+| `CardHeader`      | Header section               |
+| `CardTitle`       | Card title                   |
+| `CardDescription` | Subtitle or description      |
+| `CardContent`     | Main content area            |
+| `CardFooter`      | Footer with actions          |
+| `CardAction`      | Action element in the header |
+
+---
+
+## Carousel
+
+A carousel component for cycling through elements with navigation controls.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'horizontal' | 'vertical'` | `'horizontal'` | The scroll direction of the carousel. |
+| `opts` | `EmblaCarouselVueOptions` | - | Embla Carousel options for fine-tuning behavior. |
+| `plugins` | `EmblaCarouselVuePlugin[]` | - | Embla Carousel plugins for extended functionality. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `init-api` | `CarouselApi` | Emitted when the carousel API is initialized. |
+
+## Usage
+
+
+
+## Vertical
+
+
+
+## Sub-components
+
+| Component          | Description                               |
+| ------------------ | ----------------------------------------- |
+| `Carousel`         | Root container with scroll state          |
+| `CarouselContent`  | Scrollable track for items                |
+| `CarouselItem`     | Individual slide                          |
+| `CarouselPrevious` | Previous button. Props: `variant`, `size` |
+| `CarouselNext`     | Next button. Props: `variant`, `size`     |
+
+---
+
+## Checkbox
+
+A control that allows the user to toggle between checked and unchecked states.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `boolean` | - | The checked state. Use with v-model. |
+| `defaultValue` | `boolean` | - | The default checked state. |
+| `disabled` | `boolean` | - | Whether the checkbox is disabled. |
+| `required` | `boolean` | - | Whether the checkbox is required. |
+| `name` | `string` | - | The name attribute for form submission. |
+| `value` | `string` | - | The value attribute for form submission. |
+
+## Usage
+
+
+
+## With Description
+
+Checkboxes with labels, descriptions, and disabled state.
+
+---
+
+## Circular Progress
+
+A circular progress indicator with customizable size, thickness, and color variants.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | `0` | The progress value. |
+| `min` | `number` | `0` | Minimum value. |
+| `max` | `number` | `100` | Maximum value. |
+| `size` | `number` | `48` | The diameter in pixels. |
+| `thickness` | `number` | `4` | The stroke thickness in pixels. |
+| `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant. |
+
+## Usage
+
+
+
+## Sub-components
+
+| Component                   | Description         |
+| --------------------------- | ------------------- |
+| `CircularProgress`          | Root SVG container  |
+| `CircularProgressTrack`     | Background circle   |
+| `CircularProgressRange`     | Filled progress arc |
+| `CircularProgressIndicator` | Animated indicator  |
+| `CircularProgressLabel`     | Center text label   |
+
+---
+
+## Collapsible
+
+An interactive component that expands and collapses content.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component            | Description                                                           |
+| -------------------- | --------------------------------------------------------------------- |
+| `Collapsible`        | Root with open/closed state. Props: `open`, `defaultOpen`, `disabled` |
+| `CollapsibleTrigger` | Toggle button                                                         |
+| `CollapsibleContent` | Animated content area                                                 |
+
+---
+
+## Combobox
+
+An autocomplete input with a filterable dropdown list for selecting values.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `T | Array<T>` | - | The selected value. Use with v-model. |
+| `multiple` | `boolean` | - | Whether multiple items can be selected. |
+| `open` | `boolean` | - | Controlled open state. Use with v-model:open. |
+| `disabled` | `boolean` | `false` | Whether the combobox is disabled. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `T` | Emitted when the selected value changes. |
+| `update:open` | `boolean` | Emitted when the open state changes. |
+
+## Usage
+
+
+
+## Sub-components
+
+| Component               | Description                                                 |
+| ----------------------- | ----------------------------------------------------------- |
+| `Combobox`              | Root container with state management                        |
+| `ComboboxAnchor`        | Positions the dropdown relative to the input                |
+| `ComboboxInput`         | Filterable text input. Props: `displayValue`, `placeholder` |
+| `ComboboxTrigger`       | Toggle button to open/close                                 |
+| `ComboboxList`          | Dropdown list. Props: `position`, `align`, `sideOffset`     |
+| `ComboboxItem`          | Selectable item. Props: `value` (required), `disabled`      |
+| `ComboboxItemIndicator` | Checkmark for selected items                                |
+| `ComboboxGroup`         | Group of items. Props: `heading`                            |
+| `ComboboxEmpty`         | Empty state when no items match                             |
+| `ComboboxSeparator`     | Visual separator                                            |
+| `ComboboxCancel`        | Clear selection button                                      |
+
+---
+
+## Command
+
+A command palette for searching and executing actions, similar to Cmd+K interfaces.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string` | `''` | The current search value. Use with v-model. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `string` | Emitted when the search value changes. |
+| `highlight` | `'{ ref: HTMLElement, value: string } | undefined'` | Emitted when the highlighted element changes. |
+
+## Usage
+
+
+
+## Command Dialog
+
+Use `CommandDialog` to render the command palette in a modal dialog:
+
+
+
+## Sub-components
+
+| Component          | Description                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| `Command`          | Root container                                               |
+| `CommandDialog`    | Command palette in a modal. Props: `title`, `description`    |
+| `CommandInput`     | Search input with icon                                       |
+| `CommandList`      | Scrollable list container                                    |
+| `CommandGroup`     | Group of items. Props: `heading`                             |
+| `CommandItem`      | Selectable item. Props: `value`, `disabled`. Event: `select` |
+| `CommandEmpty`     | Empty state when no results match                            |
+| `CommandSeparator` | Visual separator between groups                              |
+| `CommandShortcut`  | Keyboard shortcut display                                    |
+
+---
+
+## Context Menu
+
+A right-click context menu with items, groups, and sub-menus.
+
+## Usage
+
+
+
+## Sub-components
+
+Same structure as [DropdownMenu](/docs/components/dropdown-menu) — supports `ContextMenuCheckboxItem`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`, `ContextMenuLabel`, `ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubTrigger`, and `ContextMenuSubContent`.
+
+---
+
+## Dialog
+
+A modal dialog that overlays content and requires user interaction.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component             | Description                                                              |
+| --------------------- | ------------------------------------------------------------------------ |
+| `Dialog`              | Root state container. Props: `open`, `defaultOpen`. Event: `update:open` |
+| `DialogTrigger`       | Opens the dialog                                                         |
+| `DialogContent`       | Modal content with overlay. Props: `showCloseButton`                     |
+| `DialogScrollContent` | Scrollable content variant                                               |
+| `DialogHeader`        | Header layout                                                            |
+| `DialogTitle`         | Dialog title (required for accessibility)                                |
+| `DialogDescription`   | Dialog description                                                       |
+| `DialogFooter`        | Footer layout for actions                                                |
+| `DialogClose`         | Closes the dialog                                                        |
+| `DialogOverlay`       | Background overlay                                                       |
+
+---
+
+## Dot
+
+A small status indicator dot with color variants and animation effects.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'primary' | 'success' | 'warning' | 'destructive' | 'info' | 'neutral'` | `'primary'` | The color variant. |
+| `size` | `'xs' | 'sm' | 'md' | 'lg' | 'xl'` | `'md'` | The dot size. |
+| `effect` | `'pulse' | 'ping'` | - | Animation effect. |
+
+## Usage
+
+---
+
+## Drawer
+
+A touch-friendly drawer component that slides from the bottom of the screen.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component           | Description                                                             |
+| ------------------- | ----------------------------------------------------------------------- |
+| `Drawer`            | Root. Props: `shouldScaleBackground` (default: true). Built on vaul-vue |
+| `DrawerTrigger`     | Opens the drawer                                                        |
+| `DrawerContent`     | Drawer panel with drag handle                                           |
+| `DrawerHeader`      | Header layout                                                           |
+| `DrawerTitle`       | Title                                                                   |
+| `DrawerDescription` | Description                                                             |
+| `DrawerFooter`      | Footer layout                                                           |
+| `DrawerClose`       | Close button                                                            |
+| `DrawerOverlay`     | Background overlay                                                      |
+
+---
+
+## Dropdown Menu
+
+A menu that appears on trigger click with items, groups, checkboxes, and nested sub-menus.
+
+## Usage
+
+
+
+## Checkbox Items
+
+Use `DropdownMenuCheckboxItem` for toggleable options.
+
+
+
+## Sub-components
+
+| Component                  | Description                                          |
+| -------------------------- | ---------------------------------------------------- |
+| `DropdownMenu`             | Root with open state                                 |
+| `DropdownMenuTrigger`      | Element that opens the menu                          |
+| `DropdownMenuContent`      | Menu content container. Props: `align`, `sideOffset` |
+| `DropdownMenuItem`         | Menu item. Props: `disabled`, `textValue`            |
+| `DropdownMenuCheckboxItem` | Item with checkbox. Props: `checked`                 |
+| `DropdownMenuRadioGroup`   | Radio group container. Props: `modelValue`           |
+| `DropdownMenuRadioItem`    | Radio option. Props: `value`                         |
+| `DropdownMenuLabel`        | Group label. Props: `inset`                          |
+| `DropdownMenuSeparator`    | Visual divider                                       |
+| `DropdownMenuShortcut`     | Keyboard shortcut display                            |
+| `DropdownMenuGroup`        | Groups items semantically                            |
+| `DropdownMenuSub`          | Sub-menu root                                        |
+| `DropdownMenuSubTrigger`   | Sub-menu trigger                                     |
+| `DropdownMenuSubContent`   | Sub-menu content                                     |
+
+---
+
+## Empty
+
+An empty state placeholder for when there is no content to display.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component          | Description                                                |
+| ------------------ | ---------------------------------------------------------- |
+| `Empty`            | Root container                                             |
+| `EmptyHeader`      | Top section                                                |
+| `EmptyMedia`       | Icon or image area. Props: `variant` ('default' \| 'icon') |
+| `EmptyContent`     | Text content area                                          |
+| `EmptyTitle`       | Title text                                                 |
+| `EmptyDescription` | Description text                                           |
+
+---
+
+## Field
+
+A form field layout component with label, content, description, and error display.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'vertical' | 'horizontal' | 'responsive'` | `'vertical'` | The layout direction of the field. |
+
+## Usage
+
+
+
+## With Error
+
+
+
+## Horizontal Layout
+
+
+
+## Sub-components
+
+| Component          | Description                                                 |
+| ------------------ | ----------------------------------------------------------- |
+| `Field`            | Root container. Props: `orientation`                        |
+| `FieldLabel`       | Label text                                                  |
+| `FieldContent`     | Input wrapper                                               |
+| `FieldDescription` | Help text below the input                                   |
+| `FieldError`       | Error message display. Props: `errors`                      |
+| `FieldGroup`       | Groups multiple fields                                      |
+| `FieldSet`         | Fieldset wrapper                                            |
+| `FieldLegend`      | Legend for fieldset. Props: `variant` ('legend' \| 'label') |
+| `FieldTitle`       | Section title                                               |
+| `FieldSeparator`   | Visual separator between fields                             |
+
+---
+
+## File Upload
+
+A file upload component with drag and drop, previews, and progress tracking.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `File[]` | - | The list of selected files. Use with v-model. |
+| `accept` | `string` | - | Accepted MIME types or file extensions. |
+| `maxFiles` | `number` | `Infinity` | Maximum number of files allowed. |
+| `maxSize` | `number` | - | Maximum file size in bytes. |
+| `multiple` | `boolean` | `true` | Whether multiple files can be selected. |
+| `disabled` | `boolean` | `false` | Whether the upload is disabled. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `'File[]'` | Emitted when files change. |
+| `file-accept` | `File` | Emitted when a file passes validation. |
+| `file-reject` | `'{ file: File, errors: FileError[] }'` | Emitted when a file fails validation. |
+
+## Usage
+
+
+
+## Sub-components
+
+| Component                | Description                                                           |
+| ------------------------ | --------------------------------------------------------------------- |
+| `FileUpload`             | Root with file state management                                       |
+| `FileUploadDropzone`     | Drag and drop area. Slot props: `isDragging`, `isDisabled`            |
+| `FileUploadTrigger`      | Button to open file picker                                            |
+| `FileUploadList`         | Container for file items                                              |
+| `FileUploadItem`         | Individual file display. Props: `file`, `progress`, `status`, `error` |
+| `FileUploadItemName`     | File name display                                                     |
+| `FileUploadItemSize`     | File size display. Props: `precision`                                 |
+| `FileUploadItemPreview`  | Image preview                                                         |
+| `FileUploadItemProgress` | Upload progress bar. Props: `variant`                                 |
+| `FileUploadItemDelete`   | Remove file button                                                    |
+| `FileUploadClear`        | Clear all files button                                                |
+
+---
+
+## Form
+
+Form components with vee-validate integration for validation and error handling.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component         | Description                                               |
+| ----------------- | --------------------------------------------------------- |
+| `Form`            | Re-export of vee-validate's Form                          |
+| `FormField`       | Re-export of vee-validate's Field. Provides field context |
+| `FormFieldArray`  | Re-export of vee-validate's FieldArray                    |
+| `FormItem`        | Wrapper for a single form field                           |
+| `FormLabel`       | Label with error state styling                            |
+| `FormControl`     | Wraps the input with ARIA attributes                      |
+| `FormDescription` | Help text for the field                                   |
+| `FormMessage`     | Validation error message (auto-populated by vee-validate) |
+
+## Composable
+
+`useFormField()` — provides access to field error state, IDs, and name within a FormItem context.
+
+---
+
+## Hover Card
+
+A rich content card that appears when hovering over a trigger element.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component          | Description                                        |
+| ------------------ | -------------------------------------------------- |
+| `HoverCard`        | Root. Props: `openDelay`, `closeDelay`             |
+| `HoverCardTrigger` | Trigger element                                    |
+| `HoverCardContent` | Card content. Props: `side`, `sideOffset`, `align` |
+
+---
+
+## Input
+
+A text input field for capturing user input.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string | number` | - | The input value. Use with v-model. |
+| `defaultValue` | `string | number` | - | The default value for uncontrolled usage. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `string | number` | Emitted when the input value changes. |
+
+## Usage
+
+
+
+## With Label
+
+
+
+## Disabled
+
+---
+
+## Input Group
+
+Groups an input with addons, buttons, and text elements.
+
+## Usage
+
+
+
+## With Button
+
+
+
+## Sub-components
+
+| Component            | Description                                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| `InputGroup`         | Root container                                                                                   |
+| `InputGroupAddon`    | Icon/text addon. Props: `align` ('inline-start' \| 'inline-end' \| 'block-start' \| 'block-end') |
+| `InputGroupButton`   | Action button. Props: `variant`, `size`                                                          |
+| `InputGroupInput`    | The input element                                                                                |
+| `InputGroupText`     | Plain text element                                                                               |
+| `InputGroupTextarea` | Textarea variant                                                                                 |
+
+---
+
+## Input OTP
+
+A one-time password input with individual character slots.
+
+## Usage
+
+
+
+## Digits Only
+
+Use the `pattern` prop to restrict input to digits only.
+
+
+
+## Sub-components
+
+| Component           | Description                                          |
+| ------------------- | ---------------------------------------------------- |
+| `InputOTP`          | Root with OTP logic (from vue-input-otp)             |
+| `InputOTPGroup`     | Visual grouping of slots                             |
+| `InputOTPSlot`      | Individual character slot. Props: `index` (required) |
+| `InputOTPSeparator` | Dash separator between groups                        |
+
+---
+
+## Item
+
+A flexible list item component for displaying structured content with media, text, and actions.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'outline' | 'muted'` | `'default'` | The visual style variant. |
+| `size` | `'default' | 'sm'` | `'default'` | The size of the item. |
+| `as` | `string` | `'div'` | The element to render as. |
+| `asChild` | `boolean` | - | Render as child element. |
+
+## Usage
+
+
+
+## Sub-components
+
+| Component         | Description                                                        |
+| ----------------- | ------------------------------------------------------------------ |
+| `Item`            | Root container. Props: `variant`, `size`, `as`, `asChild`          |
+| `ItemGroup`       | Groups multiple items                                              |
+| `ItemHeader`      | Header section                                                     |
+| `ItemMedia`       | Icon/image area. Props: `variant` ('default' \| 'icon' \| 'image') |
+| `ItemContent`     | Text content area                                                  |
+| `ItemTitle`       | Title text                                                         |
+| `ItemDescription` | Description text                                                   |
+| `ItemFooter`      | Footer section                                                     |
+| `ItemActions`     | Action buttons area                                                |
+| `ItemSeparator`   | Visual separator between items                                     |
+
+---
+
+## Kbd
+
+Displays keyboard key indicators for shortcuts and key combinations.
+
+## Usage
+
+
+
+## Shortcut List
+
+Kbd elements work well inline with text for displaying keyboard shortcuts.
+
+
+
+## Sub-components
+
+| Component  | Description            |
+| ---------- | ---------------------- |
+| `Kbd`      | Individual key display |
+| `KbdGroup` | Groups multiple keys   |
+
+---
+
+## Label
+
+An accessible label associated with form controls.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `for` | `string` | - | The id of the form element the label is associated with. |
+
+## Usage
+
+---
+
+## Menubar
+
+A horizontal menu bar with dropdown menus, similar to desktop application menus.
+
+## Usage
+
+
+
+## Sub-components
+
+Same structure as [DropdownMenu](/docs/components/dropdown-menu) but namespaced with `Menubar` prefix. Includes `MenubarCheckboxItem`, `MenubarRadioGroup`, `MenubarRadioItem`, `MenubarSub`, `MenubarSubTrigger`, `MenubarSubContent`.
+
+---
+
+## Native Select
+
+A styled native HTML select element.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `AcceptableValue | AcceptableValue[]` | - | The selected value. Use with v-model. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `AcceptableValue` | Emitted when the selection changes. |
+
+## Usage
+
+
+
+## With Option Groups
+
+Use `NativeSelectOptGroup` to organize options into labeled groups.
+
+
+
+## Sub-components
+
+| Component              | Description               |
+| ---------------------- | ------------------------- |
+| `NativeSelect`         | Styled `<select>` wrapper |
+| `NativeSelectOption`   | `<option>` element        |
+| `NativeSelectOptGroup` | `<optgroup>` element      |
+
+---
+
+## Navigation Menu
+
+A complex navigation menu with rich content areas, suitable for site-wide navigation.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `viewport` | `boolean` | `true` | Whether to render the viewport container for content panels. |
+
+## Usage
+
+
+
+## Sub-components
+
+| Component                 | Description                       |
+| ------------------------- | --------------------------------- |
+| `NavigationMenu`          | Root container. Props: `viewport` |
+| `NavigationMenuList`      | List of menu items                |
+| `NavigationMenuItem`      | Individual menu item              |
+| `NavigationMenuTrigger`   | Dropdown trigger button           |
+| `NavigationMenuContent`   | Dropdown content panel            |
+| `NavigationMenuLink`      | Navigation link                   |
+| `NavigationMenuIndicator` | Active indicator bar              |
+| `NavigationMenuViewport`  | Content viewport container        |
+
+---
+
+## Number Field
+
+A numeric input with increment and decrement buttons.
+
+## Usage
+
+
+
+## Decimal Step
+
+Use `step` for decimal increments and `formatOptions` for display formatting.
+
+
+
+## Sub-components
+
+| Component              | Description                                               |
+| ---------------------- | --------------------------------------------------------- |
+| `NumberField`          | Root with value state. Props from reka-ui NumberFieldRoot |
+| `NumberFieldContent`   | Layout wrapper for input and buttons                      |
+| `NumberFieldInput`     | The numeric input element                                 |
+| `NumberFieldIncrement` | Increment button (default: plus icon)                     |
+| `NumberFieldDecrement` | Decrement button (default: minus icon)                    |
+
+---
+
+## Pagination
+
+Navigation controls for paginated content with page numbers, previous/next, and first/last buttons.
+
+## Usage
+
+
+
+## Simple (Previous / Next)
+
+A compact pagination with `siblingCount={0}` and no first/last buttons.
+
+
+
+## Sub-components
+
+| Component            | Description                                                              |
+| -------------------- | ------------------------------------------------------------------------ |
+| `Pagination`         | Root. Props: `total`, `defaultPage`, `page`, `siblingCount`, `showEdges` |
+| `PaginationContent`  | Layout container                                                         |
+| `PaginationItem`     | Item wrapper                                                             |
+| `PaginationLink`     | Page number link                                                         |
+| `PaginationPrevious` | Previous page button                                                     |
+| `PaginationNext`     | Next page button                                                         |
+| `PaginationFirst`    | First page button                                                        |
+| `PaginationLast`     | Last page button                                                         |
+| `PaginationEllipsis` | Collapsed page indicator                                                 |
+
+---
+
+## Pin Input
+
+A PIN code input with individual boxes for each character.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `otp` | `boolean` | `true` | Whether to use OTP mode (one-time password autocomplete). |
+
+## Usage
+
+
+
+## Numeric
+
+Use `type="number"` to restrict to digits. The `placeholder` prop customizes empty slot display.
+
+
+
+## Sub-components
+
+| Component           | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `PinInput`          | Root with value state. Extends reka-ui PinInputRoot |
+| `PinInputGroup`     | Visual container                                    |
+| `PinInputSlot`      | Individual input slot. Props: `index` (required)    |
+| `PinInputSeparator` | Separator between slots                             |
+
+---
+
+## Popover
+
+A floating content panel that appears on trigger click.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component        | Description                                            |
+| ---------------- | ------------------------------------------------------ |
+| `Popover`        | Root state container. Props: `open`, `defaultOpen`     |
+| `PopoverTrigger` | Element that opens the popover                         |
+| `PopoverContent` | Floating content. Props: `align`, `side`, `sideOffset` |
+| `PopoverAnchor`  | Custom anchor element                                  |
+
+---
+
+## Progress
+
+A horizontal progress bar indicating completion status.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `number` | `0` | The progress value (0-100). |
+| `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant. |
+| `max` | `number` | `100` | The maximum value. |
+
+## Usage
+
+
+
+## Variants
+
+---
+
+## Radio Group
+
+A set of radio buttons where only one can be selected at a time.
+
+## Usage
+
+
+
+## Horizontal
+
+Use `orientation="horizontal"` for inline layout.
+
+
+
+## Sub-components
+
+| Component        | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| `RadioGroup`     | Root container with value state                                |
+| `RadioGroupItem` | Individual radio option. Props: `value` (required), `disabled` |
+
+---
+
+## Range Calendar
+
+A calendar for selecting date ranges with start and end dates.
+
+## Usage
+
+
+
+## Two Month View
+
+Use `:number-of-months="2"` to display two months side by side.
+
+
+
+Same sub-component structure as [Calendar](/docs/components/calendar) but with `RangeCalendar` prefix.
+
+---
+
+## Resizable
+
+Resizable panel groups with draggable handles for flexible layouts.
+
+## Usage
+
+
+
+## Vertical
+
+Use `direction="vertical"` for vertically stacked panels.
+
+
+
+## Three Panels with Min Size
+
+Panels support `minSize` and `maxSize` constraints.
+
+
+
+## Sub-components
+
+| Component             | Description                                                                |
+| --------------------- | -------------------------------------------------------------------------- |
+| `ResizablePanelGroup` | Root container. Props: `direction` ('horizontal' \| 'vertical')            |
+| `ResizablePanel`      | Resizable panel. Props: `defaultSize`, `minSize`, `maxSize`, `collapsible` |
+| `ResizableHandle`     | Drag handle between panels. Props: `withHandle` (shows grip icon)          |
+
+---
+
+## Scroll Area
+
+A custom scrollable area with styled scrollbars.
+
+## Usage
+
+
+
+## Horizontal Scroll
+
+Use `ScrollBar` with `orientation="horizontal"` for horizontal scrolling.
+
+
+
+## Sub-components
+
+| Component    | Description                      |
+| ------------ | -------------------------------- |
+| `ScrollArea` | Root scrollable container        |
+| `ScrollBar`  | Custom scrollbar track and thumb |
+
+---
+
+## Select
+
+A custom select component with keyboard navigation and grouping support.
+
+## Usage
+
+
+
+## With Groups
+
+
+
+## Sub-components
+
+| Component         | Description                                       |
+| ----------------- | ------------------------------------------------- |
+| `Select`          | Root with state management                        |
+| `SelectTrigger`   | Trigger button. Props: `size` ('sm' \| 'default') |
+| `SelectContent`   | Dropdown content. Props: `position`               |
+| `SelectItem`      | Selectable option. Props: `value`, `disabled`     |
+| `SelectValue`     | Displays the selected value. Props: `placeholder` |
+| `SelectGroup`     | Groups items together                             |
+| `SelectLabel`     | Group label                                       |
+| `SelectSeparator` | Visual separator                                  |
+
+---
+
+## Separator
+
+A visual divider between content sections.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'horizontal' | 'vertical'` | `'horizontal'` | The direction of the separator. |
+| `decorative` | `boolean` | `true` | Whether the separator is purely decorative (no semantic meaning). |
+
+## Usage
+
+
+
+## Vertical
+
+---
+
+## Sheet
+
+A panel that slides in from the edge of the screen.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `side` | `'top' | 'right' | 'bottom' | 'left'` | `'right'` | The edge the sheet slides from (set on SheetContent). |
+
+## Usage
+
+
+
+## Side Variants
+
+Use the `side` prop on `SheetContent` to control which edge the sheet slides from.
+
+
+
+## Sub-components
+
+| Component          | Description                                                           |
+| ------------------ | --------------------------------------------------------------------- |
+| `Sheet`            | Root state container                                                  |
+| `SheetTrigger`     | Opens the sheet                                                       |
+| `SheetContent`     | Sliding panel. Props: `side` ('top' \| 'right' \| 'bottom' \| 'left') |
+| `SheetHeader`      | Header layout                                                         |
+| `SheetTitle`       | Title                                                                 |
+| `SheetDescription` | Description                                                           |
+| `SheetFooter`      | Footer layout                                                         |
+| `SheetClose`       | Close button                                                          |
+
+---
+
+## Sidebar
+
+A complex sidebar navigation component with collapsible sections, menus, and responsive behavior.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `side` | `'left' | 'right'` | `'left'` | Which side the sidebar appears on. |
+| `variant` | `'sidebar' | 'floating' | 'inset'` | `'sidebar'` | The visual style variant. |
+| `collapsible` | `'offcanvas' | 'icon' | 'none'` | `'offcanvas'` | How the sidebar collapses. |
+
+## Usage
+
+
+
+## Complex Example
+
+A full sidebar with collapsible project groups, nested sub-menus (`SidebarMenuSub`), badge counts (`SidebarMenuBadge`), header, footer, and a toggle trigger. Uses `Collapsible` to expand/collapse groups with a chevron indicator.
+
+
+
+## Sub-components
+
+| Component              | Description                                                             |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `SidebarProvider`      | Root state provider. Props: `defaultOpen`, `open`. Event: `update:open` |
+| `Sidebar`              | Main sidebar container. Props: `side`, `variant`, `collapsible`         |
+| `SidebarContent`       | Scrollable content area                                                 |
+| `SidebarHeader`        | Top section                                                             |
+| `SidebarFooter`        | Bottom section                                                          |
+| `SidebarGroup`         | Section grouping                                                        |
+| `SidebarGroupLabel`    | Group heading                                                           |
+| `SidebarGroupContent`  | Group content                                                           |
+| `SidebarGroupAction`   | Action button in group header                                           |
+| `SidebarMenu`          | Menu container                                                          |
+| `SidebarMenuItem`      | Menu item wrapper                                                       |
+| `SidebarMenuButton`    | Clickable menu button. Props: `variant`, `size`, `tooltip`              |
+| `SidebarMenuSub`       | Nested sub-menu                                                         |
+| `SidebarMenuSubItem`   | Sub-menu item                                                           |
+| `SidebarMenuSubButton` | Sub-menu button                                                         |
+| `SidebarMenuAction`    | Action within a menu item                                               |
+| `SidebarMenuBadge`     | Badge indicator                                                         |
+| `SidebarMenuSkeleton`  | Loading skeleton                                                        |
+| `SidebarTrigger`       | Toggle button                                                           |
+| `SidebarRail`          | Slim rail for collapsed state                                           |
+| `SidebarInset`         | Main content area next to sidebar                                       |
+| `SidebarInput`         | Search input                                                            |
+| `SidebarSeparator`     | Visual separator                                                        |
+
+## Composable
+
+`useSidebar()` — returns `{ state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar }`.
+
+---
+
+## Skeleton
+
+A placeholder loading animation for content that is still loading.
+
+## Usage
+
+---
+
+## Slider
+
+A range slider for selecting numeric values with color variants.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `number[]` | - | The slider value(s). Use with v-model. |
+| `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant. |
+| `min` | `number` | `0` | Minimum value. |
+| `max` | `number` | `100` | Maximum value. |
+| `step` | `number` | `1` | Step increment. |
+| `disabled` | `boolean` | - | Whether the slider is disabled. |
+
+## Usage
+
+
+
+## Range Slider
+
+
+
+## Variants
+
+Color variants for different contexts.
+
+---
+
+## Sonner
+
+Toast notification system for success, error, and informational messages.
+
+## Setup
+
+Add the `Toaster` component once in your app root:
+
+```vue
+<script setup>
+
+</script>
+
+<template>
+  <RouterView />
+  <Toaster position="bottom-right" />
+</template>
+```
+
+## Usage
+
+
+
+## Exports
+
+| Export         | Description                                                                      |
+| -------------- | -------------------------------------------------------------------------------- |
+| `Toaster`      | Toast container component. Props: `position`, `richColors`, `expand`, `duration` |
+| `toast`        | Toast function with `.success()`, `.error()`, `.warning()`, `.info()` methods    |
+| `useVueSonner` | Composable for programmatic control                                              |
+
+---
+
+## Spinner
+
+An animated loading spinner indicator.
+
+## Usage
+
+---
+
+## Stepper
+
+A step-by-step progress indicator for multi-step workflows.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component            | Description                              |
+| -------------------- | ---------------------------------------- |
+| `Stepper`            | Root. Props from reka-ui StepperRoot     |
+| `StepperItem`        | Step container. Props: `step` (required) |
+| `StepperTrigger`     | Clickable step header                    |
+| `StepperIndicator`   | Step number/icon display                 |
+| `StepperTitle`       | Step title                               |
+| `StepperDescription` | Step description                         |
+| `StepperSeparator`   | Connector line between steps             |
+
+---
+
+## Switch
+
+A toggle switch control for boolean values with color variants.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `boolean` | - | The switch state. Use with v-model. |
+| `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant when checked. |
+| `disabled` | `boolean` | - | Whether the switch is disabled. |
+
+## Usage
+
+
+
+## Variants
+
+---
+
+## Table
+
+A semantic HTML table with consistent styling for displaying tabular data.
+
+## Usage
+
+
+
+## With Footer
+
+Use `TableFooter` to add a summary row at the bottom.
+
+
+
+## Sub-components
+
+| Component      | Description            |
+| -------------- | ---------------------- |
+| `Table`        | Root `<table>` wrapper |
+| `TableHeader`  | `<thead>` element      |
+| `TableBody`    | `<tbody>` element      |
+| `TableFooter`  | `<tfoot>` element      |
+| `TableRow`     | `<tr>` element         |
+| `TableHead`    | `<th>` element         |
+| `TableCell`    | `<td>` element         |
+| `TableCaption` | `<caption>` element    |
+| `TableEmpty`   | Empty state row        |
+
+---
+
+## Tabs
+
+Tabbed navigation with line and pill variants for organizing content.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'line' | 'pill'` | `'line'` | The visual style of the tabs. |
+| `defaultValue` | `string` | - | The default active tab value. |
+| `modelValue` | `string` | - | The controlled active tab. Use with v-model. |
+
+## Usage
+
+
+
+## Pill Variant
+
+
+
+## Vertical & Disabled
+
+Use `orientation="vertical"` for vertical layout. Individual triggers can be `disabled`.
+
+
+
+## Sub-components
+
+| Component     | Description                                                     |
+| ------------- | --------------------------------------------------------------- |
+| `Tabs`        | Root container. Props: `variant`, `defaultValue`, `orientation` |
+| `TabsList`    | Tab button container                                            |
+| `TabsTrigger` | Tab button. Props: `value` (required), `disabled`               |
+| `TabsContent` | Tab panel. Props: `value` (required)                            |
+
+---
+
+## Tags Input
+
+An input for managing multiple tags or keywords.
+
+## Usage
+
+
+
+## Max Tags
+
+Use the `max` prop to limit the number of tags.
+
+
+
+## Sub-components
+
+| Component             | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| `TagsInput`           | Root with tag list state. Props from reka-ui TagsInputRoot |
+| `TagsInputInput`      | Text input for adding new tags                             |
+| `TagsInputItem`       | Individual tag. Props: `value` (required)                  |
+| `TagsInputItemText`   | Tag text display                                           |
+| `TagsInputItemDelete` | Remove button for the tag                                  |
+
+---
+
+## Textarea
+
+A multi-line text input with optional auto-sizing support.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string | number` | - | The textarea value. Use with v-model. |
+| `autosize` | `boolean` | `false` | Automatically resize the textarea to fit content. |
+| `maxHeight` | `string` | - | Maximum height when autosize is enabled (CSS value). |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `string | number` | Emitted when the value changes. |
+
+## Usage
+
+
+
+## Autosize
+
+
+
+## With Max Height
+
+---
+
+## Toggle
+
+A two-state button that can be either on or off.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `boolean` | - | The controlled toggle state. Use with v-model. |
+| `defaultValue` | `boolean` | - | The default toggle state for uncontrolled usage. |
+| `variant` | `'default' | 'outline'` | `'default'` | The visual style variant. |
+| `size` | `'default' | 'sm' | 'lg'` | `'default'` | The size of the toggle. |
+| `disabled` | `boolean` | `false` | Whether the toggle is disabled. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `boolean` | Emitted when the toggle state changes. |
+
+### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | Toggle content with access to the toggle state. |
+
+## Usage
+
+
+
+## Variants
+
+
+
+## Sizes
+
+---
+
+## Toggle Group
+
+A set of two-state buttons that can be toggled on or off, supporting single or multiple selection.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `AcceptableValue | AcceptableValue[]` | - | The controlled value. Use with v-model. |
+| `multiple` | `boolean` | - | Whether multiple items can be selected at once. |
+| `variant` | `'default' | 'outline'` | `'default'` | The visual style variant for all items. |
+| `size` | `'default' | 'sm' | 'lg'` | `'default'` | The size of all items. |
+| `disabled` | `boolean` | `false` | Whether the entire group is disabled. |
+| `orientation` | `'horizontal' | 'vertical'` | - | The layout direction. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `update:modelValue` | `'AcceptableValue | AcceptableValue[]'` | Emitted when the value changes. |
+
+## Usage
+
+
+
+## Sub-components
+
+| Component         | Description                                                                      |
+| ----------------- | -------------------------------------------------------------------------------- |
+| `ToggleGroup`     | Root container with selection state                                              |
+| `ToggleGroupItem` | Individual toggle item. Props: `value` (required), `disabled`, `variant`, `size` |
+
+---
+
+## Tooltip
+
+A popup that displays information when hovering over an element.
+
+## Usage
+
+
+
+> **Note:** Wrap your app or layout with `TooltipProvider` once to configure all tooltips.
+
+## Placement
+
+Use the `side` prop on `TooltipContent` to control placement.
+
+
+
+## Sub-components
+
+| Component         | Description                                                       |
+| ----------------- | ----------------------------------------------------------------- |
+| `TooltipProvider` | Global configuration. Props: `delayDuration`, `skipDelayDuration` |
+| `Tooltip`         | Root state container                                              |
+| `TooltipTrigger`  | Element that triggers the tooltip                                 |
+| `TooltipContent`  | Tooltip popup. Props: `side`, `sideOffset`, `align`               |
+
+---
+
+## Avatar Group
+
+Displays a stack of avatars with an overflow indicator.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `max` | `number` | - | Maximum number of avatars to display before showing the overflow count. |
+| `orientation` | `'horizontal' | 'vertical'` | `'horizontal'` | Stack direction of the avatars. |
+| `spacing` | `string` | `'-0.75rem'` | CSS margin value controlling how much avatars overlap. |
+| `reverse` | `boolean` | `false` | Reverse the stacking order so later avatars appear on top. |
+
+### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | Avatar components to display in the group. |
+| `overflow` | Custom content for the overflow indicator. Receives the number of hidden avatars. |
+
+## Usage
+
+---
+
+## Clipboard Copy
+
+A component for copying text to the clipboard with visual feedback.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component             | Description                                                               |
+| --------------------- | ------------------------------------------------------------------------- |
+| `ClipboardCopy`       | Root component. Accepts `value` (the text to copy) and manages copy state |
+| `ClipboardCopyButton` | The trigger button that initiates the copy action                         |
+| `CopyIdle`            | Slot content shown when idle (before copying)                             |
+| `CopySuccess`         | Slot content shown after a successful copy                                |
+
+## Composable
+
+### `useCopyToClipboard`
+
+A composable for programmatic clipboard access outside of the component tree.
+
+```ts
+const { copy, copied } = useCopyToClipboard()
+
+await copy('Hello, world!')
+// copied.value === true for a short duration
+```
+
+---
+
+## Data Table
+
+A powerful, feature-rich data table with server-side operations, filtering, sorting, pagination, row selection, column pinning, and keyboard navigation.
+
+## Overview
+
+The DataTable is MeldUI's most comprehensive component, built on [TanStack Table](https://tanstack.com/table/latest) for headless table logic with a fully styled UI layer. It's designed for **server-side operations** — every user interaction (sort, filter, paginate) triggers a callback you handle.
+
+### Key Features
+
+- **Server-side first** — pagination, sorting, and filtering all trigger a single callback
+- **8 filter types** — text, select, multiselect, number, range, boolean, date, daterange
+- **Advanced filter mode** — operator-based filtering (contains, equals, greaterThan, etc.)
+- **Column helpers** — type-safe column definitions with `createColumnHelper`
+- **Cell renderers** — pre-built formatters for badge, date, currency, number, boolean
+- **Row selection** — checkbox selection with bulk actions
+- **Column pinning** — sticky left/right columns
+- **Column resizing** — drag-to-resize with onChange/onEnd modes
+- **Row expansion** — master-detail pattern
+- **Keyboard navigation** — full keyboard support
+- **Density modes** — compact, comfortable, spacious
+
+### Installation
+
+The DataTable is part of `@meldui/vue`. You also need `@tanstack/vue-table` as a peer dependency:
+
+```bash
+pnpm add @meldui/vue @tanstack/vue-table
+```
+
+### Quick Start
+
+```vue
+<script setup>
+
+
+
+interface User {
+  id: string
+  name: string
+  email: string
+  role: string
+}
+
+const helper = createColumnHelper<User>()
+
+const columns = [
+  helper.accessor('name', { title: 'Name', enableSorting: true }),
+  helper.accessor('email', { title: 'Email' }),
+  helper.accessor('role', { title: 'Role' }),
+]
+
+const data = ref([])
+const pageCount = ref(1)
+
+function handleServerSideChange({ sorting, filters, pagination }) {
+  // Fetch data from your API
+}
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    :on-server-side-change="handleServerSideChange"
+  />
+</template>
+```
+
+### Pages in this section
+
+| Page                                              | Description                                      |
+| ------------------------------------------------- | ------------------------------------------------ |
+| [Basic Usage](/docs/data-table/basic)             | Simple table setup with sorting and pagination   |
+| [Columns & Cells](/docs/data-table/columns)       | Column helpers, cell renderers, and aggregations |
+| [Filtering](/docs/data-table/filtering)           | Filter types, advanced mode, and operators       |
+| [Selection & Actions](/docs/data-table/selection) | Row selection and bulk actions                   |
+| [Column Pinning](/docs/data-table/pinning)        | Sticky left/right columns                        |
+| [Row Expansion](/docs/data-table/expansion)       | Master-detail pattern                            |
+| [Server-Side](/docs/data-table/server-side)       | Server params, response format, and URL state    |
+
+---
+
+## Data Table: Basic Usage
+
+Setting up a basic data table with sorting, pagination, and search.
+
+## Basic Table
+
+A minimal DataTable with columns, sorting, pagination, and a search input. The `onServerSideChange` callback fires whenever the user sorts, filters, or paginates — you fetch data from your API and update the reactive `data` and `pageCount`.
+
+
+
+## Core Props
+
+| Prop                 | Type                                       | Default            | Description                                  |
+| -------------------- | ------------------------------------------ | ------------------ | -------------------------------------------- |
+| `columns`            | `ColumnDef<TData>[]`                       | required           | Column definitions from `createColumnHelper` |
+| `data`               | `TData[]`                                  | required           | The current page of data                     |
+| `pageCount`          | `number`                                   | required           | Total number of pages                        |
+| `onServerSideChange` | `(state) => void`                          | required           | Callback when sort/filter/page changes       |
+| `searchColumn`       | `string`                                   | -                  | Column ID to search on                       |
+| `searchPlaceholder`  | `string`                                   | -                  | Placeholder text for search input            |
+| `defaultPerPage`     | `number`                                   | `10`               | Default rows per page                        |
+| `pageSizeOptions`    | `number[]`                                 | `[10,20,30,40,50]` | Available page size options                  |
+| `loading`            | `boolean`                                  | `false`            | Show loading state                           |
+| `error`              | `string`                                   | -                  | Show error message                           |
+| `density`            | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'`    | Row density                                  |
+| `maxHeight`          | `string`                                   | `'600px'`          | Max height with vertical scroll              |
+
+## Pagination Position
+
+```typescript
+// Show pagination at top, bottom, or both
+<DataTable pagination-position="both" />
+<DataTable pagination-position="top" />
+```
+
+## Exposed Methods
+
+Access these via a template ref:
+
+```vue
+<script setup>
+const tableRef = ref()
+
+// Reset all state
+tableRef.value?.resetAll()
+
+// Refresh current data
+tableRef.value?.refresh()
+</script>
+
+<template>
+  <DataTable ref="tableRef" ... />
+</template>
+```
+
+| Method              | Description                         |
+| ------------------- | ----------------------------------- |
+| `resetFilters()`    | Clear all active filters            |
+| `resetSorting()`    | Clear sorting                       |
+| `resetSelection()`  | Deselect all rows                   |
+| `resetPagination()` | Go to page 1                        |
+| `resetAll()`        | Reset everything                    |
+| `refresh()`         | Re-trigger the server-side callback |
+
+---
+
+## Data Table: Column Pinning
+
+Pin columns to the left or right edge for horizontal scroll tables.
+
+## Column Pinning
+
+Pin columns so they stay visible when scrolling horizontally. The `select` and `name` columns are pinned left, `actions` is pinned right — scroll the middle columns to see them stick.
+
+
+
+### Configuration
+
+```vue
+<DataTable
+  :columns="columns"
+  :data="data"
+  :page-count="pageCount"
+  :on-server-side-change="handleChange"
+  enable-column-pinning
+  :default-pinning="{
+    left: ['select', 'name'],
+    right: ['actions'],
+  }"
+/>
+```
+
+## Props
+
+| Prop                  | Type                                    | Default | Description            |
+| --------------------- | --------------------------------------- | ------- | ---------------------- |
+| `enableColumnPinning` | `boolean`                               | `false` | Enable column pinning  |
+| `defaultPinning`      | `{ left?: string[], right?: string[] }` | -       | Initial pinned columns |
+
+## Pinning Programmatically
+
+Via template ref or the `useDataTable` composable:
+
+```typescript
+const tableRef = ref()
+
+// Pin a column
+tableRef.value?.pinColumn('email', 'left')
+
+// Unpin a column
+tableRef.value?.unpinColumn('email')
+
+// Reset all pinning
+tableRef.value?.resetPinning()
+```
+
+## Visual Behavior
+
+- Pinned columns have solid backgrounds (no content scrolling behind them)
+- Shadow separators appear at the boundary between pinned and scrollable columns
+- Pinned columns maintain their background on hover and selection states
+- Works correctly with both header and body cells
+
+---
+
+## Data Table: Columns & Cells
+
+Type-safe column definitions with createColumnHelper, cell renderers, and aggregation helpers.
+
+## Column Helper
+
+Use `createColumnHelper<T>()` for type-safe column definitions:
+
+
+
+## Column Types
+
+```typescript
+
+
+const helper = createColumnHelper<User>()
+
+// Accessor — bound to a data property
+helper.accessor('name', {
+  title: 'Name',
+  enableSorting: true,
+  enableHiding: true,
+  size: 200,
+  minSize: 100,
+})
+
+// Display — custom content, no data binding
+helper.display({
+  id: 'custom',
+  title: 'Custom',
+  cell: ({ row }) => h('span', row.original.name),
+})
+
+// Selection — checkbox column
+helper.selection()
+
+// Expander — expand/collapse button
+helper.expander()
+
+// Actions — dropdown or inline action buttons
+helper.actions({
+  display: 'dropdown', // or 'inline'
+  actions: [
+    { label: 'Edit', icon: IconPencil, onClick: (row) => edit(row) },
+    { label: 'Delete', icon: IconTrash, variant: 'destructive', onClick: (row) => remove(row) },
+  ],
+})
+```
+
+## Cell Renderers
+
+Pre-built formatters for common data types:
+
+```typescript
+
+
+// Badge — color-coded status
+helper.accessor('status', {
+  cell: cellRenderers.badge({
+    variants: {
+      active: { label: 'Active', variant: 'success' },
+      inactive: { label: 'Inactive', variant: 'destructive' },
+    },
+  }),
+})
+
+// Currency — formatted with symbol
+helper.accessor('price', {
+  cell: cellRenderers.currency({ currency: 'USD', locale: 'en-US' }),
+})
+
+// Number — with grouping and decimals
+helper.accessor('count', {
+  cell: cellRenderers.number({ useGrouping: true, decimals: 2 }),
+})
+
+// Date — locale-aware formatting
+helper.accessor('created_at', {
+  cell: cellRenderers.date({ format: 'medium' }), // short | medium | long | full
+})
+
+// Boolean — checkmark/x display
+helper.accessor('is_active', {
+  cell: cellRenderers.boolean({ trueText: 'Yes', falseText: 'No' }),
+})
+
+// Truncate — with tooltip on overflow
+helper.accessor('description', {
+  cell: cellRenderers.truncate({ maxLength: 50 }),
+})
+```
+
+## Aggregation Helpers
+
+Add footer aggregations:
+
+```typescript
+
+
+helper.accessor('salary', {
+  title: 'Salary',
+  cell: cellRenderers.currency({ currency: 'USD' }),
+  footer: aggregations.sum({ format: 'currency', currency: 'USD' }),
+})
+
+helper.accessor('age', {
+  footer: aggregations.average({ format: 'number', decimals: 1 }),
+})
+
+helper.accessor('id', {
+  footer: aggregations.count({ label: 'Total:' }),
+})
+```
+
+| Aggregation | Description                 |
+| ----------- | --------------------------- |
+| `sum()`     | Sum of numeric values       |
+| `count()`   | Row count                   |
+| `average()` | Mean value                  |
+| `min()`     | Minimum value               |
+| `max()`     | Maximum value               |
+| `range()`   | Min-max range string        |
+| `custom()`  | Custom aggregation function |
+
+---
+
+## Data Table: Filtering
+
+Configure filter types, advanced mode with operators, and custom filter fields.
+
+## Filter Fields
+
+Pass `filterFields` to enable the filter toolbar. Each field maps to a column ID:
+
+
+
+## Filter Types
+
+| Type          | Description                                | Value Format     |
+| ------------- | ------------------------------------------ | ---------------- |
+| `text`        | Text input, multi-instance with OR logic   | `string[]`       |
+| `select`      | Single dropdown                            | `string`         |
+| `multiselect` | Multiple checkboxes (simple mode only)     | `string[]`       |
+| `number`      | Number input, multi-instance               | `number[]`       |
+| `range`       | Dual slider for min/max (simple mode only) | `[min, max]`     |
+| `boolean`     | Toggle switch                              | `boolean`        |
+| `date`        | Date picker, multi-instance                | `DateValue[]`    |
+| `daterange`   | Start/end date range (simple mode only)    | `{ start, end }` |
+
+## Filter Field Configuration
+
+```typescript
+
+
+const filterFields: DataTableFilterField<User>[] = [
+  // Text filter
+  {
+    id: 'name',
+    label: 'Name',
+    type: 'text',
+    placeholder: 'Filter by name...',
+  },
+
+  // Select with options
+  {
+    id: 'role',
+    label: 'Role',
+    type: 'select',
+    options: [
+      { label: 'Admin', value: 'admin' },
+      { label: 'User', value: 'user' },
+      { label: 'Guest', value: 'guest' },
+    ],
+  },
+
+  // Multiselect (simple mode only)
+  {
+    id: 'department',
+    label: 'Department',
+    type: 'multiselect',
+    options: [
+      { label: 'Engineering', value: 'engineering' },
+      { label: 'Marketing', value: 'marketing' },
+      { label: 'Sales', value: 'sales' },
+    ],
+  },
+
+  // Number with range constraints
+  {
+    id: 'age',
+    label: 'Age',
+    type: 'number',
+    min: 18,
+    max: 100,
+  },
+
+  // Range slider
+  {
+    id: 'salary',
+    label: 'Salary',
+    type: 'range',
+    range: [0, 200000],
+    step: 5000,
+    unit: '$',
+  },
+
+  // Boolean toggle
+  {
+    id: 'is_verified',
+    label: 'Verified',
+    type: 'boolean',
+  },
+
+  // Date picker
+  {
+    id: 'created_at',
+    label: 'Created',
+    type: 'date',
+  },
+
+  // Date range
+  {
+    id: 'last_login',
+    label: 'Last Login',
+    type: 'daterange',
+  },
+]
+```
+
+## Advanced Mode
+
+Enable operator-based filtering with `advancedMode`:
+
+```vue
+<DataTable
+  :columns="columns"
+  :data="data"
+  :page-count="pageCount"
+  :on-server-side-change="handleChange"
+  :filter-fields="filterFields"
+  :advanced-mode="true"
+/>
+```
+
+In advanced mode, each filter gets an operator dropdown. Only base types are allowed (text, number, date, select, boolean — not multiselect, range, or daterange).
+
+### Available Operators
+
+| Type        | Operators                                                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------- |
+| **Text**    | contains, equals, startsWith, endsWith, notContains, notEquals, isEmpty, isNotEmpty                         |
+| **Number**  | equals, notEquals, greaterThan, greaterThanOrEqual, lessThan, lessThanOrEqual, between, isEmpty, isNotEmpty |
+| **Date**    | is, isBefore, isAfter, isBetween, isEmpty, isNotEmpty                                                       |
+| **Select**  | is, isAnyOf, isNot, isNoneOf, isEmpty, isNotEmpty                                                           |
+| **Boolean** | is, isEmpty, isNotEmpty                                                                                     |
+
+You can customize available operators per field:
+
+```typescript
+{
+  id: 'name',
+  label: 'Name',
+  type: 'text',
+  defaultOperator: 'contains',
+  availableOperators: ['contains', 'equals', 'startsWith'],
+}
+```
+
+---
+
+## Data Table: Row Expansion
+
+Expand rows to show detail content using the master-detail pattern.
+
+## Row Expansion
+
+Click the chevron to expand a row and see order items. Rows with no items (like the cancelled order) cannot be expanded.
+
+
+
+### Setup
+
+Add an expander column and provide detail content via the `#expanded-row` slot:
+
+```vue
+<script setup>
+
+
+interface Order {
+  id: string
+  customer: string
+  total: number
+  items: { name: string; qty: number; price: number }[]
+}
+
+const helper = createColumnHelper<Order>()
+
+const columns = [
+  helper.expander(),  // Adds expand/collapse chevron
+  helper.accessor('customer', { title: 'Customer' }),
+  helper.accessor('total', { title: 'Total' }),
+]
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    :on-server-side-change="handleChange"
+    enable-row-expansion
+    :get-row-can-expand="(row) => row.original.items.length > 0"
+  >
+    <template #expanded-row="{ row }">
+      <div class="p-4">
+        <h4 class="font-medium mb-2">Order Items</h4>
+        <table class="w-full text-sm">
+          <tr v-for="item in row.original.items" :key="item.name">
+            <td>{{ item.name }}</td>
+            <td>x{{ item.qty }}</td>
+            <td class="text-right">${{ item.price }}</td>
+          </tr>
+        </table>
+      </div>
+    </template>
+  </DataTable>
+</template>
+```
+
+## Props
+
+| Prop                 | Type                       | Default | Description                   |
+| -------------------- | -------------------------- | ------- | ----------------------------- |
+| `enableRowExpansion` | `boolean`                  | `false` | Enable row expansion          |
+| `getRowCanExpand`    | `(row: Row<T>) => boolean` | -       | Control which rows can expand |
+
+## Programmatic Control
+
+```typescript
+const tableRef = ref()
+
+// Expand/collapse all rows
+tableRef.value?.toggleAllRowsExpanded(true)
+tableRef.value?.toggleAllRowsExpanded(false)
+
+// Reset expansion state
+tableRef.value?.resetExpanded()
+```
+
+---
+
+## Data Table: Selection & Actions
+
+Row selection with checkboxes, bulk actions, and per-row action menus.
+
+## Row Selection
+
+Add `enableRowSelection` and use `helper.selection()` for a checkbox column:
+
+
+
+## Bulk Actions
+
+When rows are selected, bulk action buttons appear in the toolbar:
+
+```typescript
+
+
+const bulkActions: BulkActionOption<User>[] = [
+  {
+    label: 'Delete',
+    icon: IconTrash,
+    variant: 'destructive',
+    action: (selectedRows) => {
+      // selectedRows is User[]
+      deleteUsers(selectedRows.map((r) => r.id))
+    },
+  },
+  {
+    label: 'Export CSV',
+    icon: IconDownload,
+    action: (selectedRows) => exportToCsv(selectedRows),
+  },
+]
+```
+
+## Per-Row Actions
+
+Use `helper.actions()` for row-level action menus:
+
+```typescript
+const columns = [
+  helper.accessor('name', { title: 'Name' }),
+  helper.accessor('email', { title: 'Email' }),
+  helper.actions({
+    display: 'dropdown', // or 'inline'
+    actions: [
+      {
+        label: 'Edit',
+        icon: IconPencil,
+        onClick: (row) => router.push(`/users/${row.id}/edit`),
+      },
+      {
+        label: 'Delete',
+        icon: IconTrash,
+        variant: 'destructive',
+        onClick: (row) => deleteUser(row.id),
+        // Conditionally show/disable
+        show: (row) => row.role !== 'admin',
+        disabled: (row) => row.status === 'inactive',
+      },
+    ],
+  }),
+]
+```
+
+## Accessing Selection State
+
+Via template ref:
+
+```typescript
+const tableRef = ref()
+
+// Get selected row data
+const selected = tableRef.value?.selectedRows // User[]
+const count = tableRef.value?.selectedRowCount // number
+const hasAny = tableRef.value?.hasSelection // boolean
+
+// Clear selection
+tableRef.value?.resetSelection()
+```
+
+---
+
+## Data Table: Server-Side
+
+Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
+
+## How Server-Side Works
+
+The DataTable is designed for server-side operations. Every user interaction triggers the `onServerSideChange` callback with the current table state:
+
+```typescript
+function handleServerSideChange(state: {
+  sorting: SortingState
+  filters: ColumnFiltersState
+  pagination: PaginationState
+}) {
+  // Convert to your API format
+  const params = {
+    page: state.pagination.pageIndex + 1,
+    per_page: state.pagination.pageSize,
+    sort_by: state.sorting[0]?.id,
+    sort_order: state.sorting[0]?.desc ? 'desc' : 'asc',
+    filters: state.filters,
+  }
+
+  const response = await api.get('/users', { params })
+  data.value = response.data
+  pageCount.value = response.meta.total_pages
+}
+```
+
+## Server Params Helper
+
+Use `tableStateToServerParams` to convert TanStack state to a standard format:
+
+```typescript
+
+
+
+function handleChange(state) {
+  const params: ServerSideTableParams = tableStateToServerParams(state)
+  // params = { page, per_page, sort_by, sort_order, filters }
+}
+```
+
+### ServerSideTableParams
+
+```typescript
+interface ServerSideTableParams {
+  page: number
+  per_page: number
+  sort_by?: string
+  sort_order?: 'asc' | 'desc'
+  filters?: Record<string, ServerFilterValue>
+}
+```
+
+## Server Response Format
+
+```typescript
+interface ServerSideTableResponse<T> {
+  data: T[]
+  meta: {
+    current_page: number
+    per_page: number
+    total: number
+    total_pages: number
+  }
+}
+```
+
+## URL State Persistence
+
+Restore table state from URL query params (e.g., after page refresh or shared links):
+
+```vue
+<DataTable
+  :columns="columns"
+  :data="data"
+  :page-count="pageCount"
+  :on-server-side-change="handleChange"
+  :initial-filters="filtersFromUrl"
+  :initial-sorting="sortingFromUrl"
+  :initial-pagination="paginationFromUrl"
+/>
+```
+
+## Slots
+
+| Slot               | Props               | Description                       |
+| ------------------ | ------------------- | --------------------------------- |
+| `#toolbar`         | `{ table }`         | Replace entire toolbar            |
+| `#toolbar-start`   | -                   | Add content before search         |
+| `#toolbar-end`     | -                   | Add content after search          |
+| `#empty`           | -                   | Custom empty state                |
+| `#error`           | `{ error }`         | Custom error state                |
+| `#pagination`      | `{ table }`         | Custom pagination                 |
+| `#expanded-row`    | `{ row }`           | Row expansion content             |
+| `#cell-[columnId]` | `{ row, getValue }` | Custom cell for a specific column |
+
+## Keyboard Navigation
+
+Enable with `enableKeyboardNavigation`:
+
+| Key                             | Action                                  |
+| ------------------------------- | --------------------------------------- |
+| `↑` / `↓`                       | Navigate rows                           |
+| `Space`                         | Select/deselect row                     |
+| `Enter`                         | Activate row (expand or trigger action) |
+| `Home` / `End`                  | Jump to first/last row                  |
+| `PageUp` / `PageDown`           | Previous/next page                      |
+| `Ctrl+PageUp` / `Ctrl+PageDown` | First/last page                         |
+
+## Column Resizing
+
+```vue
+<DataTable
+  enable-column-resizing
+  column-resize-mode="onChange"  <!-- or "onEnd" -->
+/>
+```
+
+## Column Visibility
+
+```vue
+<DataTable enable-column-hiding />
+```
+
+Shows a dropdown in the toolbar to toggle column visibility.
+
+---
+
+## Date Range Picker
+
+A composite date picker with presets, calendar, and support for single or range date selection.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'range' | 'single'` | `'range'` | Whether to select a date range or a single date. |
+| `modelValue` | `{ start: DateValue; end: DateValue } | DateValue` | - | The selected date value (range object or single date). |
+| `presets` | `{ label: string; value: { start: DateValue; end: DateValue } | DateValue }[]` | - | Predefined date options shown as quick-select buttons. |
+| `showCalendar` | `boolean` | `true` | Whether to display the calendar alongside presets. |
+| `closeOnPresetSelect` | `boolean` | `true` | Close the popover automatically when a preset is selected. |
+| `placeholder` | `string` | - | Placeholder text shown when no date is selected. |
+| `locale` | `string` | `'en-US'` | Locale string for date formatting. |
+| `minValue` | `DateValue` | - | The earliest selectable date. |
+| `maxValue` | `DateValue` | - | The latest selectable date. |
+| `disabled` | `boolean` | `false` | Disables the entire picker. |
+| `numberOfMonths` | `number` | `2` | Number of months visible in the calendar at once. |
+
+## Usage
+
+
+
+## Single Date Mode
+
+Use `mode="single"` for picking a single date instead of a range.
+
+
+
+## Sub-components
+
+| Component                 | Description                                      |
+| ------------------------- | ------------------------------------------------ |
+| `DateRangePicker`         | Root component managing state and popover        |
+| `DateRangePickerTrigger`  | The button that opens the picker popover         |
+| `DateRangePickerContent`  | Popover content wrapper for calendar and presets |
+| `DateRangePickerCalendar` | The calendar grid for selecting dates            |
+| `DateRangePickerPresets`  | Quick-select preset buttons                      |
+
+---
+
+## Mention
+
+A rich text input that supports @-mention suggestions with customizable triggers and serialization.
+
+## Usage
+
+
+
+## Sub-components
+
+| Component            | Description                                                  |
+| -------------------- | ------------------------------------------------------------ |
+| `Mention`            | Root component managing mention state and trigger detection  |
+| `MentionInput`       | The editable text input area                                 |
+| `MentionContent`     | Popover dropdown that shows mention suggestions              |
+| `MentionItem`        | Individual suggestion item inside the dropdown               |
+| `MentionEmpty`       | Content displayed when no suggestions match                  |
+| `MentionLoading`     | Loading indicator shown while suggestions are being fetched  |
+| `MentionHighlighter` | Overlay that renders highlighted mention tokens in the input |
+
+## Serialization Utilities
+
+The mention system includes helpers to convert between display text and a serialized format that preserves mention metadata.
+
+| Function                      | Description                                                        |
+| ----------------------------- | ------------------------------------------------------------------ |
+| `serializeMention`            | Converts mention data into a serialized string token               |
+| `parseMentionsFromSerialized` | Extracts structured mention objects from a serialized string       |
+| `deserializeToDisplay`        | Converts a serialized string back into human-readable display text |
+
+## Composable
+
+### `useMention()`
+
+A composable that provides reactive mention state. Use it when you need programmatic access to the mention context, such as the current query, active trigger, and selected mentions.
+
+---
+
+## Multi Select
+
+A searchable multi-select dropdown with badge display, groups, and creatable options.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string[]` | - | The selected values (v-model). |
+| `options` | `{ label: string; value: string }[]` | - | Flat list of selectable options. |
+| `groups` | `{ label: string; options: { label: string; value: string }[] }[]` | - | Grouped options displayed under section headings. |
+| `placeholder` | `string` | `'Select...'` | Placeholder text when nothing is selected. |
+| `searchPlaceholder` | `string` | `'Search...'` | Placeholder for the search input inside the dropdown. |
+| `emptyText` | `string` | `'No results found'` | Text shown when no options match the search query. |
+| `maxDisplay` | `number` | - | Maximum number of badges to display before showing a count. |
+| `max` | `number` | - | Maximum number of items that can be selected. |
+| `disabled` | `boolean` | `false` | Disables the entire select. |
+| `creatable` | `boolean` | `false` | Allow creating new options from the search input. |
+
+## Usage
+
+
+
+## With Groups & Creatable
+
+Use `groups` for organized options, `creatable` to allow new values, and `maxDisplay` to limit visible badges.
+
+---
+
+## Relative Time
+
+Displays a human-readable relative timestamp that updates automatically.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `date` | `Date | string | number` | - | The reference date to display relative to now. |
+| `autoUpdate` | `boolean` | `true` | Automatically refresh the displayed text on an interval. |
+| `updateInterval` | `number` | `30000` | Interval in milliseconds between automatic updates. |
+| `locale` | `string` | `'en'` | Locale for the Intl.RelativeTimeFormat formatter. |
+| `as` | `string` | `'time'` | The HTML element to render as. |
+
+## Usage
+
+---
+
+## Timeline
+
+A vertical or horizontal timeline for displaying chronological events.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'vertical' | 'horizontal'` | `'vertical'` | The direction the timeline flows. |
+| `variant` | `'default' | 'outline'` | `'default'` | Visual variant of the timeline dots and connectors. |
+| `activeIndex` | `number` | - | Index of the currently active item (zero-based). Items up to this index appear in an active state. |
+| `contentPosition` | `'right' | 'left' | 'alternate'` | `'right'` | Which side of the line the content appears on. |
+
+## Usage
+
+
+
+## Sub-components
+
+| Component             | Description                                                        |
+| --------------------- | ------------------------------------------------------------------ |
+| `Timeline`            | Root container. Provides orientation and variant context           |
+| `TimelineItem`        | Wraps a single event (separator + content)                         |
+| `TimelineSeparator`   | Container for the dot and connector                                |
+| `TimelineDot`         | The circular indicator. Props: `size` (`'sm'` \| `'md'` \| `'lg'`) |
+| `TimelineConnector`   | The line between dots. Props: `thickness` (number)                 |
+| `TimelineContent`     | The text/body area for an event                                    |
+| `TimelineTitle`       | Heading text for the event                                         |
+| `TimelineDescription` | Supporting description text                                        |
+| `TimelineTime`        | Timestamp display. Props: `dateTime` (string, ISO 8601)            |
+
+---
+
+## Dark Mode
+
+How to enable and configure dark mode in your MeldUI application.
+
+## How It Works
+
+MeldUI uses class-based dark mode. All theme colors switch automatically when the `dark` class is present on a parent element (typically `<html>` or `<body>`).
+
+The theme includes a Tailwind CSS v4 custom variant:
+
+```css
+@custom-variant dark (&:is(.dark *));
+```
+
+This enables `dark:` variants in Tailwind classes (e.g., `dark:bg-gray-900`).
+
+## Toggling Dark Mode
+
+### Basic Toggle
+
+```typescript
+// Toggle dark mode
+document.documentElement.classList.toggle('dark')
+```
+
+### With localStorage Persistence
+
+```typescript
+function setTheme(mode: 'light' | 'dark' | 'system') {
+  if (mode === 'system') {
+    localStorage.removeItem('theme')
+    const isDark = matchMedia('(prefers-color-scheme: dark)').matches
+    document.documentElement.classList.toggle('dark', isDark)
+  } else {
+    localStorage.setItem('theme', mode)
+    document.documentElement.classList.toggle('dark', mode === 'dark')
+  }
+}
+```
+
+### Prevent Flash of Wrong Theme
+
+Add this inline script in your `<head>` before any stylesheets load:
+
+```html
+<script>
+  ;(function () {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'dark' || (!stored && matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+    }
+  })()
+</script>
+```
+
+This runs synchronously before paint, preventing a flash of light mode when the user prefers dark.
+
+## Vue Composable Example
+
+```vue
+<script setup lang="ts">
+
+
+type ThemeMode = 'light' | 'dark' | 'system'
+
+const mode = ref<ThemeMode>('system')
+
+function applyTheme(m: ThemeMode) {
+  const isDark =
+    m === 'dark' || (m === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+  document.documentElement.classList.toggle('dark', isDark)
+}
+
+onMounted(() => {
+  const stored = localStorage.getItem('theme') as ThemeMode | null
+  if (stored) mode.value = stored
+  applyTheme(mode.value)
+})
+
+watch(mode, (m) => {
+  if (m === 'system') {
+    localStorage.removeItem('theme')
+  } else {
+    localStorage.setItem('theme', m)
+  }
+  applyTheme(m)
+})
+</script>
+```
+
+## All Components Support Dark Mode
+
+Every MeldUI component uses CSS custom properties for colors. When the `dark` class is present, the theme variables switch to dark values automatically — no additional props or configuration needed.
+
+```vue
+<template>
+  <!-- These components automatically adapt to dark mode -->
+  <Card>
+    <CardContent>
+      <Button variant="outline">I adapt to dark mode</Button>
+    </CardContent>
+  </Card>
+</template>
+```
+
+## Custom Dark Mode Colors
+
+Override dark mode colors after the theme import:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
+
+.dark {
+  --primary: oklch(0.7 0.2 280);
+  --background: oklch(0.1 0.02 260);
+  --card: oklch(0.15 0.02 260);
+}
+```
+
+---
+
+## Icons
+
+MeldUI uses Tabler Icons with custom defaults for size and stroke, provided via the @meldui/tabler-vue package.
+
+## Installation
+
+Icons are in a separate package:
+
+```bash
+pnpm add @meldui/tabler-vue
+```
+
+## Usage
+
+```vue
+<script setup>
+
+</script>
+
+<template>
+  <!-- Default (24px, stroke 1.5) -->
+  <IconCheck />
+
+  <!-- Custom size -->
+  <IconX :size="32" />
+
+  <!-- Custom stroke -->
+  <IconAlertCircle :stroke="2" />
+
+  <!-- Color via Tailwind class -->
+  <IconCheck class="text-green-500" />
+</template>
+```
+
+## Default Values
+
+All icons ship with these defaults:
+
+| Prop     | Default | Tabler Default |
+| -------- | ------- | -------------- |
+| `size`   | 24      | 24             |
+| `stroke` | 1.5     | 2              |
+
+The stroke weight is intentionally thinner than Tabler's default for a cleaner look that matches MeldUI's design system.
+
+## Props
+
+| Prop     | Type     | Default | Description         |
+| -------- | -------- | ------- | ------------------- |
+| `size`   | `number` | `24`    | Icon size in pixels |
+| `stroke` | `number` | `1.5`   | Stroke thickness    |
+
+## Color
+
+Icons use `currentColor` and inherit from the parent's text color. Control color using Tailwind classes:
+
+```vue
+<template>
+  <!-- Via parent -->
+  <span class="text-red-500">
+    <IconX />
+    <!-- Red icon -->
+  </span>
+
+  <!-- Directly on icon -->
+  <IconCheck class="text-green-500" />
+
+  <!-- With MeldUI theme colors -->
+  <IconAlertCircle class="text-destructive" />
+  <IconCheck class="text-success" />
+  <IconInfo class="text-info" />
+</template>
+```
+
+## Available Icons
+
+Browse all 5000+ icons at [tabler.io/icons](https://tabler.io/icons).
+
+Icon names use the `Icon` prefix followed by PascalCase:
+
+| Tabler Name    | Import Name       |
+| -------------- | ----------------- |
+| `x`            | `IconX`           |
+| `check`        | `IconCheck`       |
+| `user`         | `IconUser`        |
+| `settings`     | `IconSettings`    |
+| `arrow-right`  | `IconArrowRight`  |
+| `alert-circle` | `IconAlertCircle` |
+
+## Tree Shaking
+
+Only the icons you import are included in your bundle:
+
+```vue
+<script setup>
+// Only these 3 icons are bundled
+
+</script>
+```
+
+## Using with Components
+
+Icons work seamlessly with MeldUI components:
+
+```vue
+<script setup>
+
+
+</script>
+
+<template>
+  <!-- Icon button -->
+  <Button size="icon">
+    <IconSearch />
+  </Button>
+
+  <!-- Button with icon and text -->
+  <Button>
+    <IconSend class="mr-2 size-4" />
+    Send Message
+  </Button>
+</template>
+```
+
+---
+
+## Installation
+
+How to install and configure MeldUI in your Vue 3 project.
+
+## Prerequisites
+
+- Node.js 18+ and pnpm (or npm/yarn)
+- Vue 3.5+
+- Vite 5+
+
+## Step 1: Configure Registry
+
+MeldUI packages are hosted on GitHub Package Registry. Create or update `.npmrc` in your project root:
+
+```bash
+@meldui:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
+```
+
+Set your GitHub token (needs `read:packages` scope):
+
+```bash
+export NPM_TOKEN=ghp_your_token_here
+```
+
+## Step 2: Install Packages
+
+```bash
+# Core packages
+pnpm add @meldui/vue @meldui/tabler-vue vue
+
+# Tailwind CSS v4 dependencies
+pnpm add -D tailwindcss @tailwindcss/vite tw-animate-css
+```
+
+> **Note:** `@meldui/charts-vue` is optional. Install it only if you need chart components.
+
+## Step 3: Configure Vite
+
+Update your `vite.config.ts`:
+
+```typescript
+
+
+
+
+export default defineConfig({
+  plugins: [vue(), tailwindcss()],
+})
+```
+
+## Step 4: Set Up CSS
+
+Create `src/styles/app.css`:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
+
+/* Tell Tailwind where to scan for classes */
+@source "../**/*.{vue,js,ts,jsx,tsx}";
+@source "../node_modules/@meldui/vue/dist/**/*.mjs";
+```
+
+> **Important:** This project uses Tailwind CSS v4 with CSS-first configuration. Do NOT create a `tailwind.config.js` file.
+
+## Step 5: Import CSS
+
+In your `main.ts`:
+
+```typescript
+
+
+
+
+createApp(App).mount('#app')
+```
+
+## Step 6: Set Up Toaster
+
+Add the `Toaster` component to your `App.vue` for toast notifications:
+
+```vue
+<script setup lang="ts">
+
+</script>
+
+<template>
+  <RouterView />
+  <Toaster position="bottom-right" />
+</template>
+```
+
+Use toasts anywhere in your app:
+
+```typescript
+
+
+toast.success('Changes saved!')
+toast.error('Something went wrong')
+```
+
+## Step 7: Use Components
+
+```vue
+<script setup lang="ts">
+
+
+</script>
+
+<template>
+  <Card>
+    <CardHeader>
+      <CardTitle>Hello MeldUI</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Button>
+        <IconCheck class="mr-2 h-4 w-4" />
+        Get Started
+      </Button>
+    </CardContent>
+  </Card>
+</template>
+```
+
+## Charts (Optional)
+
+```bash
+pnpm add @meldui/charts-vue
+```
+
+```vue
+<script setup lang="ts">
+
+
+
+const config: MeldLineChartConfig = {
+  series: [
+    { name: 'Sales', data: [100, 150, 200, 180, 250] },
+    { name: 'Revenue', data: [200, 280, 350, 320, 400] },
+  ],
+  xAxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] },
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" />
+</template>
+```
+
+Available chart types: `MeldLineChart`, `MeldAreaChart`, `MeldBarChart`, `MeldPieChart`, `MeldDonutChart`, `MeldScatterChart`, `MeldRadarChart`, `MeldHeatmapChart`, `MeldMixedChart`.
+
+## TypeScript Configuration
+
+Ensure your `tsconfig.json` includes:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
+```
+
+## Package Summary
+
+| Package              | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `@meldui/vue`        | Core component library (70+ components)      |
+| `@meldui/tabler-vue` | 5000+ Tabler icons with custom defaults      |
+| `@meldui/charts-vue` | Chart components built on ECharts (optional) |
+
+---
+
+## Introduction
+
+MeldUI is a Vue 3 component library built on shadcn-vue with Tailwind CSS v4, providing consistent and beautiful UI components.
+
+## What is MeldUI?
+
+MeldUI is a design system built on [shadcn-vue](https://www.shadcn-vue.com/) that provides a comprehensive set of Vue 3 components for building modern web applications. It consists of three packages:
+
+- **@meldui/vue** — 63+ UI components (buttons, dialogs, forms, data tables, and more)
+- **@meldui/charts-vue** — 9 chart types built on Apache ECharts
+- **@meldui/tabler-vue** — 5000+ Tabler icons with custom defaults
+
+## Key Features
+
+- **Tailwind CSS v4** — CSS-first configuration with OKLch color space
+- **Dark mode** — Built-in dark mode support across all components
+- **Accessible** — Built on Reka UI primitives with proper ARIA attributes
+- **Type-safe** — Full TypeScript support with strict prop typing
+- **Tree-shakeable** — Only import what you use
+- **Customizable** — Theme via CSS variables, extend via class merging
+
+## Packages
+
+| Package              | Description                |
+| -------------------- | -------------------------- |
+| `@meldui/vue`        | Core UI component library  |
+| `@meldui/charts-vue` | Data visualization charts  |
+| `@meldui/tabler-vue` | Icon library (5000+ icons) |
+
+## Quick Start
+
+```bash
+# Install the packages
+pnpm add @meldui/vue @meldui/tabler-vue vue
+
+# For charts
+pnpm add @meldui/charts-vue
+```
+
+See the [Installation](/docs/getting-started/installation) guide for detailed setup instructions.
+
+---
+
+## Theming
+
+Customize MeldUI's appearance using CSS variables with OKLCH colors and Tailwind CSS v4.
+
+## Theme Structure
+
+MeldUI themes define two layers of CSS variables:
+
+1. **Base variables** (`:root` / `.dark`) — raw OKLCH color values
+2. **Tailwind theme variables** (`@theme inline`) — map base variables to Tailwind utilities
+
+```css
+/* Base variables */
+:root {
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+}
+
+/* Tailwind integration */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+```
+
+This means you can use `bg-primary`, `text-primary-foreground`, etc. in your Tailwind classes.
+
+## Customizing Colors
+
+Override base variables in your CSS **after** importing the theme:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
+
+/* Your overrides */
+:root {
+  --primary: oklch(0.6 0.2 280); /* Purple */
+  --primary-foreground: oklch(1 0 0); /* White */
+  --radius: 0.5rem; /* Rounder corners */
+}
+
+.dark {
+  --primary: oklch(0.7 0.2 280); /* Lighter purple for dark mode */
+}
+```
+
+## OKLCH Color Format
+
+MeldUI uses OKLCH colors for better perceptual uniformity:
+
+```css
+/* OKLCH: Lightness, Chroma, Hue */
+--primary: oklch(0.6 0.2 260);
+/*              ^    ^    ^
+                |    |    └── Hue (0-360)
+                |    └─────── Chroma (0-0.4)
+                └──────────── Lightness (0-1)
+*/
+```
+
+Benefits of OKLCH:
+
+- Consistent perceived brightness across hues
+- Better color manipulation than HSL
+- Modern CSS standard supported in all modern browsers
+
+## Available Variables
+
+### Colors
+
+| Variable                 | Description         |
+| ------------------------ | ------------------- |
+| `--background`           | Page background     |
+| `--foreground`           | Default text color  |
+| `--primary`              | Primary brand color |
+| `--primary-foreground`   | Text on primary     |
+| `--secondary`            | Secondary actions   |
+| `--secondary-foreground` | Text on secondary   |
+| `--muted`                | Subtle backgrounds  |
+| `--muted-foreground`     | Subtle text         |
+| `--accent`               | Accent/highlight    |
+| `--accent-foreground`    | Text on accent      |
+| `--destructive`          | Error/danger states |
+| `--success`              | Success states      |
+| `--warning`              | Warning states      |
+| `--info`                 | Info states         |
+| `--neutral`              | Neutral/gray states |
+
+### UI Elements
+
+| Variable               | Description                 |
+| ---------------------- | --------------------------- |
+| `--card`               | Card background             |
+| `--card-foreground`    | Card text                   |
+| `--popover`            | Popover/dropdown background |
+| `--popover-foreground` | Popover text                |
+| `--border`             | Border color                |
+| `--input`              | Input border                |
+| `--ring`               | Focus ring                  |
+
+### Chart Colors
+
+| Variable    | Description               |
+| ----------- | ------------------------- |
+| `--chart-1` | First chart series color  |
+| `--chart-2` | Second chart series color |
+| `--chart-3` | Third chart series color  |
+| `--chart-4` | Fourth chart series color |
+| `--chart-5` | Fifth chart series color  |
+
+### Sidebar
+
+| Variable                       | Description             |
+| ------------------------------ | ----------------------- |
+| `--sidebar`                    | Sidebar background      |
+| `--sidebar-foreground`         | Sidebar text            |
+| `--sidebar-primary`            | Sidebar primary color   |
+| `--sidebar-primary-foreground` | Text on sidebar primary |
+| `--sidebar-accent`             | Sidebar accent/hover    |
+| `--sidebar-accent-foreground`  | Text on sidebar accent  |
+| `--sidebar-border`             | Sidebar border color    |
+| `--sidebar-ring`               | Sidebar focus ring      |
+
+### Border Radius
+
+| Variable      | Default                     |
+| ------------- | --------------------------- |
+| `--radius`    | `0.625rem` (base)           |
+| `--radius-sm` | `calc(var(--radius) - 4px)` |
+| `--radius-md` | `calc(var(--radius) - 2px)` |
+| `--radius-lg` | `var(--radius)`             |
+| `--radius-xl` | `calc(var(--radius) + 4px)` |
+
+## Creating Custom Themes
+
+Create a new theme file:
+
+```css
+/* themes/ocean.css */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* ... same structure as default theme ... */
+}
+
+:root {
+  --primary: oklch(0.55 0.15 220); /* Ocean blue */
+  --background: oklch(0.98 0.01 220); /* Slight blue tint */
+  /* ... other overrides ... */
+}
+
+.dark {
+  --primary: oklch(0.65 0.15 220);
+  --background: oklch(0.15 0.02 220);
+}
+```
+
+Then import it instead of the default:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './themes/ocean.css';
+```
+
+## Icon Colors
+
+Icons use `currentColor` and inherit from the parent's text color:
+
+```vue
+<template>
+  <!-- Icon inherits red color -->
+  <span class="text-red-500">
+    <IconX />
+  </span>
+
+  <!-- Or directly on the icon -->
+  <IconCheck class="text-green-500" />
+</template>
+```
+
+---
+

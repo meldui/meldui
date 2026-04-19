@@ -5,6 +5,7 @@ import Sidebar from '../components/Sidebar.astro'
 import TableOfContents from '../components/TableOfContents.astro'
 import PrevNext from '../components/PrevNext.astro'
 import Footer from '../components/Footer.astro'
+import SearchDialog from '../components/SearchDialog.vue'
 
 interface Props {
   title: string
@@ -71,6 +72,8 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3)
       }
     </div>
   </div>
+
+  <SearchDialog client:only="vue" />
 
   <!-- Mobile sidebar toggle script -->
   <script is:inline>

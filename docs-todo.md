@@ -158,16 +158,16 @@
 
 ## Phase 6: Search & LLM Optimization
 
-- [ ] Add Pagefind to build pipeline (`astro build && pagefind --site dist`)
-- [ ] Build `src/components/SearchDialog.vue` (command palette, `Ctrl+K`)
-- [ ] Wire search trigger in Header
-- [ ] Write `scripts/generate-llms.ts`
-- [ ] Generate `llms.txt` (summary index)
-- [ ] Generate `llms-full.txt` (full API docs)
-- [ ] Add `generate-llms` to build pipeline
-- [ ] Verify `sitemap.xml` generation
-- [ ] Add `public/robots.txt`
-- [ ] Add Open Graph meta tags to BaseLayout
+- [x] Add Pagefind to build pipeline (95 pages indexed, 2012 words)
+- [x] Build `src/components/SearchDialog.vue` (Cmd+K, uses MeldUI Dialog)
+- [x] Wire search trigger in Header + DocsLayout
+- [x] Write `scripts/generate-llms.ts`
+- [x] Generate `llms.txt` (summary index — 95 pages)
+- [x] Generate `llms-full.txt` (full API docs — 130KB)
+- [x] Add `generate-llms` to build pipeline (runs before astro build)
+- [x] Verify `sitemap.xml` generation (done in Phase 1)
+- [x] Add `public/robots.txt` (done in Phase 1)
+- [x] Add Open Graph meta tags to BaseLayout (done in Phase 1)
 
 ## Phase 7: Polish
 
