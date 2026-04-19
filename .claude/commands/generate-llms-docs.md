@@ -40,6 +40,7 @@ The generator at `apps/docs/scripts/generate-llms.ts` reads all MDX files from `
 ## After Regenerating
 
 Verify the output:
+
 1. Check page count: `grep -c "^- \[" apps/docs/public/llms.txt`
 2. Check sub-component count: `grep -c "^#### " apps/docs/public/llms-full.txt`
 3. Check file size: `wc -c apps/docs/public/llms-full.txt`
