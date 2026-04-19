@@ -10,6 +10,29 @@ props:
   - name: layout
     type: "'month-and-year' | 'month-only' | 'year-only'"
     description: The calendar picker layout mode.
+subComponents:
+  - name: CalendarHeader
+    description: Navigation header with month/year and prev/next buttons.
+  - name: CalendarHeading
+    description: Displays the current month and year.
+  - name: CalendarGrid
+    description: Grid container for calendar days.
+  - name: CalendarGridHead
+    description: Header row with day-of-week labels.
+  - name: CalendarGridBody
+    description: Body rows containing day cells.
+  - name: CalendarGridRow
+    description: A single row in the calendar grid.
+  - name: CalendarHeadCell
+    description: Day-of-week header cell (Mon, Tue, etc.).
+  - name: CalendarCell
+    description: Container for a single day.
+  - name: CalendarCellTrigger
+    description: Clickable day button within a cell.
+  - name: CalendarPrevButton
+    description: Navigate to previous month.
+  - name: CalendarNextButton
+    description: Navigate to next month.
 ---
 
 import CalendarDemo from '../../../demos/calendar/CalendarDemo.vue'
@@ -25,6 +48,3 @@ Use `layout="month-and-year"` for a compact month/year selection mode.
 
 <CalendarLayoutDemo client:only="vue" />
 
-## Sub-components
-
-Built on reka-ui CalendarRoot. All sub-components are exported for custom layouts: `CalendarHeader`, `CalendarHeading`, `CalendarGrid`, `CalendarGridHead`, `CalendarGridBody`, `CalendarGridRow`, `CalendarHeadCell`, `CalendarCell`, `CalendarCellTrigger`, `CalendarPrevButton`, `CalendarNextButton`.

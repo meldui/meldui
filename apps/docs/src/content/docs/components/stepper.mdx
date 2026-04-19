@@ -6,6 +6,24 @@ subcategory: Feedback
 order: 77
 package: '@meldui/vue'
 componentName: Stepper
+subComponents:
+  - name: StepperItem
+    description: Container for a single step.
+    props:
+      - name: step
+        type: number
+        required: true
+        description: The step number (1-based).
+  - name: StepperTrigger
+    description: Clickable step header.
+  - name: StepperIndicator
+    description: Step number or icon display (shows checkmark when completed).
+  - name: StepperTitle
+    description: Step title text.
+  - name: StepperDescription
+    description: Step description text.
+  - name: StepperSeparator
+    description: Connector line between steps (hidden on last item).
 ---
 
 import StepperDemo from '../../../demos/stepper/StepperDemo.vue'
@@ -14,14 +32,3 @@ import StepperDemo from '../../../demos/stepper/StepperDemo.vue'
 
 <StepperDemo client:only="vue" />
 
-## Sub-components
-
-| Component            | Description                              |
-| -------------------- | ---------------------------------------- |
-| `Stepper`            | Root. Props from reka-ui StepperRoot     |
-| `StepperItem`        | Step container. Props: `step` (required) |
-| `StepperTrigger`     | Clickable step header                    |
-| `StepperIndicator`   | Step number/icon display                 |
-| `StepperTitle`       | Step title                               |
-| `StepperDescription` | Step description                         |
-| `StepperSeparator`   | Connector line between steps             |

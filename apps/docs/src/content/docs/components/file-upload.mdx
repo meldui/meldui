@@ -43,7 +43,7 @@ subComponents:
     description: Drag and drop target area.
     slots:
       - name: default
-        props: "{ isDragging: boolean, isDisabled: boolean, openFilePicker: () => void }"
+        props: '{ isDragging: boolean, isDisabled: boolean, openFilePicker: () => void }'
         description: Content with drag state access.
   - name: FileUploadTrigger
     description: Button that opens the file picker dialog.
@@ -95,4 +95,3 @@ import FileUploadDemo from '../../../demos/file-upload/FileUploadDemo.vue'
 ## Usage
 
 <FileUploadDemo client:only="vue" />
-

@@ -217,9 +217,9 @@ Enrich sub-component tables with full props, events, and slots data via frontmat
 
 ### 8.5 Data Display (3 components)
 
-- [ ] Card — CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction
-- [ ] Calendar — CalendarHeader, CalendarHeading, CalendarGrid, CalendarCell, CalendarCellTrigger, CalendarPrevButton, CalendarNextButton
-- [ ] Stepper — StepperItem (step), StepperTrigger, StepperIndicator, StepperTitle, StepperDescription, StepperSeparator
+- [x] Card — 6 sub-components (CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction)
+- [x] Calendar — 11 sub-components (CalendarHeader through CalendarNextButton)
+- [x] Stepper — 6 sub-components (StepperItem step prop, StepperIndicator, StepperSeparator)
 
 ### 8.6 Interactive (3 components)
 

@@ -6,6 +6,19 @@ subcategory: Data Display
 order: 60
 package: '@meldui/vue'
 componentName: Card
+subComponents:
+  - name: CardHeader
+    description: Header section containing title and description.
+  - name: CardTitle
+    description: Card title text.
+  - name: CardDescription
+    description: Subtitle or description text below the title.
+  - name: CardContent
+    description: Main content area of the card.
+  - name: CardFooter
+    description: Footer section for action buttons.
+  - name: CardAction
+    description: Action element positioned in the card header.
 ---
 
 import CardDemo from '../../../demos/card/CardDemo.vue'
@@ -21,14 +34,3 @@ Cards can contain form elements like inputs and selects.
 
 <CardWithFormDemo client:only="vue" />
 
-## Sub-components
-
-| Component         | Description                  |
-| ----------------- | ---------------------------- |
-| `Card`            | Root container               |
-| `CardHeader`      | Header section               |
-| `CardTitle`       | Card title                   |
-| `CardDescription` | Subtitle or description      |
-| `CardContent`     | Main content area            |
-| `CardFooter`      | Footer with actions          |
-| `CardAction`      | Action element in the header |
