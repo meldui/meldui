@@ -6,11 +6,26 @@ subcategory: Overlay
 order: 52
 package: '@meldui/vue'
 componentName: Sheet
-props:
-  - name: side
-    type: "'top' | 'right' | 'bottom' | 'left'"
-    default: "'right'"
-    description: The edge the sheet slides from (set on SheetContent).
+subComponents:
+  - name: SheetContent
+    description: Sliding panel container.
+    props:
+      - name: side
+        type: "'top' | 'right' | 'bottom' | 'left'"
+        default: "'right'"
+        description: The edge the sheet slides from.
+  - name: SheetHeader
+    description: Header layout container.
+  - name: SheetTitle
+    description: Sheet title text.
+  - name: SheetDescription
+    description: Optional description text.
+  - name: SheetFooter
+    description: Footer layout for actions.
+  - name: SheetClose
+    description: Button that closes the sheet.
+  - name: SheetTrigger
+    description: Element that opens the sheet.
 ---
 
 import SheetDemo from '../../../demos/sheet/SheetDemo.vue'
@@ -26,15 +41,3 @@ Use the `side` prop on `SheetContent` to control which edge the sheet slides fro
 
 <SheetSidesDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                                                           |
-| ------------------ | --------------------------------------------------------------------- |
-| `Sheet`            | Root state container                                                  |
-| `SheetTrigger`     | Opens the sheet                                                       |
-| `SheetContent`     | Sliding panel. Props: `side` ('top' \| 'right' \| 'bottom' \| 'left') |
-| `SheetHeader`      | Header layout                                                         |
-| `SheetTitle`       | Title                                                                 |
-| `SheetDescription` | Description                                                           |
-| `SheetFooter`      | Footer layout                                                         |
-| `SheetClose`       | Close button                                                          |

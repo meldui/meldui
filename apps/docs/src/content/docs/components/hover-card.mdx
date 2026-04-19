@@ -6,6 +6,22 @@ subcategory: Overlay
 order: 56
 package: '@meldui/vue'
 componentName: HoverCard
+subComponents:
+  - name: HoverCardContent
+    description: Rich content card.
+    props:
+      - name: side
+        type: "'top' | 'right' | 'bottom' | 'left'"
+        description: Which side of the trigger to position on.
+      - name: sideOffset
+        type: number
+        default: '4'
+        description: Distance from the trigger in pixels.
+      - name: align
+        type: "'start' | 'center' | 'end'"
+        description: Alignment relative to trigger.
+  - name: HoverCardTrigger
+    description: Element that triggers the hover card.
 ---
 
 import HoverCardDemo from '../../../demos/hover-card/HoverCardDemo.vue'
@@ -14,10 +30,3 @@ import HoverCardDemo from '../../../demos/hover-card/HoverCardDemo.vue'
 
 <HoverCardDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                                        |
-| ------------------ | -------------------------------------------------- |
-| `HoverCard`        | Root. Props: `openDelay`, `closeDelay`             |
-| `HoverCardTrigger` | Trigger element                                    |
-| `HoverCardContent` | Card content. Props: `side`, `sideOffset`, `align` |

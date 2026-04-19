@@ -6,6 +6,25 @@ subcategory: Overlay
 order: 54
 package: '@meldui/vue'
 componentName: Popover
+subComponents:
+  - name: PopoverContent
+    description: Floating content container.
+    props:
+      - name: align
+        type: "'start' | 'center' | 'end'"
+        default: "'center'"
+        description: Horizontal alignment relative to trigger.
+      - name: side
+        type: "'top' | 'right' | 'bottom' | 'left'"
+        description: Which side of the trigger to position on.
+      - name: sideOffset
+        type: number
+        default: '4'
+        description: Distance from the trigger in pixels.
+  - name: PopoverTrigger
+    description: Element that opens the popover.
+  - name: PopoverAnchor
+    description: Custom anchor element for positioning.
 ---
 
 import PopoverDemo from '../../../demos/popover/PopoverDemo.vue'
@@ -14,11 +33,3 @@ import PopoverDemo from '../../../demos/popover/PopoverDemo.vue'
 
 <PopoverDemo client:only="vue" />
 
-## Sub-components
-
-| Component        | Description                                            |
-| ---------------- | ------------------------------------------------------ |
-| `Popover`        | Root state container. Props: `open`, `defaultOpen`     |
-| `PopoverTrigger` | Element that opens the popover                         |
-| `PopoverContent` | Floating content. Props: `align`, `side`, `sideOffset` |
-| `PopoverAnchor`  | Custom anchor element                                  |

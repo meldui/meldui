@@ -6,6 +6,30 @@ subcategory: Overlay
 order: 50
 package: '@meldui/vue'
 componentName: Dialog
+subComponents:
+  - name: DialogContent
+    description: Modal content with overlay and close button.
+    props:
+      - name: showCloseButton
+        type: boolean
+        default: 'true'
+        description: Show the X close button in the top-right corner.
+  - name: DialogScrollContent
+    description: Scrollable content variant for long content.
+  - name: DialogHeader
+    description: Header layout container.
+  - name: DialogTitle
+    description: Dialog title text (required for accessibility).
+  - name: DialogDescription
+    description: Optional description below the title.
+  - name: DialogFooter
+    description: Footer layout for action buttons.
+  - name: DialogClose
+    description: Button that closes the dialog.
+  - name: DialogOverlay
+    description: Semi-transparent background overlay.
+  - name: DialogTrigger
+    description: Element that opens the dialog.
 ---
 
 import DialogDemo from '../../../demos/dialog/DialogDemo.vue'
@@ -14,17 +38,3 @@ import DialogDemo from '../../../demos/dialog/DialogDemo.vue'
 
 <DialogDemo client:only="vue" />
 
-## Sub-components
-
-| Component             | Description                                                              |
-| --------------------- | ------------------------------------------------------------------------ |
-| `Dialog`              | Root state container. Props: `open`, `defaultOpen`. Event: `update:open` |
-| `DialogTrigger`       | Opens the dialog                                                         |
-| `DialogContent`       | Modal content with overlay. Props: `showCloseButton`                     |
-| `DialogScrollContent` | Scrollable content variant                                               |
-| `DialogHeader`        | Header layout                                                            |
-| `DialogTitle`         | Dialog title (required for accessibility)                                |
-| `DialogDescription`   | Dialog description                                                       |
-| `DialogFooter`        | Footer layout for actions                                                |
-| `DialogClose`         | Closes the dialog                                                        |
-| `DialogOverlay`       | Background overlay                                                       |

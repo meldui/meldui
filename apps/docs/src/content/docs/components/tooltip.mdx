@@ -6,6 +6,30 @@ subcategory: Overlay
 order: 55
 package: '@meldui/vue'
 componentName: Tooltip
+subComponents:
+  - name: TooltipProvider
+    description: Global tooltip configuration wrapper.
+    props:
+      - name: delayDuration
+        type: number
+        default: '0'
+        description: Delay in ms before tooltip appears.
+      - name: skipDelayDuration
+        type: number
+        default: '300'
+        description: Time to skip delay when moving between tooltips.
+  - name: TooltipContent
+    description: Tooltip popup content.
+    props:
+      - name: side
+        type: "'top' | 'right' | 'bottom' | 'left'"
+        description: Which side of the trigger to show on.
+      - name: sideOffset
+        type: number
+        default: '4'
+        description: Distance from the trigger in pixels.
+  - name: TooltipTrigger
+    description: Element that triggers the tooltip on hover.
 ---
 
 import TooltipDemo from '../../../demos/tooltip/TooltipDemo.vue'
@@ -23,11 +47,3 @@ Use the `side` prop on `TooltipContent` to control placement.
 
 <TooltipSidesDemo client:only="vue" />
 
-## Sub-components
-
-| Component         | Description                                                       |
-| ----------------- | ----------------------------------------------------------------- |
-| `TooltipProvider` | Global configuration. Props: `delayDuration`, `skipDelayDuration` |
-| `Tooltip`         | Root state container                                              |
-| `TooltipTrigger`  | Element that triggers the tooltip                                 |
-| `TooltipContent`  | Tooltip popup. Props: `side`, `sideOffset`, `align`               |

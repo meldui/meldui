@@ -6,6 +6,23 @@ subcategory: Overlay
 order: 53
 package: '@meldui/vue'
 componentName: Drawer
+subComponents:
+  - name: DrawerContent
+    description: Drawer panel with drag handle.
+  - name: DrawerHeader
+    description: Header layout container.
+  - name: DrawerTitle
+    description: Drawer title text.
+  - name: DrawerDescription
+    description: Optional description text.
+  - name: DrawerFooter
+    description: Footer layout for actions.
+  - name: DrawerClose
+    description: Button that closes the drawer.
+  - name: DrawerOverlay
+    description: Background overlay.
+  - name: DrawerTrigger
+    description: Element that opens the drawer.
 ---
 
 import DrawerDemo from '../../../demos/drawer/DrawerDemo.vue'
@@ -14,16 +31,3 @@ import DrawerDemo from '../../../demos/drawer/DrawerDemo.vue'
 
 <DrawerDemo client:only="vue" />
 
-## Sub-components
-
-| Component           | Description                                                             |
-| ------------------- | ----------------------------------------------------------------------- |
-| `Drawer`            | Root. Props: `shouldScaleBackground` (default: true). Built on vaul-vue |
-| `DrawerTrigger`     | Opens the drawer                                                        |
-| `DrawerContent`     | Drawer panel with drag handle                                           |
-| `DrawerHeader`      | Header layout                                                           |
-| `DrawerTitle`       | Title                                                                   |
-| `DrawerDescription` | Description                                                             |
-| `DrawerFooter`      | Footer layout                                                           |
-| `DrawerClose`       | Close button                                                            |
-| `DrawerOverlay`     | Background overlay                                                      |

@@ -6,6 +6,23 @@ subcategory: Overlay
 order: 51
 package: '@meldui/vue'
 componentName: AlertDialog
+subComponents:
+  - name: AlertDialogContent
+    description: Modal content container.
+  - name: AlertDialogHeader
+    description: Header layout container.
+  - name: AlertDialogTitle
+    description: Alert title text (required for accessibility).
+  - name: AlertDialogDescription
+    description: Description of the action being confirmed.
+  - name: AlertDialogFooter
+    description: Footer layout for action buttons.
+  - name: AlertDialogAction
+    description: Confirm/proceed button.
+  - name: AlertDialogCancel
+    description: Cancel button that closes the dialog.
+  - name: AlertDialogTrigger
+    description: Element that opens the alert dialog.
 ---
 
 import AlertDialogDemo from '../../../demos/alert-dialog/AlertDialogDemo.vue'
@@ -14,16 +31,3 @@ import AlertDialogDemo from '../../../demos/alert-dialog/AlertDialogDemo.vue'
 
 <AlertDialogDemo client:only="vue" />
 
-## Sub-components
-
-| Component                | Description                        |
-| ------------------------ | ---------------------------------- |
-| `AlertDialog`            | Root. Props: `open`, `defaultOpen` |
-| `AlertDialogTrigger`     | Opens the dialog                   |
-| `AlertDialogContent`     | Modal content with overlay         |
-| `AlertDialogHeader`      | Header layout                      |
-| `AlertDialogTitle`       | Title (required for accessibility) |
-| `AlertDialogDescription` | Description text                   |
-| `AlertDialogFooter`      | Footer for actions                 |
-| `AlertDialogAction`      | Confirm action button              |
-| `AlertDialogCancel`      | Cancel button                      |
