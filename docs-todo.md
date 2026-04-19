@@ -179,3 +179,44 @@
 - [ ] Performance check (Lighthouse score)
 - [ ] Cross-browser testing (Chrome, Firefox, Safari)
 - [ ] Final review of all pages for consistency
+
+## Phase 8: Sub-component API Documentation
+
+Enrich sub-component tables with full props, events, and slots data via frontmatter `subComponents[]`.
+
+### 8.1 Overlay (7 components)
+- [ ] Dialog — DialogContent (showCloseButton), DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose, DialogOverlay, DialogScrollContent
+- [ ] AlertDialog — AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel
+- [ ] Sheet — SheetContent (side), SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose
+- [ ] Drawer — DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose, DrawerOverlay
+- [ ] Popover — PopoverContent (align, side, sideOffset), PopoverAnchor
+- [ ] Tooltip — TooltipProvider (delayDuration), TooltipContent (side, sideOffset, align)
+- [ ] HoverCard — HoverCardContent (side, sideOffset, align)
+
+### 8.2 Navigation (4 components)
+- [ ] DropdownMenu — DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent
+- [ ] ContextMenu — same structure as DropdownMenu
+- [ ] Menubar — MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarSub, MenubarSubTrigger, MenubarSubContent
+- [ ] Breadcrumb — BreadcrumbList, BreadcrumbItem, BreadcrumbLink (href, asChild), BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis
+
+### 8.3 Layout (4 components)
+- [ ] Accordion — AccordionItem (value, disabled), AccordionTrigger (icon slot), AccordionContent
+- [ ] Tabs — TabsList, TabsTrigger (value, disabled), TabsContent (value)
+- [ ] Resizable — ResizablePanel (defaultSize, minSize, maxSize, collapsible), ResizableHandle (withHandle)
+- [ ] Sidebar — full sub-component props (SidebarProvider, SidebarMenuButton variant/size/tooltip, etc.)
+
+### 8.4 Form (4 components)
+- [ ] Select — SelectTrigger (size), SelectContent (position), SelectItem (value, disabled), SelectValue (placeholder), SelectGroup, SelectLabel, SelectSeparator
+- [ ] Field — FieldLabel, FieldContent, FieldDescription, FieldError (errors), FieldGroup, FieldSet, FieldLegend (variant), FieldTitle, FieldSeparator
+- [ ] Form — FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage
+- [ ] FileUpload — FileUploadDropzone (slot props), FileUploadTrigger, FileUploadList, FileUploadItem (file, progress, status, error), FileUploadItemName, FileUploadItemSize (precision), FileUploadItemPreview, FileUploadItemProgress (variant), FileUploadItemDelete, FileUploadClear
+
+### 8.5 Data Display (3 components)
+- [ ] Card — CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction
+- [ ] Calendar — CalendarHeader, CalendarHeading, CalendarGrid, CalendarCell, CalendarCellTrigger, CalendarPrevButton, CalendarNextButton
+- [ ] Stepper — StepperItem (step), StepperTrigger, StepperIndicator, StepperTitle, StepperDescription, StepperSeparator
+
+### 8.6 Interactive (3 components)
+- [ ] Command — CommandDialog (title, description), CommandInput, CommandList, CommandGroup (heading), CommandItem (value, disabled), CommandEmpty, CommandSeparator, CommandShortcut
+- [ ] Carousel — CarouselContent, CarouselItem, CarouselPrevious (variant, size), CarouselNext (variant, size)
+- [ ] Combobox — ComboboxAnchor, ComboboxInput (displayValue, placeholder), ComboboxTrigger, ComboboxList (position, align, sideOffset), ComboboxItem (value, disabled), ComboboxItemIndicator, ComboboxGroup (heading), ComboboxEmpty, ComboboxSeparator, ComboboxCancel
