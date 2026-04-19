@@ -1,0 +1,64 @@
+---
+title: Charts Installation
+description: How to install and configure @meldui/charts-vue in your project.
+category: charts
+order: 2
+---
+
+## Install the Package
+
+```bash
+pnpm add @meldui/charts-vue
+```
+
+> **Note:** `@meldui/charts-vue` requires `@meldui/vue` and `vue` as peer dependencies. Make sure you have the core MeldUI setup completed first — see the [main Installation guide](/docs/getting-started/installation).
+
+## Import a Chart Component
+
+Each chart has a dedicated component and a TypeScript config type:
+
+```typescript
+import { MeldLineChart } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { MeldLineChart } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
+
+const config: MeldLineChartConfig = {
+  series: [
+    { name: 'Sales', data: [100, 150, 200, 180, 250] },
+    { name: 'Revenue', data: [200, 280, 350, 320, 400] },
+  ],
+  xAxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+  },
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" height="400px" />
+</template>
+```
+
+## Available Components
+
+| Component          | Config Type              | Description              |
+| ------------------ | ------------------------ | ------------------------ |
+| `MeldLineChart`    | `MeldLineChartConfig`    | Line and step charts     |
+| `MeldBarChart`     | `MeldBarChartConfig`     | Vertical and horizontal  |
+| `MeldAreaChart`    | `MeldAreaChartConfig`    | Filled area charts       |
+| `MeldPieChart`     | `MeldPieChartConfig`     | Pie charts               |
+| `MeldDonutChart`   | `MeldDonutChartConfig`   | Donut charts             |
+| `MeldScatterChart` | `MeldScatterChartConfig` | Scatter plots            |
+| `MeldRadarChart`   | `MeldRadarChartConfig`   | Radar/spider charts      |
+| `MeldHeatmapChart` | `MeldHeatmapChartConfig` | Heatmap grids            |
+| `MeldMixedChart`   | `MeldMixedChartConfig`   | Combined chart types     |
+
+## CSS Setup
+
+Charts inherit theme variables from your MeldUI CSS. No additional CSS imports are needed beyond what the [main Installation guide](/docs/getting-started/installation) covers. Dark mode is detected automatically.

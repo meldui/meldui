@@ -1,0 +1,23 @@
+---
+title: Scatter Chart
+description: Plot correlations between two numeric variables.
+category: charts
+order: 8
+package: '@meldui/charts-vue'
+---
+
+import ScatterChartDemo from '../../../demos/charts/ScatterChartDemo.vue'
+
+## Usage
+
+<ScatterChartDemo client:only="vue" />
+
+## Config Reference
+
+| Property     | Type                                                          | Default   | Description                                        |
+| ------------ | ------------------------------------------------------------- | --------- | -------------------------------------------------- |
+| `series`     | `{ name: string; data: { x: number; y: number }[] }[]`       | required  | Each data point is an `{ x, y }` object            |
+| `xAxis`      | `{ type?: 'numeric'; title?: string; min?: number; max?: number }` | `{ type: 'numeric' }` | Numeric X axis configuration        |
+| `yAxis`      | `{ title?: string; min?: number; max?: number }`              | -         | Y axis configuration                               |
+| `pointSize`  | `number`                                                      | `6`       | Diameter of each scatter point in pixels            |
+| `pointShape` | `'circle' \| 'rect' \| 'triangle' \| 'diamond'`              | `'circle'`| Shape of each scatter point                        |

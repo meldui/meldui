@@ -1,0 +1,32 @@
+---
+title: Line Chart
+description: Display trends and continuous data with line and step interpolation.
+category: charts
+order: 3
+package: '@meldui/charts-vue'
+---
+
+import LineChartDemo from '../../../demos/charts/LineChartDemo.vue'
+import LineChartStepDemo from '../../../demos/charts/LineChartStepDemo.vue'
+
+## Usage
+
+<LineChartDemo client:only="vue" />
+
+## Step Line
+
+Use `stroke.curve: 'stepline'` for step interpolation.
+
+<LineChartStepDemo client:only="vue" />
+
+## Config Reference
+
+| Property     | Type                                           | Default      | Description                                 |
+| ------------ | ---------------------------------------------- | ------------ | ------------------------------------------- |
+| `series`     | `{ name: string; data: number[] }[]`           | required     | Array of data series                        |
+| `xAxis`      | `{ categories: string[] }`                     | required     | Category labels for the X axis              |
+| `stroke`     | `{ curve?: 'smooth' \| 'straight' \| 'stepline'; width?: number }` | `{ curve: 'smooth', width: 2 }` | Line interpolation and thickness |
+| `legend`     | `{ show?: boolean; position?: string }`        | `{ show: true }` | Legend visibility and placement          |
+| `colors`     | `string \| string[]`                           | `'default'`  | Palette name or custom color array          |
+| `dataLabels` | `{ enabled?: boolean }`                        | `{ enabled: false }` | Show values on data points           |
+| `tooltip`    | `{ enabled?: boolean; shared?: boolean }`      | `{ enabled: true }` | Tooltip behavior                       |

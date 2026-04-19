@@ -1,0 +1,71 @@
+---
+title: Chart Theme Customization
+description: Customize chart appearance with CSS variables, color palettes, and dark mode.
+category: charts
+order: 12
+---
+
+## Tailwind CSS Integration
+
+All chart components read your project's Tailwind CSS theme variables for foreground colors, background colors, borders, and font styles. This means charts automatically match the rest of your MeldUI components without any extra configuration.
+
+Key CSS variables used by charts:
+
+| Variable                      | Used For                          |
+| ----------------------------- | --------------------------------- |
+| `--color-foreground`          | Axis labels, tick text            |
+| `--color-muted-foreground`    | Grid lines, secondary text        |
+| `--color-background`          | Chart background                  |
+| `--color-border`              | Axis lines, chart borders         |
+| `--color-card`                | Tooltip background                |
+| `--color-card-foreground`     | Tooltip text                      |
+
+## Dark Mode
+
+Charts detect dark mode automatically by reading the `dark` class on the `<html>` element. When dark mode is active, axis labels, grid lines, tooltips, and backgrounds all adapt to use the dark theme variables. No additional props are required.
+
+## Color Palettes
+
+Pass a palette name as a string to the `colors` config property:
+
+```vue
+<MeldLineChart :config="{ ...config, colors: 'ocean' }" />
+```
+
+### Available Palettes
+
+| Palette        | Description                                           |
+| -------------- | ----------------------------------------------------- |
+| `default`      | Balanced palette suitable for most use cases           |
+| `vibrant`      | High-saturation colors for emphasis                    |
+| `pastel`       | Soft, muted tones for lighter designs                  |
+| `monochrome`   | Shades of a single hue                                 |
+| `earth`        | Warm, natural tones (browns, greens, ambers)           |
+| `ocean`        | Cool blues and teals                                   |
+| `sunset`       | Warm gradient from orange to purple                    |
+| `corporate`    | Professional, subdued palette for business dashboards  |
+| `neon`         | Bright, electric colors for dark backgrounds           |
+| `accessible`   | High-contrast palette optimized for color blindness    |
+
+## Custom Color Arrays
+
+For full control, pass an array of hex color strings instead of a palette name:
+
+```vue
+<script setup lang="ts">
+const config = {
+  series: [
+    { name: 'Alpha', data: [10, 20, 30] },
+    { name: 'Beta', data: [15, 25, 35] },
+  ],
+  xAxis: { categories: ['Q1', 'Q2', 'Q3'] },
+  colors: ['#6366f1', '#f59e0b', '#10b981'],
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" />
+</template>
+```
+
+Colors are assigned to series in order. If there are more series than colors, the palette cycles.

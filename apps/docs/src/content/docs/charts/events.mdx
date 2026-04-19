@@ -1,0 +1,51 @@
+---
+title: Chart Events
+description: Handle user interactions with chart click, hover, legend, and selection events.
+category: charts
+order: 13
+---
+
+## Event Reference
+
+All chart components emit the following events:
+
+| Event           | Payload                                                        | Description                                   |
+| --------------- | -------------------------------------------------------------- | --------------------------------------------- |
+| `@click`        | `{ seriesName: string; dataIndex: number; value: any; event: MouseEvent }` | Fired when a data point or element is clicked |
+| `@hover`        | `{ seriesName: string; dataIndex: number; value: any }`        | Fired when hovering over a data point         |
+| `@mouseout`     | `{ seriesName: string }`                                       | Fired when the cursor leaves a data point     |
+| `@legendSelect` | `{ name: string; selected: Record<string, boolean> }`         | Fired when a legend item is toggled           |
+| `@dataZoom`     | `{ start: number; end: number }`                               | Fired when the visible data range changes     |
+| `@brushSelect`  | `{ areas: { coordRange: number[][] }[] }`                      | Fired when a brush selection is made          |
+
+## Usage Example
+
+```vue
+<script setup lang="ts">
+import { MeldBarChart } from '@meldui/charts-vue'
+import type { MeldBarChartConfig } from '@meldui/charts-vue'
+
+const config: MeldBarChartConfig = {
+  series: [
+    { name: 'Sales', data: [120, 200, 150, 80, 70] },
+  ],
+  xAxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] },
+}
+
+function handleClick(payload: { seriesName: string; dataIndex: number; value: any }) {
+  console.log(`Clicked ${payload.seriesName} at index ${payload.dataIndex}: ${payload.value}`)
+}
+
+function handleLegendSelect(payload: { name: string; selected: Record<string, boolean> }) {
+  console.log(`Legend toggled: ${payload.name}`, payload.selected)
+}
+</script>
+
+<template>
+  <MeldBarChart
+    :config="config"
+    @click="handleClick"
+    @legend-select="handleLegendSelect"
+  />
+</template>
+```

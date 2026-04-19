@@ -1,0 +1,22 @@
+---
+title: Donut Chart
+description: A pie chart with a hollow center, ideal for displaying a summary metric.
+category: charts
+order: 7
+package: '@meldui/charts-vue'
+---
+
+import DonutChartDemo from '../../../demos/charts/DonutChartDemo.vue'
+
+## Usage
+
+<DonutChartDemo client:only="vue" />
+
+## Config Reference
+
+| Property      | Type                                    | Default        | Description                                                        |
+| ------------- | --------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| `series`      | `{ name: string; data: number[] }[]`    | required       | Each series represents a slice; use a single-element `data` array  |
+| `legend`      | `{ show?: boolean; position?: string }` | `{ show: true }` | Legend visibility and placement                                 |
+| `innerRadius` | `string \| number`                      | `'55%'`        | Inner radius that creates the donut hole                           |
+| `centerLabel` | `{ show?: boolean; text?: string; subText?: string }` | - | Content displayed in the center of the donut          |

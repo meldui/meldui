@@ -1,0 +1,67 @@
+---
+title: Charts Overview
+description: A comprehensive charting library for Vue 3, built on ECharts with MeldUI theming and dark mode support.
+category: charts
+order: 1
+---
+
+## Overview
+
+`@meldui/charts-vue` provides 9 chart components that integrate seamlessly with MeldUI's design system. Charts automatically read your Tailwind CSS theme variables and support dark mode out of the box.
+
+### Available Chart Types
+
+| Chart                                          | Component          | Best For                                    |
+| ---------------------------------------------- | ------------------ | ------------------------------------------- |
+| [Line Chart](/docs/charts/line-chart)          | `MeldLineChart`    | Trends over time, continuous data           |
+| [Bar Chart](/docs/charts/bar-chart)            | `MeldBarChart`     | Comparisons across categories               |
+| [Area Chart](/docs/charts/area-chart)          | `MeldAreaChart`    | Volume and cumulative values over time      |
+| [Pie Chart](/docs/charts/pie-chart)            | `MeldPieChart`     | Proportions of a whole                      |
+| [Donut Chart](/docs/charts/donut-chart)        | `MeldDonutChart`   | Proportions with a center metric            |
+| [Scatter Chart](/docs/charts/scatter-chart)    | `MeldScatterChart` | Correlations between two variables          |
+| [Radar Chart](/docs/charts/radar-chart)        | `MeldRadarChart`   | Multi-dimensional comparisons               |
+| [Heatmap Chart](/docs/charts/heatmap-chart)    | `MeldHeatmapChart` | Density and intensity across two dimensions |
+| [Mixed Chart](/docs/charts/mixed-chart)        | `MeldMixedChart`   | Combining multiple chart types              |
+
+### Installation
+
+```bash
+pnpm add @meldui/charts-vue
+```
+
+See the [Installation](/docs/charts/installation) page for full setup instructions.
+
+### Common Props
+
+All chart components accept these shared props:
+
+| Prop        | Type     | Default  | Description                                |
+| ----------- | -------- | -------- | ------------------------------------------ |
+| `config`    | `object` | required | Chart-specific configuration object        |
+| `height`    | `string` | `'350px'`| CSS height of the chart container          |
+| `width`     | `string` | `'100%'` | CSS width of the chart container           |
+| `title`     | `string` | -        | Chart title displayed above the chart      |
+| `loading`   | `boolean`| `false`  | Show a loading spinner overlay             |
+| `ariaLabel` | `string` | -        | Accessible label for screen readers        |
+
+### Color Palettes
+
+Charts support named color palettes via the `colors` config property. Pass a palette name string or a custom array of hex colors.
+
+| Palette        | Description                                           |
+| -------------- | ----------------------------------------------------- |
+| `default`      | Balanced palette suitable for most use cases           |
+| `vibrant`      | High-saturation colors for emphasis                    |
+| `pastel`       | Soft, muted tones for lighter designs                  |
+| `monochrome`   | Shades of a single hue                                 |
+| `earth`        | Warm, natural tones (browns, greens, ambers)           |
+| `ocean`        | Cool blues and teals                                   |
+| `sunset`       | Warm gradient from orange to purple                    |
+| `corporate`    | Professional, subdued palette for business dashboards  |
+| `neon`         | Bright, electric colors for dark backgrounds           |
+| `accessible`   | High-contrast palette optimized for color blindness    |
+
+### Additional Resources
+
+- [Theme Customization](/docs/charts/theme-customization) — dark mode, CSS variables, custom colors
+- [Chart Events](/docs/charts/events) — click, hover, and selection event handling

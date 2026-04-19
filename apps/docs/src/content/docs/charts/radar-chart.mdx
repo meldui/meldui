@@ -1,0 +1,23 @@
+---
+title: Radar Chart
+description: Compare multiple dimensions on a radial grid.
+category: charts
+order: 9
+package: '@meldui/charts-vue'
+---
+
+import RadarChartDemo from '../../../demos/charts/RadarChartDemo.vue'
+
+## Usage
+
+<RadarChartDemo client:only="vue" />
+
+## Config Reference
+
+| Property   | Type                                         | Default   | Description                                         |
+| ---------- | -------------------------------------------- | --------- | --------------------------------------------------- |
+| `series`   | `{ name: string; data: number[] }[]`         | required  | Values for each indicator per series                |
+| `xAxis`    | `{ categories: string[] }`                   | required  | Category names used as radar indicators             |
+| `yAxis`    | `{ max?: number }`                           | -         | Maximum value for the radial axis                   |
+| `shape`    | `'polygon' \| 'circle'`                      | `'polygon'` | Shape of the radar grid lines                     |
+| `fillArea` | `boolean`                                    | `true`    | Fill the area enclosed by each series               |

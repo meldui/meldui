@@ -7,14 +7,19 @@ import { cn } from '@/lib/utils'
 import type { BadgeVariants } from '.'
 import { badgeVariants } from '.'
 
-const props = defineProps<
-  PrimitiveProps & {
-    shape?: BadgeVariants['shape']
-    variant?: BadgeVariants['variant']
-    outline?: BadgeVariants['outline']
-    class?: HTMLAttributes['class']
-  }
->()
+const props = withDefaults(
+  defineProps<
+    PrimitiveProps & {
+      shape?: BadgeVariants['shape']
+      variant?: BadgeVariants['variant']
+      outline?: boolean
+      class?: HTMLAttributes['class']
+    }
+  >(),
+  {
+    outline: false,
+  },
+)
 
 const delegatedProps = reactiveOmit(props, 'class', 'shape', 'variant', 'outline')
 </script>

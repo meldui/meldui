@@ -1,0 +1,22 @@
+---
+title: Heatmap Chart
+description: Visualize density and intensity across two categorical or numeric dimensions.
+category: charts
+order: 10
+package: '@meldui/charts-vue'
+---
+
+import HeatmapChartDemo from '../../../demos/charts/HeatmapChartDemo.vue'
+
+## Usage
+
+<HeatmapChartDemo client:only="vue" />
+
+## Config Reference
+
+| Property     | Type                                                         | Default  | Description                                          |
+| ------------ | ------------------------------------------------------------ | -------- | ---------------------------------------------------- |
+| `series`     | `{ name: string; data: [number \| string, number \| string, number][] }[]` | required | Each data point is `[x, y, value]`        |
+| `xAxis`      | `{ categories?: string[]; type?: string }`                   | -        | X axis labels or type                                |
+| `yAxis`      | `{ categories?: string[]; type?: string }`                   | -        | Y axis labels or type                                |
+| `colorRange` | `{ min?: number; max?: number; colors?: string[] }`         | -        | Color scale mapping for intensity values             |

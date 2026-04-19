@@ -1,0 +1,32 @@
+---
+title: Bar Chart
+description: Compare values across categories with vertical, horizontal, and stacked bars.
+category: charts
+order: 4
+package: '@meldui/charts-vue'
+---
+
+import BarChartDemo from '../../../demos/charts/BarChartDemo.vue'
+import BarChartStackedDemo from '../../../demos/charts/BarChartStackedDemo.vue'
+
+## Usage
+
+<BarChartDemo client:only="vue" />
+
+## Stacked & Horizontal
+
+Use `stacked` and `horizontal` props.
+
+<BarChartStackedDemo client:only="vue" />
+
+## Config Reference
+
+| Property     | Type                                 | Default      | Description                                    |
+| ------------ | ------------------------------------ | ------------ | ---------------------------------------------- |
+| `series`     | `{ name: string; data: number[] }[]` | required     | Array of data series                           |
+| `xAxis`      | `{ categories: string[] }`           | required     | Category labels for the X axis                 |
+| `stacked`    | `boolean`                            | `false`      | Stack bars on top of each other                |
+| `horizontal` | `boolean`                            | `false`      | Render bars horizontally                       |
+| `barWidth`   | `string \| number`                   | -            | Width of each bar (e.g. `'50%'` or `20`)       |
+| `barGap`     | `string`                             | -            | Gap between bars in the same category          |
+| `dataLabels` | `{ enabled?: boolean }`              | `{ enabled: false }` | Show values on bars                     |

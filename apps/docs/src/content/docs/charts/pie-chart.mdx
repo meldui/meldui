@@ -1,0 +1,23 @@
+---
+title: Pie Chart
+description: Show proportions of a whole with a circular chart.
+category: charts
+order: 6
+package: '@meldui/charts-vue'
+---
+
+import PieChartDemo from '../../../demos/charts/PieChartDemo.vue'
+
+## Usage
+
+<PieChartDemo client:only="vue" />
+
+## Config Reference
+
+| Property     | Type                                               | Default        | Description                                                        |
+| ------------ | -------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| `series`     | `{ name: string; data: number[] }[]`               | required       | Each series represents a slice; use a single-element `data` array  |
+| `legend`     | `{ show?: boolean; position?: string }`            | `{ show: true }` | Legend visibility and placement                                 |
+| `startAngle` | `number`                                           | `0`            | Rotation angle in degrees for the first slice                      |
+| `radius`     | `string \| number`                                 | `'75%'`        | Outer radius of the pie (e.g. `'60%'` or `150`)                   |
+| `showLabels` | `boolean`                                          | `true`         | Display percentage or value labels on slices                       |

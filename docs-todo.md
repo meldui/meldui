@@ -142,19 +142,19 @@
 
 ## Phase 5: Charts
 
-- [ ] Charts overview page (chart type selection guide)
-- [ ] Charts installation page
-- [ ] MeldLineChart — demo + MDX + config options
-- [ ] MeldBarChart — demo + MDX + config options
-- [ ] MeldAreaChart — demo + MDX + config options
-- [ ] MeldPieChart — demo + MDX + config options
-- [ ] MeldDonutChart — demo + MDX + config options
-- [ ] MeldScatterChart — demo + MDX + config options
-- [ ] MeldRadarChart — demo + MDX + config options
-- [ ] MeldHeatmapChart — demo + MDX + config options
-- [ ] MeldMixedChart — demo + MDX + config options
-- [ ] Charts theme customization page
-- [ ] Charts events & interactivity page
+- [x] Charts overview page (chart type selection guide)
+- [x] Charts installation page
+- [x] MeldLineChart — 2 demos (smooth + stepline) + config table
+- [x] MeldBarChart — 2 demos (grouped + stacked horizontal) + config table
+- [x] MeldAreaChart — 1 demo (stacked smooth) + config table
+- [x] MeldPieChart — 1 demo (browser market share) + config table
+- [x] MeldDonutChart — 1 demo (revenue by region) + config table
+- [x] MeldScatterChart — 1 demo (spend vs revenue) + config table
+- [x] MeldRadarChart — 1 demo (skill comparison) + config table
+- [x] MeldHeatmapChart — 1 demo (weekly activity) + config table
+- [x] MeldMixedChart — 1 demo (bar + line) + config table
+- [x] Charts theme customization page (palettes, dark mode, CSS variables)
+- [x] Charts events & interactivity page (click, hover, legendSelect, dataZoom, brushSelect)
 
 ## Phase 6: Search & LLM Optimization
 

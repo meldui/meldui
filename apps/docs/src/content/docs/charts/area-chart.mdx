@@ -1,0 +1,23 @@
+---
+title: Area Chart
+description: Visualize volume and cumulative data with filled areas beneath lines.
+category: charts
+order: 5
+package: '@meldui/charts-vue'
+---
+
+import AreaChartDemo from '../../../demos/charts/AreaChartDemo.vue'
+
+## Usage
+
+<AreaChartDemo client:only="vue" />
+
+## Config Reference
+
+| Property      | Type                                           | Default               | Description                          |
+| ------------- | ---------------------------------------------- | --------------------- | ------------------------------------ |
+| `series`      | `{ name: string; data: number[] }[]`           | required              | Array of data series                 |
+| `xAxis`       | `{ categories: string[] }`                     | required              | Category labels for the X axis       |
+| `stacked`     | `boolean`                                      | `false`               | Stack areas on top of each other     |
+| `stroke`      | `{ curve?: 'smooth' \| 'straight'; width?: number }` | `{ curve: 'smooth', width: 2 }` | Line interpolation and width |
+| `fillOpacity` | `number`                                       | `0.3`                 | Opacity of the filled area (0 to 1)  |
