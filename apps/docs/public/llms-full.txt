@@ -565,6 +565,25 @@ Plot correlations between two numeric variables.
 
 A vertically stacked set of interactive headings that reveal or hide sections of content.
 
+### Sub-components
+
+#### AccordionItem
+
+Individual collapsible section.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Unique identifier for the item. |
+| `disabled` | `boolean` | - | Prevents user interaction. |
+
+#### AccordionTrigger
+
+Clickable header that toggles the content.
+
+#### AccordionContent
+
+Collapsible content area with enter/leave animations.
+
 ## Usage
 
 
@@ -572,17 +591,6 @@ A vertically stacked set of interactive headings that reveal or hide sections of
 ## Multiple & Disabled
 
 Use `type="multiple"` to allow several items open at once. Individual items can be `disabled`.
-
-
-
-## Sub-components
-
-| Component          | Description                                                                 |
-| ------------------ | --------------------------------------------------------------------------- |
-| `Accordion`        | Root. Props: `type` ('single' \| 'multiple'), `collapsible`, `defaultValue` |
-| `AccordionItem`    | Individual section. Props: `value` (required), `disabled`                   |
-| `AccordionTrigger` | Clickable header. Slot: `icon` for custom expand indicator                  |
-| `AccordionContent` | Collapsible content area                                                    |
 
 ---
 
@@ -618,23 +626,41 @@ Displays a callout message for important information with color variants.
 
 A modal confirmation dialog that interrupts the user for important decisions.
 
+### Sub-components
+
+#### AlertDialogContent
+
+Modal content container.
+
+#### AlertDialogHeader
+
+Header layout container.
+
+#### AlertDialogTitle
+
+Alert title text (required for accessibility).
+
+#### AlertDialogDescription
+
+Description of the action being confirmed.
+
+#### AlertDialogFooter
+
+Footer layout for action buttons.
+
+#### AlertDialogAction
+
+Confirm/proceed button.
+
+#### AlertDialogCancel
+
+Cancel button that closes the dialog.
+
+#### AlertDialogTrigger
+
+Element that opens the alert dialog.
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component                | Description                        |
-| ------------------------ | ---------------------------------- |
-| `AlertDialog`            | Root. Props: `open`, `defaultOpen` |
-| `AlertDialogTrigger`     | Opens the dialog                   |
-| `AlertDialogContent`     | Modal content with overlay         |
-| `AlertDialogHeader`      | Header layout                      |
-| `AlertDialogTitle`       | Title (required for accessibility) |
-| `AlertDialogDescription` | Description text                   |
-| `AlertDialogFooter`      | Footer for actions                 |
-| `AlertDialogAction`      | Confirm action button              |
-| `AlertDialogCancel`      | Cancel button                      |
 
 ---
 
@@ -712,6 +738,37 @@ Use the `outline` prop for a bordered style across all color variants.
 
 Navigation breadcrumbs showing the current page location in a hierarchy.
 
+### Sub-components
+
+#### BreadcrumbList
+
+Ordered list container for breadcrumb items.
+
+#### BreadcrumbItem
+
+Individual breadcrumb wrapper.
+
+#### BreadcrumbLink
+
+Clickable navigation link.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `href` | `string` | - | The link URL. |
+| `asChild` | `boolean` | - | Merge props onto child element instead of rendering an anchor. |
+
+#### BreadcrumbPage
+
+Current page indicator (non-clickable, has aria-current="page").
+
+#### BreadcrumbSeparator
+
+Separator between items (default chevron icon).
+
+#### BreadcrumbEllipsis
+
+Collapsed items indicator (three dots).
+
 ## Usage
 
 
@@ -719,20 +776,6 @@ Navigation breadcrumbs showing the current page location in a hierarchy.
 ## With Ellipsis
 
 Use `BreadcrumbEllipsis` to indicate collapsed intermediate items.
-
-
-
-## Sub-components
-
-| Component             | Description                                |
-| --------------------- | ------------------------------------------ |
-| `Breadcrumb`          | Root `<nav>` element                       |
-| `BreadcrumbList`      | Ordered list of breadcrumb items           |
-| `BreadcrumbItem`      | Individual breadcrumb                      |
-| `BreadcrumbLink`      | Clickable link. Props: `href`, `asChild`   |
-| `BreadcrumbPage`      | Current page (non-clickable)               |
-| `BreadcrumbSeparator` | Separator between items (default: chevron) |
-| `BreadcrumbEllipsis`  | Collapsed items indicator                  |
 
 ---
 
@@ -805,6 +848,52 @@ A date picker calendar for selecting individual dates.
 |------|------|---------|-------------|
 | `layout` | `'month-and-year' | 'month-only' | 'year-only'` | - | The calendar picker layout mode. |
 
+### Sub-components
+
+#### CalendarHeader
+
+Navigation header with month/year and prev/next buttons.
+
+#### CalendarHeading
+
+Displays the current month and year.
+
+#### CalendarGrid
+
+Grid container for calendar days.
+
+#### CalendarGridHead
+
+Header row with day-of-week labels.
+
+#### CalendarGridBody
+
+Body rows containing day cells.
+
+#### CalendarGridRow
+
+A single row in the calendar grid.
+
+#### CalendarHeadCell
+
+Day-of-week header cell (Mon, Tue, etc.).
+
+#### CalendarCell
+
+Container for a single day.
+
+#### CalendarCellTrigger
+
+Clickable day button within a cell.
+
+#### CalendarPrevButton
+
+Navigate to previous month.
+
+#### CalendarNextButton
+
+Navigate to next month.
+
 ## Usage
 
 
@@ -813,17 +902,37 @@ A date picker calendar for selecting individual dates.
 
 Use `layout="month-and-year"` for a compact month/year selection mode.
 
-
-
-## Sub-components
-
-Built on reka-ui CalendarRoot. All sub-components are exported for custom layouts: `CalendarHeader`, `CalendarHeading`, `CalendarGrid`, `CalendarGridHead`, `CalendarGridBody`, `CalendarGridRow`, `CalendarHeadCell`, `CalendarCell`, `CalendarCellTrigger`, `CalendarPrevButton`, `CalendarNextButton`.
-
 ---
 
 ## Card
 
 A container for grouping related content with header, body, and footer sections.
+
+### Sub-components
+
+#### CardHeader
+
+Header section containing title and description.
+
+#### CardTitle
+
+Card title text.
+
+#### CardDescription
+
+Subtitle or description text below the title.
+
+#### CardContent
+
+Main content area of the card.
+
+#### CardFooter
+
+Footer section for action buttons.
+
+#### CardAction
+
+Action element positioned in the card header.
 
 ## Usage
 
@@ -832,20 +941,6 @@ A container for grouping related content with header, body, and footer sections.
 ## With Form
 
 Cards can contain form elements like inputs and selects.
-
-
-
-## Sub-components
-
-| Component         | Description                  |
-| ----------------- | ---------------------------- |
-| `Card`            | Root container               |
-| `CardHeader`      | Header section               |
-| `CardTitle`       | Card title                   |
-| `CardDescription` | Subtitle or description      |
-| `CardContent`     | Main content area            |
-| `CardFooter`      | Footer with actions          |
-| `CardAction`      | Action element in the header |
 
 ---
 
@@ -867,23 +962,39 @@ A carousel component for cycling through elements with navigation controls.
 |-------|---------|-------------|
 | `init-api` | `CarouselApi` | Emitted when the carousel API is initialized. |
 
+### Sub-components
+
+#### CarouselContent
+
+Scrollable track container for carousel items.
+
+#### CarouselItem
+
+Individual slide within the carousel.
+
+#### CarouselPrevious
+
+Navigate to the previous slide.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `ButtonVariants['variant']` | `'outline'` | Button style variant. |
+| `size` | `ButtonVariants['size']` | `'icon'` | Button size. |
+
+#### CarouselNext
+
+Navigate to the next slide.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `ButtonVariants['variant']` | `'outline'` | Button style variant. |
+| `size` | `ButtonVariants['size']` | `'icon'` | Button size. |
+
 ## Usage
 
 
 
 ## Vertical
-
-
-
-## Sub-components
-
-| Component          | Description                               |
-| ------------------ | ----------------------------------------- |
-| `Carousel`         | Root container with scroll state          |
-| `CarouselContent`  | Scrollable track for items                |
-| `CarouselItem`     | Individual slide                          |
-| `CarouselPrevious` | Previous button. Props: `variant`, `size` |
-| `CarouselNext`     | Next button. Props: `variant`, `size`     |
 
 ---
 
@@ -981,25 +1092,70 @@ An autocomplete input with a filterable dropdown list for selecting values.
 | `update:modelValue` | `T` | Emitted when the selected value changes. |
 | `update:open` | `boolean` | Emitted when the open state changes. |
 
+### Sub-components
+
+#### ComboboxAnchor
+
+Positions the dropdown relative to the input.
+
+#### ComboboxInput
+
+Filterable text input.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `displayValue` | `(val: any) => string` | - | Function to format the selected value for display. |
+| `placeholder` | `string` | - | Placeholder text when empty. |
+
+#### ComboboxTrigger
+
+Toggle button to open/close the dropdown.
+
+#### ComboboxList
+
+Dropdown list container.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `position` | `'popper' | 'item-aligned'` | `'popper'` | Positioning strategy. |
+| `align` | `'start' | 'center' | 'end'` | `'center'` | Horizontal alignment. |
+| `sideOffset` | `number` | `4` | Distance from anchor in pixels. |
+
+#### ComboboxItem
+
+Selectable option in the list.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `T` | - | The option value. |
+| `disabled` | `boolean` | - | Disable this option. |
+| `textValue` | `string` | - | Text used for filtering when content is complex. |
+
+#### ComboboxItemIndicator
+
+Checkmark indicator for the selected item.
+
+#### ComboboxGroup
+
+Groups related options under a heading.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `heading` | `string` | - | Group heading text. |
+
+#### ComboboxEmpty
+
+Shown when no options match the filter.
+
+#### ComboboxSeparator
+
+Visual divider between groups.
+
+#### ComboboxCancel
+
+Button to clear the selected value.
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component               | Description                                                 |
-| ----------------------- | ----------------------------------------------------------- |
-| `Combobox`              | Root container with state management                        |
-| `ComboboxAnchor`        | Positions the dropdown relative to the input                |
-| `ComboboxInput`         | Filterable text input. Props: `displayValue`, `placeholder` |
-| `ComboboxTrigger`       | Toggle button to open/close                                 |
-| `ComboboxList`          | Dropdown list. Props: `position`, `align`, `sideOffset`     |
-| `ComboboxItem`          | Selectable item. Props: `value` (required), `disabled`      |
-| `ComboboxItemIndicator` | Checkmark for selected items                                |
-| `ComboboxGroup`         | Group of items. Props: `heading`                            |
-| `ComboboxEmpty`         | Empty state when no items match                             |
-| `ComboboxSeparator`     | Visual separator                                            |
-| `ComboboxCancel`        | Clear selection button                                      |
 
 ---
 
@@ -1020,6 +1176,54 @@ A command palette for searching and executing actions, similar to Cmd+K interfac
 | `update:modelValue` | `string` | Emitted when the search value changes. |
 | `highlight` | `'{ ref: HTMLElement, value: string } | undefined'` | Emitted when the highlighted element changes. |
 
+### Sub-components
+
+#### CommandDialog
+
+Command palette rendered in a modal dialog.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | `'Command Palette'` | Dialog title for accessibility. |
+| `description` | `string` | `'Search for a command to run...'` | Dialog description for accessibility. |
+
+#### CommandInput
+
+Search input with magnifying glass icon.
+
+#### CommandList
+
+Scrollable list container for items and groups.
+
+#### CommandGroup
+
+Groups related items under a heading.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `heading` | `string` | - | Group heading text. |
+
+#### CommandItem
+
+Selectable command item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Value used for filtering and selection. |
+| `disabled` | `boolean` | - | Disable this item. |
+
+#### CommandEmpty
+
+Shown when no items match the search query.
+
+#### CommandSeparator
+
+Visual divider between groups.
+
+#### CommandShortcut
+
+Displays a keyboard shortcut hint aligned to the right.
+
 ## Usage
 
 
@@ -1028,35 +1232,88 @@ A command palette for searching and executing actions, similar to Cmd+K interfac
 
 Use `CommandDialog` to render the command palette in a modal dialog:
 
-
-
-## Sub-components
-
-| Component          | Description                                                  |
-| ------------------ | ------------------------------------------------------------ |
-| `Command`          | Root container                                               |
-| `CommandDialog`    | Command palette in a modal. Props: `title`, `description`    |
-| `CommandInput`     | Search input with icon                                       |
-| `CommandList`      | Scrollable list container                                    |
-| `CommandGroup`     | Group of items. Props: `heading`                             |
-| `CommandItem`      | Selectable item. Props: `value`, `disabled`. Event: `select` |
-| `CommandEmpty`     | Empty state when no results match                            |
-| `CommandSeparator` | Visual separator between groups                              |
-| `CommandShortcut`  | Keyboard shortcut display                                    |
-
 ---
 
 ## Context Menu
 
 A right-click context menu with items, groups, and sub-menus.
 
+### Sub-components
+
+#### ContextMenuTrigger
+
+Element that opens the context menu on right-click.
+
+#### ContextMenuContent
+
+The context menu panel.
+
+#### ContextMenuItem
+
+A menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding to align with items that have icons. |
+| `variant` | `'default' | 'destructive'` | `'default'` | Visual style variant. |
+
+#### ContextMenuCheckboxItem
+
+A checkbox menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `checked` | `boolean` | - | Checked state. Use with v-model:checked. |
+
+#### ContextMenuRadioGroup
+
+Groups radio items.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string` | - | Selected value. Use with v-model. |
+
+#### ContextMenuRadioItem
+
+A radio menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | The value for this radio option. |
+
+#### ContextMenuLabel
+
+A label for a group.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding. |
+
+#### ContextMenuSeparator
+
+Visual divider.
+
+#### ContextMenuShortcut
+
+Keyboard shortcut hint.
+
+#### ContextMenuSub
+
+Container for a sub-menu.
+
+#### ContextMenuSubTrigger
+
+Item that opens a sub-menu.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding. |
+
+#### ContextMenuSubContent
+
+The sub-menu panel.
+
 ## Usage
-
-
-
-## Sub-components
-
-Same structure as [DropdownMenu](/docs/components/dropdown-menu) — supports `ContextMenuCheckboxItem`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`, `ContextMenuLabel`, `ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubTrigger`, and `ContextMenuSubContent`.
 
 ---
 
@@ -1064,24 +1321,49 @@ Same structure as [DropdownMenu](/docs/components/dropdown-menu) — supports `C
 
 A modal dialog that overlays content and requires user interaction.
 
+### Sub-components
+
+#### DialogContent
+
+Modal content with overlay and close button.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `showCloseButton` | `boolean` | `true` | Show the X close button in the top-right corner. |
+
+#### DialogScrollContent
+
+Scrollable content variant for long content.
+
+#### DialogHeader
+
+Header layout container.
+
+#### DialogTitle
+
+Dialog title text (required for accessibility).
+
+#### DialogDescription
+
+Optional description below the title.
+
+#### DialogFooter
+
+Footer layout for action buttons.
+
+#### DialogClose
+
+Button that closes the dialog.
+
+#### DialogOverlay
+
+Semi-transparent background overlay.
+
+#### DialogTrigger
+
+Element that opens the dialog.
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component             | Description                                                              |
-| --------------------- | ------------------------------------------------------------------------ |
-| `Dialog`              | Root state container. Props: `open`, `defaultOpen`. Event: `update:open` |
-| `DialogTrigger`       | Opens the dialog                                                         |
-| `DialogContent`       | Modal content with overlay. Props: `showCloseButton`                     |
-| `DialogScrollContent` | Scrollable content variant                                               |
-| `DialogHeader`        | Header layout                                                            |
-| `DialogTitle`         | Dialog title (required for accessibility)                                |
-| `DialogDescription`   | Dialog description                                                       |
-| `DialogFooter`        | Footer layout for actions                                                |
-| `DialogClose`         | Closes the dialog                                                        |
-| `DialogOverlay`       | Background overlay                                                       |
 
 ---
 
@@ -1105,29 +1387,137 @@ A small status indicator dot with color variants and animation effects.
 
 A touch-friendly drawer component that slides from the bottom of the screen.
 
+### Sub-components
+
+#### DrawerContent
+
+Drawer panel with drag handle.
+
+#### DrawerHeader
+
+Header layout container.
+
+#### DrawerTitle
+
+Drawer title text.
+
+#### DrawerDescription
+
+Optional description text.
+
+#### DrawerFooter
+
+Footer layout for actions.
+
+#### DrawerClose
+
+Button that closes the drawer.
+
+#### DrawerOverlay
+
+Background overlay.
+
+#### DrawerTrigger
+
+Element that opens the drawer.
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component           | Description                                                             |
-| ------------------- | ----------------------------------------------------------------------- |
-| `Drawer`            | Root. Props: `shouldScaleBackground` (default: true). Built on vaul-vue |
-| `DrawerTrigger`     | Opens the drawer                                                        |
-| `DrawerContent`     | Drawer panel with drag handle                                           |
-| `DrawerHeader`      | Header layout                                                           |
-| `DrawerTitle`       | Title                                                                   |
-| `DrawerDescription` | Description                                                             |
-| `DrawerFooter`      | Footer layout                                                           |
-| `DrawerClose`       | Close button                                                            |
-| `DrawerOverlay`     | Background overlay                                                      |
 
 ---
 
 ## Dropdown Menu
 
 A menu that appears on trigger click with items, groups, checkboxes, and nested sub-menus.
+
+### Sub-components
+
+#### DropdownMenuTrigger
+
+Element that opens the menu. Use with as-child to merge onto your own button.
+
+#### DropdownMenuContent
+
+The dropdown panel.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `sideOffset` | `number` | `4` | Distance from the trigger in pixels. |
+| `align` | `'start' | 'center' | 'end'` | - | Horizontal alignment relative to the trigger. |
+
+#### DropdownMenuItem
+
+A menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding to align with items that have icons. |
+| `variant` | `'default' | 'destructive'` | `'default'` | Visual style variant. |
+| `disabled` | `boolean` | - | Disable the item. |
+| `textValue` | `string` | - | Text used for typeahead matching. |
+
+#### DropdownMenuCheckboxItem
+
+A checkbox menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `checked` | `boolean` | - | Checked state. Use with v-model:checked. |
+
+#### DropdownMenuRadioGroup
+
+Groups radio items.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string` | - | Selected value. Use with v-model. |
+
+#### DropdownMenuRadioItem
+
+A radio menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | The value for this radio option. |
+
+#### DropdownMenuLabel
+
+A label for a group of items.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding to align with items that have icons. |
+
+#### DropdownMenuSeparator
+
+Visual divider between groups.
+
+#### DropdownMenuShortcut
+
+Displays a keyboard shortcut hint.
+
+#### DropdownMenuGroup
+
+Groups items semantically.
+
+#### DropdownMenuSub
+
+Container for a sub-menu.
+
+#### DropdownMenuSubTrigger
+
+Item that opens a sub-menu.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding to align with other items. |
+
+#### DropdownMenuSubContent
+
+The sub-menu dropdown panel.
+
+#### DropdownMenuPortal
+
+Portal for rendering menu outside the DOM hierarchy.
 
 ## Usage
 
@@ -1136,27 +1526,6 @@ A menu that appears on trigger click with items, groups, checkboxes, and nested 
 ## Checkbox Items
 
 Use `DropdownMenuCheckboxItem` for toggleable options.
-
-
-
-## Sub-components
-
-| Component                  | Description                                          |
-| -------------------------- | ---------------------------------------------------- |
-| `DropdownMenu`             | Root with open state                                 |
-| `DropdownMenuTrigger`      | Element that opens the menu                          |
-| `DropdownMenuContent`      | Menu content container. Props: `align`, `sideOffset` |
-| `DropdownMenuItem`         | Menu item. Props: `disabled`, `textValue`            |
-| `DropdownMenuCheckboxItem` | Item with checkbox. Props: `checked`                 |
-| `DropdownMenuRadioGroup`   | Radio group container. Props: `modelValue`           |
-| `DropdownMenuRadioItem`    | Radio option. Props: `value`                         |
-| `DropdownMenuLabel`        | Group label. Props: `inset`                          |
-| `DropdownMenuSeparator`    | Visual divider                                       |
-| `DropdownMenuShortcut`     | Keyboard shortcut display                            |
-| `DropdownMenuGroup`        | Groups items semantically                            |
-| `DropdownMenuSub`          | Sub-menu root                                        |
-| `DropdownMenuSubTrigger`   | Sub-menu trigger                                     |
-| `DropdownMenuSubContent`   | Sub-menu content                                     |
 
 ---
 
@@ -1191,6 +1560,52 @@ A form field layout component with label, content, description, and error displa
 |------|------|---------|-------------|
 | `orientation` | `'vertical' | 'horizontal' | 'responsive'` | `'vertical'` | The layout direction of the field. |
 
+### Sub-components
+
+#### FieldLabel
+
+Label text for the field.
+
+#### FieldContent
+
+Wrapper for the input element.
+
+#### FieldDescription
+
+Help text displayed below the input.
+
+#### FieldError
+
+Error message display.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `errors` | `Array<string | { message: string }>` | - | Array of error messages to display. |
+
+#### FieldGroup
+
+Groups multiple fields together.
+
+#### FieldSet
+
+Fieldset wrapper element.
+
+#### FieldLegend
+
+Legend for a fieldset.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'legend' | 'label'` | - | Render as legend or styled label. |
+
+#### FieldTitle
+
+Section title within a field group.
+
+#### FieldSeparator
+
+Visual separator between fields.
+
 ## Usage
 
 
@@ -1200,23 +1615,6 @@ A form field layout component with label, content, description, and error displa
 
 
 ## Horizontal Layout
-
-
-
-## Sub-components
-
-| Component          | Description                                                 |
-| ------------------ | ----------------------------------------------------------- |
-| `Field`            | Root container. Props: `orientation`                        |
-| `FieldLabel`       | Label text                                                  |
-| `FieldContent`     | Input wrapper                                               |
-| `FieldDescription` | Help text below the input                                   |
-| `FieldError`       | Error message display. Props: `errors`                      |
-| `FieldGroup`       | Groups multiple fields                                      |
-| `FieldSet`         | Fieldset wrapper                                            |
-| `FieldLegend`      | Legend for fieldset. Props: `variant` ('legend' \| 'label') |
-| `FieldTitle`       | Section title                                               |
-| `FieldSeparator`   | Visual separator between fields                             |
 
 ---
 
@@ -1243,25 +1641,64 @@ A file upload component with drag and drop, previews, and progress tracking.
 | `file-accept` | `File` | Emitted when a file passes validation. |
 | `file-reject` | `'{ file: File, errors: FileError[] }'` | Emitted when a file fails validation. |
 
+### Sub-components
+
+#### FileUploadDropzone
+
+Drag and drop target area.
+
+#### FileUploadTrigger
+
+Button that opens the file picker dialog.
+
+#### FileUploadList
+
+Container for uploaded file items.
+
+#### FileUploadItem
+
+Individual file display with status.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `file` | `File` | - | The file object. |
+| `progress` | `number` | - | Upload progress percentage (0-100). |
+| `status` | `'pending' | 'uploading' | 'complete' | 'error'` | `'pending'` | Upload status. |
+| `error` | `string` | - | Error message for failed uploads. |
+
+#### FileUploadItemName
+
+Displays the file name.
+
+#### FileUploadItemSize
+
+Displays the file size.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `precision` | `number` | `1` | Decimal places for size display. |
+
+#### FileUploadItemPreview
+
+Image preview thumbnail.
+
+#### FileUploadItemProgress
+
+Upload progress bar.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'success' | 'destructive'` | `'default'` | Progress bar color variant. |
+
+#### FileUploadItemDelete
+
+Button to remove the file.
+
+#### FileUploadClear
+
+Button to clear all files.
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component                | Description                                                           |
-| ------------------------ | --------------------------------------------------------------------- |
-| `FileUpload`             | Root with file state management                                       |
-| `FileUploadDropzone`     | Drag and drop area. Slot props: `isDragging`, `isDisabled`            |
-| `FileUploadTrigger`      | Button to open file picker                                            |
-| `FileUploadList`         | Container for file items                                              |
-| `FileUploadItem`         | Individual file display. Props: `file`, `progress`, `status`, `error` |
-| `FileUploadItemName`     | File name display                                                     |
-| `FileUploadItemSize`     | File size display. Props: `precision`                                 |
-| `FileUploadItemPreview`  | Image preview                                                         |
-| `FileUploadItemProgress` | Upload progress bar. Props: `variant`                                 |
-| `FileUploadItemDelete`   | Remove file button                                                    |
-| `FileUploadClear`        | Clear all files button                                                |
 
 ---
 
@@ -1269,22 +1706,39 @@ A file upload component with drag and drop, previews, and progress tracking.
 
 Form components with vee-validate integration for validation and error handling.
 
+### Sub-components
+
+#### FormField
+
+Re-export of vee-validate Field. Provides field context via scoped slot.
+
+#### FormFieldArray
+
+Re-export of vee-validate FieldArray for dynamic field lists.
+
+#### FormItem
+
+Wrapper for a single form field with auto-generated IDs.
+
+#### FormLabel
+
+Label with automatic error state styling.
+
+#### FormControl
+
+Wraps the input element with ARIA attributes for accessibility.
+
+#### FormDescription
+
+Help text for the field.
+
+#### FormMessage
+
+Validation error message (auto-populated by vee-validate).
+
 ## Usage
 
 
-
-## Sub-components
-
-| Component         | Description                                               |
-| ----------------- | --------------------------------------------------------- |
-| `Form`            | Re-export of vee-validate's Form                          |
-| `FormField`       | Re-export of vee-validate's Field. Provides field context |
-| `FormFieldArray`  | Re-export of vee-validate's FieldArray                    |
-| `FormItem`        | Wrapper for a single form field                           |
-| `FormLabel`       | Label with error state styling                            |
-| `FormControl`     | Wraps the input with ARIA attributes                      |
-| `FormDescription` | Help text for the field                                   |
-| `FormMessage`     | Validation error message (auto-populated by vee-validate) |
 
 ## Composable
 
@@ -1296,17 +1750,23 @@ Form components with vee-validate integration for validation and error handling.
 
 A rich content card that appears when hovering over a trigger element.
 
+### Sub-components
+
+#### HoverCardContent
+
+Rich content card.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `side` | `'top' | 'right' | 'bottom' | 'left'` | - | Which side of the trigger to position on. |
+| `sideOffset` | `number` | `4` | Distance from the trigger in pixels. |
+| `align` | `'start' | 'center' | 'end'` | - | Alignment relative to trigger. |
+
+#### HoverCardTrigger
+
+Element that triggers the hover card.
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component          | Description                                        |
-| ------------------ | -------------------------------------------------- |
-| `HoverCard`        | Root. Props: `openDelay`, `closeDelay`             |
-| `HoverCardTrigger` | Trigger element                                    |
-| `HoverCardContent` | Card content. Props: `side`, `sideOffset`, `align` |
 
 ---
 
@@ -1464,13 +1924,79 @@ An accessible label associated with form controls.
 
 A horizontal menu bar with dropdown menus, similar to desktop application menus.
 
+### Sub-components
+
+#### MenubarMenu
+
+Container for a single menu in the bar.
+
+#### MenubarTrigger
+
+Button that opens the menu dropdown.
+
+#### MenubarContent
+
+The dropdown panel.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `align` | `string` | `'start'` | Alignment relative to trigger. |
+| `sideOffset` | `number` | `8` | Distance from the trigger in pixels. |
+
+#### MenubarItem
+
+A menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding to align with items that have icons. |
+| `variant` | `'default' | 'destructive'` | - | Visual style variant. |
+
+#### MenubarCheckboxItem
+
+A checkbox menu item.
+
+#### MenubarRadioGroup
+
+Groups radio items.
+
+#### MenubarRadioItem
+
+A radio menu item.
+
+#### MenubarLabel
+
+A label for a group.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding. |
+
+#### MenubarSeparator
+
+Visual divider.
+
+#### MenubarShortcut
+
+Keyboard shortcut hint.
+
+#### MenubarSub
+
+Container for a sub-menu.
+
+#### MenubarSubTrigger
+
+Item that opens a sub-menu.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | - | Add left padding. |
+
+#### MenubarSubContent
+
+The sub-menu panel.
+
 ## Usage
-
-
-
-## Sub-components
-
-Same structure as [DropdownMenu](/docs/components/dropdown-menu) but namespaced with `Menubar` prefix. Includes `MenubarCheckboxItem`, `MenubarRadioGroup`, `MenubarRadioItem`, `MenubarSub`, `MenubarSubTrigger`, `MenubarSubContent`.
 
 ---
 
@@ -1630,18 +2156,27 @@ Use `type="number"` to restrict to digits. The `placeholder` prop customizes emp
 
 A floating content panel that appears on trigger click.
 
+### Sub-components
+
+#### PopoverContent
+
+Floating content container.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `align` | `'start' | 'center' | 'end'` | `'center'` | Horizontal alignment relative to trigger. |
+| `side` | `'top' | 'right' | 'bottom' | 'left'` | - | Which side of the trigger to position on. |
+| `sideOffset` | `number` | `4` | Distance from the trigger in pixels. |
+
+#### PopoverTrigger
+
+Element that opens the popover.
+
+#### PopoverAnchor
+
+Custom anchor element for positioning.
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component        | Description                                            |
-| ---------------- | ------------------------------------------------------ |
-| `Popover`        | Root state container. Props: `open`, `defaultOpen`     |
-| `PopoverTrigger` | Element that opens the popover                         |
-| `PopoverContent` | Floating content. Props: `align`, `side`, `sideOffset` |
-| `PopoverAnchor`  | Custom anchor element                                  |
 
 ---
 
@@ -1710,6 +2245,39 @@ Same sub-component structure as [Calendar](/docs/components/calendar) but with `
 
 Resizable panel groups with draggable handles for flexible layouts.
 
+### Sub-components
+
+#### ResizablePanelGroup
+
+Root container that manages panel layout.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `direction` | `'horizontal' | 'vertical'` | - | Layout direction of the panels. |
+| `autoSaveId` | `string` | - | Auto-save panel arrangement to localStorage with this key. |
+| `keyboardResizeBy` | `number` | - | Step size in pixels/percent for arrow key resizing. |
+
+#### ResizablePanel
+
+Individual resizable panel.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `defaultSize` | `number` | - | Initial panel size as a percentage. |
+| `minSize` | `number` | - | Minimum size constraint. |
+| `maxSize` | `number` | - | Maximum size constraint. |
+| `collapsible` | `boolean` | - | Allow panel to collapse when resized below minSize. |
+| `collapsedSize` | `number` | - | Size when collapsed. |
+
+#### ResizableHandle
+
+Draggable handle between panels.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `withHandle` | `boolean` | - | Show a visible grip icon on the handle. |
+| `disabled` | `boolean` | - | Disable drag functionality. |
+
 ## Usage
 
 
@@ -1723,16 +2291,6 @@ Use `direction="vertical"` for vertically stacked panels.
 ## Three Panels with Min Size
 
 Panels support `minSize` and `maxSize` constraints.
-
-
-
-## Sub-components
-
-| Component             | Description                                                                |
-| --------------------- | -------------------------------------------------------------------------- |
-| `ResizablePanelGroup` | Root container. Props: `direction` ('horizontal' \| 'vertical')            |
-| `ResizablePanel`      | Resizable panel. Props: `defaultSize`, `minSize`, `maxSize`, `collapsible` |
-| `ResizableHandle`     | Drag handle between panels. Props: `withHandle` (shows grip icon)          |
 
 ---
 
@@ -1763,26 +2321,66 @@ Use `ScrollBar` with `orientation="horizontal"` for horizontal scrolling.
 
 A custom select component with keyboard navigation and grouping support.
 
+### Sub-components
+
+#### SelectTrigger
+
+Button that opens the dropdown.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'sm' | 'default'` | `'default'` | Trigger button size. |
+
+#### SelectContent
+
+Dropdown panel containing options.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `position` | `'popper'` | `'popper'` | Positioning strategy. |
+
+#### SelectItem
+
+Individual selectable option.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | The option value. |
+| `disabled` | `boolean` | - | Disable this option. |
+
+#### SelectValue
+
+Displays the currently selected value.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `placeholder` | `string` | - | Text shown when no value is selected. |
+
+#### SelectGroup
+
+Groups related options together.
+
+#### SelectLabel
+
+Label heading for a group.
+
+#### SelectSeparator
+
+Visual divider between groups.
+
+#### SelectScrollUpButton
+
+Scroll-up button for long option lists.
+
+#### SelectScrollDownButton
+
+Scroll-down button for long option lists.
+
 ## Usage
 
 
 
 ## With Groups
-
-
-
-## Sub-components
-
-| Component         | Description                                       |
-| ----------------- | ------------------------------------------------- |
-| `Select`          | Root with state management                        |
-| `SelectTrigger`   | Trigger button. Props: `size` ('sm' \| 'default') |
-| `SelectContent`   | Dropdown content. Props: `position`               |
-| `SelectItem`      | Selectable option. Props: `value`, `disabled`     |
-| `SelectValue`     | Displays the selected value. Props: `placeholder` |
-| `SelectGroup`     | Groups items together                             |
-| `SelectLabel`     | Group label                                       |
-| `SelectSeparator` | Visual separator                                  |
 
 ---
 
@@ -1809,11 +2407,39 @@ A visual divider between content sections.
 
 A panel that slides in from the edge of the screen.
 
-### Props
+### Sub-components
+
+#### SheetContent
+
+Sliding panel container.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `side` | `'top' | 'right' | 'bottom' | 'left'` | `'right'` | The edge the sheet slides from (set on SheetContent). |
+| `side` | `'top' | 'right' | 'bottom' | 'left'` | `'right'` | The edge the sheet slides from. |
+
+#### SheetHeader
+
+Header layout container.
+
+#### SheetTitle
+
+Sheet title text.
+
+#### SheetDescription
+
+Optional description text.
+
+#### SheetFooter
+
+Footer layout for actions.
+
+#### SheetClose
+
+Button that closes the sheet.
+
+#### SheetTrigger
+
+Element that opens the sheet.
 
 ## Usage
 
@@ -1822,21 +2448,6 @@ A panel that slides in from the edge of the screen.
 ## Side Variants
 
 Use the `side` prop on `SheetContent` to control which edge the sheet slides from.
-
-
-
-## Sub-components
-
-| Component          | Description                                                           |
-| ------------------ | --------------------------------------------------------------------- |
-| `Sheet`            | Root state container                                                  |
-| `SheetTrigger`     | Opens the sheet                                                       |
-| `SheetContent`     | Sliding panel. Props: `side` ('top' \| 'right' \| 'bottom' \| 'left') |
-| `SheetHeader`      | Header layout                                                         |
-| `SheetTitle`       | Title                                                                 |
-| `SheetDescription` | Description                                                           |
-| `SheetFooter`      | Footer layout                                                         |
-| `SheetClose`       | Close button                                                          |
 
 ---
 
@@ -1852,6 +2463,117 @@ A complex sidebar navigation component with collapsible sections, menus, and res
 | `variant` | `'sidebar' | 'floating' | 'inset'` | `'sidebar'` | The visual style variant. |
 | `collapsible` | `'offcanvas' | 'icon' | 'none'` | `'offcanvas'` | How the sidebar collapses. |
 
+### Sub-components
+
+#### SidebarProvider
+
+Root state provider that manages open/closed state.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `defaultOpen` | `boolean` | - | Initial open state. |
+| `open` | `boolean` | - | Controlled open state. Use with v-model. |
+
+#### SidebarContent
+
+Scrollable content area.
+
+#### SidebarHeader
+
+Top section of the sidebar.
+
+#### SidebarFooter
+
+Bottom section of the sidebar.
+
+#### SidebarGroup
+
+Groups related menu items.
+
+#### SidebarGroupLabel
+
+Label heading for a group.
+
+#### SidebarGroupContent
+
+Content container within a group.
+
+#### SidebarGroupAction
+
+Action button in a group header.
+
+#### SidebarMenu
+
+Menu container for menu items.
+
+#### SidebarMenuItem
+
+Wrapper for a single menu entry.
+
+#### SidebarMenuButton
+
+Clickable menu button with icon and text.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'outline'` | `'default'` | Visual style variant. |
+| `size` | `'default' | 'sm' | 'lg'` | `'default'` | Button size. |
+| `isActive` | `boolean` | - | Active state styling. |
+| `tooltip` | `string | Component` | - | Tooltip text shown on hover (useful in collapsed icon mode). |
+
+#### SidebarMenuSub
+
+Nested sub-menu container.
+
+#### SidebarMenuSubItem
+
+Item within a sub-menu.
+
+#### SidebarMenuSubButton
+
+Button within a sub-menu.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'sm' | 'md'` | `'md'` | Button size. |
+| `isActive` | `boolean` | - | Active state styling. |
+
+#### SidebarMenuAction
+
+Action button within a menu item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `showOnHover` | `boolean` | - | Only show when parent menu item is hovered. |
+
+#### SidebarMenuBadge
+
+Badge indicator for counts or status.
+
+#### SidebarMenuSkeleton
+
+Loading skeleton for menu items.
+
+#### SidebarTrigger
+
+Button that toggles the sidebar open/closed.
+
+#### SidebarRail
+
+Slim rail visible when sidebar is collapsed.
+
+#### SidebarInset
+
+Main content area positioned next to the sidebar.
+
+#### SidebarInput
+
+Search input styled for the sidebar.
+
+#### SidebarSeparator
+
+Visual separator between groups.
+
 ## Usage
 
 
@@ -1862,37 +2584,9 @@ A full sidebar with collapsible project groups, nested sub-menus (`SidebarMenuSu
 
 
 
-## Sub-components
-
-| Component              | Description                                                             |
-| ---------------------- | ----------------------------------------------------------------------- |
-| `SidebarProvider`      | Root state provider. Props: `defaultOpen`, `open`. Event: `update:open` |
-| `Sidebar`              | Main sidebar container. Props: `side`, `variant`, `collapsible`         |
-| `SidebarContent`       | Scrollable content area                                                 |
-| `SidebarHeader`        | Top section                                                             |
-| `SidebarFooter`        | Bottom section                                                          |
-| `SidebarGroup`         | Section grouping                                                        |
-| `SidebarGroupLabel`    | Group heading                                                           |
-| `SidebarGroupContent`  | Group content                                                           |
-| `SidebarGroupAction`   | Action button in group header                                           |
-| `SidebarMenu`          | Menu container                                                          |
-| `SidebarMenuItem`      | Menu item wrapper                                                       |
-| `SidebarMenuButton`    | Clickable menu button. Props: `variant`, `size`, `tooltip`              |
-| `SidebarMenuSub`       | Nested sub-menu                                                         |
-| `SidebarMenuSubItem`   | Sub-menu item                                                           |
-| `SidebarMenuSubButton` | Sub-menu button                                                         |
-| `SidebarMenuAction`    | Action within a menu item                                               |
-| `SidebarMenuBadge`     | Badge indicator                                                         |
-| `SidebarMenuSkeleton`  | Loading skeleton                                                        |
-| `SidebarTrigger`       | Toggle button                                                           |
-| `SidebarRail`          | Slim rail for collapsed state                                           |
-| `SidebarInset`         | Main content area next to sidebar                                       |
-| `SidebarInput`         | Search input                                                            |
-| `SidebarSeparator`     | Visual separator                                                        |
-
 ## Composable
 
-`useSidebar()` — returns `{ state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar }`.
+`useSidebar()` -- returns `{ state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar }`.
 
 ---
 
@@ -1978,21 +2672,37 @@ An animated loading spinner indicator.
 
 A step-by-step progress indicator for multi-step workflows.
 
+### Sub-components
+
+#### StepperItem
+
+Container for a single step.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `step` | `number` | - | The step number (1-based). |
+
+#### StepperTrigger
+
+Clickable step header.
+
+#### StepperIndicator
+
+Step number or icon display (shows checkmark when completed).
+
+#### StepperTitle
+
+Step title text.
+
+#### StepperDescription
+
+Step description text.
+
+#### StepperSeparator
+
+Connector line between steps (hidden on last item).
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component            | Description                              |
-| -------------------- | ---------------------------------------- |
-| `Stepper`            | Root. Props from reka-ui StepperRoot     |
-| `StepperItem`        | Step container. Props: `step` (required) |
-| `StepperTrigger`     | Clickable step header                    |
-| `StepperIndicator`   | Step number/icon display                 |
-| `StepperTitle`       | Step title                               |
-| `StepperDescription` | Step description                         |
-| `StepperSeparator`   | Connector line between steps             |
 
 ---
 
@@ -2058,6 +2768,34 @@ Tabbed navigation with line and pill variants for organizing content.
 | `defaultValue` | `string` | - | The default active tab value. |
 | `modelValue` | `string` | - | The controlled active tab. Use with v-model. |
 
+### Sub-components
+
+#### TabsList
+
+Container for tab trigger buttons.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `loop` | `boolean` | - | Keyboard navigation loops from last to first tab. |
+
+#### TabsTrigger
+
+Button that activates a tab panel.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Unique value associating this trigger with its content panel. |
+| `disabled` | `boolean` | - | Prevents activation of this tab. |
+
+#### TabsContent
+
+Panel content shown when the associated trigger is active.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Unique value associating this panel with its trigger. |
+| `forceMount` | `boolean` | - | Force mount content for CSS animations. |
+
 ## Usage
 
 
@@ -2069,17 +2807,6 @@ Tabbed navigation with line and pill variants for organizing content.
 ## Vertical & Disabled
 
 Use `orientation="vertical"` for vertical layout. Individual triggers can be `disabled`.
-
-
-
-## Sub-components
-
-| Component     | Description                                                     |
-| ------------- | --------------------------------------------------------------- |
-| `Tabs`        | Root container. Props: `variant`, `defaultValue`, `orientation` |
-| `TabsList`    | Tab button container                                            |
-| `TabsTrigger` | Tab button. Props: `value` (required), `disabled`               |
-| `TabsContent` | Tab panel. Props: `value` (required)                            |
 
 ---
 
@@ -2215,6 +2942,30 @@ A set of two-state buttons that can be toggled on or off, supporting single or m
 
 A popup that displays information when hovering over an element.
 
+### Sub-components
+
+#### TooltipProvider
+
+Global tooltip configuration wrapper.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `delayDuration` | `number` | `0` | Delay in ms before tooltip appears. |
+| `skipDelayDuration` | `number` | `300` | Time to skip delay when moving between tooltips. |
+
+#### TooltipContent
+
+Tooltip popup content.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `side` | `'top' | 'right' | 'bottom' | 'left'` | - | Which side of the trigger to show on. |
+| `sideOffset` | `number` | `4` | Distance from the trigger in pixels. |
+
+#### TooltipTrigger
+
+Element that triggers the tooltip on hover.
+
 ## Usage
 
 
@@ -2224,17 +2975,6 @@ A popup that displays information when hovering over an element.
 ## Placement
 
 Use the `side` prop on `TooltipContent` to control placement.
-
-
-
-## Sub-components
-
-| Component         | Description                                                       |
-| ----------------- | ----------------------------------------------------------------- |
-| `TooltipProvider` | Global configuration. Props: `delayDuration`, `skipDelayDuration` |
-| `Tooltip`         | Root state container                                              |
-| `TooltipTrigger`  | Element that triggers the tooltip                                 |
-| `TooltipContent`  | Tooltip popup. Props: `side`, `sideOffset`, `align`               |
 
 ---
 

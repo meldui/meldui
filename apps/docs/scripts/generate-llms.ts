@@ -10,14 +10,23 @@ import { join, relative } from 'node:path'
 const CONTENT_DIR = join(import.meta.dirname, '../src/content/docs')
 const PUBLIC_DIR = join(import.meta.dirname, '../public')
 
+interface PropInfo {
+  name: string; type: string; default?: string; description: string
+}
+
+interface SubComponentInfo {
+  name: string; description?: string; props?: PropInfo[]
+}
+
 interface PageInfo {
   title: string
   description: string
   category: string
   path: string
-  props?: { name: string; type: string; default?: string; description: string }[]
+  props?: PropInfo[]
   events?: { name: string; payload: string; description: string }[]
   slots?: { name: string; description: string }[]
+  subComponents?: SubComponentInfo[]
   content: string
 }
 
@@ -81,6 +90,58 @@ function parseFrontmatter(content: string): Record<string, any> {
   return result
 }
 
+function parseSubComponents(content: string): SubComponentInfo[] | undefined {
+  const match = content.match(/^---\n([\s\S]*?)\n---/)
+  if (!match) return undefined
+
+  const yaml = match[1]
+  if (!yaml.includes('subComponents:')) return undefined
+
+  const subs: SubComponentInfo[] = []
+  const subSection = yaml.split('subComponents:')[1]
+  if (!subSection) return undefined
+
+  let current: SubComponentInfo | null = null
+  let inProps = false
+
+  for (const line of subSection.split('\n')) {
+    // New sub-component
+    if (/^\s{2}- name:\s/.test(line)) {
+      if (current) subs.push(current)
+      current = { name: line.trim().replace('- name: ', '') }
+      inProps = false
+      continue
+    }
+    if (!current) continue
+
+    if (/^\s{4}description:\s/.test(line)) {
+      current.description = line.trim().replace('description: ', '')
+    } else if (/^\s{4}props:/.test(line)) {
+      inProps = true
+      current.props = []
+    } else if (/^\s{4}slots:/.test(line)) {
+      inProps = false
+    } else if (inProps && /^\s{6}- name:\s/.test(line)) {
+      current.props!.push({
+        name: line.trim().replace('- name: ', ''),
+        type: '', description: '',
+      })
+    } else if (inProps && /^\s{8}type:\s/.test(line) && current.props?.length) {
+      current.props[current.props.length - 1].type = line.trim().replace('type: ', '').replace(/^['"]|['"]$/g, '')
+    } else if (inProps && /^\s{8}default:\s/.test(line) && current.props?.length) {
+      current.props[current.props.length - 1].default = line.trim().replace('default: ', '').replace(/^['"]|['"]$/g, '')
+    } else if (inProps && /^\s{8}description:\s/.test(line) && current.props?.length) {
+      current.props[current.props.length - 1].description = line.trim().replace('description: ', '')
+    } else if (/^\w/.test(line)) {
+      // Hit a new top-level key — end of subComponents
+      break
+    }
+  }
+  if (current) subs.push(current)
+
+  return subs.length > 0 ? subs : undefined
+}
+
 function getBodyContent(content: string): string {
   const match = content.match(/^---\n[\s\S]*?\n---\n([\s\S]*)$/)
   if (!match) return ''
@@ -130,6 +191,7 @@ for (const file of walkDir(CONTENT_DIR)) {
     props: fm.props,
     events: fm.events,
     slots: fm.slots,
+    subComponents: parseSubComponents(content),
     content: getBodyContent(content),
   })
 }
@@ -199,6 +261,21 @@ for (const page of pages) {
       llmsFullTxt += `| \`${slot.name}\` | ${slot.description} |\n`
     }
     llmsFullTxt += '\n'
+  }
+
+  if (page.subComponents?.length) {
+    llmsFullTxt += '### Sub-components\n\n'
+    for (const sub of page.subComponents) {
+      llmsFullTxt += `#### ${sub.name}\n\n`
+      if (sub.description) llmsFullTxt += `${sub.description}\n\n`
+      if (sub.props?.length) {
+        llmsFullTxt += '| Prop | Type | Default | Description |\n|------|------|---------|-------------|\n'
+        for (const prop of sub.props) {
+          llmsFullTxt += `| \`${prop.name}\` | \`${prop.type}\` | ${prop.default ? `\`${prop.default}\`` : '-'} | ${prop.description} |\n`
+        }
+        llmsFullTxt += '\n'
+      }
+    }
   }
 
   // Include markdown content (tables, sub-components, etc.)
