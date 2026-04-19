@@ -13,39 +13,16 @@ props:
     description: The color variant of the alert.
 ---
 
+import AlertDemo from '../../../demos/alert/AlertDemo.vue'
+import AlertVariantsDemo from '../../../demos/alert/AlertVariantsDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Alert, AlertTitle, AlertDescription } from '@meldui/vue'
-</script>
-
-<template>
-  <Alert>
-    <AlertTitle>Heads up!</AlertTitle>
-    <AlertDescription>You can add components to your app using the cli.</AlertDescription>
-  </Alert>
-</template>
-```
+<AlertDemo client:only="vue" />
 
 ## Variants
 
-```vue
-<template>
-  <Alert variant="destructive">
-    <AlertTitle>Error</AlertTitle>
-    <AlertDescription>Something went wrong.</AlertDescription>
-  </Alert>
-  <Alert variant="success">
-    <AlertTitle>Success</AlertTitle>
-    <AlertDescription>Operation completed.</AlertDescription>
-  </Alert>
-  <Alert variant="warning">
-    <AlertTitle>Warning</AlertTitle>
-    <AlertDescription>Please check your input.</AlertDescription>
-  </Alert>
-</template>
-```
+<AlertVariantsDemo client:only="vue" />
 
 ## Sub-components
 

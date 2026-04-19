@@ -21,28 +21,13 @@ props:
     description: Whether to use outline style.
 ---
 
+import BadgeDemo from '../../../demos/badge/BadgeDemo.vue'
+import BadgeShapesDemo from '../../../demos/badge/BadgeShapesDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Badge } from '@meldui/vue'
-</script>
-
-<template>
-  <Badge>Default</Badge>
-  <Badge variant="secondary">Secondary</Badge>
-  <Badge variant="destructive">Destructive</Badge>
-  <Badge variant="success">Success</Badge>
-  <Badge variant="warning">Warning</Badge>
-  <Badge variant="outline" outline>Outline</Badge>
-</template>
-```
+<BadgeDemo client:only="vue" />
 
 ## Shapes
 
-```vue
-<template>
-  <Badge shape="pill">Pill</Badge>
-  <Badge shape="tag">Tag</Badge>
-</template>
-```
+<BadgeShapesDemo client:only="vue" />

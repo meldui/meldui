@@ -24,37 +24,11 @@ props:
     description: Render as child element.
 ---
 
+import ItemDemo from '../../../demos/item/ItemDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Item,
-  ItemHeader,
-  ItemMedia,
-  ItemContent,
-  ItemTitle,
-  ItemDescription,
-  ItemActions,
-} from '@meldui/vue'
-import { IconUser } from '@meldui/tabler-vue'
-</script>
-
-<template>
-  <Item>
-    <ItemMedia variant="icon">
-      <IconUser class="size-5" />
-    </ItemMedia>
-    <ItemContent>
-      <ItemTitle>John Doe</ItemTitle>
-      <ItemDescription>Software Engineer</ItemDescription>
-    </ItemContent>
-    <ItemActions>
-      <Button size="sm" variant="outline">View</Button>
-    </ItemActions>
-  </Item>
-</template>
-```
+<ItemDemo client:only="vue" />
 
 ## Sub-components
 

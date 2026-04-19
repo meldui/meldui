@@ -8,20 +8,11 @@ package: '@meldui/vue'
 componentName: Kbd
 ---
 
+import KbdDemo from '../../../demos/kbd/KbdDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Kbd, KbdGroup } from '@meldui/vue'
-</script>
-
-<template>
-  <KbdGroup>
-    <Kbd>⌘</Kbd>
-    <Kbd>K</Kbd>
-  </KbdGroup>
-</template>
-```
+<KbdDemo client:only="vue" />
 
 ## Sub-components
 

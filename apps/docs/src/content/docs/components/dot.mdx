@@ -20,16 +20,8 @@ props:
     description: Animation effect.
 ---
 
+import DotDemo from '../../../demos/dot/DotDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Dot } from '@meldui/vue'
-</script>
-
-<template>
-  <Dot variant="success" />
-  <Dot variant="warning" effect="pulse" />
-  <Dot variant="destructive" effect="ping" />
-</template>
-```
+<DotDemo client:only="vue" />

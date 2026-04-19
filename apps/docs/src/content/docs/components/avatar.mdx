@@ -8,20 +8,11 @@ package: '@meldui/vue'
 componentName: Avatar
 ---
 
+import AvatarDemo from '../../../demos/avatar/AvatarDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Avatar, AvatarImage, AvatarFallback } from '@meldui/vue'
-</script>
-
-<template>
-  <Avatar>
-    <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue" />
-    <AvatarFallback>RV</AvatarFallback>
-  </Avatar>
-</template>
-```
+<AvatarDemo client:only="vue" />
 
 ## Sub-components
 

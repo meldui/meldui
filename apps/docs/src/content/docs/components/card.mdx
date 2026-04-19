@@ -8,30 +8,11 @@ package: '@meldui/vue'
 componentName: Card
 ---
 
+import CardDemo from '../../../demos/card/CardDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
-
-<template>
-  <Card class="w-[350px]">
-    <CardHeader>
-      <CardTitle>Create project</CardTitle>
-      <CardDescription>Deploy your new project in one-click.</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <p>Card content goes here.</p>
-    </CardContent>
-    <CardFooter class="flex justify-between">
-      <Button variant="outline">Cancel</Button>
-      <Button>Deploy</Button>
-    </CardFooter>
-  </Card>
-</template>
-```
+<CardDemo client:only="vue" />
 
 ## Sub-components
 

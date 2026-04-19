@@ -21,25 +21,13 @@ props:
     description: The maximum value.
 ---
 
+import ProgressDemo from '../../../demos/progress/ProgressDemo.vue'
+import ProgressVariantsDemo from '../../../demos/progress/ProgressVariantsDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Progress } from '@meldui/vue'
-</script>
-
-<template>
-  <Progress :model-value="60" />
-</template>
-```
+<ProgressDemo client:only="vue" />
 
 ## Variants
 
-```vue
-<template>
-  <Progress :model-value="60" variant="default" />
-  <Progress :model-value="60" variant="success" />
-  <Progress :model-value="60" variant="warning" />
-  <Progress :model-value="60" variant="destructive" />
-</template>
-```
+<ProgressVariantsDemo client:only="vue" />

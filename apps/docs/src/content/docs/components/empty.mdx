@@ -8,35 +8,11 @@ package: '@meldui/vue'
 componentName: Empty
 ---
 
+import EmptyDemo from '../../../demos/empty/EmptyDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyContent,
-  EmptyTitle,
-  EmptyDescription,
-} from '@meldui/vue'
-import { IconInbox } from '@meldui/tabler-vue'
-</script>
-
-<template>
-  <Empty>
-    <EmptyHeader>
-      <EmptyMedia variant="icon">
-        <IconInbox class="size-10" />
-      </EmptyMedia>
-    </EmptyHeader>
-    <EmptyContent>
-      <EmptyTitle>No items found</EmptyTitle>
-      <EmptyDescription>Try adjusting your search or filters.</EmptyDescription>
-    </EmptyContent>
-  </Empty>
-</template>
-```
+<EmptyDemo client:only="vue" />
 
 ## Sub-components
 

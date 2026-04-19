@@ -12,20 +12,11 @@ props:
     description: The calendar picker layout mode.
 ---
 
+import CalendarDemo from '../../../demos/calendar/CalendarDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { ref } from 'vue'
-import { Calendar } from '@meldui/vue'
-
-const date = ref()
-</script>
-
-<template>
-  <Calendar v-model="date" />
-</template>
-```
+<CalendarDemo client:only="vue" />
 
 ## Sub-components
 

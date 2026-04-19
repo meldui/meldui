@@ -8,19 +8,10 @@ package: '@meldui/vue'
 componentName: RangeCalendar
 ---
 
+import RangeCalendarDemo from '../../../demos/range-calendar/RangeCalendarDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { ref } from 'vue'
-import { RangeCalendar } from '@meldui/vue'
-
-const range = ref()
-</script>
-
-<template>
-  <RangeCalendar v-model="range" />
-</template>
-```
+<RangeCalendarDemo client:only="vue" />
 
 Same sub-component structure as [Calendar](/docs/components/calendar) but with `RangeCalendar` prefix.

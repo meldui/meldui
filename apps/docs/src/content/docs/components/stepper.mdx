@@ -8,55 +8,11 @@ package: '@meldui/vue'
 componentName: Stepper
 ---
 
+import StepperDemo from '../../../demos/stepper/StepperDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Stepper,
-  StepperItem,
-  StepperTrigger,
-  StepperIndicator,
-  StepperTitle,
-  StepperDescription,
-  StepperSeparator,
-} from '@meldui/vue'
-</script>
-
-<template>
-  <Stepper :default-value="2">
-    <StepperItem :step="1">
-      <StepperTrigger>
-        <StepperIndicator>1</StepperIndicator>
-        <div>
-          <StepperTitle>Step 1</StepperTitle>
-          <StepperDescription>Account details</StepperDescription>
-        </div>
-      </StepperTrigger>
-      <StepperSeparator />
-    </StepperItem>
-    <StepperItem :step="2">
-      <StepperTrigger>
-        <StepperIndicator>2</StepperIndicator>
-        <div>
-          <StepperTitle>Step 2</StepperTitle>
-          <StepperDescription>Preferences</StepperDescription>
-        </div>
-      </StepperTrigger>
-      <StepperSeparator />
-    </StepperItem>
-    <StepperItem :step="3">
-      <StepperTrigger>
-        <StepperIndicator>3</StepperIndicator>
-        <div>
-          <StepperTitle>Step 3</StepperTitle>
-          <StepperDescription>Confirmation</StepperDescription>
-        </div>
-      </StepperTrigger>
-    </StepperItem>
-  </Stepper>
-</template>
-```
+<StepperDemo client:only="vue" />
 
 ## Sub-components
 

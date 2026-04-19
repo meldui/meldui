@@ -8,6 +8,8 @@ package: '@meldui/vue'
 componentName: Toaster
 ---
 
+import SonnerDemo from '../../../demos/sonner/SonnerDemo.vue'
+
 ## Setup
 
 Add the `Toaster` component once in your app root:
@@ -25,31 +27,7 @@ import { Toaster } from '@meldui/vue'
 
 ## Usage
 
-```typescript
-import { toast } from '@meldui/vue'
-
-// Basic
-toast('Event has been created.')
-
-// Variants
-toast.success('Changes saved successfully!')
-toast.error('Something went wrong.')
-toast.warning('Please check your input.')
-toast.info('New update available.')
-
-// With description
-toast.success('File uploaded', {
-  description: 'Your file has been uploaded successfully.',
-})
-
-// With action
-toast('Undo action?', {
-  action: {
-    label: 'Undo',
-    onClick: () => console.log('Undo'),
-  },
-})
-```
+<SonnerDemo client:only="vue" />
 
 ## Exports
 
