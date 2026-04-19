@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Header from '../components/Header.astro'
 import SearchDialog from '../components/SearchDialog.vue'
+import InstallCopy from '../components/InstallCopy.vue'
 ---
 
 <BaseLayout title="MeldUI" description="A Vue 3 component library built on shadcn-vue with Tailwind CSS v4.">
@@ -73,8 +74,13 @@ import SearchDialog from '../components/SearchDialog.vue'
       </div>
     </div>
 
+    <!-- Install -->
+    <div class="mx-auto mt-16 w-full max-w-md">
+      <InstallCopy client:only="vue" />
+    </div>
+
     <!-- Packages -->
-    <div class="mx-auto mt-16 max-w-2xl text-center">
+    <div class="mx-auto mt-12 max-w-2xl text-center">
       <h2 class="text-2xl font-semibold tracking-tight text-foreground">Packages</h2>
       <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <code class="rounded-md border border-border bg-muted px-4 py-2 text-sm">@meldui/vue</code>
