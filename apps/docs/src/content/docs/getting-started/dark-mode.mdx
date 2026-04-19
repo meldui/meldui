@@ -1,0 +1,123 @@
+---
+title: Dark Mode
+description: How to enable and configure dark mode in your MeldUI application.
+category: getting-started
+order: 4
+---
+
+## How It Works
+
+MeldUI uses class-based dark mode. All theme colors switch automatically when the `dark` class is present on a parent element (typically `<html>` or `<body>`).
+
+The theme includes a Tailwind CSS v4 custom variant:
+
+```css
+@custom-variant dark (&:is(.dark *));
+```
+
+This enables `dark:` variants in Tailwind classes (e.g., `dark:bg-gray-900`).
+
+## Toggling Dark Mode
+
+### Basic Toggle
+
+```typescript
+// Toggle dark mode
+document.documentElement.classList.toggle('dark')
+```
+
+### With localStorage Persistence
+
+```typescript
+function setTheme(mode: 'light' | 'dark' | 'system') {
+  if (mode === 'system') {
+    localStorage.removeItem('theme')
+    const isDark = matchMedia('(prefers-color-scheme: dark)').matches
+    document.documentElement.classList.toggle('dark', isDark)
+  } else {
+    localStorage.setItem('theme', mode)
+    document.documentElement.classList.toggle('dark', mode === 'dark')
+  }
+}
+```
+
+### Prevent Flash of Wrong Theme
+
+Add this inline script in your `<head>` before any stylesheets load:
+
+```html
+<script>
+  ;(function () {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'dark' || (!stored && matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+    }
+  })()
+</script>
+```
+
+This runs synchronously before paint, preventing a flash of light mode when the user prefers dark.
+
+## Vue Composable Example
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted, watch } from 'vue'
+
+type ThemeMode = 'light' | 'dark' | 'system'
+
+const mode = ref<ThemeMode>('system')
+
+function applyTheme(m: ThemeMode) {
+  const isDark =
+    m === 'dark' || (m === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+  document.documentElement.classList.toggle('dark', isDark)
+}
+
+onMounted(() => {
+  const stored = localStorage.getItem('theme') as ThemeMode | null
+  if (stored) mode.value = stored
+  applyTheme(mode.value)
+})
+
+watch(mode, (m) => {
+  if (m === 'system') {
+    localStorage.removeItem('theme')
+  } else {
+    localStorage.setItem('theme', m)
+  }
+  applyTheme(m)
+})
+</script>
+```
+
+## All Components Support Dark Mode
+
+Every MeldUI component uses CSS custom properties for colors. When the `dark` class is present, the theme variables switch to dark values automatically — no additional props or configuration needed.
+
+```vue
+<template>
+  <!-- These components automatically adapt to dark mode -->
+  <Card>
+    <CardContent>
+      <Button variant="outline">I adapt to dark mode</Button>
+    </CardContent>
+  </Card>
+</template>
+```
+
+## Custom Dark Mode Colors
+
+Override dark mode colors after the theme import:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
+
+.dark {
+  --primary: oklch(0.7 0.2 280);
+  --background: oklch(0.1 0.02 260);
+  --card: oklch(0.15 0.02 260);
+}
+```

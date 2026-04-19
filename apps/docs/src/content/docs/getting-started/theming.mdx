@@ -1,0 +1,184 @@
+---
+title: Theming
+description: Customize MeldUI's appearance using CSS variables with OKLCH colors and Tailwind CSS v4.
+category: getting-started
+order: 3
+---
+
+## Theme Structure
+
+MeldUI themes define two layers of CSS variables:
+
+1. **Base variables** (`:root` / `.dark`) — raw OKLCH color values
+2. **Tailwind theme variables** (`@theme inline`) — map base variables to Tailwind utilities
+
+```css
+/* Base variables */
+:root {
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+}
+
+/* Tailwind integration */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+```
+
+This means you can use `bg-primary`, `text-primary-foreground`, etc. in your Tailwind classes.
+
+## Customizing Colors
+
+Override base variables in your CSS **after** importing the theme:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
+
+/* Your overrides */
+:root {
+  --primary: oklch(0.6 0.2 280); /* Purple */
+  --primary-foreground: oklch(1 0 0); /* White */
+  --radius: 0.5rem; /* Rounder corners */
+}
+
+.dark {
+  --primary: oklch(0.7 0.2 280); /* Lighter purple for dark mode */
+}
+```
+
+## OKLCH Color Format
+
+MeldUI uses OKLCH colors for better perceptual uniformity:
+
+```css
+/* OKLCH: Lightness, Chroma, Hue */
+--primary: oklch(0.6 0.2 260);
+/*              ^    ^    ^
+                |    |    └── Hue (0-360)
+                |    └─────── Chroma (0-0.4)
+                └──────────── Lightness (0-1)
+*/
+```
+
+Benefits of OKLCH:
+- Consistent perceived brightness across hues
+- Better color manipulation than HSL
+- Modern CSS standard supported in all modern browsers
+
+## Available Variables
+
+### Colors
+
+| Variable | Description |
+|----------|-------------|
+| `--background` | Page background |
+| `--foreground` | Default text color |
+| `--primary` | Primary brand color |
+| `--primary-foreground` | Text on primary |
+| `--secondary` | Secondary actions |
+| `--secondary-foreground` | Text on secondary |
+| `--muted` | Subtle backgrounds |
+| `--muted-foreground` | Subtle text |
+| `--accent` | Accent/highlight |
+| `--accent-foreground` | Text on accent |
+| `--destructive` | Error/danger states |
+| `--success` | Success states |
+| `--warning` | Warning states |
+| `--info` | Info states |
+| `--neutral` | Neutral/gray states |
+
+### UI Elements
+
+| Variable | Description |
+|----------|-------------|
+| `--card` | Card background |
+| `--card-foreground` | Card text |
+| `--popover` | Popover/dropdown background |
+| `--popover-foreground` | Popover text |
+| `--border` | Border color |
+| `--input` | Input border |
+| `--ring` | Focus ring |
+
+### Chart Colors
+
+| Variable | Description |
+|----------|-------------|
+| `--chart-1` | First chart series color |
+| `--chart-2` | Second chart series color |
+| `--chart-3` | Third chart series color |
+| `--chart-4` | Fourth chart series color |
+| `--chart-5` | Fifth chart series color |
+
+### Sidebar
+
+| Variable | Description |
+|----------|-------------|
+| `--sidebar` | Sidebar background |
+| `--sidebar-foreground` | Sidebar text |
+| `--sidebar-primary` | Sidebar primary color |
+| `--sidebar-primary-foreground` | Text on sidebar primary |
+| `--sidebar-accent` | Sidebar accent/hover |
+| `--sidebar-accent-foreground` | Text on sidebar accent |
+| `--sidebar-border` | Sidebar border color |
+| `--sidebar-ring` | Sidebar focus ring |
+
+### Border Radius
+
+| Variable | Default |
+|----------|---------|
+| `--radius` | `0.625rem` (base) |
+| `--radius-sm` | `calc(var(--radius) - 4px)` |
+| `--radius-md` | `calc(var(--radius) - 2px)` |
+| `--radius-lg` | `var(--radius)` |
+| `--radius-xl` | `calc(var(--radius) + 4px)` |
+
+## Creating Custom Themes
+
+Create a new theme file:
+
+```css
+/* themes/ocean.css */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* ... same structure as default theme ... */
+}
+
+:root {
+  --primary: oklch(0.55 0.15 220); /* Ocean blue */
+  --background: oklch(0.98 0.01 220); /* Slight blue tint */
+  /* ... other overrides ... */
+}
+
+.dark {
+  --primary: oklch(0.65 0.15 220);
+  --background: oklch(0.15 0.02 220);
+}
+```
+
+Then import it instead of the default:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './themes/ocean.css';
+```
+
+## Icon Colors
+
+Icons use `currentColor` and inherit from the parent's text color:
+
+```vue
+<template>
+  <!-- Icon inherits red color -->
+  <span class="text-red-500">
+    <IconX />
+  </span>
+
+  <!-- Or directly on the icon -->
+  <IconCheck class="text-green-500" />
+</template>
+```

@@ -1,0 +1,180 @@
+---
+title: Installation
+description: How to install and configure MeldUI in your Vue 3 project.
+category: getting-started
+order: 2
+---
+
+## Prerequisites
+
+- Node.js 18+ and pnpm (or npm/yarn)
+- Vue 3.5+
+- Vite 5+
+
+## Step 1: Configure Registry
+
+MeldUI packages are hosted on GitHub Package Registry. Create or update `.npmrc` in your project root:
+
+```bash
+@meldui:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
+```
+
+Set your GitHub token (needs `read:packages` scope):
+
+```bash
+export NPM_TOKEN=ghp_your_token_here
+```
+
+## Step 2: Install Packages
+
+```bash
+# Core packages
+pnpm add @meldui/vue @meldui/tabler-vue vue
+
+# Tailwind CSS v4 dependencies
+pnpm add -D tailwindcss @tailwindcss/vite tw-animate-css
+```
+
+> **Note:** `@meldui/charts-vue` is optional. Install it only if you need chart components.
+
+## Step 3: Configure Vite
+
+Update your `vite.config.ts`:
+
+```typescript
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [vue(), tailwindcss()],
+})
+```
+
+## Step 4: Set Up CSS
+
+Create `src/styles/app.css`:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@meldui/vue/themes/default';
+
+/* Tell Tailwind where to scan for classes */
+@source "../**/*.{vue,js,ts,jsx,tsx}";
+@source "../node_modules/@meldui/vue/dist/**/*.mjs";
+```
+
+> **Important:** This project uses Tailwind CSS v4 with CSS-first configuration. Do NOT create a `tailwind.config.js` file.
+
+## Step 5: Import CSS
+
+In your `main.ts`:
+
+```typescript
+import { createApp } from 'vue'
+import App from './App.vue'
+import './styles/app.css'
+
+createApp(App).mount('#app')
+```
+
+## Step 6: Set Up Toaster
+
+Add the `Toaster` component to your `App.vue` for toast notifications:
+
+```vue
+<script setup lang="ts">
+import { Toaster } from '@meldui/vue'
+</script>
+
+<template>
+  <RouterView />
+  <Toaster position="bottom-right" />
+</template>
+```
+
+Use toasts anywhere in your app:
+
+```typescript
+import { toast } from '@meldui/vue'
+
+toast.success('Changes saved!')
+toast.error('Something went wrong')
+```
+
+## Step 7: Use Components
+
+```vue
+<script setup lang="ts">
+import { Button, Card, CardHeader, CardTitle, CardContent } from '@meldui/vue'
+import { IconCheck } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <Card>
+    <CardHeader>
+      <CardTitle>Hello MeldUI</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Button>
+        <IconCheck class="mr-2 h-4 w-4" />
+        Get Started
+      </Button>
+    </CardContent>
+  </Card>
+</template>
+```
+
+## Charts (Optional)
+
+```bash
+pnpm add @meldui/charts-vue
+```
+
+```vue
+<script setup lang="ts">
+import { MeldLineChart } from '@meldui/charts-vue'
+import type { MeldLineChartConfig } from '@meldui/charts-vue'
+
+const config: MeldLineChartConfig = {
+  series: [
+    { name: 'Sales', data: [100, 150, 200, 180, 250] },
+    { name: 'Revenue', data: [200, 280, 350, 320, 400] },
+  ],
+  xAxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] },
+}
+</script>
+
+<template>
+  <MeldLineChart :config="config" />
+</template>
+```
+
+Available chart types: `MeldLineChart`, `MeldAreaChart`, `MeldBarChart`, `MeldPieChart`, `MeldDonutChart`, `MeldScatterChart`, `MeldRadarChart`, `MeldHeatmapChart`, `MeldMixedChart`.
+
+## TypeScript Configuration
+
+Ensure your `tsconfig.json` includes:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
+```
+
+## Package Summary
+
+| Package | Description |
+|---------|-------------|
+| `@meldui/vue` | Core component library (70+ components) |
+| `@meldui/tabler-vue` | 5000+ Tabler icons with custom defaults |
+| `@meldui/charts-vue` | Chart components built on ECharts (optional) |

@@ -1,0 +1,219 @@
+---
+interface Prop {
+  name: string
+  type: string
+  default?: string
+  description: string
+  required?: boolean
+}
+
+interface Event {
+  name: string
+  payload: string
+  description: string
+}
+
+interface Slot {
+  name: string
+  props?: string
+  description: string
+}
+
+interface SubComponent {
+  name: string
+  description?: string
+  props?: Prop[]
+  slots?: Slot[]
+}
+
+interface Props {
+  props?: Prop[]
+  events?: Event[]
+  slots?: Slot[]
+  subComponents?: SubComponent[]
+}
+
+const { props: componentProps, events, slots, subComponents } = Astro.props as Props
+---
+
+{
+  componentProps && componentProps.length > 0 && (
+    <section>
+      <h2 id="props">Props</h2>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Prop</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {componentProps.map((prop) => (
+              <tr>
+                <td>
+                  <code>{prop.name}</code>
+                  {prop.required && <span class="ml-1 text-destructive text-xs">*</span>}
+                </td>
+                <td>
+                  <code class="text-xs">{prop.type}</code>
+                </td>
+                <td>{prop.default ? <code>{prop.default}</code> : <span class="text-muted-foreground">-</span>}</td>
+                <td>{prop.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+}
+
+{
+  events && events.length > 0 && (
+    <section>
+      <h2 id="events">Events</h2>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Payload</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {events.map((event) => (
+              <tr>
+                <td>
+                  <code>{event.name}</code>
+                </td>
+                <td>
+                  <code class="text-xs">{event.payload}</code>
+                </td>
+                <td>{event.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+}
+
+{
+  slots && slots.length > 0 && (
+    <section>
+      <h2 id="slots">Slots</h2>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Slot</th>
+              <th>Props</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {slots.map((slot) => (
+              <tr>
+                <td>
+                  <code>{slot.name}</code>
+                </td>
+                <td>
+                  {slot.props ? (
+                    <code class="text-xs">{slot.props}</code>
+                  ) : (
+                    <span class="text-muted-foreground">-</span>
+                  )}
+                </td>
+                <td>{slot.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+}
+
+{
+  subComponents &&
+    subComponents.length > 0 &&
+    subComponents.map((sub) => (
+      <section>
+        <h3 id={sub.name.toLowerCase().replace(/\s+/g, '-')}>{sub.name}</h3>
+        {sub.description && <p>{sub.description}</p>}
+
+        {sub.props && sub.props.length > 0 && (
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Prop</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sub.props.map((prop) => (
+                  <tr>
+                    <td>
+                      <code>{prop.name}</code>
+                      {prop.required && <span class="ml-1 text-destructive text-xs">*</span>}
+                    </td>
+                    <td>
+                      <code class="text-xs">{prop.type}</code>
+                    </td>
+                    <td>
+                      {prop.default ? (
+                        <code>{prop.default}</code>
+                      ) : (
+                        <span class="text-muted-foreground">-</span>
+                      )}
+                    </td>
+                    <td>{prop.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {sub.slots && sub.slots.length > 0 && (
+          <div class="overflow-x-auto">
+            <h4>Slots</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Slot</th>
+                  <th>Props</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sub.slots.map((slot) => (
+                  <tr>
+                    <td>
+                      <code>{slot.name}</code>
+                    </td>
+                    <td>
+                      {slot.props ? (
+                        <code class="text-xs">{slot.props}</code>
+                      ) : (
+                        <span class="text-muted-foreground">-</span>
+                      )}
+                    </td>
+                    <td>{slot.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    ))
+}

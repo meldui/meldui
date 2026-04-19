@@ -24,18 +24,18 @@
 
 ## Phase 2: Content Infrastructure + Getting Started
 
-- [ ] Build `src/components/ComponentPreview.vue` (Preview/Code tabs, slot for demo, code prop)
-- [ ] Build `src/components/CopyButton.vue` (copy to clipboard with feedback)
-- [ ] Build `src/components/ApiTable.astro` (renders props/events/slots tables from frontmatter)
-- [ ] Build `src/components/Breadcrumbs.astro`
-- [ ] Build `src/components/PrevNext.astro`
-- [ ] Build `src/components/TableOfContents.astro` (right-side heading links)
-- [ ] Create `src/content/docs/getting-started/index.mdx` (Introduction)
-- [ ] Create `src/content/docs/getting-started/installation.mdx`
-- [ ] Create `src/content/docs/getting-started/theming.mdx`
-- [ ] Create `src/content/docs/getting-started/dark-mode.mdx`
-- [ ] Create `src/content/docs/getting-started/icons.mdx`
-- [ ] Verify all 5 pages render correctly with layout, nav, breadcrumbs, TOC
+- [x] Build `src/components/ComponentPreview.vue` (Preview/Code tabs, slot for demo, code prop)
+- [x] Build `src/components/CopyButton.vue` (copy to clipboard with feedback)
+- [x] Build `src/components/ApiTable.astro` (renders props/events/slots tables from frontmatter)
+- [x] Build `src/components/Breadcrumbs.astro`
+- [x] Build `src/components/PrevNext.astro` (done in Phase 1)
+- [x] Build `src/components/TableOfContents.astro` (done in Phase 1)
+- [x] Create `src/content/docs/getting-started/index.mdx` (Introduction)
+- [x] Create `src/content/docs/getting-started/installation.mdx`
+- [x] Create `src/content/docs/getting-started/theming.mdx`
+- [x] Create `src/content/docs/getting-started/dark-mode.mdx`
+- [x] Create `src/content/docs/getting-started/icons.mdx`
+- [x] Verify all 5 pages render correctly with layout, nav, breadcrumbs, TOC
 
 ## Phase 3: Component Pages
 

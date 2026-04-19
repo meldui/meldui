@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content'
 import DocsLayout from '../../layouts/DocsLayout.astro'
+import Breadcrumbs from '../../components/Breadcrumbs.astro'
+import ApiTable from '../../components/ApiTable.astro'
 
 export async function getStaticPaths() {
   const docs = await getCollection('docs')
@@ -15,7 +17,16 @@ const { Content, headings } = await render(entry)
 ---
 
 <DocsLayout title={entry.data.title} description={entry.data.description} headings={headings}>
+  <Breadcrumbs />
   <h1>{entry.data.title}</h1>
   <p class="mt-2 text-lg text-muted-foreground">{entry.data.description}</p>
   <Content />
+  {(entry.data.props || entry.data.events || entry.data.slots || entry.data.subComponents) && (
+    <ApiTable
+      props={entry.data.props}
+      events={entry.data.events}
+      slots={entry.data.slots}
+      subComponents={entry.data.subComponents}
+    />
+  )}
 </DocsLayout>

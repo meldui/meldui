@@ -1,0 +1,125 @@
+---
+title: Icons
+description: MeldUI uses Tabler Icons with custom defaults for size and stroke, provided via the @meldui/tabler-vue package.
+category: getting-started
+order: 5
+---
+
+## Installation
+
+Icons are in a separate package:
+
+```bash
+pnpm add @meldui/tabler-vue
+```
+
+## Usage
+
+```vue
+<script setup>
+import { IconX, IconCheck, IconAlertCircle } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <!-- Default (24px, stroke 1.5) -->
+  <IconCheck />
+
+  <!-- Custom size -->
+  <IconX :size="32" />
+
+  <!-- Custom stroke -->
+  <IconAlertCircle :stroke="2" />
+
+  <!-- Color via Tailwind class -->
+  <IconCheck class="text-green-500" />
+</template>
+```
+
+## Default Values
+
+All icons ship with these defaults:
+
+| Prop | Default | Tabler Default |
+|------|---------|----------------|
+| `size` | 24 | 24 |
+| `stroke` | 1.5 | 2 |
+
+The stroke weight is intentionally thinner than Tabler's default for a cleaner look that matches MeldUI's design system.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `number` | `24` | Icon size in pixels |
+| `stroke` | `number` | `1.5` | Stroke thickness |
+
+## Color
+
+Icons use `currentColor` and inherit from the parent's text color. Control color using Tailwind classes:
+
+```vue
+<template>
+  <!-- Via parent -->
+  <span class="text-red-500">
+    <IconX /> <!-- Red icon -->
+  </span>
+
+  <!-- Directly on icon -->
+  <IconCheck class="text-green-500" />
+
+  <!-- With MeldUI theme colors -->
+  <IconAlertCircle class="text-destructive" />
+  <IconCheck class="text-success" />
+  <IconInfo class="text-info" />
+</template>
+```
+
+## Available Icons
+
+Browse all 5000+ icons at [tabler.io/icons](https://tabler.io/icons).
+
+Icon names use the `Icon` prefix followed by PascalCase:
+
+| Tabler Name | Import Name |
+|-------------|-------------|
+| `x` | `IconX` |
+| `check` | `IconCheck` |
+| `user` | `IconUser` |
+| `settings` | `IconSettings` |
+| `arrow-right` | `IconArrowRight` |
+| `alert-circle` | `IconAlertCircle` |
+
+## Tree Shaking
+
+Only the icons you import are included in your bundle:
+
+```vue
+<script setup>
+// Only these 3 icons are bundled
+import { IconCheck, IconX, IconUser } from '@meldui/tabler-vue'
+</script>
+```
+
+## Using with Components
+
+Icons work seamlessly with MeldUI components:
+
+```vue
+<script setup>
+import { Button, Input } from '@meldui/vue'
+import { IconSearch, IconSend } from '@meldui/tabler-vue'
+</script>
+
+<template>
+  <!-- Icon button -->
+  <Button size="icon">
+    <IconSearch />
+  </Button>
+
+  <!-- Button with icon and text -->
+  <Button>
+    <IconSend class="mr-2 size-4" />
+    Send Message
+  </Button>
+</template>
+```
