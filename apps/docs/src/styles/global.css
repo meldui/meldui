@@ -14,25 +14,27 @@
     'Courier New', monospace;
 }
 
-/* Docs-specific prose styles — scoped to avoid affecting Vue demo islands */
+/* Docs-specific prose styles — scoped to avoid affecting Vue demo islands.
+   Targets direct children and elements inside <section> (ApiTable),
+   but NOT elements inside <astro-island> (Vue demo components). */
 .docs-prose {
-  > h1 {
+  > h1, > section h1 {
     @apply text-3xl font-bold tracking-tight text-foreground mb-2;
   }
 
-  > h2 {
+  > h2, > section h2 {
     @apply text-2xl font-semibold tracking-tight text-foreground mt-10 mb-4 border-b border-border pb-2;
   }
 
-  > h3 {
+  > h3, > section h3 {
     @apply text-xl font-semibold tracking-tight text-foreground mt-8 mb-3;
   }
 
-  > h4 {
+  > h4, > section h4 {
     @apply text-lg font-semibold text-foreground mt-6 mb-2;
   }
 
-  > p {
+  > p, > section p {
     @apply text-base text-foreground/90 leading-7 mb-4;
   }
 

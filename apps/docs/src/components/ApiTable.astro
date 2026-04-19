@@ -140,6 +140,14 @@ const { props: componentProps, events, slots, subComponents } = Astro.props as P
 }
 
 {
+  subComponents && subComponents.length > 0 && (
+    <section>
+      <h2 id="sub-components">Sub-components</h2>
+    </section>
+  )
+}
+
+{
   subComponents &&
     subComponents.length > 0 &&
     subComponents.map((sub) => (
