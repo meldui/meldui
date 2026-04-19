@@ -14,10 +14,17 @@ props:
 ---
 
 import PinInputDemo from '../../../demos/pin-input/PinInputDemo.vue'
+import PinInputNumericDemo from '../../../demos/pin-input/PinInputNumericDemo.vue'
 
 ## Usage
 
 <PinInputDemo client:only="vue" />
+
+## Numeric
+
+Use `type="number"` to restrict to digits. The `placeholder` prop customizes empty slot display.
+
+<PinInputNumericDemo client:only="vue" />
 
 ## Sub-components
 

@@ -22,10 +22,17 @@ props:
 ---
 
 import SidebarDemo from '../../../demos/sidebar/SidebarDemo.vue'
+import SidebarComplexDemo from '../../../demos/sidebar/SidebarComplexDemo.vue'
 
 ## Usage
 
 <SidebarDemo client:only="vue" />
+
+## Complex Example
+
+A full sidebar with collapsible project groups, nested sub-menus (`SidebarMenuSub`), badge counts (`SidebarMenuBadge`), header, footer, and a toggle trigger. Uses `Collapsible` to expand/collapse groups with a chevron indicator.
+
+<SidebarComplexDemo client:only="vue" />
 
 ## Sub-components
 
