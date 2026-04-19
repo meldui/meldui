@@ -8,42 +8,11 @@ package: '@meldui/vue'
 componentName: AlertDialog
 ---
 
+import AlertDialogDemo from '../../../demos/alert-dialog/AlertDialogDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
-
-<template>
-  <AlertDialog>
-    <AlertDialogTrigger as-child>
-      <Button variant="outline">Delete</Button>
-    </AlertDialogTrigger>
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-        <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction>Delete</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
-</template>
-```
+<AlertDialogDemo client:only="vue" />
 
 ## Sub-components
 

@@ -8,28 +8,11 @@ package: '@meldui/vue'
 componentName: Popover
 ---
 
+import PopoverDemo from '../../../demos/popover/PopoverDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Popover, PopoverTrigger, PopoverContent } from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
-
-<template>
-  <Popover>
-    <PopoverTrigger as-child>
-      <Button variant="outline">Open Popover</Button>
-    </PopoverTrigger>
-    <PopoverContent class="w-80">
-      <div class="grid gap-4">
-        <h4 class="font-medium leading-none">Dimensions</h4>
-        <p class="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
-      </div>
-    </PopoverContent>
-  </Popover>
-</template>
-```
+<PopoverDemo client:only="vue" />
 
 ## Sub-components
 

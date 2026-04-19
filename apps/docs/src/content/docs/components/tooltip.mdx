@@ -8,29 +8,20 @@ package: '@meldui/vue'
 componentName: Tooltip
 ---
 
+import TooltipDemo from '../../../demos/tooltip/TooltipDemo.vue'
+import TooltipSidesDemo from '../../../demos/tooltip/TooltipSidesDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
-
-<template>
-  <TooltipProvider>
-    <Tooltip>
-      <TooltipTrigger as-child>
-        <Button variant="outline">Hover me</Button>
-      </TooltipTrigger>
-      <TooltipContent>
-        <p>Add to library</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
-</template>
-```
+<TooltipDemo client:only="vue" />
 
 > **Note:** Wrap your app or layout with `TooltipProvider` once to configure all tooltips.
+
+## Placement
+
+Use the `side` prop on `TooltipContent` to control placement.
+
+<TooltipSidesDemo client:only="vue" />
 
 ## Sub-components
 

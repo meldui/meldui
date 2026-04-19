@@ -8,46 +8,11 @@ package: '@meldui/vue'
 componentName: Drawer
 ---
 
+import DrawerDemo from '../../../demos/drawer/DrawerDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Drawer,
-  DrawerTrigger,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerClose,
-} from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
-
-<template>
-  <Drawer>
-    <DrawerTrigger as-child>
-      <Button variant="outline">Open Drawer</Button>
-    </DrawerTrigger>
-    <DrawerContent>
-      <DrawerHeader>
-        <DrawerTitle>Move Goal</DrawerTitle>
-        <DrawerDescription>Set your daily activity goal.</DrawerDescription>
-      </DrawerHeader>
-      <div class="p-4">
-        <!-- Content -->
-      </div>
-      <DrawerFooter>
-        <Button>Submit</Button>
-        <DrawerClose as-child>
-          <Button variant="outline">Cancel</Button>
-        </DrawerClose>
-      </DrawerFooter>
-    </DrawerContent>
-  </Drawer>
-</template>
-```
+<DrawerDemo client:only="vue" />
 
 ## Sub-components
 

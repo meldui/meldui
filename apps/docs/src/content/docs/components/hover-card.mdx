@@ -8,29 +8,11 @@ package: '@meldui/vue'
 componentName: HoverCard
 ---
 
+import HoverCardDemo from '../../../demos/hover-card/HoverCardDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@meldui/vue'
-</script>
-
-<template>
-  <HoverCard>
-    <HoverCardTrigger as-child>
-      <a href="#" class="font-medium underline underline-offset-4">@meldui</a>
-    </HoverCardTrigger>
-    <HoverCardContent class="w-80">
-      <div class="flex justify-between space-x-4">
-        <div class="space-y-1">
-          <h4 class="text-sm font-semibold">@meldui</h4>
-          <p class="text-sm">A Vue 3 component library built on shadcn-vue.</p>
-        </div>
-      </div>
-    </HoverCardContent>
-  </HoverCard>
-</template>
-```
+<HoverCardDemo client:only="vue" />
 
 ## Sub-components
 

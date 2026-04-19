@@ -13,39 +13,18 @@ props:
     description: The edge the sheet slides from (set on SheetContent).
 ---
 
+import SheetDemo from '../../../demos/sheet/SheetDemo.vue'
+import SheetSidesDemo from '../../../demos/sheet/SheetSidesDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetClose,
-} from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
+<SheetDemo client:only="vue" />
 
-<template>
-  <Sheet>
-    <SheetTrigger as-child>
-      <Button variant="outline">Open Sheet</Button>
-    </SheetTrigger>
-    <SheetContent>
-      <SheetHeader>
-        <SheetTitle>Edit Profile</SheetTitle>
-        <SheetDescription>Make changes to your profile.</SheetDescription>
-      </SheetHeader>
-      <div class="py-4">
-        <!-- Content -->
-      </div>
-    </SheetContent>
-  </Sheet>
-</template>
-```
+## Side Variants
+
+Use the `side` prop on `SheetContent` to control which edge the sheet slides from.
+
+<SheetSidesDemo client:only="vue" />
 
 ## Sub-components
 
