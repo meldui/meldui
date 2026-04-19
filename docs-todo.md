@@ -40,6 +40,7 @@
 ## Phase 3: Component Pages
 
 ### 3.1 Interactive (7 components)
+
 - [ ] Button — demo + MDX + API
 - [ ] ButtonGroup — demo + MDX + API
 - [ ] Toggle — demo + MDX + API
@@ -49,6 +50,7 @@
 - [ ] Combobox — demo + MDX + API
 
 ### 3.2 Form & Input (17 components)
+
 - [ ] Input — demo + MDX + API
 - [ ] Select — demo + MDX + API
 - [ ] Checkbox — demo + MDX + API
@@ -68,6 +70,7 @@
 - [ ] FileUpload — demo + MDX + API
 
 ### 3.3 Layout (9 components)
+
 - [ ] Accordion — demo + MDX + API
 - [ ] Table — demo + MDX + API
 - [ ] Tabs — demo + MDX + API
@@ -79,6 +82,7 @@
 - [ ] Sidebar — demo + MDX + API
 
 ### 3.4 Navigation (7 components)
+
 - [ ] Breadcrumb — demo + MDX + API
 - [ ] DropdownMenu — demo + MDX + API
 - [ ] ContextMenu — demo + MDX + API
@@ -88,6 +92,7 @@
 - [ ] Tabs (if not already in Layout)
 
 ### 3.5 Overlay (7 components)
+
 - [ ] Dialog — demo + MDX + API
 - [ ] AlertDialog — demo + MDX + API
 - [ ] Sheet — demo + MDX + API
@@ -97,6 +102,7 @@
 - [ ] HoverCard — demo + MDX + API
 
 ### 3.6 Data Display (6 components)
+
 - [ ] Card — demo + MDX + API
 - [ ] Avatar — demo + MDX + API
 - [ ] Badge — demo + MDX + API
@@ -105,6 +111,7 @@
 - [ ] Kbd — demo + MDX + API
 
 ### 3.7 Feedback (10 components)
+
 - [ ] Alert — demo + MDX + API
 - [ ] Progress — demo + MDX + API
 - [ ] CircularProgress — demo + MDX + API

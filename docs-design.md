@@ -5,6 +5,7 @@
 MeldUI's documentation currently lives in Storybook (99 component stories + 9 MDX pages). While Storybook is excellent for interactive component exploration, it has a critical limitation: **AI coding agents cannot effectively crawl JavaScript-heavy Storybook sites**. The rendered content depends on JavaScript execution, making it opaque to LLMs and automated tools.
 
 We need a documentation site that serves two audiences equally:
+
 1. **Human developers** — modern, visually appealing, with live component demos
 2. **AI agents/LLMs** — clean static HTML, structured content, machine-readable indexes
 
@@ -34,6 +35,7 @@ We need a documentation site that serves two audiences equally:
 **Choice:** Astro 5 with custom layout (not Starlight)
 
 **Why Astro:**
+
 - Islands architecture — Vue components render client-side as interactive islands, everything else is static HTML
 - First-class SSG — produces clean, crawlable HTML with zero JavaScript by default
 - MDX support — rich content authoring with component imports
@@ -56,6 +58,7 @@ MeldUI components are Vue 3 SFCs. Astro's Vue integration renders them as intera
 ### 4.3 Styling: Tailwind CSS v4
 
 Matches the monorepo's existing CSS-first approach:
+
 - `@import 'tailwindcss'` (not a JS config file)
 - `@tailwindcss/vite` plugin
 - MeldUI theme imported via `@import '../../../../packages/vue/src/themes/default.css'`
@@ -107,7 +110,7 @@ MeldUI's peer dependencies (vue, vue-sonner, @internationalized/date, @tanstack/
 ```typescript
 // apps/docs/astro.config.ts
 export default defineConfig({
-  site: 'https://docs.meldui.dev',  // adjust as needed
+  site: 'https://docs.meldui.dev', // adjust as needed
   integrations: [vue(), mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
@@ -154,11 +157,13 @@ export default defineConfig({
 ```
 
 **Responsive breakpoints:**
+
 - `>1280px`: Full 3-column layout
 - `768-1280px`: Sidebar as hamburger overlay, no TOC
 - `<768px`: Single column, hamburger sidebar
 
 **Layout components (all Astro — zero JS):**
+
 - `BaseLayout.astro` — HTML shell, `<head>`, dark mode inline script, font loading
 - `DocsLayout.astro` — 3-column grid, renders sidebar + content + TOC
 - `Header.astro` — Top navigation bar
@@ -192,6 +197,7 @@ import { Button } from '@meldui/vue'
 
 **2. ComponentPreview wrapper** (`src/components/ComponentPreview.vue`)
 A Vue island component that provides the Preview/Code tab interface:
+
 - Preview tab: renders the demo component via `<slot />`
 - Code tab: displays syntax-highlighted source with copy button
 - Source code is passed as a raw string prop (loaded via Vite `?raw` import)
@@ -223,39 +229,63 @@ const docs = defineCollection({
     subcategory: z.string().optional(),
     package: z.enum(['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue']).optional(),
     componentName: z.string().optional(),
-    props: z.array(z.object({
-      name: z.string(),
-      type: z.string(),
-      default: z.string().optional(),
-      description: z.string(),
-      required: z.boolean().default(false),
-    })).optional(),
-    events: z.array(z.object({
-      name: z.string(),
-      payload: z.string(),
-      description: z.string(),
-    })).optional(),
-    slots: z.array(z.object({
-      name: z.string(),
-      props: z.string().optional(),
-      description: z.string(),
-    })).optional(),
-    subComponents: z.array(z.object({
-      name: z.string(),
-      description: z.string().optional(),
-      props: z.array(z.object({
-        name: z.string(),
-        type: z.string(),
-        default: z.string().optional(),
-        description: z.string(),
-        required: z.boolean().default(false),
-      })).optional(),
-      slots: z.array(z.object({
-        name: z.string(),
-        props: z.string().optional(),
-        description: z.string(),
-      })).optional(),
-    })).optional(),
+    props: z
+      .array(
+        z.object({
+          name: z.string(),
+          type: z.string(),
+          default: z.string().optional(),
+          description: z.string(),
+          required: z.boolean().default(false),
+        }),
+      )
+      .optional(),
+    events: z
+      .array(
+        z.object({
+          name: z.string(),
+          payload: z.string(),
+          description: z.string(),
+        }),
+      )
+      .optional(),
+    slots: z
+      .array(
+        z.object({
+          name: z.string(),
+          props: z.string().optional(),
+          description: z.string(),
+        }),
+      )
+      .optional(),
+    subComponents: z
+      .array(
+        z.object({
+          name: z.string(),
+          description: z.string().optional(),
+          props: z
+            .array(
+              z.object({
+                name: z.string(),
+                type: z.string(),
+                default: z.string().optional(),
+                description: z.string(),
+                required: z.boolean().default(false),
+              }),
+            )
+            .optional(),
+          slots: z
+            .array(
+              z.object({
+                name: z.string(),
+                props: z.string().optional(),
+                description: z.string(),
+              }),
+            )
+            .optional(),
+        }),
+      )
+      .optional(),
     order: z.number().default(999),
     sourceUrl: z.string().optional(),
     storybookUrl: z.string().optional(),
@@ -275,10 +305,20 @@ The `ApiTable.astro` component reads the current page's frontmatter and renders 
 <h3>Props</h3>
 <table>
   <thead>
-    <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
   </thead>
   <tbody>
-    <tr><td><code>variant</code></td><td><code>'default' | 'destructive' | ...</code></td><td><code>'default'</code></td><td>Visual style variant</td></tr>
+    <tr>
+      <td><code>variant</code></td>
+      <td><code>'default' | 'destructive' | ...</code></td>
+      <td><code>'default'</code></td>
+      <td>Visual style variant</td>
+    </tr>
     ...
   </tbody>
 </table>
@@ -337,6 +377,7 @@ MeldUI uses class-based dark mode with the `.dark` class on `<html>`. The docs s
 ### 5.10 Search
 
 **Pagefind integration:**
+
 - Build step: `astro build && pagefind --site dist`
 - Search UI: `SearchDialog.vue` (Vue island, `client:idle`)
 - Trigger: `Ctrl+K` / `Cmd+K` keyboard shortcut or header button
@@ -347,12 +388,14 @@ MeldUI uses class-based dark mode with the `.dark` class on `<html>`. The docs s
 
 **`llms.txt` / `llms-full.txt`:**
 A build script (`scripts/generate-llms.ts`) reads all content collection entries and generates:
+
 - `llms.txt` — summary index with component names, categories, and descriptions
 - `llms-full.txt` — full API documentation (props, events, slots, usage examples)
 
 Format matches the existing `apps/vue-storybook/public/llms.txt`.
 
 **Structured HTML:**
+
 - `<h1>` = page title, `<h2>` = sections, `<h3>` = subsections
 - `<table>` with `<thead>`/`<tbody>` for all API docs
 - `<code>` with language class for code blocks
@@ -368,28 +411,28 @@ Format matches the existing `apps/vue-storybook/public/llms.txt`.
 
 ### 6.1 Base UI Components (63)
 
-| Category | Components |
-|----------|-----------|
-| Interactive (7) | Button, ButtonGroup, Toggle, ToggleGroup, Command, Carousel, Combobox |
+| Category          | Components                                                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Interactive (7)   | Button, ButtonGroup, Toggle, ToggleGroup, Command, Carousel, Combobox                                                                                               |
 | Form & Input (17) | Input, Select, Checkbox, RadioGroup, Switch, Textarea, Slider, NumberField, PinInput, TagsInput, InputOtp, FileUpload, NativeSelect, InputGroup, Label, Field, Form |
-| Layout (8) | Accordion, Table, Tabs, Separator, ScrollArea, Resizable, AspectRatio, Collapsible, Sidebar |
-| Navigation (7) | Breadcrumb, DropdownMenu, ContextMenu, Menubar, NavigationMenu, Pagination |
-| Overlay (7) | Dialog, AlertDialog, Sheet, Drawer, Popover, Tooltip, HoverCard |
-| Data Display (6) | Card, Avatar, Badge, Calendar, RangeCalendar, Kbd |
-| Feedback (10) | Alert, Progress, CircularProgress, Skeleton, Spinner, Dot, Empty, Stepper, Sonner, Item |
+| Layout (8)        | Accordion, Table, Tabs, Separator, ScrollArea, Resizable, AspectRatio, Collapsible, Sidebar                                                                         |
+| Navigation (7)    | Breadcrumb, DropdownMenu, ContextMenu, Menubar, NavigationMenu, Pagination                                                                                          |
+| Overlay (7)       | Dialog, AlertDialog, Sheet, Drawer, Popover, Tooltip, HoverCard                                                                                                     |
+| Data Display (6)  | Card, Avatar, Badge, Calendar, RangeCalendar, Kbd                                                                                                                   |
+| Feedback (10)     | Alert, Progress, CircularProgress, Skeleton, Spinner, Dot, Empty, Stepper, Sonner, Item                                                                             |
 
 ### 6.2 Composites (8)
 
-| Component | Complexity | Notes |
-|-----------|-----------|-------|
-| DataTable | Very High | 23 files, filters, sorting, pagination, column pinning, server-side |
-| DateRangePicker | High | Calendar, presets, trigger components |
-| Mention | High | Highlighter, portal, serialization utilities |
-| MultiSelect | Medium | Grouping, create option, search |
-| Timeline | Medium | Vertical/horizontal, status variants |
-| AvatarGroup | Low | Orientation, spacing, reverse |
-| ClipboardCopy | Low | Copy button, composable |
-| RelativeTime | Low | Single component |
+| Component       | Complexity | Notes                                                               |
+| --------------- | ---------- | ------------------------------------------------------------------- |
+| DataTable       | Very High  | 23 files, filters, sorting, pagination, column pinning, server-side |
+| DateRangePicker | High       | Calendar, presets, trigger components                               |
+| Mention         | High       | Highlighter, portal, serialization utilities                        |
+| MultiSelect     | Medium     | Grouping, create option, search                                     |
+| Timeline        | Medium     | Vertical/horizontal, status variants                                |
+| AvatarGroup     | Low        | Orientation, spacing, reverse                                       |
+| ClipboardCopy   | Low        | Copy button, composable                                             |
+| RelativeTime    | Low        | Single component                                                    |
 
 ### 6.3 Charts (9 types + infrastructure)
 
@@ -428,6 +471,7 @@ For each component:
 ## 8. Build & Dev Scripts
 
 **Root `package.json`:**
+
 ```json
 {
   "scripts": {
@@ -438,6 +482,7 @@ For each component:
 ```
 
 **`apps/docs/package.json`:**
+
 ```json
 {
   "scripts": {
@@ -455,14 +500,14 @@ For each component:
 
 ## 9. Known Challenges & Mitigations
 
-| Challenge | Mitigation |
-|-----------|-----------|
-| Vue hydration in Astro islands with shared state | Each island is independent. Use `client:visible` for simple demos, `client:load` for interactive ones. Don't share state between islands. |
-| ECharts SSR (ECharts doesn't support SSR) | Charts render only client-side via `client:visible`. `MeldChartSkeleton` provides loading state. |
-| Tailwind v4 class scanning across workspace | `@source` directive in global.css points to MeldUI package source, not just dist. Mirrors Storybook pattern. |
-| Vue deduplication (multiple Vue copies = runtime errors) | `resolve.alias` to single Vue ESM bundle. Proven pattern from Storybook config. |
-| Showing source code of demo components | Vite's `?raw` suffix import loads `.vue` files as strings at build time. |
-| 90 pages of content | Phased approach — foundation first, then components by category. Structured frontmatter + `ApiTable.astro` reduces per-page boilerplate. |
+| Challenge                                                | Mitigation                                                                                                                                |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Vue hydration in Astro islands with shared state         | Each island is independent. Use `client:visible` for simple demos, `client:load` for interactive ones. Don't share state between islands. |
+| ECharts SSR (ECharts doesn't support SSR)                | Charts render only client-side via `client:visible`. `MeldChartSkeleton` provides loading state.                                          |
+| Tailwind v4 class scanning across workspace              | `@source` directive in global.css points to MeldUI package source, not just dist. Mirrors Storybook pattern.                              |
+| Vue deduplication (multiple Vue copies = runtime errors) | `resolve.alias` to single Vue ESM bundle. Proven pattern from Storybook config.                                                           |
+| Showing source code of demo components                   | Vite's `?raw` suffix import loads `.vue` files as strings at build time.                                                                  |
+| 90 pages of content                                      | Phased approach — foundation first, then components by category. Structured frontmatter + `ApiTable.astro` reduces per-page boilerplate.  |
 
 ---
 

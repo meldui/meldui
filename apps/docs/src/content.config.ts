@@ -28,9 +28,7 @@ const docs = defineCollection({
     description: z.string(),
     category: z.enum(['getting-started', 'components', 'composites', 'charts', 'examples']),
     subcategory: z.string().optional(),
-    package: z
-      .enum(['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue'])
-      .optional(),
+    package: z.enum(['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue']).optional(),
     componentName: z.string().optional(),
     props: z.array(propSchema).optional(),
     events: z.array(eventSchema).optional(),
@@ -42,7 +40,7 @@ const docs = defineCollection({
           description: z.string().optional(),
           props: z.array(propSchema).optional(),
           slots: z.array(slotSchema).optional(),
-        })
+        }),
       )
       .optional(),
     order: z.number().default(999),
