@@ -4,7 +4,7 @@ import vue from '@astrojs/vue'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 export default defineConfig({
-  site: 'https://docs.meldui.dev',
+  site: 'https://meldui.dipayanb.com',
   integrations: [
     vue({
       appEntrypoint: '/src/vue-app',

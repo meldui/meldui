@@ -110,7 +110,7 @@ MeldUI's peer dependencies (vue, vue-sonner, @internationalized/date, @tanstack/
 ```typescript
 // apps/docs/astro.config.ts
 export default defineConfig({
-  site: 'https://docs.meldui.dev', // adjust as needed
+  site: 'https://meldui.dipayanb.com', // adjust as needed
   integrations: [vue(), mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
