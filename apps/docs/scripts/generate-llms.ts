@@ -11,11 +11,16 @@ const CONTENT_DIR = join(import.meta.dirname, '../src/content/docs')
 const PUBLIC_DIR = join(import.meta.dirname, '../public')
 
 interface PropInfo {
-  name: string; type: string; default?: string; description: string
+  name: string
+  type: string
+  default?: string
+  description: string
 }
 
 interface SubComponentInfo {
-  name: string; description?: string; props?: PropInfo[]
+  name: string
+  description?: string
+  props?: PropInfo[]
 }
 
 interface PageInfo {
@@ -124,12 +129,19 @@ function parseSubComponents(content: string): SubComponentInfo[] | undefined {
     } else if (inProps && /^\s{6}- name:\s/.test(line)) {
       current.props!.push({
         name: line.trim().replace('- name: ', ''),
-        type: '', description: '',
+        type: '',
+        description: '',
       })
     } else if (inProps && /^\s{8}type:\s/.test(line) && current.props?.length) {
-      current.props[current.props.length - 1].type = line.trim().replace('type: ', '').replace(/^['"]|['"]$/g, '')
+      current.props[current.props.length - 1].type = line
+        .trim()
+        .replace('type: ', '')
+        .replace(/^['"]|['"]$/g, '')
     } else if (inProps && /^\s{8}default:\s/.test(line) && current.props?.length) {
-      current.props[current.props.length - 1].default = line.trim().replace('default: ', '').replace(/^['"]|['"]$/g, '')
+      current.props[current.props.length - 1].default = line
+        .trim()
+        .replace('default: ', '')
+        .replace(/^['"]|['"]$/g, '')
     } else if (inProps && /^\s{8}description:\s/.test(line) && current.props?.length) {
       current.props[current.props.length - 1].description = line.trim().replace('description: ', '')
     } else if (/^\w/.test(line)) {
@@ -269,7 +281,8 @@ for (const page of pages) {
       llmsFullTxt += `#### ${sub.name}\n\n`
       if (sub.description) llmsFullTxt += `${sub.description}\n\n`
       if (sub.props?.length) {
-        llmsFullTxt += '| Prop | Type | Default | Description |\n|------|------|---------|-------------|\n'
+        llmsFullTxt +=
+          '| Prop | Type | Default | Description |\n|------|------|---------|-------------|\n'
         for (const prop of sub.props) {
           llmsFullTxt += `| \`${prop.name}\` | \`${prop.type}\` | ${prop.default ? `\`${prop.default}\`` : '-'} | ${prop.description} |\n`
         }
