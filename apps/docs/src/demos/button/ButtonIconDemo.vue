@@ -3,10 +3,10 @@ import DemoBlock from '../../components/DemoBlock.vue'
 import { Button } from '@meldui/vue'
 import { IconSend } from '@meldui/tabler-vue'
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { Button } from '@meldui/vue'
 import { IconSend } from '@meldui/tabler-vue'
-</script>
+\u003c/script>
 
 <template>
   <Button>

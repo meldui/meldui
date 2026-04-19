@@ -5,12 +5,12 @@ import {
   CommandGroup, CommandItem, CommandEmpty, CommandSeparator,
 } from '@meldui/vue'
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import {
   Command, CommandInput, CommandList,
   CommandGroup, CommandItem, CommandEmpty, CommandSeparator,
 } from '@meldui/vue'
-</script>
+\u003c/script>
 
 <template>
   <Command class="rounded-lg border shadow-md">

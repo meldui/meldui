@@ -31,32 +31,13 @@ props:
     description: Whether the slider is disabled.
 ---
 
+import SliderDemo from '../../../demos/slider/SliderDemo.vue'
+import SliderRangeDemo from '../../../demos/slider/SliderRangeDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { ref } from 'vue'
-import { Slider } from '@meldui/vue'
-
-const value = ref([50])
-</script>
-
-<template>
-  <Slider v-model="value" :max="100" :step="1" />
-</template>
-```
+<SliderDemo client:only="vue" />
 
 ## Range Slider
 
-```vue
-<script setup>
-import { ref } from 'vue'
-import { Slider } from '@meldui/vue'
-
-const range = ref([25, 75])
-</script>
-
-<template>
-  <Slider v-model="range" :max="100" :step="1" />
-</template>
-```
+<SliderRangeDemo client:only="vue" />

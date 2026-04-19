@@ -2,9 +2,9 @@
 import DemoBlock from '../../components/DemoBlock.vue'
 import { Toggle } from '@meldui/vue'
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { Toggle } from '@meldui/vue'
-</script>
+\u003c/script>
 
 <template>
   <div class="flex items-center gap-2">

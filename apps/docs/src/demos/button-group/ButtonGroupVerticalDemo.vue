@@ -2,9 +2,9 @@
 import DemoBlock from '../../components/DemoBlock.vue'
 import { ButtonGroup, Button } from '@meldui/vue'
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { ButtonGroup, Button } from '@meldui/vue'
-</script>
+\u003c/script>
 
 <template>
   <ButtonGroup orientation="vertical">

@@ -15,7 +15,7 @@ const frameworks = [
   { value: 'svelte', label: 'Svelte' },
 ]
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { ref } from 'vue'
 import {
   Combobox, ComboboxAnchor, ComboboxInput,
@@ -30,7 +30,7 @@ const frameworks = [
   { value: 'angular', label: 'Angular' },
   { value: 'svelte', label: 'Svelte' },
 ]
-</script>
+\u003c/script>
 
 <template>
   <Combobox v-model="selected">

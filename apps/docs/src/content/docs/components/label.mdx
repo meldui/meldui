@@ -12,17 +12,8 @@ props:
     description: The id of the form element the label is associated with.
 ---
 
+import LabelDemo from '../../../demos/label/LabelDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Label, Input } from '@meldui/vue'
-</script>
-
-<template>
-  <div class="grid w-full max-w-sm gap-1.5">
-    <Label for="email">Email</Label>
-    <Input id="email" type="email" placeholder="Email" />
-  </div>
-</template>
-```
+<LabelDemo client:only="vue" />

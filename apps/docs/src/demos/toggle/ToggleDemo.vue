@@ -3,10 +3,10 @@ import DemoBlock from '../../components/DemoBlock.vue'
 import { Toggle } from '@meldui/vue'
 import { IconBold } from '@meldui/tabler-vue'
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { Toggle } from '@meldui/vue'
 import { IconBold } from '@meldui/tabler-vue'
-</script>
+\u003c/script>
 
 <template>
   <Toggle aria-label="Toggle bold">

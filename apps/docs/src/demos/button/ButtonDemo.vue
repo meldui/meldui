@@ -2,9 +2,9 @@
 import DemoBlock from '../../components/DemoBlock.vue'
 import { Button } from '@meldui/vue'
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { Button } from '@meldui/vue'
-</script>
+\u003c/script>
 
 <template>
   <div class="flex flex-wrap items-center gap-2">

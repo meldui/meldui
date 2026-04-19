@@ -40,40 +40,11 @@ events:
     description: Emitted when a file fails validation.
 ---
 
+import FileUploadDemo from '../../../demos/file-upload/FileUploadDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  FileUpload,
-  FileUploadDropzone,
-  FileUploadTrigger,
-  FileUploadList,
-  FileUploadItem,
-  FileUploadItemName,
-  FileUploadItemSize,
-  FileUploadItemDelete,
-} from '@meldui/vue'
-</script>
-
-<template>
-  <FileUpload accept="image/*" :max-files="5">
-    <FileUploadDropzone>
-      <p>Drag & drop files here, or</p>
-      <FileUploadTrigger>Browse Files</FileUploadTrigger>
-    </FileUploadDropzone>
-    <FileUploadList>
-      <template #default="{ files }">
-        <FileUploadItem v-for="file in files" :key="file.name" :file="file">
-          <FileUploadItemName />
-          <FileUploadItemSize />
-          <FileUploadItemDelete />
-        </FileUploadItem>
-      </template>
-    </FileUploadList>
-  </FileUpload>
-</template>
-```
+<FileUploadDemo client:only="vue" />
 
 ## Sub-components
 

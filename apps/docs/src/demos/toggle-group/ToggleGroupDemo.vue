@@ -6,13 +6,13 @@ import { IconAlignLeft, IconAlignCenter, IconAlignRight } from '@meldui/tabler-v
 
 const alignment = ref('center')
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { ref } from 'vue'
 import { ToggleGroup, ToggleGroupItem } from '@meldui/vue'
 import { IconAlignLeft, IconAlignCenter, IconAlignRight } from '@meldui/tabler-vue'
 
 const alignment = ref('center')
-</script>
+\u003c/script>
 
 <template>
   <ToggleGroup v-model="alignment" type="single">

@@ -8,30 +8,11 @@ package: '@meldui/vue'
 componentName: RadioGroup
 ---
 
+import RadioGroupDemo from '../../../demos/radio-group/RadioGroupDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { RadioGroup, RadioGroupItem, Label } from '@meldui/vue'
-</script>
-
-<template>
-  <RadioGroup default-value="comfortable">
-    <div class="flex items-center space-x-2">
-      <RadioGroupItem id="default" value="default" />
-      <Label for="default">Default</Label>
-    </div>
-    <div class="flex items-center space-x-2">
-      <RadioGroupItem id="comfortable" value="comfortable" />
-      <Label for="comfortable">Comfortable</Label>
-    </div>
-    <div class="flex items-center space-x-2">
-      <RadioGroupItem id="compact" value="compact" />
-      <Label for="compact">Compact</Label>
-    </div>
-  </RadioGroup>
-</template>
-```
+<RadioGroupDemo client:only="vue" />
 
 ## Sub-components
 

@@ -8,38 +8,16 @@ package: '@meldui/vue'
 componentName: InputGroup
 ---
 
+import InputGroupDemo from '../../../demos/input-group/InputGroupDemo.vue'
+import InputGroupButtonDemo from '../../../demos/input-group/InputGroupButtonDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@meldui/vue'
-import { IconSearch } from '@meldui/tabler-vue'
-</script>
-
-<template>
-  <InputGroup>
-    <InputGroupAddon>
-      <IconSearch class="size-4" />
-    </InputGroupAddon>
-    <InputGroupInput placeholder="Search..." />
-  </InputGroup>
-</template>
-```
+<InputGroupDemo client:only="vue" />
 
 ## With Button
 
-```vue
-<script setup>
-import { InputGroup, InputGroupInput, InputGroupButton } from '@meldui/vue'
-</script>
-
-<template>
-  <InputGroup>
-    <InputGroupInput placeholder="Enter URL" />
-    <InputGroupButton>Go</InputGroupButton>
-  </InputGroup>
-</template>
-```
+<InputGroupButtonDemo client:only="vue" />
 
 ## Sub-components
 

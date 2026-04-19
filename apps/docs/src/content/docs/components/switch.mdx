@@ -19,29 +19,13 @@ props:
     description: Whether the switch is disabled.
 ---
 
+import SwitchDemo from '../../../demos/switch/SwitchDemo.vue'
+import SwitchVariantsDemo from '../../../demos/switch/SwitchVariantsDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Switch, Label } from '@meldui/vue'
-</script>
-
-<template>
-  <div class="flex items-center space-x-2">
-    <Switch id="airplane-mode" />
-    <Label for="airplane-mode">Airplane Mode</Label>
-  </div>
-</template>
-```
+<SwitchDemo client:only="vue" />
 
 ## Variants
 
-```vue
-<template>
-  <Switch variant="default" />
-  <Switch variant="success" />
-  <Switch variant="warning" />
-  <Switch variant="destructive" />
-  <Switch variant="info" />
-</template>
-```
+<SwitchVariantsDemo client:only="vue" />

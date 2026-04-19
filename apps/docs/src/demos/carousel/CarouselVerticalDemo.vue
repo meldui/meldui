@@ -2,9 +2,9 @@
 import DemoBlock from '../../components/DemoBlock.vue'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@meldui/vue'
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@meldui/vue'
-</script>
+\u003c/script>
 
 <template>
   <Carousel orientation="vertical" class="w-full max-w-xs">

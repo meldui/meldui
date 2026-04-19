@@ -19,37 +19,18 @@ events:
     description: Emitted when the input value changes.
 ---
 
+import InputDemo from '../../../demos/input/InputDemo.vue'
+import InputWithLabelDemo from '../../../demos/input/InputWithLabelDemo.vue'
+import InputDisabledDemo from '../../../demos/input/InputDisabledDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Input } from '@meldui/vue'
-</script>
-
-<template>
-  <Input placeholder="Enter your email" />
-</template>
-```
+<InputDemo client:only="vue" />
 
 ## With Label
 
-```vue
-<script setup>
-import { Input, Label } from '@meldui/vue'
-</script>
-
-<template>
-  <div class="grid w-full max-w-sm gap-1.5">
-    <Label for="email">Email</Label>
-    <Input id="email" type="email" placeholder="Email" />
-  </div>
-</template>
-```
+<InputWithLabelDemo client:only="vue" />
 
 ## Disabled
 
-```vue
-<template>
-  <Input disabled placeholder="Disabled input" />
-</template>
-```
+<InputDisabledDemo client:only="vue" />

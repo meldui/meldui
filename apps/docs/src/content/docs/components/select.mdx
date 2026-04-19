@@ -8,64 +8,16 @@ package: '@meldui/vue'
 componentName: Select
 ---
 
+import SelectDemo from '../../../demos/select/SelectDemo.vue'
+import SelectGroupsDemo from '../../../demos/select/SelectGroupsDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@meldui/vue'
-</script>
-
-<template>
-  <Select>
-    <SelectTrigger class="w-[180px]">
-      <SelectValue placeholder="Select a fruit" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="apple">Apple</SelectItem>
-      <SelectItem value="banana">Banana</SelectItem>
-      <SelectItem value="cherry">Cherry</SelectItem>
-    </SelectContent>
-  </Select>
-</template>
-```
+<SelectDemo client:only="vue" />
 
 ## With Groups
 
-```vue
-<script setup>
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-  SelectGroup,
-  SelectLabel,
-  SelectSeparator,
-} from '@meldui/vue'
-</script>
-
-<template>
-  <Select>
-    <SelectTrigger class="w-[180px]">
-      <SelectValue placeholder="Select..." />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectGroup>
-        <SelectLabel>Fruits</SelectLabel>
-        <SelectItem value="apple">Apple</SelectItem>
-        <SelectItem value="banana">Banana</SelectItem>
-      </SelectGroup>
-      <SelectSeparator />
-      <SelectGroup>
-        <SelectLabel>Vegetables</SelectLabel>
-        <SelectItem value="carrot">Carrot</SelectItem>
-        <SelectItem value="potato">Potato</SelectItem>
-      </SelectGroup>
-    </SelectContent>
-  </Select>
-</template>
-```
+<SelectGroupsDemo client:only="vue" />
 
 ## Sub-components
 

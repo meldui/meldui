@@ -8,54 +8,11 @@ package: '@meldui/vue'
 componentName: Form
 ---
 
+import FormDemo from '../../../demos/form/FormDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from '@meldui/vue'
-import { Input } from '@meldui/vue'
-
-const formSchema = toTypedSchema(
-  z.object({
-    username: z.string().min(2).max(50),
-  }),
-)
-
-const { handleSubmit } = useForm({
-  validationSchema: formSchema,
-})
-
-const onSubmit = handleSubmit((values) => {
-  console.log(values)
-})
-</script>
-
-<template>
-  <form @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="username">
-      <FormItem>
-        <FormLabel>Username</FormLabel>
-        <FormControl>
-          <Input placeholder="username" v-bind="componentField" />
-        </FormControl>
-        <FormDescription>Your public display name.</FormDescription>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-  </form>
-</template>
-```
+<FormDemo client:only="vue" />
 
 ## Sub-components
 

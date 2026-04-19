@@ -8,7 +8,7 @@ import {
 
 const open = ref(false)
 
-const code = `<script setup>
+const code = `\u003cscript setup>
 import { ref } from 'vue'
 import {
   CommandDialog, CommandInput, CommandList,
@@ -16,7 +16,7 @@ import {
 } from '@meldui/vue'
 
 const open = ref(false)
-</script>
+\u003c/script>
 
 <template>
   <Button variant="outline" @click="open = true">Open Command Palette</Button>

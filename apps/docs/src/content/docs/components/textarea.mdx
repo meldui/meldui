@@ -23,30 +23,18 @@ events:
     description: Emitted when the value changes.
 ---
 
+import TextareaDemo from '../../../demos/textarea/TextareaDemo.vue'
+import TextareaAutosizeDemo from '../../../demos/textarea/TextareaAutosizeDemo.vue'
+import TextareaMaxHeightDemo from '../../../demos/textarea/TextareaMaxHeightDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Textarea } from '@meldui/vue'
-</script>
-
-<template>
-  <Textarea placeholder="Type your message here." />
-</template>
-```
+<TextareaDemo client:only="vue" />
 
 ## Autosize
 
-```vue
-<template>
-  <Textarea autosize placeholder="This textarea grows as you type..." />
-</template>
-```
+<TextareaAutosizeDemo client:only="vue" />
 
 ## With Max Height
 
-```vue
-<template>
-  <Textarea autosize max-height="200px" placeholder="Grows up to 200px..." />
-</template>
-```
+<TextareaMaxHeightDemo client:only="vue" />

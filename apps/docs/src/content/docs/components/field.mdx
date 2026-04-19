@@ -13,50 +13,21 @@ props:
     description: The layout direction of the field.
 ---
 
+import FieldDemo from '../../../demos/field/FieldDemo.vue'
+import FieldErrorDemo from '../../../demos/field/FieldErrorDemo.vue'
+import FieldHorizontalDemo from '../../../demos/field/FieldHorizontalDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Field, FieldLabel, FieldContent, FieldDescription, FieldError, Input } from '@meldui/vue'
-</script>
-
-<template>
-  <Field>
-    <FieldLabel>Username</FieldLabel>
-    <FieldContent>
-      <Input placeholder="Enter username" />
-    </FieldContent>
-    <FieldDescription>This is your public display name.</FieldDescription>
-  </Field>
-</template>
-```
+<FieldDemo client:only="vue" />
 
 ## With Error
 
-```vue
-<template>
-  <Field>
-    <FieldLabel>Email</FieldLabel>
-    <FieldContent>
-      <Input placeholder="Email" />
-    </FieldContent>
-    <FieldError :errors="['Please enter a valid email address.']" />
-  </Field>
-</template>
-```
+<FieldErrorDemo client:only="vue" />
 
 ## Horizontal Layout
 
-```vue
-<template>
-  <Field orientation="horizontal">
-    <FieldLabel>Name</FieldLabel>
-    <FieldContent>
-      <Input placeholder="Name" />
-    </FieldContent>
-  </Field>
-</template>
-```
+<FieldHorizontalDemo client:only="vue" />
 
 ## Sub-components
 

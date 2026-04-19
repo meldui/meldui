@@ -16,22 +16,11 @@ events:
     description: Emitted when the selection changes.
 ---
 
+import NativeSelectDemo from '../../../demos/native-select/NativeSelectDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { NativeSelect, NativeSelectOption, NativeSelectOptGroup } from '@meldui/vue'
-</script>
-
-<template>
-  <NativeSelect>
-    <NativeSelectOption value="" disabled>Select a fruit</NativeSelectOption>
-    <NativeSelectOption value="apple">Apple</NativeSelectOption>
-    <NativeSelectOption value="banana">Banana</NativeSelectOption>
-    <NativeSelectOption value="cherry">Cherry</NativeSelectOption>
-  </NativeSelect>
-</template>
-```
+<NativeSelectDemo client:only="vue" />
 
 ## Sub-components
 
