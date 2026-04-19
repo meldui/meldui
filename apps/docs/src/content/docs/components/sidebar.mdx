@@ -21,62 +21,11 @@ props:
     description: How the sidebar collapses.
 ---
 
+import SidebarDemo from '../../../demos/sidebar/SidebarDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarTrigger,
-  SidebarInset,
-} from '@meldui/vue'
-import { IconHome, IconSettings } from '@meldui/tabler-vue'
-</script>
-
-<template>
-  <SidebarProvider>
-    <Sidebar>
-      <SidebarHeader>
-        <h2>My App</h2>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <IconHome class="size-4" />
-                  <span>Home</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <IconSettings class="size-4" />
-                  <span>Settings</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
-    <SidebarInset>
-      <SidebarTrigger />
-      <main>Content</main>
-    </SidebarInset>
-  </SidebarProvider>
-</template>
-```
+<SidebarDemo client:only="vue" />
 
 ## Sub-components
 

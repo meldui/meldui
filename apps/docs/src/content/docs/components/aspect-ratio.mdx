@@ -13,18 +13,8 @@ props:
     description: 'The desired aspect ratio (e.g., 16/9 for widescreen).'
 ---
 
+import AspectRatioDemo from '../../../demos/aspect-ratio/AspectRatioDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { AspectRatio } from '@meldui/vue'
-</script>
-
-<template>
-  <div class="w-[450px]">
-    <AspectRatio :ratio="16 / 9">
-      <img src="..." alt="Photo" class="h-full w-full rounded-md object-cover" />
-    </AspectRatio>
-  </div>
-</template>
-```
+<AspectRatioDemo client:only="vue" />

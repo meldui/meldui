@@ -8,29 +8,11 @@ package: '@meldui/vue'
 componentName: ResizablePanelGroup
 ---
 
+import ResizableDemo from '../../../demos/resizable/ResizableDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@meldui/vue'
-</script>
-
-<template>
-  <ResizablePanelGroup direction="horizontal" class="max-w-md rounded-lg border">
-    <ResizablePanel :default-size="50">
-      <div class="flex h-[200px] items-center justify-center p-6">
-        <span class="font-semibold">One</span>
-      </div>
-    </ResizablePanel>
-    <ResizableHandle with-handle />
-    <ResizablePanel :default-size="50">
-      <div class="flex h-[200px] items-center justify-center p-6">
-        <span class="font-semibold">Two</span>
-      </div>
-    </ResizablePanel>
-  </ResizablePanelGroup>
-</template>
-```
+<ResizableDemo client:only="vue" />
 
 ## Sub-components
 

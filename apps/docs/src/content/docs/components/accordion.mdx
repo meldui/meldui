@@ -8,26 +8,11 @@ package: '@meldui/vue'
 componentName: Accordion
 ---
 
+import AccordionDemo from '../../../demos/accordion/AccordionDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@meldui/vue'
-</script>
-
-<template>
-  <Accordion type="single" collapsible>
-    <AccordionItem value="item-1">
-      <AccordionTrigger>Is it accessible?</AccordionTrigger>
-      <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
-    </AccordionItem>
-    <AccordionItem value="item-2">
-      <AccordionTrigger>Is it styled?</AccordionTrigger>
-      <AccordionContent>Yes. It comes with default styles via Tailwind CSS.</AccordionContent>
-    </AccordionItem>
-  </Accordion>
-</template>
-```
+<AccordionDemo client:only="vue" />
 
 ## Sub-components
 

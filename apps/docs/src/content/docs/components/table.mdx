@@ -8,41 +8,11 @@ package: '@meldui/vue'
 componentName: Table
 ---
 
+import TableDemo from '../../../demos/table/TableDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableCaption,
-} from '@meldui/vue'
-</script>
-
-<template>
-  <Table>
-    <TableCaption>A list of recent invoices.</TableCaption>
-    <TableHeader>
-      <TableRow>
-        <TableHead>Invoice</TableHead>
-        <TableHead>Status</TableHead>
-        <TableHead class="text-right">Amount</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <TableRow>
-        <TableCell class="font-medium">INV001</TableCell>
-        <TableCell>Paid</TableCell>
-        <TableCell class="text-right">$250.00</TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
-</template>
-```
+<TableDemo client:only="vue" />
 
 ## Sub-components
 

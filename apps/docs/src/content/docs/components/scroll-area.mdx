@@ -8,19 +8,11 @@ package: '@meldui/vue'
 componentName: ScrollArea
 ---
 
+import ScrollAreaDemo from '../../../demos/scroll-area/ScrollAreaDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { ScrollArea } from '@meldui/vue'
-</script>
-
-<template>
-  <ScrollArea class="h-[200px] w-[350px] rounded-md border p-4">
-    <div>Long scrollable content here...</div>
-  </ScrollArea>
-</template>
-```
+<ScrollAreaDemo client:only="vue" />
 
 ## Sub-components
 

@@ -17,32 +17,13 @@ props:
     description: Whether the separator is purely decorative (no semantic meaning).
 ---
 
+import SeparatorDemo from '../../../demos/separator/SeparatorDemo.vue'
+import SeparatorVerticalDemo from '../../../demos/separator/SeparatorVerticalDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Separator } from '@meldui/vue'
-</script>
-
-<template>
-  <div>
-    <p>Content above</p>
-    <Separator class="my-4" />
-    <p>Content below</p>
-  </div>
-</template>
-```
+<SeparatorDemo client:only="vue" />
 
 ## Vertical
 
-```vue
-<template>
-  <div class="flex h-5 items-center space-x-4">
-    <span>Blog</span>
-    <Separator orientation="vertical" />
-    <span>Docs</span>
-    <Separator orientation="vertical" />
-    <span>Source</span>
-  </div>
-</template>
-```
+<SeparatorVerticalDemo client:only="vue" />

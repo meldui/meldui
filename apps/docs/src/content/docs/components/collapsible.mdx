@@ -8,25 +8,11 @@ package: '@meldui/vue'
 componentName: Collapsible
 ---
 
+import CollapsibleDemo from '../../../demos/collapsible/CollapsibleDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
-
-<template>
-  <Collapsible>
-    <CollapsibleTrigger as-child>
-      <Button variant="ghost">Toggle</Button>
-    </CollapsibleTrigger>
-    <CollapsibleContent>
-      <p>This content can be collapsed.</p>
-    </CollapsibleContent>
-  </Collapsible>
-</template>
-```
+<CollapsibleDemo client:only="vue" />
 
 ## Sub-components
 

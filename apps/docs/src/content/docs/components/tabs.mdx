@@ -19,39 +19,16 @@ props:
     description: The controlled active tab. Use with v-model.
 ---
 
+import TabsDemo from '../../../demos/tabs/TabsDemo.vue'
+import TabsPillDemo from '../../../demos/tabs/TabsPillDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@meldui/vue'
-</script>
-
-<template>
-  <Tabs default-value="account">
-    <TabsList>
-      <TabsTrigger value="account">Account</TabsTrigger>
-      <TabsTrigger value="password">Password</TabsTrigger>
-    </TabsList>
-    <TabsContent value="account">Account settings here.</TabsContent>
-    <TabsContent value="password">Change your password here.</TabsContent>
-  </Tabs>
-</template>
-```
+<TabsDemo client:only="vue" />
 
 ## Pill Variant
 
-```vue
-<template>
-  <Tabs default-value="tab1" variant="pill">
-    <TabsList>
-      <TabsTrigger value="tab1">Tab 1</TabsTrigger>
-      <TabsTrigger value="tab2">Tab 2</TabsTrigger>
-    </TabsList>
-    <TabsContent value="tab1">Content 1</TabsContent>
-    <TabsContent value="tab2">Content 2</TabsContent>
-  </Tabs>
-</template>
-```
+<TabsPillDemo client:only="vue" />
 
 ## Sub-components
 
