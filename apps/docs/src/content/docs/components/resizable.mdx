@@ -9,10 +9,24 @@ componentName: ResizablePanelGroup
 ---
 
 import ResizableDemo from '../../../demos/resizable/ResizableDemo.vue'
+import ResizableVerticalDemo from '../../../demos/resizable/ResizableVerticalDemo.vue'
+import ResizableThreePanelDemo from '../../../demos/resizable/ResizableThreePanelDemo.vue'
 
 ## Usage
 
 <ResizableDemo client:only="vue" />
+
+## Vertical
+
+Use `direction="vertical"` for vertically stacked panels.
+
+<ResizableVerticalDemo client:only="vue" />
+
+## Three Panels with Min Size
+
+Panels support `minSize` and `maxSize` constraints.
+
+<ResizableThreePanelDemo client:only="vue" />
 
 ## Sub-components
 

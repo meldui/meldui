@@ -14,7 +14,14 @@ props:
 ---
 
 import AspectRatioDemo from '../../../demos/aspect-ratio/AspectRatioDemo.vue'
+import AspectRatioSquareDemo from '../../../demos/aspect-ratio/AspectRatioSquareDemo.vue'
 
 ## Usage
 
 <AspectRatioDemo client:only="vue" />
+
+## Different Ratios
+
+Pass any number as the `ratio` prop — common values include `1` (square), `4/3`, and `21/9`.
+
+<AspectRatioSquareDemo client:only="vue" />
