@@ -11,10 +11,10 @@ props:
     default: "'range'"
     description: Whether to select a date range or a single date.
   - name: modelValue
-    type: "{ start: DateValue; end: DateValue } | DateValue"
+    type: '{ start: DateValue; end: DateValue } | DateValue'
     description: The selected date value (range object or single date).
   - name: presets
-    type: "{ label: string; value: { start: DateValue; end: DateValue } | DateValue }[]"
+    type: '{ label: string; value: { start: DateValue; end: DateValue } | DateValue }[]'
     description: Predefined date options shown as quick-select buttons.
   - name: showCalendar
     type: boolean
@@ -62,10 +62,10 @@ Use `mode="single"` for picking a single date instead of a range.
 
 ## Sub-components
 
-| Component                  | Description                                        |
-| -------------------------- | -------------------------------------------------- |
-| `DateRangePicker`          | Root component managing state and popover           |
-| `DateRangePickerTrigger`   | The button that opens the picker popover            |
-| `DateRangePickerContent`   | Popover content wrapper for calendar and presets    |
-| `DateRangePickerCalendar`  | The calendar grid for selecting dates               |
-| `DateRangePickerPresets`   | Quick-select preset buttons                         |
+| Component                 | Description                                      |
+| ------------------------- | ------------------------------------------------ |
+| `DateRangePicker`         | Root component managing state and popover        |
+| `DateRangePickerTrigger`  | The button that opens the picker popover         |
+| `DateRangePickerContent`  | Popover content wrapper for calendar and presets |
+| `DateRangePickerCalendar` | The calendar grid for selecting dates            |
+| `DateRangePickerPresets`  | Quick-select preset buttons                      |
