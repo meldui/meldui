@@ -1,14 +1,20 @@
 ---
-title: "Data Table: Column Pinning"
+title: 'Data Table: Column Pinning'
 description: Pin columns to the left or right edge for horizontal scroll tables.
 category: composites
 order: 6
 package: '@meldui/vue'
 ---
 
+import DataTablePinningDemo from '../../../demos/data-table/DataTablePinningDemo.vue'
+
 ## Column Pinning
 
-Pin columns so they stay visible when scrolling horizontally:
+Pin columns so they stay visible when scrolling horizontally. The `select` and `name` columns are pinned left, `actions` is pinned right — scroll the middle columns to see them stick.
+
+<DataTablePinningDemo client:only="vue" />
+
+### Configuration
 
 ```vue
 <DataTable
@@ -26,10 +32,10 @@ Pin columns so they stay visible when scrolling horizontally:
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `enableColumnPinning` | `boolean` | `false` | Enable column pinning |
-| `defaultPinning` | `{ left?: string[], right?: string[] }` | - | Initial pinned columns |
+| Prop                  | Type                                    | Default | Description            |
+| --------------------- | --------------------------------------- | ------- | ---------------------- |
+| `enableColumnPinning` | `boolean`                               | `false` | Enable column pinning  |
+| `defaultPinning`      | `{ left?: string[], right?: string[] }` | -       | Initial pinned columns |
 
 ## Pinning Programmatically
 

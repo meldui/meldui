@@ -1,5 +1,5 @@
 ---
-title: "Data Table: Basic Usage"
+title: 'Data Table: Basic Usage'
 description: Setting up a basic data table with sorting, pagination, and search.
 category: composites
 order: 2
@@ -16,20 +16,20 @@ A minimal DataTable with columns, sorting, pagination, and a search input. The `
 
 ## Core Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `columns` | `ColumnDef<TData>[]` | required | Column definitions from `createColumnHelper` |
-| `data` | `TData[]` | required | The current page of data |
-| `pageCount` | `number` | required | Total number of pages |
-| `onServerSideChange` | `(state) => void` | required | Callback when sort/filter/page changes |
-| `searchColumn` | `string` | - | Column ID to search on |
-| `searchPlaceholder` | `string` | - | Placeholder text for search input |
-| `defaultPerPage` | `number` | `10` | Default rows per page |
-| `pageSizeOptions` | `number[]` | `[10,20,30,40,50]` | Available page size options |
-| `loading` | `boolean` | `false` | Show loading state |
-| `error` | `string` | - | Show error message |
-| `density` | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'` | Row density |
-| `maxHeight` | `string` | `'600px'` | Max height with vertical scroll |
+| Prop                 | Type                                       | Default            | Description                                  |
+| -------------------- | ------------------------------------------ | ------------------ | -------------------------------------------- |
+| `columns`            | `ColumnDef<TData>[]`                       | required           | Column definitions from `createColumnHelper` |
+| `data`               | `TData[]`                                  | required           | The current page of data                     |
+| `pageCount`          | `number`                                   | required           | Total number of pages                        |
+| `onServerSideChange` | `(state) => void`                          | required           | Callback when sort/filter/page changes       |
+| `searchColumn`       | `string`                                   | -                  | Column ID to search on                       |
+| `searchPlaceholder`  | `string`                                   | -                  | Placeholder text for search input            |
+| `defaultPerPage`     | `number`                                   | `10`               | Default rows per page                        |
+| `pageSizeOptions`    | `number[]`                                 | `[10,20,30,40,50]` | Available page size options                  |
+| `loading`            | `boolean`                                  | `false`            | Show loading state                           |
+| `error`              | `string`                                   | -                  | Show error message                           |
+| `density`            | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'`    | Row density                                  |
+| `maxHeight`          | `string`                                   | `'600px'`          | Max height with vertical scroll              |
 
 ## Pagination Position
 
@@ -59,11 +59,11 @@ tableRef.value?.refresh()
 </template>
 ```
 
-| Method | Description |
-|--------|-------------|
-| `resetFilters()` | Clear all active filters |
-| `resetSorting()` | Clear sorting |
-| `resetSelection()` | Deselect all rows |
-| `resetPagination()` | Go to page 1 |
-| `resetAll()` | Reset everything |
-| `refresh()` | Re-trigger the server-side callback |
+| Method              | Description                         |
+| ------------------- | ----------------------------------- |
+| `resetFilters()`    | Clear all active filters            |
+| `resetSorting()`    | Clear sorting                       |
+| `resetSelection()`  | Deselect all rows                   |
+| `resetPagination()` | Go to page 1                        |
+| `resetAll()`        | Reset everything                    |
+| `refresh()`         | Re-trigger the server-side callback |

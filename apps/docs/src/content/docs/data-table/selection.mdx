@@ -1,5 +1,5 @@
 ---
-title: "Data Table: Selection & Actions"
+title: 'Data Table: Selection & Actions'
 description: Row selection with checkboxes, bulk actions, and per-row action menus.
 category: composites
 order: 5
@@ -28,7 +28,7 @@ const bulkActions: BulkActionOption<User>[] = [
     variant: 'destructive',
     action: (selectedRows) => {
       // selectedRows is User[]
-      deleteUsers(selectedRows.map(r => r.id))
+      deleteUsers(selectedRows.map((r) => r.id))
     },
   },
   {
@@ -77,9 +77,9 @@ Via template ref:
 const tableRef = ref()
 
 // Get selected row data
-const selected = tableRef.value?.selectedRows     // User[]
-const count = tableRef.value?.selectedRowCount     // number
-const hasAny = tableRef.value?.hasSelection        // boolean
+const selected = tableRef.value?.selectedRows // User[]
+const count = tableRef.value?.selectedRowCount // number
+const hasAny = tableRef.value?.hasSelection // boolean
 
 // Clear selection
 tableRef.value?.resetSelection()

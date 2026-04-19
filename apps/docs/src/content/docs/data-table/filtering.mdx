@@ -1,5 +1,5 @@
 ---
-title: "Data Table: Filtering"
+title: 'Data Table: Filtering'
 description: Configure filter types, advanced mode with operators, and custom filter fields.
 category: composites
 order: 4
@@ -16,16 +16,16 @@ Pass `filterFields` to enable the filter toolbar. Each field maps to a column ID
 
 ## Filter Types
 
-| Type | Description | Value Format |
-|------|-------------|-------------|
-| `text` | Text input, multi-instance with OR logic | `string[]` |
-| `select` | Single dropdown | `string` |
-| `multiselect` | Multiple checkboxes (simple mode only) | `string[]` |
-| `number` | Number input, multi-instance | `number[]` |
-| `range` | Dual slider for min/max (simple mode only) | `[min, max]` |
-| `boolean` | Toggle switch | `boolean` |
-| `date` | Date picker, multi-instance | `DateValue[]` |
-| `daterange` | Start/end date range (simple mode only) | `{ start, end }` |
+| Type          | Description                                | Value Format     |
+| ------------- | ------------------------------------------ | ---------------- |
+| `text`        | Text input, multi-instance with OR logic   | `string[]`       |
+| `select`      | Single dropdown                            | `string`         |
+| `multiselect` | Multiple checkboxes (simple mode only)     | `string[]`       |
+| `number`      | Number input, multi-instance               | `number[]`       |
+| `range`       | Dual slider for min/max (simple mode only) | `[min, max]`     |
+| `boolean`     | Toggle switch                              | `boolean`        |
+| `date`        | Date picker, multi-instance                | `DateValue[]`    |
+| `daterange`   | Start/end date range (simple mode only)    | `{ start, end }` |
 
 ## Filter Field Configuration
 
@@ -126,13 +126,13 @@ In advanced mode, each filter gets an operator dropdown. Only base types are all
 
 ### Available Operators
 
-| Type | Operators |
-|------|-----------|
-| **Text** | contains, equals, startsWith, endsWith, notContains, notEquals, isEmpty, isNotEmpty |
-| **Number** | equals, notEquals, greaterThan, greaterThanOrEqual, lessThan, lessThanOrEqual, between, isEmpty, isNotEmpty |
-| **Date** | is, isBefore, isAfter, isBetween, isEmpty, isNotEmpty |
-| **Select** | is, isAnyOf, isNot, isNoneOf, isEmpty, isNotEmpty |
-| **Boolean** | is, isEmpty, isNotEmpty |
+| Type        | Operators                                                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------- |
+| **Text**    | contains, equals, startsWith, endsWith, notContains, notEquals, isEmpty, isNotEmpty                         |
+| **Number**  | equals, notEquals, greaterThan, greaterThanOrEqual, lessThan, lessThanOrEqual, between, isEmpty, isNotEmpty |
+| **Date**    | is, isBefore, isAfter, isBetween, isEmpty, isNotEmpty                                                       |
+| **Select**  | is, isAnyOf, isNot, isNoneOf, isEmpty, isNotEmpty                                                           |
+| **Boolean** | is, isEmpty, isNotEmpty                                                                                     |
 
 You can customize available operators per field:
 

@@ -1,12 +1,20 @@
 ---
-title: "Data Table: Row Expansion"
+title: 'Data Table: Row Expansion'
 description: Expand rows to show detail content using the master-detail pattern.
 category: composites
 order: 7
 package: '@meldui/vue'
 ---
 
+import DataTableExpansionDemo from '../../../demos/data-table/DataTableExpansionDemo.vue'
+
 ## Row Expansion
+
+Click the chevron to expand a row and see order items. Rows with no items (like the cancelled order) cannot be expanded.
+
+<DataTableExpansionDemo client:only="vue" />
+
+### Setup
 
 Add an expander column and provide detail content via the `#expanded-row` slot:
 
@@ -57,10 +65,10 @@ const columns = [
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `enableRowExpansion` | `boolean` | `false` | Enable row expansion |
-| `getRowCanExpand` | `(row: Row<T>) => boolean` | - | Control which rows can expand |
+| Prop                 | Type                       | Default | Description                   |
+| -------------------- | -------------------------- | ------- | ----------------------------- |
+| `enableRowExpansion` | `boolean`                  | `false` | Enable row expansion          |
+| `getRowCanExpand`    | `(row: Row<T>) => boolean` | -       | Control which rows can expand |
 
 ## Programmatic Control
 

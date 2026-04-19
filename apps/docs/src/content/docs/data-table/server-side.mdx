@@ -1,5 +1,5 @@
 ---
-title: "Data Table: Server-Side"
+title: 'Data Table: Server-Side'
 description: Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
 category: composites
 order: 8
@@ -89,29 +89,29 @@ Restore table state from URL query params (e.g., after page refresh or shared li
 
 ## Slots
 
-| Slot | Props | Description |
-|------|-------|-------------|
-| `#toolbar` | `{ table }` | Replace entire toolbar |
-| `#toolbar-start` | - | Add content before search |
-| `#toolbar-end` | - | Add content after search |
-| `#empty` | - | Custom empty state |
-| `#error` | `{ error }` | Custom error state |
-| `#pagination` | `{ table }` | Custom pagination |
-| `#expanded-row` | `{ row }` | Row expansion content |
+| Slot               | Props               | Description                       |
+| ------------------ | ------------------- | --------------------------------- |
+| `#toolbar`         | `{ table }`         | Replace entire toolbar            |
+| `#toolbar-start`   | -                   | Add content before search         |
+| `#toolbar-end`     | -                   | Add content after search          |
+| `#empty`           | -                   | Custom empty state                |
+| `#error`           | `{ error }`         | Custom error state                |
+| `#pagination`      | `{ table }`         | Custom pagination                 |
+| `#expanded-row`    | `{ row }`           | Row expansion content             |
 | `#cell-[columnId]` | `{ row, getValue }` | Custom cell for a specific column |
 
 ## Keyboard Navigation
 
 Enable with `enableKeyboardNavigation`:
 
-| Key | Action |
-|-----|--------|
-| `↑` / `↓` | Navigate rows |
-| `Space` | Select/deselect row |
-| `Enter` | Activate row (expand or trigger action) |
-| `Home` / `End` | Jump to first/last row |
-| `PageUp` / `PageDown` | Previous/next page |
-| `Ctrl+PageUp` / `Ctrl+PageDown` | First/last page |
+| Key                             | Action                                  |
+| ------------------------------- | --------------------------------------- |
+| `↑` / `↓`                       | Navigate rows                           |
+| `Space`                         | Select/deselect row                     |
+| `Enter`                         | Activate row (expand or trigger action) |
+| `Home` / `End`                  | Jump to first/last row                  |
+| `PageUp` / `PageDown`           | Previous/next page                      |
+| `Ctrl+PageUp` / `Ctrl+PageDown` | First/last page                         |
 
 ## Column Resizing
 
