@@ -1,0 +1,36 @@
+---
+title: Clipboard Copy
+description: A component for copying text to the clipboard with visual feedback.
+category: composites
+order: 6
+package: '@meldui/vue'
+componentName: ClipboardCopy
+---
+
+import ClipboardCopyDemo from '../../../demos/clipboard-copy/ClipboardCopyDemo.vue'
+
+## Usage
+
+<ClipboardCopyDemo client:only="vue" />
+
+## Sub-components
+
+| Component             | Description                                                      |
+| --------------------- | ---------------------------------------------------------------- |
+| `ClipboardCopy`       | Root component. Accepts `value` (the text to copy) and manages copy state |
+| `ClipboardCopyButton` | The trigger button that initiates the copy action                |
+| `CopyIdle`            | Slot content shown when idle (before copying)                    |
+| `CopySuccess`         | Slot content shown after a successful copy                       |
+
+## Composable
+
+### `useCopyToClipboard`
+
+A composable for programmatic clipboard access outside of the component tree.
+
+```ts
+const { copy, copied } = useCopyToClipboard()
+
+await copy('Hello, world!')
+// copied.value === true for a short duration
+```

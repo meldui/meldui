@@ -1,0 +1,44 @@
+---
+title: Timeline
+description: A vertical or horizontal timeline for displaying chronological events.
+category: composites
+order: 4
+package: '@meldui/vue'
+componentName: Timeline
+props:
+  - name: orientation
+    type: "'vertical' | 'horizontal'"
+    default: "'vertical'"
+    description: The direction the timeline flows.
+  - name: variant
+    type: "'default' | 'outline'"
+    default: "'default'"
+    description: Visual variant of the timeline dots and connectors.
+  - name: activeIndex
+    type: number
+    description: Index of the currently active item (zero-based). Items up to this index appear in an active state.
+  - name: contentPosition
+    type: "'right' | 'left' | 'alternate'"
+    default: "'right'"
+    description: Which side of the line the content appears on.
+---
+
+import TimelineDemo from '../../../demos/timeline/TimelineDemo.vue'
+
+## Usage
+
+<TimelineDemo client:only="vue" />
+
+## Sub-components
+
+| Component             | Description                                                          |
+| --------------------- | -------------------------------------------------------------------- |
+| `Timeline`            | Root container. Provides orientation and variant context              |
+| `TimelineItem`        | Wraps a single event (separator + content)                           |
+| `TimelineSeparator`   | Container for the dot and connector                                  |
+| `TimelineDot`         | The circular indicator. Props: `size` (`'sm'` \| `'md'` \| `'lg'`)  |
+| `TimelineConnector`   | The line between dots. Props: `thickness` (number)                   |
+| `TimelineContent`     | The text/body area for an event                                      |
+| `TimelineTitle`       | Heading text for the event                                           |
+| `TimelineDescription` | Supporting description text                                          |
+| `TimelineTime`        | Timestamp display. Props: `dateTime` (string, ISO 8601)              |

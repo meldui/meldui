@@ -1,0 +1,57 @@
+---
+title: Multi Select
+description: A searchable multi-select dropdown with badge display, groups, and creatable options.
+category: composites
+order: 2
+package: '@meldui/vue'
+componentName: MultiSelect
+props:
+  - name: modelValue
+    type: "string[]"
+    description: The selected values (v-model).
+  - name: options
+    type: "{ label: string; value: string }[]"
+    description: Flat list of selectable options.
+  - name: groups
+    type: "{ label: string; options: { label: string; value: string }[] }[]"
+    description: Grouped options displayed under section headings.
+  - name: placeholder
+    type: string
+    default: "'Select...'"
+    description: Placeholder text when nothing is selected.
+  - name: searchPlaceholder
+    type: string
+    default: "'Search...'"
+    description: Placeholder for the search input inside the dropdown.
+  - name: emptyText
+    type: string
+    default: "'No results found'"
+    description: Text shown when no options match the search query.
+  - name: maxDisplay
+    type: number
+    description: Maximum number of badges to display before showing a count.
+  - name: max
+    type: number
+    description: Maximum number of items that can be selected.
+  - name: disabled
+    type: boolean
+    default: 'false'
+    description: Disables the entire select.
+  - name: creatable
+    type: boolean
+    default: 'false'
+    description: Allow creating new options from the search input.
+---
+
+import MultiSelectDemo from '../../../demos/multi-select/MultiSelectDemo.vue'
+import MultiSelectGroupsDemo from '../../../demos/multi-select/MultiSelectGroupsDemo.vue'
+
+## Usage
+
+<MultiSelectDemo client:only="vue" />
+
+## With Groups & Creatable
+
+Use `groups` for organized options, `creatable` to allow new values, and `maxDisplay` to limit visible badges.
+
+<MultiSelectGroupsDemo client:only="vue" />

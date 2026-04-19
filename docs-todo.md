@@ -124,20 +124,21 @@
 
 ## Phase 4: Composites
 
-- [ ] DataTable — basic usage demo
-- [ ] DataTable — filtering demo (all filter types)
-- [ ] DataTable — selection & bulk actions demo
-- [ ] DataTable — column helpers & cell renderers
-- [ ] DataTable — column pinning demo
-- [ ] DataTable — server-side demo
-- [ ] DataTable — full MDX page with all sections + API tables
-- [ ] DateRangePicker — demo + MDX + API
-- [ ] MultiSelect — demo + MDX + API
-- [ ] Mention — demo + MDX + API
-- [ ] Timeline — demo + MDX + API
-- [ ] AvatarGroup — demo + MDX + API
-- [ ] ClipboardCopy — demo + MDX + API
-- [ ] RelativeTime — demo + MDX + API
+- [x] DataTable — dedicated section with 8 pages (Overview, Basic, Columns, Filtering, Selection, Pinning, Expansion, Server-Side)
+- [x] DataTable — basic usage demo
+- [x] DataTable — columns & cell renderers demo (badge, currency, date)
+- [x] DataTable — filtering demo (text, select, boolean)
+- [x] DataTable — selection & bulk actions demo
+- [x] DataTable — column pinning demo
+- [x] DataTable — row expansion demo (master-detail)
+- [x] DataTable — server-side docs (params, response format, slots, keyboard nav)
+- [x] DateRangePicker — demos (range + single mode) + MDX + API
+- [x] MultiSelect — demos (flat + grouped/creatable) + MDX + API
+- [x] Mention — demo (styled input with suggestions) + MDX + API
+- [x] Timeline — demo (vertical with activeIndex) + MDX + API
+- [x] AvatarGroup — demo (max overflow) + MDX + API
+- [x] ClipboardCopy — demo (button + custom scoped slot) + MDX + API
+- [x] RelativeTime — demo (auto-updating) + MDX + API
 
 ## Phase 5: Charts
 

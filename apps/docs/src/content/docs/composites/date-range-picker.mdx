@@ -1,0 +1,71 @@
+---
+title: Date Range Picker
+description: A composite date picker with presets, calendar, and support for single or range date selection.
+category: composites
+order: 1
+package: '@meldui/vue'
+componentName: DateRangePicker
+props:
+  - name: mode
+    type: "'range' | 'single'"
+    default: "'range'"
+    description: Whether to select a date range or a single date.
+  - name: modelValue
+    type: "{ start: DateValue; end: DateValue } | DateValue"
+    description: The selected date value (range object or single date).
+  - name: presets
+    type: "{ label: string; value: { start: DateValue; end: DateValue } | DateValue }[]"
+    description: Predefined date options shown as quick-select buttons.
+  - name: showCalendar
+    type: boolean
+    default: 'true'
+    description: Whether to display the calendar alongside presets.
+  - name: closeOnPresetSelect
+    type: boolean
+    default: 'true'
+    description: Close the popover automatically when a preset is selected.
+  - name: placeholder
+    type: string
+    description: Placeholder text shown when no date is selected.
+  - name: locale
+    type: string
+    default: "'en-US'"
+    description: Locale string for date formatting.
+  - name: minValue
+    type: DateValue
+    description: The earliest selectable date.
+  - name: maxValue
+    type: DateValue
+    description: The latest selectable date.
+  - name: disabled
+    type: boolean
+    default: 'false'
+    description: Disables the entire picker.
+  - name: numberOfMonths
+    type: number
+    default: '2'
+    description: Number of months visible in the calendar at once.
+---
+
+import DateRangePickerDemo from '../../../demos/date-range-picker/DateRangePickerDemo.vue'
+import DateRangePickerSingleDemo from '../../../demos/date-range-picker/DateRangePickerSingleDemo.vue'
+
+## Usage
+
+<DateRangePickerDemo client:only="vue" />
+
+## Single Date Mode
+
+Use `mode="single"` for picking a single date instead of a range.
+
+<DateRangePickerSingleDemo client:only="vue" />
+
+## Sub-components
+
+| Component                  | Description                                        |
+| -------------------------- | -------------------------------------------------- |
+| `DateRangePicker`          | Root component managing state and popover           |
+| `DateRangePickerTrigger`   | The button that opens the picker popover            |
+| `DateRangePickerContent`   | Popover content wrapper for calendar and presets    |
+| `DateRangePickerCalendar`  | The calendar grid for selecting dates               |
+| `DateRangePickerPresets`   | Quick-select preset buttons                         |

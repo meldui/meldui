@@ -1,0 +1,36 @@
+---
+title: Avatar Group
+description: Displays a stack of avatars with an overflow indicator.
+category: composites
+order: 5
+package: '@meldui/vue'
+componentName: AvatarGroup
+props:
+  - name: max
+    type: number
+    description: Maximum number of avatars to display before showing the overflow count.
+  - name: orientation
+    type: "'horizontal' | 'vertical'"
+    default: "'horizontal'"
+    description: Stack direction of the avatars.
+  - name: spacing
+    type: string
+    default: "'-0.75rem'"
+    description: CSS margin value controlling how much avatars overlap.
+  - name: reverse
+    type: boolean
+    default: 'false'
+    description: Reverse the stacking order so later avatars appear on top.
+slots:
+  - name: default
+    description: Avatar components to display in the group.
+  - name: overflow
+    props: '{ count: number }'
+    description: Custom content for the overflow indicator. Receives the number of hidden avatars.
+---
+
+import AvatarGroupDemo from '../../../demos/avatar-group/AvatarGroupDemo.vue'
+
+## Usage
+
+<AvatarGroupDemo client:only="vue" />

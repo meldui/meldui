@@ -51,7 +51,7 @@ function isGroupActive(item: NavItem): boolean {
           {group.title}
         </h4>
         {group.items && (
-          <div class:list={['space-y-0.5', depth > 0 && 'ml-2 border-l border-border pl-2']}>
+          <div class:list={['space-y-0.5', depth > 0 ? 'ml-2 border-l border-border pl-2' : group.items?.every(i => i.href) && 'ml-2 border-l border-border pl-2']}>
             {group.items.map((item) => (
               <Astro.self group={item} depth={depth + 1} />
             ))}

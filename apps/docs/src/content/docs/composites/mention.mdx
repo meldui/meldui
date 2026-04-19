@@ -1,0 +1,42 @@
+---
+title: Mention
+description: A rich text input that supports @-mention suggestions with customizable triggers and serialization.
+category: composites
+order: 3
+package: '@meldui/vue'
+componentName: Mention
+---
+
+import MentionDemo from '../../../demos/mention/MentionDemo.vue'
+
+## Usage
+
+<MentionDemo client:only="vue" />
+
+## Sub-components
+
+| Component           | Description                                                    |
+| ------------------- | -------------------------------------------------------------- |
+| `Mention`           | Root component managing mention state and trigger detection     |
+| `MentionInput`      | The editable text input area                                   |
+| `MentionContent`    | Popover dropdown that shows mention suggestions                |
+| `MentionItem`       | Individual suggestion item inside the dropdown                 |
+| `MentionEmpty`      | Content displayed when no suggestions match                    |
+| `MentionLoading`    | Loading indicator shown while suggestions are being fetched    |
+| `MentionHighlighter`| Overlay that renders highlighted mention tokens in the input   |
+
+## Serialization Utilities
+
+The mention system includes helpers to convert between display text and a serialized format that preserves mention metadata.
+
+| Function                       | Description                                                              |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| `serializeMention`             | Converts mention data into a serialized string token                     |
+| `parseMentionsFromSerialized`  | Extracts structured mention objects from a serialized string             |
+| `deserializeToDisplay`         | Converts a serialized string back into human-readable display text       |
+
+## Composable
+
+### `useMention()`
+
+A composable that provides reactive mention state. Use it when you need programmatic access to the mention context, such as the current query, active trigger, and selected mentions.

@@ -1,0 +1,35 @@
+---
+title: Relative Time
+description: Displays a human-readable relative timestamp that updates automatically.
+category: composites
+order: 7
+package: '@meldui/vue'
+componentName: RelativeTime
+props:
+  - name: date
+    type: "Date | string | number"
+    description: The reference date to display relative to now.
+    required: true
+  - name: autoUpdate
+    type: boolean
+    default: 'true'
+    description: Automatically refresh the displayed text on an interval.
+  - name: updateInterval
+    type: number
+    default: '30000'
+    description: Interval in milliseconds between automatic updates.
+  - name: locale
+    type: string
+    default: "'en'"
+    description: Locale for the Intl.RelativeTimeFormat formatter.
+  - name: as
+    type: string
+    default: "'time'"
+    description: The HTML element to render as.
+---
+
+import RelativeTimeDemo from '../../../demos/relative-time/RelativeTimeDemo.vue'
+
+## Usage
+
+<RelativeTimeDemo client:only="vue" />
