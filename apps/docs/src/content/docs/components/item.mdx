@@ -6,6 +6,29 @@ subcategory: Feedback
 order: 79
 package: '@meldui/vue'
 componentName: Item
+subComponents:
+  - name: ItemGroup
+    description: Groups multiple items
+  - name: ItemHeader
+    description: Header section
+  - name: ItemMedia
+    description: Icon or image area
+    props:
+      - name: variant
+        type: "'default' | 'icon' | 'image'"
+        description: Display variant
+  - name: ItemContent
+    description: Text content area
+  - name: ItemTitle
+    description: Title text
+  - name: ItemDescription
+    description: Description text
+  - name: ItemFooter
+    description: Footer section
+  - name: ItemActions
+    description: Action buttons area
+  - name: ItemSeparator
+    description: Visual separator between items
 props:
   - name: variant
     type: "'default' | 'outline' | 'muted'"
@@ -30,17 +53,3 @@ import ItemDemo from '../../../demos/item/ItemDemo.vue'
 
 <ItemDemo client:only="vue" />
 
-## Sub-components
-
-| Component         | Description                                                        |
-| ----------------- | ------------------------------------------------------------------ |
-| `Item`            | Root container. Props: `variant`, `size`, `as`, `asChild`          |
-| `ItemGroup`       | Groups multiple items                                              |
-| `ItemHeader`      | Header section                                                     |
-| `ItemMedia`       | Icon/image area. Props: `variant` ('default' \| 'icon' \| 'image') |
-| `ItemContent`     | Text content area                                                  |
-| `ItemTitle`       | Title text                                                         |
-| `ItemDescription` | Description text                                                   |
-| `ItemFooter`      | Footer section                                                     |
-| `ItemActions`     | Action buttons area                                                |
-| `ItemSeparator`   | Visual separator between items                                     |

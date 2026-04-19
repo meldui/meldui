@@ -6,6 +6,15 @@ subcategory: Layout
 order: 34
 package: '@meldui/vue'
 componentName: ScrollArea
+subComponents:
+  - name: ScrollArea
+    description: Root scrollable container
+  - name: ScrollBar
+    description: Custom scrollbar track and thumb
+    props:
+      - name: orientation
+        type: "'horizontal' | 'vertical'"
+        description: Scrollbar direction
 ---
 
 import ScrollAreaDemo from '../../../demos/scroll-area/ScrollAreaDemo.vue'
@@ -21,9 +30,3 @@ Use `ScrollBar` with `orientation="horizontal"` for horizontal scrolling.
 
 <ScrollAreaHorizontalDemo client:only="vue" />
 
-## Sub-components
-
-| Component    | Description                      |
-| ------------ | -------------------------------- |
-| `ScrollArea` | Root scrollable container        |
-| `ScrollBar`  | Custom scrollbar track and thumb |

@@ -6,6 +6,11 @@ subcategory: Layout
 order: 37
 package: '@meldui/vue'
 componentName: Collapsible
+subComponents:
+  - name: CollapsibleTrigger
+    description: Toggle button that opens/closes content
+  - name: CollapsibleContent
+    description: Animated content area
 ---
 
 import CollapsibleDemo from '../../../demos/collapsible/CollapsibleDemo.vue'
@@ -14,10 +19,3 @@ import CollapsibleDemo from '../../../demos/collapsible/CollapsibleDemo.vue'
 
 <CollapsibleDemo client:only="vue" />
 
-## Sub-components
-
-| Component            | Description                                                           |
-| -------------------- | --------------------------------------------------------------------- |
-| `Collapsible`        | Root with open/closed state. Props: `open`, `defaultOpen`, `disabled` |
-| `CollapsibleTrigger` | Toggle button                                                         |
-| `CollapsibleContent` | Animated content area                                                 |

@@ -6,6 +6,21 @@ subcategory: Feedback
 order: 76
 package: '@meldui/vue'
 componentName: Empty
+subComponents:
+  - name: EmptyHeader
+    description: Top section
+  - name: EmptyMedia
+    description: Icon or image area
+    props:
+      - name: variant
+        type: "'default' | 'icon'"
+        description: Display variant
+  - name: EmptyContent
+    description: Text content area
+  - name: EmptyTitle
+    description: Title text
+  - name: EmptyDescription
+    description: Description text
 ---
 
 import EmptyDemo from '../../../demos/empty/EmptyDemo.vue'
@@ -14,13 +29,3 @@ import EmptyDemo from '../../../demos/empty/EmptyDemo.vue'
 
 <EmptyDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| `Empty`            | Root container                                             |
-| `EmptyHeader`      | Top section                                                |
-| `EmptyMedia`       | Icon or image area. Props: `variant` ('default' \| 'icon') |
-| `EmptyContent`     | Text content area                                          |
-| `EmptyTitle`       | Title text                                                 |
-| `EmptyDescription` | Description text                                           |

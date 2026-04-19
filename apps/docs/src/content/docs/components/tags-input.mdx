@@ -6,6 +6,20 @@ subcategory: Form
 order: 25
 package: '@meldui/vue'
 componentName: TagsInput
+subComponents:
+  - name: TagsInputInput
+    description: Text input for adding new tags
+  - name: TagsInputItem
+    description: Individual tag
+    props:
+      - name: value
+        type: string
+        required: true
+        description: Tag value
+  - name: TagsInputItemText
+    description: Tag text display
+  - name: TagsInputItemDelete
+    description: Remove button for the tag
 ---
 
 import TagsInputDemo from '../../../demos/tags-input/TagsInputDemo.vue'
@@ -21,12 +35,3 @@ Use the `max` prop to limit the number of tags.
 
 <TagsInputMaxDemo client:only="vue" />
 
-## Sub-components
-
-| Component             | Description                                                |
-| --------------------- | ---------------------------------------------------------- |
-| `TagsInput`           | Root with tag list state. Props from reka-ui TagsInputRoot |
-| `TagsInputInput`      | Text input for adding new tags                             |
-| `TagsInputItem`       | Individual tag. Props: `value` (required)                  |
-| `TagsInputItemText`   | Tag text display                                           |
-| `TagsInputItemDelete` | Remove button for the tag                                  |

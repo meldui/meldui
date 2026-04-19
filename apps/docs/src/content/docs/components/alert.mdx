@@ -6,6 +6,13 @@ subcategory: Feedback
 order: 70
 package: '@meldui/vue'
 componentName: Alert
+subComponents:
+  - name: Alert
+    description: Root container with variant prop
+  - name: AlertTitle
+    description: Bold title text
+  - name: AlertDescription
+    description: Description text
 props:
   - name: variant
     type: "'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'"
@@ -24,10 +31,3 @@ import AlertVariantsDemo from '../../../demos/alert/AlertVariantsDemo.vue'
 
 <AlertVariantsDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                      |
-| ------------------ | -------------------------------- |
-| `Alert`            | Root container. Props: `variant` |
-| `AlertTitle`       | Bold title text                  |
-| `AlertDescription` | Description text                 |

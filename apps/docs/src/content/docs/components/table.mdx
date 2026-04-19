@@ -6,6 +6,23 @@ subcategory: Layout
 order: 31
 package: '@meldui/vue'
 componentName: Table
+subComponents:
+  - name: TableHeader
+    description: thead element
+  - name: TableBody
+    description: tbody element
+  - name: TableFooter
+    description: tfoot element
+  - name: TableRow
+    description: tr element
+  - name: TableHead
+    description: th element
+  - name: TableCell
+    description: td element
+  - name: TableCaption
+    description: caption element
+  - name: TableEmpty
+    description: Empty state row
 ---
 
 import TableDemo from '../../../demos/table/TableDemo.vue'
@@ -21,16 +38,3 @@ Use `TableFooter` to add a summary row at the bottom.
 
 <TableFooterDemo client:only="vue" />
 
-## Sub-components
-
-| Component      | Description            |
-| -------------- | ---------------------- |
-| `Table`        | Root `<table>` wrapper |
-| `TableHeader`  | `<thead>` element      |
-| `TableBody`    | `<tbody>` element      |
-| `TableFooter`  | `<tfoot>` element      |
-| `TableRow`     | `<tr>` element         |
-| `TableHead`    | `<th>` element         |
-| `TableCell`    | `<td>` element         |
-| `TableCaption` | `<caption>` element    |
-| `TableEmpty`   | Empty state row        |

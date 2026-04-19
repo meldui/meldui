@@ -6,6 +6,11 @@ subcategory: Interactive
 order: 2
 package: '@meldui/vue'
 componentName: ButtonGroup
+subComponents:
+  - name: ButtonGroupSeparator
+    description: Visual separator between buttons
+  - name: ButtonGroupText
+    description: Text element within the group
 props:
   - name: orientation
     type: "'horizontal' | 'vertical'"
@@ -24,10 +29,3 @@ import ButtonGroupVerticalDemo from '../../../demos/button-group/ButtonGroupVert
 
 <ButtonGroupVerticalDemo client:only="vue" />
 
-## Sub-components
-
-| Component              | Description                      |
-| ---------------------- | -------------------------------- |
-| `ButtonGroup`          | Root container                   |
-| `ButtonGroupSeparator` | Visual separator between buttons |
-| `ButtonGroupText`      | Text element within the group    |

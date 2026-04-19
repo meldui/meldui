@@ -17,7 +17,7 @@ export const navigation: NavItem[] = [
     ],
   },
   {
-    title: 'Components',
+    title: 'Components', label: '62',
     items: [
       {
         title: 'Interactive',
@@ -131,7 +131,7 @@ export const navigation: NavItem[] = [
     ],
   },
   {
-    title: 'Composites',
+    title: 'Composites', label: '7',
     items: [
       { title: 'Date Range Picker', href: '/docs/composites/date-range-picker' },
       { title: 'Multi Select', href: '/docs/composites/multi-select' },
@@ -143,7 +143,7 @@ export const navigation: NavItem[] = [
     ],
   },
   {
-    title: 'Charts',
+    title: 'Charts', label: '9',
     items: [
       { title: 'Overview', href: '/docs/charts' },
       { title: 'Installation', href: '/docs/charts/installation' },

@@ -6,6 +6,15 @@ subcategory: Form
 order: 21
 package: '@meldui/vue'
 componentName: NativeSelect
+subComponents:
+  - name: NativeSelectOption
+    description: Option element
+  - name: NativeSelectOptGroup
+    description: Option group element
+    props:
+      - name: label
+        type: string
+        description: Group label
 props:
   - name: modelValue
     type: 'AcceptableValue | AcceptableValue[]'
@@ -29,10 +38,3 @@ Use `NativeSelectOptGroup` to organize options into labeled groups.
 
 <NativeSelectGroupsDemo client:only="vue" />
 
-## Sub-components
-
-| Component              | Description               |
-| ---------------------- | ------------------------- |
-| `NativeSelect`         | Styled `<select>` wrapper |
-| `NativeSelectOption`   | `<option>` element        |
-| `NativeSelectOptGroup` | `<optgroup>` element      |

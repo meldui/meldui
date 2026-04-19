@@ -5,6 +5,21 @@ category: composites
 order: 3
 package: '@meldui/vue'
 componentName: Mention
+subComponents:
+  - name: Mention
+    description: Root component managing mention state and trigger detection
+  - name: MentionInput
+    description: The editable text input area
+  - name: MentionContent
+    description: Popover dropdown that shows mention suggestions
+  - name: MentionItem
+    description: Individual suggestion item inside the dropdown
+  - name: MentionEmpty
+    description: Content displayed when no suggestions match
+  - name: MentionLoading
+    description: Loading indicator shown while suggestions are being fetched
+  - name: MentionHighlighter
+    description: Overlay that renders highlighted mention tokens in the input
 ---
 
 import MentionDemo from '../../../demos/mention/MentionDemo.vue'
@@ -12,18 +27,6 @@ import MentionDemo from '../../../demos/mention/MentionDemo.vue'
 ## Usage
 
 <MentionDemo client:only="vue" />
-
-## Sub-components
-
-| Component            | Description                                                  |
-| -------------------- | ------------------------------------------------------------ |
-| `Mention`            | Root component managing mention state and trigger detection  |
-| `MentionInput`       | The editable text input area                                 |
-| `MentionContent`     | Popover dropdown that shows mention suggestions              |
-| `MentionItem`        | Individual suggestion item inside the dropdown               |
-| `MentionEmpty`       | Content displayed when no suggestions match                  |
-| `MentionLoading`     | Loading indicator shown while suggestions are being fetched  |
-| `MentionHighlighter` | Overlay that renders highlighted mention tokens in the input |
 
 ## Serialization Utilities
 

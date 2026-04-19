@@ -5,6 +5,17 @@ category: composites
 order: 1
 package: '@meldui/vue'
 componentName: DateRangePicker
+subComponents:
+  - name: DateRangePicker
+    description: Root component managing state and popover
+  - name: DateRangePickerTrigger
+    description: The button that opens the picker popover
+  - name: DateRangePickerContent
+    description: Popover content wrapper for calendar and presets
+  - name: DateRangePickerCalendar
+    description: The calendar grid for selecting dates
+  - name: DateRangePickerPresets
+    description: Quick-select preset buttons
 props:
   - name: mode
     type: "'range' | 'single'"
@@ -60,12 +71,3 @@ Use `mode="single"` for picking a single date instead of a range.
 
 <DateRangePickerSingleDemo client:only="vue" />
 
-## Sub-components
-
-| Component                 | Description                                      |
-| ------------------------- | ------------------------------------------------ |
-| `DateRangePicker`         | Root component managing state and popover        |
-| `DateRangePickerTrigger`  | The button that opens the picker popover         |
-| `DateRangePickerContent`  | Popover content wrapper for calendar and presets |
-| `DateRangePickerCalendar` | The calendar grid for selecting dates            |
-| `DateRangePickerPresets`  | Quick-select preset buttons                      |

@@ -6,6 +6,9 @@ subcategory: Data Display
 order: 65
 package: '@meldui/vue'
 componentName: Kbd
+subComponents:
+  - name: KbdGroup
+    description: Groups multiple key indicators
 ---
 
 import KbdDemo from '../../../demos/kbd/KbdDemo.vue'
@@ -21,9 +24,3 @@ Kbd elements work well inline with text for displaying keyboard shortcuts.
 
 <KbdInlineDemo client:only="vue" />
 
-## Sub-components
-
-| Component  | Description            |
-| ---------- | ---------------------- |
-| `Kbd`      | Individual key display |
-| `KbdGroup` | Groups multiple keys   |

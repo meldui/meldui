@@ -6,6 +6,15 @@ subcategory: Form
 order: 17
 package: '@meldui/vue'
 componentName: NumberField
+subComponents:
+  - name: NumberFieldContent
+    description: Layout wrapper for input and buttons
+  - name: NumberFieldInput
+    description: The numeric input element
+  - name: NumberFieldIncrement
+    description: Increment button (default plus icon)
+  - name: NumberFieldDecrement
+    description: Decrement button (default minus icon)
 ---
 
 import NumberFieldDemo from '../../../demos/number-field/NumberFieldDemo.vue'
@@ -21,12 +30,3 @@ Use `step` for decimal increments and `formatOptions` for display formatting.
 
 <NumberFieldStepDemo client:only="vue" />
 
-## Sub-components
-
-| Component              | Description                                               |
-| ---------------------- | --------------------------------------------------------- |
-| `NumberField`          | Root with value state. Props from reka-ui NumberFieldRoot |
-| `NumberFieldContent`   | Layout wrapper for input and buttons                      |
-| `NumberFieldInput`     | The numeric input element                                 |
-| `NumberFieldIncrement` | Increment button (default: plus icon)                     |
-| `NumberFieldDecrement` | Decrement button (default: minus icon)                    |

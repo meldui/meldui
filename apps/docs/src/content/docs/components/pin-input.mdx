@@ -6,6 +6,18 @@ subcategory: Form
 order: 24
 package: '@meldui/vue'
 componentName: PinInput
+subComponents:
+  - name: PinInputGroup
+    description: Visual container
+  - name: PinInputSlot
+    description: Individual input slot
+    props:
+      - name: index
+        type: number
+        required: true
+        description: Slot position (0-based)
+  - name: PinInputSeparator
+    description: Separator between slots
 props:
   - name: otp
     type: boolean
@@ -26,11 +38,3 @@ Use `type="number"` to restrict to digits. The `placeholder` prop customizes emp
 
 <PinInputNumericDemo client:only="vue" />
 
-## Sub-components
-
-| Component           | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| `PinInput`          | Root with value state. Extends reka-ui PinInputRoot |
-| `PinInputGroup`     | Visual container                                    |
-| `PinInputSlot`      | Individual input slot. Props: `index` (required)    |
-| `PinInputSeparator` | Separator between slots                             |

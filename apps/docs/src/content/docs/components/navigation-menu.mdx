@@ -6,6 +6,21 @@ subcategory: Navigation
 order: 44
 package: '@meldui/vue'
 componentName: NavigationMenu
+subComponents:
+  - name: NavigationMenuList
+    description: List of menu items
+  - name: NavigationMenuItem
+    description: Individual menu item
+  - name: NavigationMenuTrigger
+    description: Dropdown trigger button
+  - name: NavigationMenuContent
+    description: Dropdown content panel
+  - name: NavigationMenuLink
+    description: Navigation link
+  - name: NavigationMenuIndicator
+    description: Active indicator bar
+  - name: NavigationMenuViewport
+    description: Content viewport container
 props:
   - name: viewport
     type: boolean
@@ -19,15 +34,3 @@ import NavigationMenuDemo from '../../../demos/navigation-menu/NavigationMenuDem
 
 <NavigationMenuDemo client:only="vue" />
 
-## Sub-components
-
-| Component                 | Description                       |
-| ------------------------- | --------------------------------- |
-| `NavigationMenu`          | Root container. Props: `viewport` |
-| `NavigationMenuList`      | List of menu items                |
-| `NavigationMenuItem`      | Individual menu item              |
-| `NavigationMenuTrigger`   | Dropdown trigger button           |
-| `NavigationMenuContent`   | Dropdown content panel            |
-| `NavigationMenuLink`      | Navigation link                   |
-| `NavigationMenuIndicator` | Active indicator bar              |
-| `NavigationMenuViewport`  | Content viewport container        |

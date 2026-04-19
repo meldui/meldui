@@ -5,6 +5,37 @@ category: composites
 order: 4
 package: '@meldui/vue'
 componentName: Timeline
+subComponents:
+  - name: Timeline
+    description: Root container. Provides orientation and variant context
+  - name: TimelineItem
+    description: Wraps a single event (separator + content)
+  - name: TimelineSeparator
+    description: Container for the dot and connector
+  - name: TimelineDot
+    description: The circular indicator
+    props:
+      - name: size
+        type: "'sm' | 'md' | 'lg'"
+        description: Dot size
+  - name: TimelineConnector
+    description: The line between dots
+    props:
+      - name: thickness
+        type: number
+        description: Line thickness
+  - name: TimelineContent
+    description: The text/body area for an event
+  - name: TimelineTitle
+    description: Heading text for the event
+  - name: TimelineDescription
+    description: Supporting description text
+  - name: TimelineTime
+    description: Timestamp display
+    props:
+      - name: dateTime
+        type: string
+        description: ISO 8601 date string
 props:
   - name: orientation
     type: "'vertical' | 'horizontal'"
@@ -29,16 +60,3 @@ import TimelineDemo from '../../../demos/timeline/TimelineDemo.vue'
 
 <TimelineDemo client:only="vue" />
 
-## Sub-components
-
-| Component             | Description                                                        |
-| --------------------- | ------------------------------------------------------------------ |
-| `Timeline`            | Root container. Provides orientation and variant context           |
-| `TimelineItem`        | Wraps a single event (separator + content)                         |
-| `TimelineSeparator`   | Container for the dot and connector                                |
-| `TimelineDot`         | The circular indicator. Props: `size` (`'sm'` \| `'md'` \| `'lg'`) |
-| `TimelineConnector`   | The line between dots. Props: `thickness` (number)                 |
-| `TimelineContent`     | The text/body area for an event                                    |
-| `TimelineTitle`       | Heading text for the event                                         |
-| `TimelineDescription` | Supporting description text                                        |
-| `TimelineTime`        | Timestamp display. Props: `dateTime` (string, ISO 8601)            |

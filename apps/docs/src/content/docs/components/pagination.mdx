@@ -6,6 +6,29 @@ subcategory: Navigation
 order: 45
 package: '@meldui/vue'
 componentName: Pagination
+subComponents:
+  - name: PaginationContent
+    description: Layout container with items slot
+  - name: PaginationItem
+    description: Page number button
+    props:
+      - name: value
+        type: number
+        required: true
+        description: Page number
+      - name: isActive
+        type: boolean
+        description: Active page styling
+  - name: PaginationPrevious
+    description: Previous page button
+  - name: PaginationNext
+    description: Next page button
+  - name: PaginationFirst
+    description: First page button
+  - name: PaginationLast
+    description: Last page button
+  - name: PaginationEllipsis
+    description: Collapsed page indicator
 ---
 
 import PaginationDemo from '../../../demos/pagination/PaginationDemo.vue'
@@ -21,16 +44,3 @@ A compact pagination with `siblingCount={0}` and no first/last buttons.
 
 <PaginationSimpleDemo client:only="vue" />
 
-## Sub-components
-
-| Component            | Description                                                              |
-| -------------------- | ------------------------------------------------------------------------ |
-| `Pagination`         | Root. Props: `total`, `defaultPage`, `page`, `siblingCount`, `showEdges` |
-| `PaginationContent`  | Layout container                                                         |
-| `PaginationItem`     | Item wrapper                                                             |
-| `PaginationLink`     | Page number link                                                         |
-| `PaginationPrevious` | Previous page button                                                     |
-| `PaginationNext`     | Next page button                                                         |
-| `PaginationFirst`    | First page button                                                        |
-| `PaginationLast`     | Last page button                                                         |
-| `PaginationEllipsis` | Collapsed page indicator                                                 |

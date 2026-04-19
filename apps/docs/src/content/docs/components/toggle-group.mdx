@@ -6,6 +6,23 @@ subcategory: Interactive
 order: 4
 package: '@meldui/vue'
 componentName: ToggleGroup
+subComponents:
+  - name: ToggleGroupItem
+    description: Individual toggle item
+    props:
+      - name: value
+        type: AcceptableValue
+        required: true
+        description: Item value
+      - name: disabled
+        type: boolean
+        description: Disable this item
+      - name: variant
+        type: "'default' | 'outline'"
+        description: Visual style variant
+      - name: size
+        type: "'default' | 'sm' | 'lg'"
+        description: Item size
 props:
   - name: modelValue
     type: 'AcceptableValue | AcceptableValue[]'
@@ -40,9 +57,3 @@ import ToggleGroupDemo from '../../../demos/toggle-group/ToggleGroupDemo.vue'
 
 <ToggleGroupDemo client:only="vue" />
 
-## Sub-components
-
-| Component         | Description                                                                      |
-| ----------------- | -------------------------------------------------------------------------------- |
-| `ToggleGroup`     | Root container with selection state                                              |
-| `ToggleGroupItem` | Individual toggle item. Props: `value` (required), `disabled`, `variant`, `size` |

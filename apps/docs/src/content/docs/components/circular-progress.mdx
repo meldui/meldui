@@ -6,6 +6,15 @@ subcategory: Feedback
 order: 72
 package: '@meldui/vue'
 componentName: CircularProgress
+subComponents:
+  - name: CircularProgressTrack
+    description: Background circle
+  - name: CircularProgressRange
+    description: Filled progress arc
+  - name: CircularProgressIndicator
+    description: Animated indicator
+  - name: CircularProgressLabel
+    description: Center text label
 props:
   - name: value
     type: number
@@ -39,12 +48,3 @@ import CircularProgressDemo from '../../../demos/circular-progress/CircularProgr
 
 <CircularProgressDemo client:only="vue" />
 
-## Sub-components
-
-| Component                   | Description         |
-| --------------------------- | ------------------- |
-| `CircularProgress`          | Root SVG container  |
-| `CircularProgressTrack`     | Background circle   |
-| `CircularProgressRange`     | Filled progress arc |
-| `CircularProgressIndicator` | Animated indicator  |
-| `CircularProgressLabel`     | Center text label   |

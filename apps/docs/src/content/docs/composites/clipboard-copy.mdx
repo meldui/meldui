@@ -5,6 +5,15 @@ category: composites
 order: 6
 package: '@meldui/vue'
 componentName: ClipboardCopy
+subComponents:
+  - name: ClipboardCopy
+    description: Root component. Accepts value (the text to copy) and manages copy state
+  - name: ClipboardCopyButton
+    description: The trigger button that initiates the copy action
+  - name: CopyIdle
+    description: Slot content shown when idle (before copying)
+  - name: CopySuccess
+    description: Slot content shown after a successful copy
 ---
 
 import ClipboardCopyDemo from '../../../demos/clipboard-copy/ClipboardCopyDemo.vue'
@@ -12,15 +21,6 @@ import ClipboardCopyDemo from '../../../demos/clipboard-copy/ClipboardCopyDemo.v
 ## Usage
 
 <ClipboardCopyDemo client:only="vue" />
-
-## Sub-components
-
-| Component             | Description                                                               |
-| --------------------- | ------------------------------------------------------------------------- |
-| `ClipboardCopy`       | Root component. Accepts `value` (the text to copy) and manages copy state |
-| `ClipboardCopyButton` | The trigger button that initiates the copy action                         |
-| `CopyIdle`            | Slot content shown when idle (before copying)                             |
-| `CopySuccess`         | Slot content shown after a successful copy                                |
 
 ## Composable
 

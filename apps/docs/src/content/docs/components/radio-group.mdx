@@ -6,6 +6,17 @@ subcategory: Form
 order: 14
 package: '@meldui/vue'
 componentName: RadioGroup
+subComponents:
+  - name: RadioGroupItem
+    description: Individual radio option
+    props:
+      - name: value
+        type: string
+        required: true
+        description: Option value
+      - name: disabled
+        type: boolean
+        description: Disable this option
 ---
 
 import RadioGroupDemo from '../../../demos/radio-group/RadioGroupDemo.vue'
@@ -21,9 +32,3 @@ Use `orientation="horizontal"` for inline layout.
 
 <RadioGroupHorizontalDemo client:only="vue" />
 
-## Sub-components
-
-| Component        | Description                                                    |
-| ---------------- | -------------------------------------------------------------- |
-| `RadioGroup`     | Root container with value state                                |
-| `RadioGroupItem` | Individual radio option. Props: `value` (required), `disabled` |

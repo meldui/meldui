@@ -6,6 +6,18 @@ subcategory: Form
 order: 23
 package: '@meldui/vue'
 componentName: InputOTP
+subComponents:
+  - name: InputOTPGroup
+    description: Visual grouping of slots
+  - name: InputOTPSlot
+    description: Individual character slot
+    props:
+      - name: index
+        type: number
+        required: true
+        description: Slot position (0-based)
+  - name: InputOTPSeparator
+    description: Dash separator between groups
 ---
 
 import InputOtpDemo from '../../../demos/input-otp/InputOtpDemo.vue'
@@ -21,11 +33,3 @@ Use the `pattern` prop to restrict input to digits only.
 
 <InputOtpPatternDemo client:only="vue" />
 
-## Sub-components
-
-| Component           | Description                                          |
-| ------------------- | ---------------------------------------------------- |
-| `InputOTP`          | Root with OTP logic (from vue-input-otp)             |
-| `InputOTPGroup`     | Visual grouping of slots                             |
-| `InputOTPSlot`      | Individual character slot. Props: `index` (required) |
-| `InputOTPSeparator` | Dash separator between groups                        |

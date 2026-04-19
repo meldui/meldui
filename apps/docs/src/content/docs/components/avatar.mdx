@@ -6,6 +6,22 @@ subcategory: Data Display
 order: 61
 package: '@meldui/vue'
 componentName: Avatar
+subComponents:
+  - name: AvatarImage
+    description: The image element
+    props:
+      - name: src
+        type: string
+        description: Image URL
+      - name: alt
+        type: string
+        description: Alt text
+  - name: AvatarFallback
+    description: Fallback shown when image fails to load
+    props:
+      - name: delayMs
+        type: number
+        description: Delay before showing fallback
 ---
 
 import AvatarDemo from '../../../demos/avatar/AvatarDemo.vue'
@@ -21,10 +37,3 @@ Control avatar size with Tailwind size classes (`size-6`, `size-8`, `size-14`, `
 
 <AvatarSizesDemo client:only="vue" />
 
-## Sub-components
-
-| Component        | Description                                               |
-| ---------------- | --------------------------------------------------------- |
-| `Avatar`         | Root container with size styling                          |
-| `AvatarImage`    | The image element. Props: `src`, `alt`                    |
-| `AvatarFallback` | Fallback shown when image fails to load. Props: `delayMs` |

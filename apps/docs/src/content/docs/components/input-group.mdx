@@ -6,6 +6,30 @@ subcategory: Form
 order: 22
 package: '@meldui/vue'
 componentName: InputGroup
+subComponents:
+  - name: InputGroupAddon
+    description: Icon or text addon
+    props:
+      - name: align
+        type: "'inline-start' | 'inline-end' | 'block-start' | 'block-end'"
+        default: "'inline-start'"
+        description: Position of the addon
+  - name: InputGroupButton
+    description: Action button
+    props:
+      - name: variant
+        type: ButtonVariants
+        description: Button style variant
+      - name: size
+        type: "'xs' | 'sm' | 'icon-xs' | 'icon-sm'"
+        default: "'xs'"
+        description: Button size
+  - name: InputGroupInput
+    description: The input element
+  - name: InputGroupText
+    description: Plain text element
+  - name: InputGroupTextarea
+    description: Textarea variant
 ---
 
 import InputGroupDemo from '../../../demos/input-group/InputGroupDemo.vue'
@@ -19,13 +43,3 @@ import InputGroupButtonDemo from '../../../demos/input-group/InputGroupButtonDem
 
 <InputGroupButtonDemo client:only="vue" />
 
-## Sub-components
-
-| Component            | Description                                                                                      |
-| -------------------- | ------------------------------------------------------------------------------------------------ |
-| `InputGroup`         | Root container                                                                                   |
-| `InputGroupAddon`    | Icon/text addon. Props: `align` ('inline-start' \| 'inline-end' \| 'block-start' \| 'block-end') |
-| `InputGroupButton`   | Action button. Props: `variant`, `size`                                                          |
-| `InputGroupInput`    | The input element                                                                                |
-| `InputGroupText`     | Plain text element                                                                               |
-| `InputGroupTextarea` | Textarea variant                                                                                 |

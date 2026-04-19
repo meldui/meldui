@@ -604,21 +604,25 @@ Displays a callout message for important information with color variants.
 |------|------|---------|-------------|
 | `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant of the alert. |
 
+### Sub-components
+
+#### Alert
+
+Root container with variant prop
+
+#### AlertTitle
+
+Bold title text
+
+#### AlertDescription
+
+Description text
+
 ## Usage
 
 
 
 ## Variants
-
-
-
-## Sub-components
-
-| Component          | Description                      |
-| ------------------ | -------------------------------- |
-| `Alert`            | Root container. Props: `variant` |
-| `AlertTitle`       | Bold title text                  |
-| `AlertDescription` | Description text                 |
 
 ---
 
@@ -688,6 +692,25 @@ Pass any number as the `ratio` prop — common values include `1` (square), `4/3
 
 An image element with a fallback for representing the user.
 
+### Sub-components
+
+#### AvatarImage
+
+The image element
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | - | Image URL |
+| `alt` | `string` | - | Alt text |
+
+#### AvatarFallback
+
+Fallback shown when image fails to load
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `delayMs` | `number` | - | Delay before showing fallback |
+
 ## Usage
 
 
@@ -695,16 +718,6 @@ An image element with a fallback for representing the user.
 ## Sizes
 
 Control avatar size with Tailwind size classes (`size-6`, `size-8`, `size-14`, `size-20`).
-
-
-
-## Sub-components
-
-| Component        | Description                                               |
-| ---------------- | --------------------------------------------------------- |
-| `Avatar`         | Root container with size styling                          |
-| `AvatarImage`    | The image element. Props: `src`, `alt`                    |
-| `AvatarFallback` | Fallback shown when image fails to load. Props: `delayMs` |
 
 ---
 
@@ -820,21 +833,21 @@ Groups multiple buttons together with consistent spacing and visual connection.
 |------|------|---------|-------------|
 | `orientation` | `'horizontal' | 'vertical'` | `'horizontal'` | The layout direction of the button group. |
 
+### Sub-components
+
+#### ButtonGroupSeparator
+
+Visual separator between buttons
+
+#### ButtonGroupText
+
+Text element within the group
+
 ## Usage
 
 
 
 ## Vertical
-
-
-
-## Sub-components
-
-| Component              | Description                      |
-| ---------------------- | -------------------------------- |
-| `ButtonGroup`          | Root container                   |
-| `ButtonGroupSeparator` | Visual separator between buttons |
-| `ButtonGroupText`      | Text element within the group    |
 
 ---
 
@@ -1038,19 +1051,25 @@ A circular progress indicator with customizable size, thickness, and color varia
 | `thickness` | `number` | `4` | The stroke thickness in pixels. |
 | `variant` | `'default' | 'destructive' | 'success' | 'warning' | 'info' | 'neutral'` | `'default'` | The color variant. |
 
+### Sub-components
+
+#### CircularProgressTrack
+
+Background circle
+
+#### CircularProgressRange
+
+Filled progress arc
+
+#### CircularProgressIndicator
+
+Animated indicator
+
+#### CircularProgressLabel
+
+Center text label
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component                   | Description         |
-| --------------------------- | ------------------- |
-| `CircularProgress`          | Root SVG container  |
-| `CircularProgressTrack`     | Background circle   |
-| `CircularProgressRange`     | Filled progress arc |
-| `CircularProgressIndicator` | Animated indicator  |
-| `CircularProgressLabel`     | Center text label   |
 
 ---
 
@@ -1058,17 +1077,17 @@ A circular progress indicator with customizable size, thickness, and color varia
 
 An interactive component that expands and collapses content.
 
+### Sub-components
+
+#### CollapsibleTrigger
+
+Toggle button that opens/closes content
+
+#### CollapsibleContent
+
+Animated content area
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component            | Description                                                           |
-| -------------------- | --------------------------------------------------------------------- |
-| `Collapsible`        | Root with open/closed state. Props: `open`, `defaultOpen`, `disabled` |
-| `CollapsibleTrigger` | Toggle button                                                         |
-| `CollapsibleContent` | Animated content area                                                 |
 
 ---
 
@@ -1533,20 +1552,33 @@ Use `DropdownMenuCheckboxItem` for toggleable options.
 
 An empty state placeholder for when there is no content to display.
 
+### Sub-components
+
+#### EmptyHeader
+
+Top section
+
+#### EmptyMedia
+
+Icon or image area
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'icon'` | - | Display variant |
+
+#### EmptyContent
+
+Text content area
+
+#### EmptyTitle
+
+Title text
+
+#### EmptyDescription
+
+Description text
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component          | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| `Empty`            | Root container                                             |
-| `EmptyHeader`      | Top section                                                |
-| `EmptyMedia`       | Icon or image area. Props: `variant` ('default' \| 'icon') |
-| `EmptyContent`     | Text content area                                          |
-| `EmptyTitle`       | Title text                                                 |
-| `EmptyDescription` | Description text                                           |
 
 ---
 
@@ -1803,30 +1835,66 @@ A text input field for capturing user input.
 
 Groups an input with addons, buttons, and text elements.
 
+### Sub-components
+
+#### InputGroupAddon
+
+Icon or text addon
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `align` | `'inline-start' | 'inline-end' | 'block-start' | 'block-end'` | `'inline-start'` | Position of the addon |
+
+#### InputGroupButton
+
+Action button
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `ButtonVariants` | - | Button style variant |
+| `size` | `'xs' | 'sm' | 'icon-xs' | 'icon-sm'` | `'xs'` | Button size |
+
+#### InputGroupInput
+
+The input element
+
+#### InputGroupText
+
+Plain text element
+
+#### InputGroupTextarea
+
+Textarea variant
+
 ## Usage
 
 
 
 ## With Button
 
-
-
-## Sub-components
-
-| Component            | Description                                                                                      |
-| -------------------- | ------------------------------------------------------------------------------------------------ |
-| `InputGroup`         | Root container                                                                                   |
-| `InputGroupAddon`    | Icon/text addon. Props: `align` ('inline-start' \| 'inline-end' \| 'block-start' \| 'block-end') |
-| `InputGroupButton`   | Action button. Props: `variant`, `size`                                                          |
-| `InputGroupInput`    | The input element                                                                                |
-| `InputGroupText`     | Plain text element                                                                               |
-| `InputGroupTextarea` | Textarea variant                                                                                 |
-
 ---
 
 ## Input OTP
 
 A one-time password input with individual character slots.
+
+### Sub-components
+
+#### InputOTPGroup
+
+Visual grouping of slots
+
+#### InputOTPSlot
+
+Individual character slot
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `index` | `number` | - | Slot position (0-based) |
+
+#### InputOTPSeparator
+
+Dash separator between groups
 
 ## Usage
 
@@ -1835,17 +1903,6 @@ A one-time password input with individual character slots.
 ## Digits Only
 
 Use the `pattern` prop to restrict input to digits only.
-
-
-
-## Sub-components
-
-| Component           | Description                                          |
-| ------------------- | ---------------------------------------------------- |
-| `InputOTP`          | Root with OTP logic (from vue-input-otp)             |
-| `InputOTPGroup`     | Visual grouping of slots                             |
-| `InputOTPSlot`      | Individual character slot. Props: `index` (required) |
-| `InputOTPSeparator` | Dash separator between groups                        |
 
 ---
 
@@ -1862,30 +1919,61 @@ A flexible list item component for displaying structured content with media, tex
 | `as` | `string` | `'div'` | The element to render as. |
 | `asChild` | `boolean` | - | Render as child element. |
 
+### Sub-components
+
+#### ItemGroup
+
+Groups multiple items
+
+#### ItemHeader
+
+Header section
+
+#### ItemMedia
+
+Icon or image area
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' | 'icon' | 'image'` | - | Display variant |
+
+#### ItemContent
+
+Text content area
+
+#### ItemTitle
+
+Title text
+
+#### ItemDescription
+
+Description text
+
+#### ItemFooter
+
+Footer section
+
+#### ItemActions
+
+Action buttons area
+
+#### ItemSeparator
+
+Visual separator between items
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component         | Description                                                        |
-| ----------------- | ------------------------------------------------------------------ |
-| `Item`            | Root container. Props: `variant`, `size`, `as`, `asChild`          |
-| `ItemGroup`       | Groups multiple items                                              |
-| `ItemHeader`      | Header section                                                     |
-| `ItemMedia`       | Icon/image area. Props: `variant` ('default' \| 'icon' \| 'image') |
-| `ItemContent`     | Text content area                                                  |
-| `ItemTitle`       | Title text                                                         |
-| `ItemDescription` | Description text                                                   |
-| `ItemFooter`      | Footer section                                                     |
-| `ItemActions`     | Action buttons area                                                |
-| `ItemSeparator`   | Visual separator between items                                     |
 
 ---
 
 ## Kbd
 
 Displays keyboard key indicators for shortcuts and key combinations.
+
+### Sub-components
+
+#### KbdGroup
+
+Groups multiple key indicators
 
 ## Usage
 
@@ -1894,15 +1982,6 @@ Displays keyboard key indicators for shortcuts and key combinations.
 ## Shortcut List
 
 Kbd elements work well inline with text for displaying keyboard shortcuts.
-
-
-
-## Sub-components
-
-| Component  | Description            |
-| ---------- | ---------------------- |
-| `Kbd`      | Individual key display |
-| `KbdGroup` | Groups multiple keys   |
 
 ---
 
@@ -2016,6 +2095,20 @@ A styled native HTML select element.
 |-------|---------|-------------|
 | `update:modelValue` | `AcceptableValue` | Emitted when the selection changes. |
 
+### Sub-components
+
+#### NativeSelectOption
+
+Option element
+
+#### NativeSelectOptGroup
+
+Option group element
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | Group label |
+
 ## Usage
 
 
@@ -2023,16 +2116,6 @@ A styled native HTML select element.
 ## With Option Groups
 
 Use `NativeSelectOptGroup` to organize options into labeled groups.
-
-
-
-## Sub-components
-
-| Component              | Description               |
-| ---------------------- | ------------------------- |
-| `NativeSelect`         | Styled `<select>` wrapper |
-| `NativeSelectOption`   | `<option>` element        |
-| `NativeSelectOptGroup` | `<optgroup>` element      |
 
 ---
 
@@ -2046,28 +2129,61 @@ A complex navigation menu with rich content areas, suitable for site-wide naviga
 |------|------|---------|-------------|
 | `viewport` | `boolean` | `true` | Whether to render the viewport container for content panels. |
 
+### Sub-components
+
+#### NavigationMenuList
+
+List of menu items
+
+#### NavigationMenuItem
+
+Individual menu item
+
+#### NavigationMenuTrigger
+
+Dropdown trigger button
+
+#### NavigationMenuContent
+
+Dropdown content panel
+
+#### NavigationMenuLink
+
+Navigation link
+
+#### NavigationMenuIndicator
+
+Active indicator bar
+
+#### NavigationMenuViewport
+
+Content viewport container
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component                 | Description                       |
-| ------------------------- | --------------------------------- |
-| `NavigationMenu`          | Root container. Props: `viewport` |
-| `NavigationMenuList`      | List of menu items                |
-| `NavigationMenuItem`      | Individual menu item              |
-| `NavigationMenuTrigger`   | Dropdown trigger button           |
-| `NavigationMenuContent`   | Dropdown content panel            |
-| `NavigationMenuLink`      | Navigation link                   |
-| `NavigationMenuIndicator` | Active indicator bar              |
-| `NavigationMenuViewport`  | Content viewport container        |
 
 ---
 
 ## Number Field
 
 A numeric input with increment and decrement buttons.
+
+### Sub-components
+
+#### NumberFieldContent
+
+Layout wrapper for input and buttons
+
+#### NumberFieldInput
+
+The numeric input element
+
+#### NumberFieldIncrement
+
+Increment button (default plus icon)
+
+#### NumberFieldDecrement
+
+Decrement button (default minus icon)
 
 ## Usage
 
@@ -2077,23 +2193,46 @@ A numeric input with increment and decrement buttons.
 
 Use `step` for decimal increments and `formatOptions` for display formatting.
 
-
-
-## Sub-components
-
-| Component              | Description                                               |
-| ---------------------- | --------------------------------------------------------- |
-| `NumberField`          | Root with value state. Props from reka-ui NumberFieldRoot |
-| `NumberFieldContent`   | Layout wrapper for input and buttons                      |
-| `NumberFieldInput`     | The numeric input element                                 |
-| `NumberFieldIncrement` | Increment button (default: plus icon)                     |
-| `NumberFieldDecrement` | Decrement button (default: minus icon)                    |
-
 ---
 
 ## Pagination
 
 Navigation controls for paginated content with page numbers, previous/next, and first/last buttons.
+
+### Sub-components
+
+#### PaginationContent
+
+Layout container with items slot
+
+#### PaginationItem
+
+Page number button
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | - | Page number |
+| `isActive` | `boolean` | - | Active page styling |
+
+#### PaginationPrevious
+
+Previous page button
+
+#### PaginationNext
+
+Next page button
+
+#### PaginationFirst
+
+First page button
+
+#### PaginationLast
+
+Last page button
+
+#### PaginationEllipsis
+
+Collapsed page indicator
 
 ## Usage
 
@@ -2102,22 +2241,6 @@ Navigation controls for paginated content with page numbers, previous/next, and 
 ## Simple (Previous / Next)
 
 A compact pagination with `siblingCount={0}` and no first/last buttons.
-
-
-
-## Sub-components
-
-| Component            | Description                                                              |
-| -------------------- | ------------------------------------------------------------------------ |
-| `Pagination`         | Root. Props: `total`, `defaultPage`, `page`, `siblingCount`, `showEdges` |
-| `PaginationContent`  | Layout container                                                         |
-| `PaginationItem`     | Item wrapper                                                             |
-| `PaginationLink`     | Page number link                                                         |
-| `PaginationPrevious` | Previous page button                                                     |
-| `PaginationNext`     | Next page button                                                         |
-| `PaginationFirst`    | First page button                                                        |
-| `PaginationLast`     | Last page button                                                         |
-| `PaginationEllipsis` | Collapsed page indicator                                                 |
 
 ---
 
@@ -2131,6 +2254,24 @@ A PIN code input with individual boxes for each character.
 |------|------|---------|-------------|
 | `otp` | `boolean` | `true` | Whether to use OTP mode (one-time password autocomplete). |
 
+### Sub-components
+
+#### PinInputGroup
+
+Visual container
+
+#### PinInputSlot
+
+Individual input slot
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `index` | `number` | - | Slot position (0-based) |
+
+#### PinInputSeparator
+
+Separator between slots
+
 ## Usage
 
 
@@ -2138,17 +2279,6 @@ A PIN code input with individual boxes for each character.
 ## Numeric
 
 Use `type="number"` to restrict to digits. The `placeholder` prop customizes empty slot display.
-
-
-
-## Sub-components
-
-| Component           | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| `PinInput`          | Root with value state. Extends reka-ui PinInputRoot |
-| `PinInputGroup`     | Visual container                                    |
-| `PinInputSlot`      | Individual input slot. Props: `index` (required)    |
-| `PinInputSeparator` | Separator between slots                             |
 
 ---
 
@@ -2204,6 +2334,17 @@ A horizontal progress bar indicating completion status.
 
 A set of radio buttons where only one can be selected at a time.
 
+### Sub-components
+
+#### RadioGroupItem
+
+Individual radio option
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Option value |
+| `disabled` | `boolean` | - | Disable this option |
+
 ## Usage
 
 
@@ -2211,15 +2352,6 @@ A set of radio buttons where only one can be selected at a time.
 ## Horizontal
 
 Use `orientation="horizontal"` for inline layout.
-
-
-
-## Sub-components
-
-| Component        | Description                                                    |
-| ---------------- | -------------------------------------------------------------- |
-| `RadioGroup`     | Root container with value state                                |
-| `RadioGroupItem` | Individual radio option. Props: `value` (required), `disabled` |
 
 ---
 
@@ -2298,6 +2430,20 @@ Panels support `minSize` and `maxSize` constraints.
 
 A custom scrollable area with styled scrollbars.
 
+### Sub-components
+
+#### ScrollArea
+
+Root scrollable container
+
+#### ScrollBar
+
+Custom scrollbar track and thumb
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'horizontal' | 'vertical'` | - | Scrollbar direction |
+
 ## Usage
 
 
@@ -2305,15 +2451,6 @@ A custom scrollable area with styled scrollbars.
 ## Horizontal Scroll
 
 Use `ScrollBar` with `orientation="horizontal"` for horizontal scrolling.
-
-
-
-## Sub-components
-
-| Component    | Description                      |
-| ------------ | -------------------------------- |
-| `ScrollArea` | Root scrollable container        |
-| `ScrollBar`  | Custom scrollbar track and thumb |
 
 ---
 
@@ -2730,6 +2867,40 @@ A toggle switch control for boolean values with color variants.
 
 A semantic HTML table with consistent styling for displaying tabular data.
 
+### Sub-components
+
+#### TableHeader
+
+thead element
+
+#### TableBody
+
+tbody element
+
+#### TableFooter
+
+tfoot element
+
+#### TableRow
+
+tr element
+
+#### TableHead
+
+th element
+
+#### TableCell
+
+td element
+
+#### TableCaption
+
+caption element
+
+#### TableEmpty
+
+Empty state row
+
 ## Usage
 
 
@@ -2737,22 +2908,6 @@ A semantic HTML table with consistent styling for displaying tabular data.
 ## With Footer
 
 Use `TableFooter` to add a summary row at the bottom.
-
-
-
-## Sub-components
-
-| Component      | Description            |
-| -------------- | ---------------------- |
-| `Table`        | Root `<table>` wrapper |
-| `TableHeader`  | `<thead>` element      |
-| `TableBody`    | `<tbody>` element      |
-| `TableFooter`  | `<tfoot>` element      |
-| `TableRow`     | `<tr>` element         |
-| `TableHead`    | `<th>` element         |
-| `TableCell`    | `<td>` element         |
-| `TableCaption` | `<caption>` element    |
-| `TableEmpty`   | Empty state row        |
 
 ---
 
@@ -2814,6 +2969,28 @@ Use `orientation="vertical"` for vertical layout. Individual triggers can be `di
 
 An input for managing multiple tags or keywords.
 
+### Sub-components
+
+#### TagsInputInput
+
+Text input for adding new tags
+
+#### TagsInputItem
+
+Individual tag
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Tag value |
+
+#### TagsInputItemText
+
+Tag text display
+
+#### TagsInputItemDelete
+
+Remove button for the tag
+
 ## Usage
 
 
@@ -2821,18 +2998,6 @@ An input for managing multiple tags or keywords.
 ## Max Tags
 
 Use the `max` prop to limit the number of tags.
-
-
-
-## Sub-components
-
-| Component             | Description                                                |
-| --------------------- | ---------------------------------------------------------- |
-| `TagsInput`           | Root with tag list state. Props from reka-ui TagsInputRoot |
-| `TagsInputInput`      | Text input for adding new tags                             |
-| `TagsInputItem`       | Individual tag. Props: `value` (required)                  |
-| `TagsInputItemText`   | Tag text display                                           |
-| `TagsInputItemDelete` | Remove button for the tag                                  |
 
 ---
 
@@ -2925,16 +3090,20 @@ A set of two-state buttons that can be toggled on or off, supporting single or m
 |-------|---------|-------------|
 | `update:modelValue` | `'AcceptableValue | AcceptableValue[]'` | Emitted when the value changes. |
 
+### Sub-components
+
+#### ToggleGroupItem
+
+Individual toggle item
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `AcceptableValue` | - | Item value |
+| `disabled` | `boolean` | - | Disable this item |
+| `variant` | `'default' | 'outline'` | - | Visual style variant |
+| `size` | `'default' | 'sm' | 'lg'` | - | Item size |
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component         | Description                                                                      |
-| ----------------- | -------------------------------------------------------------------------------- |
-| `ToggleGroup`     | Root container with selection state                                              |
-| `ToggleGroupItem` | Individual toggle item. Props: `value` (required), `disabled`, `variant`, `size` |
 
 ---
 
@@ -3006,18 +3175,27 @@ Displays a stack of avatars with an overflow indicator.
 
 A component for copying text to the clipboard with visual feedback.
 
+### Sub-components
+
+#### ClipboardCopy
+
+Root component. Accepts value (the text to copy) and manages copy state
+
+#### ClipboardCopyButton
+
+The trigger button that initiates the copy action
+
+#### CopyIdle
+
+Slot content shown when idle (before copying)
+
+#### CopySuccess
+
+Slot content shown after a successful copy
+
 ## Usage
 
 
-
-## Sub-components
-
-| Component             | Description                                                               |
-| --------------------- | ------------------------------------------------------------------------- |
-| `ClipboardCopy`       | Root component. Accepts `value` (the text to copy) and manages copy state |
-| `ClipboardCopyButton` | The trigger button that initiates the copy action                         |
-| `CopyIdle`            | Slot content shown when idle (before copying)                             |
-| `CopySuccess`         | Slot content shown after a successful copy                                |
 
 ## Composable
 
@@ -3827,6 +4005,28 @@ A composite date picker with presets, calendar, and support for single or range 
 | `disabled` | `boolean` | `false` | Disables the entire picker. |
 | `numberOfMonths` | `number` | `2` | Number of months visible in the calendar at once. |
 
+### Sub-components
+
+#### DateRangePicker
+
+Root component managing state and popover
+
+#### DateRangePickerTrigger
+
+The button that opens the picker popover
+
+#### DateRangePickerContent
+
+Popover content wrapper for calendar and presets
+
+#### DateRangePickerCalendar
+
+The calendar grid for selecting dates
+
+#### DateRangePickerPresets
+
+Quick-select preset buttons
+
 ## Usage
 
 
@@ -3835,39 +4035,45 @@ A composite date picker with presets, calendar, and support for single or range 
 
 Use `mode="single"` for picking a single date instead of a range.
 
-
-
-## Sub-components
-
-| Component                 | Description                                      |
-| ------------------------- | ------------------------------------------------ |
-| `DateRangePicker`         | Root component managing state and popover        |
-| `DateRangePickerTrigger`  | The button that opens the picker popover         |
-| `DateRangePickerContent`  | Popover content wrapper for calendar and presets |
-| `DateRangePickerCalendar` | The calendar grid for selecting dates            |
-| `DateRangePickerPresets`  | Quick-select preset buttons                      |
-
 ---
 
 ## Mention
 
 A rich text input that supports @-mention suggestions with customizable triggers and serialization.
 
+### Sub-components
+
+#### Mention
+
+Root component managing mention state and trigger detection
+
+#### MentionInput
+
+The editable text input area
+
+#### MentionContent
+
+Popover dropdown that shows mention suggestions
+
+#### MentionItem
+
+Individual suggestion item inside the dropdown
+
+#### MentionEmpty
+
+Content displayed when no suggestions match
+
+#### MentionLoading
+
+Loading indicator shown while suggestions are being fetched
+
+#### MentionHighlighter
+
+Overlay that renders highlighted mention tokens in the input
+
 ## Usage
 
 
-
-## Sub-components
-
-| Component            | Description                                                  |
-| -------------------- | ------------------------------------------------------------ |
-| `Mention`            | Root component managing mention state and trigger detection  |
-| `MentionInput`       | The editable text input area                                 |
-| `MentionContent`     | Popover dropdown that shows mention suggestions              |
-| `MentionItem`        | Individual suggestion item inside the dropdown               |
-| `MentionEmpty`       | Content displayed when no suggestions match                  |
-| `MentionLoading`     | Loading indicator shown while suggestions are being fetched  |
-| `MentionHighlighter` | Overlay that renders highlighted mention tokens in the input |
 
 ## Serialization Utilities
 
@@ -3947,23 +4153,57 @@ A vertical or horizontal timeline for displaying chronological events.
 | `activeIndex` | `number` | - | Index of the currently active item (zero-based). Items up to this index appear in an active state. |
 | `contentPosition` | `'right' | 'left' | 'alternate'` | `'right'` | Which side of the line the content appears on. |
 
+### Sub-components
+
+#### Timeline
+
+Root container. Provides orientation and variant context
+
+#### TimelineItem
+
+Wraps a single event (separator + content)
+
+#### TimelineSeparator
+
+Container for the dot and connector
+
+#### TimelineDot
+
+The circular indicator
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'sm' | 'md' | 'lg'` | - | Dot size |
+
+#### TimelineConnector
+
+The line between dots
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `thickness` | `number` | - | Line thickness |
+
+#### TimelineContent
+
+The text/body area for an event
+
+#### TimelineTitle
+
+Heading text for the event
+
+#### TimelineDescription
+
+Supporting description text
+
+#### TimelineTime
+
+Timestamp display
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `dateTime` | `string` | - | ISO 8601 date string |
+
 ## Usage
-
-
-
-## Sub-components
-
-| Component             | Description                                                        |
-| --------------------- | ------------------------------------------------------------------ |
-| `Timeline`            | Root container. Provides orientation and variant context           |
-| `TimelineItem`        | Wraps a single event (separator + content)                         |
-| `TimelineSeparator`   | Container for the dot and connector                                |
-| `TimelineDot`         | The circular indicator. Props: `size` (`'sm'` \| `'md'` \| `'lg'`) |
-| `TimelineConnector`   | The line between dots. Props: `thickness` (number)                 |
-| `TimelineContent`     | The text/body area for an event                                    |
-| `TimelineTitle`       | Heading text for the event                                         |
-| `TimelineDescription` | Supporting description text                                        |
-| `TimelineTime`        | Timestamp display. Props: `dateTime` (string, ISO 8601)            |
 
 ---
 
