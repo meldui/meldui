@@ -174,7 +174,7 @@
 - [x] Create examples/common patterns page (form validation, dashboard layout, data table, chart dashboard)
 - [x] Link to Task Manager example app
 - [x] Search dialog on landing page
-- [ ] Responsive testing (mobile, tablet, desktop)
+- [x] Responsive testing (mobile, tablet, desktop)
 - [ ] Accessibility audit (keyboard navigation, screen reader)
 - [ ] Performance check (Lighthouse score)
 - [ ] Cross-browser testing (Chrome, Firefox, Safari)
