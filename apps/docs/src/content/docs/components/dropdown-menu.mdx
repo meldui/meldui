@@ -8,38 +8,18 @@ package: '@meldui/vue'
 componentName: DropdownMenu
 ---
 
+import DropdownMenuDemo from '../../../demos/dropdown-menu/DropdownMenuDemo.vue'
+import DropdownMenuCheckboxDemo from '../../../demos/dropdown-menu/DropdownMenuCheckboxDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@meldui/vue'
-import { Button } from '@meldui/vue'
-</script>
+<DropdownMenuDemo client:only="vue" />
 
-<template>
-  <DropdownMenu>
-    <DropdownMenuTrigger as-child>
-      <Button variant="outline">Open</Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent class="w-56">
-      <DropdownMenuLabel>My Account</DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem>Profile</DropdownMenuItem>
-      <DropdownMenuItem>Billing</DropdownMenuItem>
-      <DropdownMenuItem>Settings</DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem>Log out</DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-</template>
-```
+## Checkbox Items
+
+Use `DropdownMenuCheckboxItem` for toggleable options.
+
+<DropdownMenuCheckboxDemo client:only="vue" />
 
 ## Sub-components
 

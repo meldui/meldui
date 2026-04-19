@@ -8,38 +8,18 @@ package: '@meldui/vue'
 componentName: Breadcrumb
 ---
 
+import BreadcrumbDemo from '../../../demos/breadcrumb/BreadcrumbDemo.vue'
+import BreadcrumbEllipsisDemo from '../../../demos/breadcrumb/BreadcrumbEllipsisDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@meldui/vue'
-</script>
+<BreadcrumbDemo client:only="vue" />
 
-<template>
-  <Breadcrumb>
-    <BreadcrumbList>
-      <BreadcrumbItem>
-        <BreadcrumbLink href="/">Home</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem>
-        <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem>
-        <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-      </BreadcrumbItem>
-    </BreadcrumbList>
-  </Breadcrumb>
-</template>
-```
+## With Ellipsis
+
+Use `BreadcrumbEllipsis` to indicate collapsed intermediate items.
+
+<BreadcrumbEllipsisDemo client:only="vue" />
 
 ## Sub-components
 

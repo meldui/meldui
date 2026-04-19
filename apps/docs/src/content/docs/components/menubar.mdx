@@ -8,42 +8,11 @@ package: '@meldui/vue'
 componentName: Menubar
 ---
 
+import MenubarDemo from '../../../demos/menubar/MenubarDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Menubar,
-  MenubarMenu,
-  MenubarTrigger,
-  MenubarContent,
-  MenubarItem,
-  MenubarSeparator,
-  MenubarShortcut,
-} from '@meldui/vue'
-</script>
-
-<template>
-  <Menubar>
-    <MenubarMenu>
-      <MenubarTrigger>File</MenubarTrigger>
-      <MenubarContent>
-        <MenubarItem>New Tab <MenubarShortcut>⌘T</MenubarShortcut></MenubarItem>
-        <MenubarItem>New Window <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-        <MenubarSeparator />
-        <MenubarItem>Print <MenubarShortcut>⌘P</MenubarShortcut></MenubarItem>
-      </MenubarContent>
-    </MenubarMenu>
-    <MenubarMenu>
-      <MenubarTrigger>Edit</MenubarTrigger>
-      <MenubarContent>
-        <MenubarItem>Undo <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-        <MenubarItem>Redo <MenubarShortcut>⌘Y</MenubarShortcut></MenubarItem>
-      </MenubarContent>
-    </MenubarMenu>
-  </Menubar>
-</template>
-```
+<MenubarDemo client:only="vue" />
 
 ## Sub-components
 

@@ -40,15 +40,19 @@
     @apply text-primary underline underline-offset-4 hover:text-primary/80 transition-colors;
   }
 
-  ul {
-    @apply list-disc pl-6 mb-4 space-y-1;
+  > ul, > ol, > div > ul, > div > ol {
+    @apply pl-6 mb-4 space-y-1;
   }
 
-  ol {
-    @apply list-decimal pl-6 mb-4 space-y-1;
+  > ul, > div > ul {
+    @apply list-disc;
   }
 
-  li {
+  > ol, > div > ol {
+    @apply list-decimal;
+  }
+
+  > ul > li, > ol > li, > div > ul > li, > div > ol > li {
     @apply text-foreground/90 leading-7;
   }
 

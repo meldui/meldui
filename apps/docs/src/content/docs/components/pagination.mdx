@@ -8,33 +8,18 @@ package: '@meldui/vue'
 componentName: Pagination
 ---
 
+import PaginationDemo from '../../../demos/pagination/PaginationDemo.vue'
+import PaginationSimpleDemo from '../../../demos/pagination/PaginationSimpleDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationPrevious,
-  PaginationNext,
-  PaginationEllipsis,
-} from '@meldui/vue'
-</script>
+<PaginationDemo client:only="vue" />
 
-<template>
-  <Pagination :total="100" :sibling-count="1" show-edges :default-page="1">
-    <PaginationContent>
-      <PaginationFirst />
-      <PaginationPrevious />
-      <!-- Page links rendered automatically via slot -->
-      <PaginationNext />
-      <PaginationLast />
-    </PaginationContent>
-  </Pagination>
-</template>
-```
+## Simple (Previous / Next)
+
+A compact pagination with `siblingCount={0}` and no first/last buttons.
+
+<PaginationSimpleDemo client:only="vue" />
 
 ## Sub-components
 

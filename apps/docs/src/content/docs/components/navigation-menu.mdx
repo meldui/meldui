@@ -13,42 +13,11 @@ props:
     description: Whether to render the viewport container for content panels.
 ---
 
+import NavigationMenuDemo from '../../../demos/navigation-menu/NavigationMenuDemo.vue'
+
 ## Usage
 
-```vue
-<script setup>
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
-  NavigationMenuLink,
-} from '@meldui/vue'
-</script>
-
-<template>
-  <NavigationMenu>
-    <NavigationMenuList>
-      <NavigationMenuItem>
-        <NavigationMenuTrigger>Getting Started</NavigationMenuTrigger>
-        <NavigationMenuContent>
-          <ul class="grid gap-3 p-4 w-[400px]">
-            <li>
-              <NavigationMenuLink href="/docs/getting-started"> Introduction </NavigationMenuLink>
-            </li>
-            <li>
-              <NavigationMenuLink href="/docs/getting-started/installation">
-                Installation
-              </NavigationMenuLink>
-            </li>
-          </ul>
-        </NavigationMenuContent>
-      </NavigationMenuItem>
-    </NavigationMenuList>
-  </NavigationMenu>
-</template>
-```
+<NavigationMenuDemo client:only="vue" />
 
 ## Sub-components
 
