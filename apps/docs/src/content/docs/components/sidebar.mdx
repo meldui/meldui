@@ -19,6 +19,85 @@ props:
     type: "'offcanvas' | 'icon' | 'none'"
     default: "'offcanvas'"
     description: How the sidebar collapses.
+subComponents:
+  - name: SidebarProvider
+    description: Root state provider that manages open/closed state.
+    props:
+      - name: defaultOpen
+        type: boolean
+        description: Initial open state.
+      - name: open
+        type: boolean
+        description: Controlled open state. Use with v-model.
+  - name: SidebarContent
+    description: Scrollable content area.
+  - name: SidebarHeader
+    description: Top section of the sidebar.
+  - name: SidebarFooter
+    description: Bottom section of the sidebar.
+  - name: SidebarGroup
+    description: Groups related menu items.
+  - name: SidebarGroupLabel
+    description: Label heading for a group.
+  - name: SidebarGroupContent
+    description: Content container within a group.
+  - name: SidebarGroupAction
+    description: Action button in a group header.
+  - name: SidebarMenu
+    description: Menu container for menu items.
+  - name: SidebarMenuItem
+    description: Wrapper for a single menu entry.
+  - name: SidebarMenuButton
+    description: Clickable menu button with icon and text.
+    props:
+      - name: variant
+        type: "'default' | 'outline'"
+        default: "'default'"
+        description: Visual style variant.
+      - name: size
+        type: "'default' | 'sm' | 'lg'"
+        default: "'default'"
+        description: Button size.
+      - name: isActive
+        type: boolean
+        description: Active state styling.
+      - name: tooltip
+        type: string | Component
+        description: Tooltip text shown on hover (useful in collapsed icon mode).
+  - name: SidebarMenuSub
+    description: Nested sub-menu container.
+  - name: SidebarMenuSubItem
+    description: Item within a sub-menu.
+  - name: SidebarMenuSubButton
+    description: Button within a sub-menu.
+    props:
+      - name: size
+        type: "'sm' | 'md'"
+        default: "'md'"
+        description: Button size.
+      - name: isActive
+        type: boolean
+        description: Active state styling.
+  - name: SidebarMenuAction
+    description: Action button within a menu item.
+    props:
+      - name: showOnHover
+        type: boolean
+        description: Only show when parent menu item is hovered.
+  - name: SidebarMenuBadge
+    description: Badge indicator for counts or status.
+  - name: SidebarMenuSkeleton
+    description: Loading skeleton for menu items.
+  - name: SidebarTrigger
+    description: Button that toggles the sidebar open/closed.
+  - name: SidebarRail
+    description: Slim rail visible when sidebar is collapsed.
+  - name: SidebarInset
+    description: Main content area positioned next to the sidebar.
+  - name: SidebarInput
+    description: Search input styled for the sidebar.
+  - name: SidebarSeparator
+    description: Visual separator between groups.
 ---
 
 import SidebarDemo from '../../../demos/sidebar/SidebarDemo.vue'
@@ -34,34 +113,6 @@ A full sidebar with collapsible project groups, nested sub-menus (`SidebarMenuSu
 
 <SidebarComplexDemo client:only="vue" />
 
-## Sub-components
-
-| Component              | Description                                                             |
-| ---------------------- | ----------------------------------------------------------------------- |
-| `SidebarProvider`      | Root state provider. Props: `defaultOpen`, `open`. Event: `update:open` |
-| `Sidebar`              | Main sidebar container. Props: `side`, `variant`, `collapsible`         |
-| `SidebarContent`       | Scrollable content area                                                 |
-| `SidebarHeader`        | Top section                                                             |
-| `SidebarFooter`        | Bottom section                                                          |
-| `SidebarGroup`         | Section grouping                                                        |
-| `SidebarGroupLabel`    | Group heading                                                           |
-| `SidebarGroupContent`  | Group content                                                           |
-| `SidebarGroupAction`   | Action button in group header                                           |
-| `SidebarMenu`          | Menu container                                                          |
-| `SidebarMenuItem`      | Menu item wrapper                                                       |
-| `SidebarMenuButton`    | Clickable menu button. Props: `variant`, `size`, `tooltip`              |
-| `SidebarMenuSub`       | Nested sub-menu                                                         |
-| `SidebarMenuSubItem`   | Sub-menu item                                                           |
-| `SidebarMenuSubButton` | Sub-menu button                                                         |
-| `SidebarMenuAction`    | Action within a menu item                                               |
-| `SidebarMenuBadge`     | Badge indicator                                                         |
-| `SidebarMenuSkeleton`  | Loading skeleton                                                        |
-| `SidebarTrigger`       | Toggle button                                                           |
-| `SidebarRail`          | Slim rail for collapsed state                                           |
-| `SidebarInset`         | Main content area next to sidebar                                       |
-| `SidebarInput`         | Search input                                                            |
-| `SidebarSeparator`     | Visual separator                                                        |
-
 ## Composable
 
-`useSidebar()` — returns `{ state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar }`.
+`useSidebar()` -- returns `{ state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar }`.

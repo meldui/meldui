@@ -6,6 +6,24 @@ subcategory: Layout
 order: 30
 package: '@meldui/vue'
 componentName: Accordion
+subComponents:
+  - name: AccordionItem
+    description: Individual collapsible section.
+    props:
+      - name: value
+        type: string
+        required: true
+        description: Unique identifier for the item.
+      - name: disabled
+        type: boolean
+        description: Prevents user interaction.
+  - name: AccordionTrigger
+    description: Clickable header that toggles the content.
+    slots:
+      - name: icon
+        description: Custom expand/collapse indicator icon.
+  - name: AccordionContent
+    description: Collapsible content area with enter/leave animations.
 ---
 
 import AccordionDemo from '../../../demos/accordion/AccordionDemo.vue'
@@ -21,11 +39,3 @@ Use `type="multiple"` to allow several items open at once. Individual items can 
 
 <AccordionMultipleDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                                                                 |
-| ------------------ | --------------------------------------------------------------------------- |
-| `Accordion`        | Root. Props: `type` ('single' \| 'multiple'), `collapsible`, `defaultValue` |
-| `AccordionItem`    | Individual section. Props: `value` (required), `disabled`                   |
-| `AccordionTrigger` | Clickable header. Slot: `icon` for custom expand indicator                  |
-| `AccordionContent` | Collapsible content area                                                    |

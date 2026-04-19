@@ -203,10 +203,10 @@ Enrich sub-component tables with full props, events, and slots data via frontmat
 
 ### 8.3 Layout (4 components)
 
-- [ ] Accordion — AccordionItem (value, disabled), AccordionTrigger (icon slot), AccordionContent
-- [ ] Tabs — TabsList, TabsTrigger (value, disabled), TabsContent (value)
-- [ ] Resizable — ResizablePanel (defaultSize, minSize, maxSize, collapsible), ResizableHandle (withHandle)
-- [ ] Sidebar — full sub-component props (SidebarProvider, SidebarMenuButton variant/size/tooltip, etc.)
+- [x] Accordion — AccordionItem (value, disabled), AccordionTrigger (icon slot), AccordionContent
+- [x] Tabs — TabsList (loop), TabsTrigger (value, disabled), TabsContent (value, forceMount)
+- [x] Resizable — ResizablePanelGroup (direction, autoSaveId), ResizablePanel (defaultSize, minSize, maxSize, collapsible), ResizableHandle (withHandle)
+- [x] Sidebar — 22 sub-components (SidebarProvider open/defaultOpen, SidebarMenuButton variant/size/tooltip/isActive, SidebarMenuSubButton size/isActive, SidebarMenuAction showOnHover)
 
 ### 8.4 Form (4 components)
 

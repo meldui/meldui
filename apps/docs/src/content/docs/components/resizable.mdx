@@ -6,6 +6,47 @@ subcategory: Layout
 order: 35
 package: '@meldui/vue'
 componentName: ResizablePanelGroup
+subComponents:
+  - name: ResizablePanelGroup
+    description: Root container that manages panel layout.
+    props:
+      - name: direction
+        type: "'horizontal' | 'vertical'"
+        required: true
+        description: Layout direction of the panels.
+      - name: autoSaveId
+        type: string
+        description: Auto-save panel arrangement to localStorage with this key.
+      - name: keyboardResizeBy
+        type: number
+        description: Step size in pixels/percent for arrow key resizing.
+  - name: ResizablePanel
+    description: Individual resizable panel.
+    props:
+      - name: defaultSize
+        type: number
+        description: Initial panel size as a percentage.
+      - name: minSize
+        type: number
+        description: Minimum size constraint.
+      - name: maxSize
+        type: number
+        description: Maximum size constraint.
+      - name: collapsible
+        type: boolean
+        description: Allow panel to collapse when resized below minSize.
+      - name: collapsedSize
+        type: number
+        description: Size when collapsed.
+  - name: ResizableHandle
+    description: Draggable handle between panels.
+    props:
+      - name: withHandle
+        type: boolean
+        description: Show a visible grip icon on the handle.
+      - name: disabled
+        type: boolean
+        description: Disable drag functionality.
 ---
 
 import ResizableDemo from '../../../demos/resizable/ResizableDemo.vue'
@@ -28,10 +69,3 @@ Panels support `minSize` and `maxSize` constraints.
 
 <ResizableThreePanelDemo client:only="vue" />
 
-## Sub-components
-
-| Component             | Description                                                                |
-| --------------------- | -------------------------------------------------------------------------- |
-| `ResizablePanelGroup` | Root container. Props: `direction` ('horizontal' \| 'vertical')            |
-| `ResizablePanel`      | Resizable panel. Props: `defaultSize`, `minSize`, `maxSize`, `collapsible` |
-| `ResizableHandle`     | Drag handle between panels. Props: `withHandle` (shows grip icon)          |

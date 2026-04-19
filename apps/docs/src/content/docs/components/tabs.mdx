@@ -17,6 +17,33 @@ props:
   - name: modelValue
     type: string
     description: The controlled active tab. Use with v-model.
+subComponents:
+  - name: TabsList
+    description: Container for tab trigger buttons.
+    props:
+      - name: loop
+        type: boolean
+        description: Keyboard navigation loops from last to first tab.
+  - name: TabsTrigger
+    description: Button that activates a tab panel.
+    props:
+      - name: value
+        type: string
+        required: true
+        description: Unique value associating this trigger with its content panel.
+      - name: disabled
+        type: boolean
+        description: Prevents activation of this tab.
+  - name: TabsContent
+    description: Panel content shown when the associated trigger is active.
+    props:
+      - name: value
+        type: string
+        required: true
+        description: Unique value associating this panel with its trigger.
+      - name: forceMount
+        type: boolean
+        description: Force mount content for CSS animations.
 ---
 
 import TabsDemo from '../../../demos/tabs/TabsDemo.vue'
@@ -37,11 +64,3 @@ Use `orientation="vertical"` for vertical layout. Individual triggers can be `di
 
 <TabsVerticalDemo client:only="vue" />
 
-## Sub-components
-
-| Component     | Description                                                     |
-| ------------- | --------------------------------------------------------------- |
-| `Tabs`        | Root container. Props: `variant`, `defaultValue`, `orientation` |
-| `TabsList`    | Tab button container                                            |
-| `TabsTrigger` | Tab button. Props: `value` (required), `disabled`               |
-| `TabsContent` | Tab panel. Props: `value` (required)                            |
