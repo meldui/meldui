@@ -27,9 +27,7 @@ async function search(q: string) {
     return
   }
   const searchResult = await pagefind.value.search(q)
-  const data = await Promise.all(
-    searchResult.results.slice(0, 8).map((r: any) => r.data())
-  )
+  const data = await Promise.all(searchResult.results.slice(0, 8).map((r: any) => r.data()))
   results.value = data
 }
 
@@ -58,7 +56,9 @@ onMounted(() => {
   // Wire up the header search button
   const trigger = document.getElementById('search-trigger')
   if (trigger) {
-    trigger.addEventListener('click', () => { open.value = true })
+    trigger.addEventListener('click', () => {
+      open.value = true
+    })
   }
 })
 
@@ -88,9 +88,15 @@ function navigate(url: string) {
       <div class="max-h-[300px] overflow-y-auto p-2">
         <div v-if="searchUnavailable" class="py-6 text-center text-sm text-muted-foreground">
           Search is only available in the production build.<br />
-          <span class="text-xs">Run <code class="rounded bg-muted px-1 py-0.5">pnpm docs:build</code> then <code class="rounded bg-muted px-1 py-0.5">pnpm --filter docs preview</code></span>
+          <span class="text-xs"
+            >Run <code class="rounded bg-muted px-1 py-0.5">pnpm docs:build</code> then
+            <code class="rounded bg-muted px-1 py-0.5">pnpm --filter docs preview</code></span
+          >
         </div>
-        <div v-else-if="query && results.length === 0" class="py-6 text-center text-sm text-muted-foreground">
+        <div
+          v-else-if="query && results.length === 0"
+          class="py-6 text-center text-sm text-muted-foreground"
+        >
           No results found.
         </div>
         <div v-else-if="!query" class="py-6 text-center text-sm text-muted-foreground">

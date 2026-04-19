@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Header from '../components/Header.astro'
+import SearchDialog from '../components/SearchDialog.vue'
 ---
 
 <BaseLayout title="MeldUI" description="A Vue 3 component library built on shadcn-vue with Tailwind CSS v4.">
@@ -82,4 +83,5 @@ import Header from '../components/Header.astro'
       </div>
     </div>
   </main>
+  <SearchDialog client:only="vue" />
 </BaseLayout>
