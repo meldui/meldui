@@ -27,6 +27,62 @@ events:
   - name: update:open
     payload: boolean
     description: Emitted when the open state changes.
+subComponents:
+  - name: ComboboxAnchor
+    description: Positions the dropdown relative to the input.
+  - name: ComboboxInput
+    description: Filterable text input.
+    props:
+      - name: displayValue
+        type: "(val: any) => string"
+        description: Function to format the selected value for display.
+      - name: placeholder
+        type: string
+        description: Placeholder text when empty.
+  - name: ComboboxTrigger
+    description: Toggle button to open/close the dropdown.
+  - name: ComboboxList
+    description: Dropdown list container.
+    props:
+      - name: position
+        type: "'popper' | 'item-aligned'"
+        default: "'popper'"
+        description: Positioning strategy.
+      - name: align
+        type: "'start' | 'center' | 'end'"
+        default: "'center'"
+        description: Horizontal alignment.
+      - name: sideOffset
+        type: number
+        default: '4'
+        description: Distance from anchor in pixels.
+  - name: ComboboxItem
+    description: Selectable option in the list.
+    props:
+      - name: value
+        type: T
+        required: true
+        description: The option value.
+      - name: disabled
+        type: boolean
+        description: Disable this option.
+      - name: textValue
+        type: string
+        description: Text used for filtering when content is complex.
+  - name: ComboboxItemIndicator
+    description: Checkmark indicator for the selected item.
+  - name: ComboboxGroup
+    description: Groups related options under a heading.
+    props:
+      - name: heading
+        type: string
+        description: Group heading text.
+  - name: ComboboxEmpty
+    description: Shown when no options match the filter.
+  - name: ComboboxSeparator
+    description: Visual divider between groups.
+  - name: ComboboxCancel
+    description: Button to clear the selected value.
 ---
 
 import ComboboxDemo from '../../../demos/combobox/ComboboxDemo.vue'
@@ -35,18 +91,3 @@ import ComboboxDemo from '../../../demos/combobox/ComboboxDemo.vue'
 
 <ComboboxDemo client:only="vue" />
 
-## Sub-components
-
-| Component               | Description                                                 |
-| ----------------------- | ----------------------------------------------------------- |
-| `Combobox`              | Root container with state management                        |
-| `ComboboxAnchor`        | Positions the dropdown relative to the input                |
-| `ComboboxInput`         | Filterable text input. Props: `displayValue`, `placeholder` |
-| `ComboboxTrigger`       | Toggle button to open/close                                 |
-| `ComboboxList`          | Dropdown list. Props: `position`, `align`, `sideOffset`     |
-| `ComboboxItem`          | Selectable item. Props: `value` (required), `disabled`      |
-| `ComboboxItemIndicator` | Checkmark for selected items                                |
-| `ComboboxGroup`         | Group of items. Props: `heading`                            |
-| `ComboboxEmpty`         | Empty state when no items match                             |
-| `ComboboxSeparator`     | Visual separator                                            |
-| `ComboboxCancel`        | Clear selection button                                      |

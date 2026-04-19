@@ -223,6 +223,6 @@ Enrich sub-component tables with full props, events, and slots data via frontmat
 
 ### 8.6 Interactive (3 components)
 
-- [ ] Command — CommandDialog (title, description), CommandInput, CommandList, CommandGroup (heading), CommandItem (value, disabled), CommandEmpty, CommandSeparator, CommandShortcut
-- [ ] Carousel — CarouselContent, CarouselItem, CarouselPrevious (variant, size), CarouselNext (variant, size)
-- [ ] Combobox — ComboboxAnchor, ComboboxInput (displayValue, placeholder), ComboboxTrigger, ComboboxList (position, align, sideOffset), ComboboxItem (value, disabled), ComboboxItemIndicator, ComboboxGroup (heading), ComboboxEmpty, ComboboxSeparator, ComboboxCancel
+- [x] Command — 8 sub-components (CommandDialog title/description, CommandGroup heading, CommandItem value/disabled)
+- [x] Carousel — 4 sub-components (CarouselPrevious/Next variant/size)
+- [x] Combobox — 10 sub-components (ComboboxInput displayValue, ComboboxList position/align/sideOffset, ComboboxItem value/disabled/textValue, ComboboxGroup heading)

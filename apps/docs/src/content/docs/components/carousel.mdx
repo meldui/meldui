@@ -21,6 +21,33 @@ events:
   - name: init-api
     payload: CarouselApi
     description: Emitted when the carousel API is initialized.
+subComponents:
+  - name: CarouselContent
+    description: Scrollable track container for carousel items.
+  - name: CarouselItem
+    description: Individual slide within the carousel.
+  - name: CarouselPrevious
+    description: Navigate to the previous slide.
+    props:
+      - name: variant
+        type: ButtonVariants['variant']
+        default: "'outline'"
+        description: Button style variant.
+      - name: size
+        type: ButtonVariants['size']
+        default: "'icon'"
+        description: Button size.
+  - name: CarouselNext
+    description: Navigate to the next slide.
+    props:
+      - name: variant
+        type: ButtonVariants['variant']
+        default: "'outline'"
+        description: Button style variant.
+      - name: size
+        type: ButtonVariants['size']
+        default: "'icon'"
+        description: Button size.
 ---
 
 import CarouselDemo from '../../../demos/carousel/CarouselDemo.vue'
@@ -34,12 +61,3 @@ import CarouselVerticalDemo from '../../../demos/carousel/CarouselVerticalDemo.v
 
 <CarouselVerticalDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                               |
-| ------------------ | ----------------------------------------- |
-| `Carousel`         | Root container with scroll state          |
-| `CarouselContent`  | Scrollable track for items                |
-| `CarouselItem`     | Individual slide                          |
-| `CarouselPrevious` | Previous button. Props: `variant`, `size` |
-| `CarouselNext`     | Next button. Props: `variant`, `size`     |

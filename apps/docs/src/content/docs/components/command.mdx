@@ -18,6 +18,43 @@ events:
   - name: highlight
     payload: '{ ref: HTMLElement, value: string } | undefined'
     description: Emitted when the highlighted element changes.
+subComponents:
+  - name: CommandDialog
+    description: Command palette rendered in a modal dialog.
+    props:
+      - name: title
+        type: string
+        default: "'Command Palette'"
+        description: Dialog title for accessibility.
+      - name: description
+        type: string
+        default: "'Search for a command to run...'"
+        description: Dialog description for accessibility.
+  - name: CommandInput
+    description: Search input with magnifying glass icon.
+  - name: CommandList
+    description: Scrollable list container for items and groups.
+  - name: CommandGroup
+    description: Groups related items under a heading.
+    props:
+      - name: heading
+        type: string
+        description: Group heading text.
+  - name: CommandItem
+    description: Selectable command item.
+    props:
+      - name: value
+        type: string
+        description: Value used for filtering and selection.
+      - name: disabled
+        type: boolean
+        description: Disable this item.
+  - name: CommandEmpty
+    description: Shown when no items match the search query.
+  - name: CommandSeparator
+    description: Visual divider between groups.
+  - name: CommandShortcut
+    description: Displays a keyboard shortcut hint aligned to the right.
 ---
 
 import CommandDemo from '../../../demos/command/CommandDemo.vue'
@@ -33,16 +70,3 @@ Use `CommandDialog` to render the command palette in a modal dialog:
 
 <CommandDialogDemo client:only="vue" />
 
-## Sub-components
-
-| Component          | Description                                                  |
-| ------------------ | ------------------------------------------------------------ |
-| `Command`          | Root container                                               |
-| `CommandDialog`    | Command palette in a modal. Props: `title`, `description`    |
-| `CommandInput`     | Search input with icon                                       |
-| `CommandList`      | Scrollable list container                                    |
-| `CommandGroup`     | Group of items. Props: `heading`                             |
-| `CommandItem`      | Selectable item. Props: `value`, `disabled`. Event: `select` |
-| `CommandEmpty`     | Empty state when no results match                            |
-| `CommandSeparator` | Visual separator between groups                              |
-| `CommandShortcut`  | Keyboard shortcut display                                    |
