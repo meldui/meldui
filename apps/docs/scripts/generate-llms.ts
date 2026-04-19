@@ -59,11 +59,17 @@ function parseFrontmatter(content: string): Record<string, any> {
       if (!currentArray) currentArray = []
       currentArray.push({ name: line.trim().replace('- name: ', '') })
     } else if (line.trim().startsWith('type:') && currentArray?.length) {
-      currentArray[currentArray.length - 1].type = line.trim().replace('type: ', '').replace(/^['"]|['"]$/g, '')
+      currentArray[currentArray.length - 1].type = line
+        .trim()
+        .replace('type: ', '')
+        .replace(/^['"]|['"]$/g, '')
     } else if (line.trim().startsWith('description:') && currentArray?.length) {
       currentArray[currentArray.length - 1].description = line.trim().replace('description: ', '')
     } else if (line.trim().startsWith('default:') && currentArray?.length) {
-      currentArray[currentArray.length - 1].default = line.trim().replace('default: ', '').replace(/^['"]|['"]$/g, '')
+      currentArray[currentArray.length - 1].default = line
+        .trim()
+        .replace('default: ', '')
+        .replace(/^['"]|['"]$/g, '')
     } else if (line.trim().startsWith('payload:') && currentArray?.length) {
       currentArray[currentArray.length - 1].payload = line.trim().replace('payload: ', '')
     }
@@ -148,13 +154,13 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 
 ## Packages
 
-- [@meldui/vue](${pages.find(p => p.path.includes('installation'))?.path || '/docs/getting-started/installation'}): Core UI components
-- [@meldui/tabler-vue](${pages.find(p => p.path.includes('icons'))?.path || '/docs/getting-started/icons'}): 5000+ Tabler icons with custom defaults
-- [@meldui/charts-vue](${pages.find(p => p.path.includes('charts/installation'))?.path || '/docs/charts/installation'}): Apache ECharts components
+- [@meldui/vue](${pages.find((p) => p.path.includes('installation'))?.path || '/docs/getting-started/installation'}): Core UI components
+- [@meldui/tabler-vue](${pages.find((p) => p.path.includes('icons'))?.path || '/docs/getting-started/icons'}): 5000+ Tabler icons with custom defaults
+- [@meldui/charts-vue](${pages.find((p) => p.path.includes('charts/installation'))?.path || '/docs/charts/installation'}): Apache ECharts components
 
 ## Pages
 
-${pages.map(p => `- [${p.title}](${p.path}): ${p.description}`).join('\n')}
+${pages.map((p) => `- [${p.title}](${p.path}): ${p.description}`).join('\n')}
 `
 
 writeFileSync(join(PUBLIC_DIR, 'llms.txt'), llmsTxt)
@@ -169,7 +175,8 @@ for (const page of pages) {
 
   if (page.props?.length) {
     llmsFullTxt += '### Props\n\n'
-    llmsFullTxt += '| Prop | Type | Default | Description |\n|------|------|---------|-------------|\n'
+    llmsFullTxt +=
+      '| Prop | Type | Default | Description |\n|------|------|---------|-------------|\n'
     for (const prop of page.props) {
       llmsFullTxt += `| \`${prop.name}\` | \`${prop.type}\` | ${prop.default ? `\`${prop.default}\`` : '-'} | ${prop.description} |\n`
     }

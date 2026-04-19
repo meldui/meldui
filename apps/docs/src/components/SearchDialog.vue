@@ -33,9 +33,7 @@ async function search(q: string) {
     return
   }
   const searchResult = await pagefind.value.search(q)
-  const data = await Promise.all(
-    searchResult.results.slice(0, 10).map((r: any) => r.data()),
-  )
+  const data = await Promise.all(searchResult.results.slice(0, 10).map((r: any) => r.data()))
   results.value = data.map((d: any) => ({
     url: d.url,
     title: d.meta?.title || d.url,
@@ -82,7 +80,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <CommandDialog v-model:open="open" title="Search Documentation" description="Search across all component pages, guides, and API docs.">
+  <CommandDialog
+    v-model:open="open"
+    title="Search Documentation"
+    description="Search across all component pages, guides, and API docs."
+  >
     <CommandInput v-model="query" placeholder="Search documentation..." />
     <CommandList>
       <div v-if="searchUnavailable" class="py-6 text-center text-sm text-muted-foreground">

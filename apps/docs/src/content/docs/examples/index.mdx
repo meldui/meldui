@@ -15,16 +15,29 @@ import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import {
-  Form, FormField, FormItem, FormLabel, FormControl, FormMessage,
-  Input, Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
-  Button, toast,
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  Input,
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  Button,
+  toast,
 } from '@meldui/vue'
 
-const schema = toTypedSchema(z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  role: z.enum(['admin', 'user', 'guest']),
-}))
+const schema = toTypedSchema(
+  z.object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Invalid email address'),
+    role: z.enum(['admin', 'user', 'guest']),
+  }),
+)
 
 const { handleSubmit } = useForm({ validationSchema: schema })
 
@@ -86,10 +99,19 @@ A full application layout using `SidebarProvider`, `Sidebar`, and `SidebarInset`
 ```vue
 <script setup>
 import {
-  SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter,
-  SidebarMenu, SidebarMenuItem, SidebarMenuButton,
-  SidebarGroup, SidebarGroupLabel, SidebarGroupContent,
-  SidebarTrigger, SidebarInset,
+  SidebarProvider,
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarTrigger,
+  SidebarInset,
 } from '@meldui/vue'
 import { IconHome, IconUsers, IconSettings, IconChartBar } from '@meldui/tabler-vue'
 </script>
@@ -111,14 +133,10 @@ import { IconHome, IconUsers, IconSettings, IconChartBar } from '@meldui/tabler-
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <IconUsers class="size-4" /> Users
-                </SidebarMenuButton>
+                <SidebarMenuButton> <IconUsers class="size-4" /> Users </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <IconChartBar class="size-4" /> Analytics
-                </SidebarMenuButton>
+                <SidebarMenuButton> <IconChartBar class="size-4" /> Analytics </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -127,9 +145,7 @@ import { IconHome, IconUsers, IconSettings, IconChartBar } from '@meldui/tabler-
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
-              <IconSettings class="size-4" /> Settings
-            </SidebarMenuButton>
+            <SidebarMenuButton> <IconSettings class="size-4" /> Settings </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
@@ -304,6 +320,7 @@ A complete working application built with MeldUI is available in the repository:
 **[Task Manager App](https://github.com/meldui/meldui/tree/main/apps/task-manager)**
 
 Features demonstrated:
+
 - Dashboard with stats cards and charts
 - Task CRUD with DataTable, filtering, and sorting
 - Project organization with sidebar navigation

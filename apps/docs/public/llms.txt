@@ -110,6 +110,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
 - [Relative Time](/docs/composites/relative-time): Displays a human-readable relative timestamp that updates automatically.
 - [Timeline](/docs/composites/timeline): A vertical or horizontal timeline for displaying chronological events.
+- [Common Patterns](/docs/examples): Real-world usage patterns and composition examples for building applications with MeldUI.
 - [Dark Mode](/docs/getting-started/dark-mode): How to enable and configure dark mode in your MeldUI application.
 - [Icons](/docs/getting-started/icons): MeldUI uses Tabler Icons with custom defaults for size and stroke, provided via the @meldui/tabler-vue package.
 - [Installation](/docs/getting-started/installation): How to install and configure MeldUI in your Vue 3 project.

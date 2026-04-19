@@ -110,6 +110,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
 - [Relative Time](/docs/composites/relative-time): Displays a human-readable relative timestamp that updates automatically.
 - [Timeline](/docs/composites/timeline): A vertical or horizontal timeline for displaying chronological events.
+- [Common Patterns](/docs/examples): Real-world usage patterns and composition examples for building applications with MeldUI.
 - [Dark Mode](/docs/getting-started/dark-mode): How to enable and configure dark mode in your MeldUI application.
 - [Icons](/docs/getting-started/icons): MeldUI uses Tabler Icons with custom defaults for size and stroke, provided via the @meldui/tabler-vue package.
 - [Installation](/docs/getting-started/installation): How to install and configure MeldUI in your Vue 3 project.
@@ -3223,6 +3224,341 @@ A vertical or horizontal timeline for displaying chronological events.
 | `TimelineTitle`       | Heading text for the event                                         |
 | `TimelineDescription` | Supporting description text                                        |
 | `TimelineTime`        | Timestamp display. Props: `dateTime` (string, ISO 8601)            |
+
+---
+
+## Common Patterns
+
+Real-world usage patterns and composition examples for building applications with MeldUI.
+
+## Form with Validation
+
+A complete form using `Field`, `Input`, `Select`, and `Button` with vee-validate + zod:
+
+```vue
+<script setup>
+
+
+
+
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  Input,
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  Button,
+  toast,
+} from '@meldui/vue'
+
+const schema = toTypedSchema(
+  z.object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Invalid email address'),
+    role: z.enum(['admin', 'user', 'guest']),
+  }),
+)
+
+const { handleSubmit } = useForm({ validationSchema: schema })
+
+const onSubmit = handleSubmit((values) => {
+  toast.success(`Created ${values.name}`)
+})
+</script>
+
+<template>
+  <form @submit="onSubmit" class="space-y-4 max-w-md">
+    <FormField v-slot="{ componentField }" name="name">
+      <FormItem>
+        <FormLabel>Name</FormLabel>
+        <FormControl>
+          <Input v-bind="componentField" placeholder="John Doe" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="email">
+      <FormItem>
+        <FormLabel>Email</FormLabel>
+        <FormControl>
+          <Input v-bind="componentField" type="email" placeholder="john@example.com" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="role">
+      <FormItem>
+        <FormLabel>Role</FormLabel>
+        <FormControl>
+          <Select v-bind="componentField">
+            <SelectTrigger>
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="user">User</SelectItem>
+              <SelectItem value="guest">Guest</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <Button type="submit">Create User</Button>
+  </form>
+</template>
+```
+
+## Dashboard Layout with Sidebar
+
+A full application layout using `SidebarProvider`, `Sidebar`, and `SidebarInset`:
+
+```vue
+<script setup>
+
+  SidebarProvider,
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarTrigger,
+  SidebarInset,
+} from '@meldui/vue'
+
+</script>
+
+<template>
+  <SidebarProvider>
+    <Sidebar>
+      <SidebarHeader>
+        <span class="px-2 text-lg font-bold">My App</span>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton is-active>
+                  <IconHome class="size-4" /> Dashboard
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton> <IconUsers class="size-4" /> Users </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton> <IconChartBar class="size-4" /> Analytics </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton> <IconSettings class="size-4" /> Settings </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+    <SidebarInset>
+      <header class="flex items-center gap-2 border-b p-4">
+        <SidebarTrigger />
+        <h1 class="text-lg font-semibold">Dashboard</h1>
+      </header>
+      <main class="p-6">
+        <!-- Page content -->
+      </main>
+    </SidebarInset>
+  </SidebarProvider>
+</template>
+```
+
+## Data Table with Server-Side Fetch
+
+A complete DataTable setup with API fetching, filters, and selection:
+
+```vue
+<script setup>
+
+
+
+
+
+interface User {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'user' | 'guest'
+  status: 'active' | 'inactive'
+}
+
+const helper = createColumnHelper<User>()
+
+const columns = [
+  helper.selection(),
+  helper.accessor('name', { title: 'Name', enableSorting: true }),
+  helper.accessor('email', { title: 'Email' }),
+  helper.accessor('role', {
+    title: 'Role',
+    cell: cellRenderers.badge({
+      variants: {
+        admin: { label: 'Admin', variant: 'default' },
+        user: { label: 'User', variant: 'secondary' },
+        guest: { label: 'Guest', variant: 'neutral' },
+      },
+    }),
+  }),
+  helper.accessor('status', {
+    title: 'Status',
+    cell: cellRenderers.badge({
+      variants: {
+        active: { label: 'Active', variant: 'success' },
+        inactive: { label: 'Inactive', variant: 'destructive' },
+      },
+    }),
+  }),
+  helper.actions({
+    display: 'dropdown',
+    actions: [
+      { label: 'Edit', onClick: (row) => router.push(`/users/${row.id}`) },
+      { label: 'Delete', variant: 'destructive', onClick: (row) => deleteUser(row.id) },
+    ],
+  }),
+]
+
+const filterFields: DataTableFilterField<User>[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'role', label: 'Role', type: 'select',
+    options: [
+      { label: 'Admin', value: 'admin' },
+      { label: 'User', value: 'user' },
+      { label: 'Guest', value: 'guest' },
+    ],
+  },
+  {
+    id: 'status', label: 'Status', type: 'select',
+    options: [
+      { label: 'Active', value: 'active' },
+      { label: 'Inactive', value: 'inactive' },
+    ],
+  },
+]
+
+const bulkActions: BulkActionOption<User>[] = [
+  {
+    label: 'Delete',
+    icon: IconTrash,
+    variant: 'destructive',
+    action: (rows) => deleteUsers(rows.map(r => r.id)),
+  },
+]
+
+const data = ref<User[]>([])
+const pageCount = ref(1)
+
+async function handleChange({ sorting, filters, pagination }) {
+  const response = await api.get('/users', {
+    params: { page: pagination.pageIndex + 1, per_page: pagination.pageSize, sorting, filters },
+  })
+  data.value = response.data
+  pageCount.value = response.meta.total_pages
+}
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    :on-server-side-change="handleChange"
+    :filter-fields="filterFields"
+    :bulk-select-options="bulkActions"
+    enable-row-selection
+    search-column="name"
+    search-placeholder="Search users..."
+  />
+</template>
+```
+
+## Chart Dashboard
+
+Multiple charts in a grid layout:
+
+```vue
+<script setup>
+
+
+</script>
+
+<template>
+  <div class="grid gap-4 md:grid-cols-2">
+    <Card>
+      <CardHeader>
+        <CardTitle>Revenue Trend</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <MeldLineChart :config="revenueConfig" :height="250" />
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle>Sales by Category</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <MeldBarChart :config="salesConfig" :height="250" />
+      </CardContent>
+    </Card>
+
+    <Card class="md:col-span-2">
+      <CardHeader>
+        <CardTitle>Traffic Sources</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <MeldDonutChart :config="trafficConfig" :height="300" />
+      </CardContent>
+    </Card>
+  </div>
+</template>
+```
+
+## Task Manager Example App
+
+A complete working application built with MeldUI is available in the repository:
+
+**[Task Manager App](https://github.com/meldui/meldui/tree/main/apps/task-manager)**
+
+Features demonstrated:
+
+- Dashboard with stats cards and charts
+- Task CRUD with DataTable, filtering, and sorting
+- Project organization with sidebar navigation
+- Settings with theme switching (light/dark)
+- Form validation with vee-validate + zod
+- Toast notifications with Sonner
+
+Run it locally:
+
+```bash
+pnpm dev:example
+```
 
 ---
 
