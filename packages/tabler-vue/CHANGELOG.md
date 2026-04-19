@@ -1,5 +1,11 @@
 # @meldui/tabler-vue
 
+## 0.1.6
+
+### Patch Changes
+
+- 6936474: Chore: version update
+
 ## 0.1.5
 
 ### Patch Changes

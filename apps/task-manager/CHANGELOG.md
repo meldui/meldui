@@ -1,5 +1,14 @@
 # task-manager
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [6936474]
+  - @meldui/tabler-vue@0.1.6
+  - @meldui/vue@0.1.15
+  - @meldui/charts-vue@0.1.15
+
 ## 0.1.8
 
 ### Patch Changes

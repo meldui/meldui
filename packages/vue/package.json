@@ -1,6 +1,6 @@
 {
   "name": "@meldui/vue",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "MeldUI Vue component library built on shadcn-vue",
   "keywords": [
     "components",
