@@ -6,6 +6,57 @@ subcategory: Navigation
 order: 43
 package: '@meldui/vue'
 componentName: Menubar
+subComponents:
+  - name: MenubarMenu
+    description: Container for a single menu in the bar.
+  - name: MenubarTrigger
+    description: Button that opens the menu dropdown.
+  - name: MenubarContent
+    description: The dropdown panel.
+    props:
+      - name: align
+        type: string
+        default: "'start'"
+        description: Alignment relative to trigger.
+      - name: sideOffset
+        type: number
+        default: '8'
+        description: Distance from the trigger in pixels.
+  - name: MenubarItem
+    description: A menu item.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding to align with items that have icons.
+      - name: variant
+        type: "'default' | 'destructive'"
+        description: Visual style variant.
+  - name: MenubarCheckboxItem
+    description: A checkbox menu item.
+  - name: MenubarRadioGroup
+    description: Groups radio items.
+  - name: MenubarRadioItem
+    description: A radio menu item.
+  - name: MenubarLabel
+    description: A label for a group.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding.
+  - name: MenubarSeparator
+    description: Visual divider.
+  - name: MenubarShortcut
+    description: Keyboard shortcut hint.
+  - name: MenubarSub
+    description: Container for a sub-menu.
+  - name: MenubarSubTrigger
+    description: Item that opens a sub-menu.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding.
+  - name: MenubarSubContent
+    description: The sub-menu panel.
 ---
 
 import MenubarDemo from '../../../demos/menubar/MenubarDemo.vue'
@@ -13,7 +64,3 @@ import MenubarDemo from '../../../demos/menubar/MenubarDemo.vue'
 ## Usage
 
 <MenubarDemo client:only="vue" />
-
-## Sub-components
-
-Same structure as [DropdownMenu](/docs/components/dropdown-menu) but namespaced with `Menubar` prefix. Includes `MenubarCheckboxItem`, `MenubarRadioGroup`, `MenubarRadioItem`, `MenubarSub`, `MenubarSubTrigger`, `MenubarSubContent`.

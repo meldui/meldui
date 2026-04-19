@@ -6,6 +6,60 @@ subcategory: Navigation
 order: 42
 package: '@meldui/vue'
 componentName: ContextMenu
+subComponents:
+  - name: ContextMenuTrigger
+    description: Element that opens the context menu on right-click.
+  - name: ContextMenuContent
+    description: The context menu panel.
+  - name: ContextMenuItem
+    description: A menu item.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding to align with items that have icons.
+      - name: variant
+        type: "'default' | 'destructive'"
+        default: "'default'"
+        description: Visual style variant.
+  - name: ContextMenuCheckboxItem
+    description: A checkbox menu item.
+    props:
+      - name: checked
+        type: boolean
+        description: Checked state. Use with v-model:checked.
+  - name: ContextMenuRadioGroup
+    description: Groups radio items.
+    props:
+      - name: modelValue
+        type: string
+        description: Selected value. Use with v-model.
+  - name: ContextMenuRadioItem
+    description: A radio menu item.
+    props:
+      - name: value
+        type: string
+        required: true
+        description: The value for this radio option.
+  - name: ContextMenuLabel
+    description: A label for a group.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding.
+  - name: ContextMenuSeparator
+    description: Visual divider.
+  - name: ContextMenuShortcut
+    description: Keyboard shortcut hint.
+  - name: ContextMenuSub
+    description: Container for a sub-menu.
+  - name: ContextMenuSubTrigger
+    description: Item that opens a sub-menu.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding.
+  - name: ContextMenuSubContent
+    description: The sub-menu panel.
 ---
 
 import ContextMenuDemo from '../../../demos/context-menu/ContextMenuDemo.vue'
@@ -13,7 +67,3 @@ import ContextMenuDemo from '../../../demos/context-menu/ContextMenuDemo.vue'
 ## Usage
 
 <ContextMenuDemo client:only="vue" />
-
-## Sub-components
-
-Same structure as [DropdownMenu](/docs/components/dropdown-menu) — supports `ContextMenuCheckboxItem`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`, `ContextMenuLabel`, `ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubTrigger`, and `ContextMenuSubContent`.

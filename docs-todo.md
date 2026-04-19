@@ -196,10 +196,10 @@ Enrich sub-component tables with full props, events, and slots data via frontmat
 
 ### 8.2 Navigation (4 components)
 
-- [ ] DropdownMenu — DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent
-- [ ] ContextMenu — same structure as DropdownMenu
-- [ ] Menubar — MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarSub, MenubarSubTrigger, MenubarSubContent
-- [ ] Breadcrumb — BreadcrumbList, BreadcrumbItem, BreadcrumbLink (href, asChild), BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis
+- [x] DropdownMenu — 15 sub-components with props (sideOffset, inset, variant, checked, value)
+- [x] ContextMenu — 13 sub-components with props (inset, variant, checked, value)
+- [x] Menubar — 13 sub-components with props (align, sideOffset, inset, variant)
+- [x] Breadcrumb — 6 sub-components with props (href, asChild)
 
 ### 8.3 Layout (4 components)
 

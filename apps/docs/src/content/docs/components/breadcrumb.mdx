@@ -6,6 +6,26 @@ subcategory: Navigation
 order: 40
 package: '@meldui/vue'
 componentName: Breadcrumb
+subComponents:
+  - name: BreadcrumbList
+    description: Ordered list container for breadcrumb items.
+  - name: BreadcrumbItem
+    description: Individual breadcrumb wrapper.
+  - name: BreadcrumbLink
+    description: Clickable navigation link.
+    props:
+      - name: href
+        type: string
+        description: The link URL.
+      - name: asChild
+        type: boolean
+        description: Merge props onto child element instead of rendering an anchor.
+  - name: BreadcrumbPage
+    description: Current page indicator (non-clickable, has aria-current="page").
+  - name: BreadcrumbSeparator
+    description: Separator between items (default chevron icon).
+  - name: BreadcrumbEllipsis
+    description: Collapsed items indicator (three dots).
 ---
 
 import BreadcrumbDemo from '../../../demos/breadcrumb/BreadcrumbDemo.vue'
@@ -20,15 +40,3 @@ import BreadcrumbEllipsisDemo from '../../../demos/breadcrumb/BreadcrumbEllipsis
 Use `BreadcrumbEllipsis` to indicate collapsed intermediate items.
 
 <BreadcrumbEllipsisDemo client:only="vue" />
-
-## Sub-components
-
-| Component             | Description                                |
-| --------------------- | ------------------------------------------ |
-| `Breadcrumb`          | Root `<nav>` element                       |
-| `BreadcrumbList`      | Ordered list of breadcrumb items           |
-| `BreadcrumbItem`      | Individual breadcrumb                      |
-| `BreadcrumbLink`      | Clickable link. Props: `href`, `asChild`   |
-| `BreadcrumbPage`      | Current page (non-clickable)               |
-| `BreadcrumbSeparator` | Separator between items (default: chevron) |
-| `BreadcrumbEllipsis`  | Collapsed items indicator                  |

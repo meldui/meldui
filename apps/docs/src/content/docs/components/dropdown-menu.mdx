@@ -6,6 +6,78 @@ subcategory: Navigation
 order: 41
 package: '@meldui/vue'
 componentName: DropdownMenu
+subComponents:
+  - name: DropdownMenuTrigger
+    description: Element that opens the menu. Use with as-child to merge onto your own button.
+  - name: DropdownMenuContent
+    description: The dropdown panel.
+    props:
+      - name: sideOffset
+        type: number
+        default: '4'
+        description: Distance from the trigger in pixels.
+      - name: align
+        type: "'start' | 'center' | 'end'"
+        description: Horizontal alignment relative to the trigger.
+  - name: DropdownMenuItem
+    description: A menu item.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding to align with items that have icons.
+      - name: variant
+        type: "'default' | 'destructive'"
+        default: "'default'"
+        description: Visual style variant.
+      - name: disabled
+        type: boolean
+        description: Disable the item.
+      - name: textValue
+        type: string
+        description: Text used for typeahead matching.
+  - name: DropdownMenuCheckboxItem
+    description: A checkbox menu item.
+    props:
+      - name: checked
+        type: boolean
+        description: Checked state. Use with v-model:checked.
+  - name: DropdownMenuRadioGroup
+    description: Groups radio items.
+    props:
+      - name: modelValue
+        type: string
+        description: Selected value. Use with v-model.
+  - name: DropdownMenuRadioItem
+    description: A radio menu item.
+    props:
+      - name: value
+        type: string
+        required: true
+        description: The value for this radio option.
+  - name: DropdownMenuLabel
+    description: A label for a group of items.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding to align with items that have icons.
+  - name: DropdownMenuSeparator
+    description: Visual divider between groups.
+  - name: DropdownMenuShortcut
+    description: Displays a keyboard shortcut hint.
+  - name: DropdownMenuGroup
+    description: Groups items semantically.
+  - name: DropdownMenuSub
+    description: Container for a sub-menu.
+  - name: DropdownMenuSubTrigger
+    description: Item that opens a sub-menu.
+    props:
+      - name: inset
+        type: boolean
+        description: Add left padding to align with other items.
+  - name: DropdownMenuSubContent
+    description: The sub-menu dropdown panel.
+  - name: DropdownMenuPortal
+    description: Portal for rendering menu outside the DOM hierarchy.
 ---
 
 import DropdownMenuDemo from '../../../demos/dropdown-menu/DropdownMenuDemo.vue'
@@ -20,22 +92,3 @@ import DropdownMenuCheckboxDemo from '../../../demos/dropdown-menu/DropdownMenuC
 Use `DropdownMenuCheckboxItem` for toggleable options.
 
 <DropdownMenuCheckboxDemo client:only="vue" />
-
-## Sub-components
-
-| Component                  | Description                                          |
-| -------------------------- | ---------------------------------------------------- |
-| `DropdownMenu`             | Root with open state                                 |
-| `DropdownMenuTrigger`      | Element that opens the menu                          |
-| `DropdownMenuContent`      | Menu content container. Props: `align`, `sideOffset` |
-| `DropdownMenuItem`         | Menu item. Props: `disabled`, `textValue`            |
-| `DropdownMenuCheckboxItem` | Item with checkbox. Props: `checked`                 |
-| `DropdownMenuRadioGroup`   | Radio group container. Props: `modelValue`           |
-| `DropdownMenuRadioItem`    | Radio option. Props: `value`                         |
-| `DropdownMenuLabel`        | Group label. Props: `inset`                          |
-| `DropdownMenuSeparator`    | Visual divider                                       |
-| `DropdownMenuShortcut`     | Keyboard shortcut display                            |
-| `DropdownMenuGroup`        | Groups items semantically                            |
-| `DropdownMenuSub`          | Sub-menu root                                        |
-| `DropdownMenuSubTrigger`   | Sub-menu trigger                                     |
-| `DropdownMenuSubContent`   | Sub-menu content                                     |
