@@ -1,0 +1,94 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../../../../packages/vue/src/themes/default.css';
+
+@source "../**/*.{vue,ts,tsx,js,jsx,astro,mdx}";
+@source "../../../../packages/vue/src/**/*.{vue,ts,tsx,js,jsx}";
+
+@theme inline {
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+}
+
+/* Docs-specific prose styles */
+.docs-prose {
+  h1 {
+    @apply text-3xl font-bold tracking-tight text-foreground mb-2;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold tracking-tight text-foreground mt-10 mb-4 border-b border-border pb-2;
+  }
+
+  h3 {
+    @apply text-xl font-semibold tracking-tight text-foreground mt-8 mb-3;
+  }
+
+  h4 {
+    @apply text-lg font-semibold text-foreground mt-6 mb-2;
+  }
+
+  p {
+    @apply text-base text-foreground/90 leading-7 mb-4;
+  }
+
+  a {
+    @apply text-primary underline underline-offset-4 hover:text-primary/80 transition-colors;
+  }
+
+  ul {
+    @apply list-disc pl-6 mb-4 space-y-1;
+  }
+
+  ol {
+    @apply list-decimal pl-6 mb-4 space-y-1;
+  }
+
+  li {
+    @apply text-foreground/90 leading-7;
+  }
+
+  code:not(pre code) {
+    @apply bg-muted text-foreground px-1.5 py-0.5 rounded-md text-sm font-mono;
+  }
+
+  pre {
+    @apply rounded-lg border border-border bg-muted/50 p-4 overflow-x-auto mb-4;
+  }
+
+  pre code {
+    @apply bg-transparent p-0 text-sm;
+  }
+
+  blockquote {
+    @apply border-l-4 border-primary/30 pl-4 italic text-muted-foreground my-4;
+  }
+
+  table {
+    @apply w-full border-collapse text-sm mb-6;
+  }
+
+  th {
+    @apply text-left font-semibold text-foreground px-4 py-2 border-b-2 border-border bg-muted/50;
+  }
+
+  td {
+    @apply px-4 py-2 border-b border-border text-foreground/90;
+  }
+
+  tr:last-child td {
+    @apply border-b-0;
+  }
+
+  hr {
+    @apply border-border my-8;
+  }
+
+  img {
+    @apply rounded-lg border border-border;
+  }
+}

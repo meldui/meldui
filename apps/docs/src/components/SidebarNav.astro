@@ -1,0 +1,63 @@
+---
+import type { NavItem } from '../data/navigation'
+
+interface Props {
+  group: NavItem
+  depth?: number
+}
+
+const { group, depth = 0 } = Astro.props
+const currentPath = Astro.url.pathname
+
+function isActive(href: string): boolean {
+  // Exact match or match with trailing slash
+  return currentPath === href || currentPath === href + '/'
+}
+
+function isGroupActive(item: NavItem): boolean {
+  if (item.href && isActive(item.href)) return true
+  if (item.items) return item.items.some((child) => isGroupActive(child))
+  return false
+}
+---
+
+<div>
+  {
+    group.href ? (
+      <a
+        href={group.href}
+        class:list={[
+          'block rounded-md px-2 py-1.5 text-sm transition-colors',
+          isActive(group.href)
+            ? 'bg-accent font-medium text-accent-foreground'
+            : 'text-muted-foreground hover:text-foreground',
+        ]}
+      >
+        {group.title}
+        {group.label && (
+          <span class="ml-2 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+            {group.label}
+          </span>
+        )}
+      </a>
+    ) : (
+      <div>
+        <h4
+          class:list={[
+            'mb-1 px-2 text-sm font-semibold',
+            depth === 0 ? 'text-foreground' : 'text-foreground/80',
+          ]}
+        >
+          {group.title}
+        </h4>
+        {group.items && (
+          <div class:list={['space-y-0.5', depth > 0 && 'ml-2 border-l border-border pl-2']}>
+            {group.items.map((item) => (
+              <Astro.self group={item} depth={depth + 1} />
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+</div>

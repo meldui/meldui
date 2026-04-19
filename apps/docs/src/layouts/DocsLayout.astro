@@ -1,0 +1,112 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Sidebar from '../components/Sidebar.astro'
+import TableOfContents from '../components/TableOfContents.astro'
+import PrevNext from '../components/PrevNext.astro'
+import Footer from '../components/Footer.astro'
+
+interface Props {
+  title: string
+  description: string
+  headings?: { depth: number; slug: string; text: string }[]
+}
+
+const { title, description, headings = [] } = Astro.props
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3)
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+
+  <div class="mx-auto max-w-[1440px]">
+    <div class="flex">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-[240px] shrink-0 border-r border-border lg:block"
+      >
+        <div class="h-full overflow-y-auto py-6 pl-6 pr-4 custom-scrollbar">
+          <Sidebar />
+        </div>
+      </aside>
+
+      <!-- Mobile sidebar overlay -->
+      <div
+        id="sidebar-overlay"
+        class="fixed inset-0 z-20 hidden bg-background/80 backdrop-blur-sm lg:hidden"
+      >
+      </div>
+      <aside
+        id="sidebar-mobile"
+        class="fixed top-14 left-0 z-30 hidden h-[calc(100vh-3.5rem)] w-[280px] border-r border-border bg-background lg:hidden"
+      >
+        <div class="h-full overflow-y-auto py-6 pl-6 pr-4 custom-scrollbar">
+          <Sidebar />
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="min-w-0 flex-1 lg:pl-[240px] xl:pr-[200px]">
+        <div class="mx-auto max-w-3xl px-6 py-8 lg:px-8">
+          <article class="docs-prose" data-pagefind-body>
+            <slot />
+          </article>
+
+          <PrevNext />
+        </div>
+
+        <Footer />
+      </main>
+
+      <!-- Table of Contents -->
+      {
+        tocHeadings.length > 0 && (
+          <aside class="fixed top-14 right-0 hidden h-[calc(100vh-3.5rem)] w-[200px] xl:block">
+            <div class="h-full overflow-y-auto py-8 pr-6 pl-4">
+              <TableOfContents headings={tocHeadings} />
+            </div>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+
+  <!-- Mobile sidebar toggle script -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.getElementById('sidebar-toggle')
+      const sidebar = document.getElementById('sidebar-mobile')
+      const overlay = document.getElementById('sidebar-overlay')
+
+      if (!toggle || !sidebar || !overlay) return
+
+      function open() {
+        sidebar.classList.remove('hidden')
+        overlay.classList.remove('hidden')
+        document.body.style.overflow = 'hidden'
+      }
+
+      function close() {
+        sidebar.classList.add('hidden')
+        overlay.classList.add('hidden')
+        document.body.style.overflow = ''
+      }
+
+      toggle.addEventListener('click', () => {
+        if (sidebar.classList.contains('hidden')) {
+          open()
+        } else {
+          close()
+        }
+      })
+
+      overlay.addEventListener('click', close)
+
+      // Close on navigation
+      sidebar.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', close)
+      })
+    })
+  </script>
+</BaseLayout>

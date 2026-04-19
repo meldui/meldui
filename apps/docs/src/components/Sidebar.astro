@@ -1,0 +1,8 @@
+---
+import SidebarNav from './SidebarNav.astro'
+import { navigation } from '../data/navigation'
+---
+
+<nav class="space-y-6" aria-label="Documentation navigation">
+  {navigation.map((group) => <SidebarNav group={group} />)}
+</nav>

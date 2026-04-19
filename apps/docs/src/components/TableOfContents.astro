@@ -1,0 +1,52 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[]
+}
+
+const { headings } = Astro.props
+---
+
+<nav class="space-y-1" aria-label="Table of contents">
+  <h4 class="mb-3 text-sm font-semibold text-foreground">On this page</h4>
+  {
+    headings.map((heading) => (
+      <a
+        href={`#${heading.slug}`}
+        class:list={[
+          'block text-[13px] leading-6 text-muted-foreground transition-colors hover:text-foreground',
+          heading.depth === 3 && 'pl-3',
+        ]}
+        data-toc-link
+        data-toc-slug={heading.slug}
+      >
+        {heading.text}
+      </a>
+    ))
+  }
+</nav>
+
+<script is:inline>
+  ;(function () {
+    const links = document.querySelectorAll('[data-toc-link]')
+    if (!links.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            links.forEach((l) => l.classList.remove('text-foreground', 'font-medium'))
+            const active = document.querySelector(
+              `[data-toc-slug="${entry.target.id}"]`
+            )
+            if (active) {
+              active.classList.add('text-foreground', 'font-medium')
+            }
+          }
+        }
+      },
+      { rootMargin: '0px 0px -80% 0px', threshold: 0.1 }
+    )
+
+    document.querySelectorAll('h2[id], h3[id]').forEach((el) => observer.observe(el))
+  })()
+</script>

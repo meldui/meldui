@@ -23,6 +23,7 @@
     "**/dist/**",
     "**/build/**",
     "**/.turbo/**",
-    "**/storybook-static/**"
+    "**/storybook-static/**",
+    "**/.astro/**"
   ]
 }
