@@ -1,0 +1,56 @@
+---
+title: "Data Table: Column Pinning"
+description: Pin columns to the left or right edge for horizontal scroll tables.
+category: composites
+order: 6
+package: '@meldui/vue'
+---
+
+## Column Pinning
+
+Pin columns so they stay visible when scrolling horizontally:
+
+```vue
+<DataTable
+  :columns="columns"
+  :data="data"
+  :page-count="pageCount"
+  :on-server-side-change="handleChange"
+  enable-column-pinning
+  :default-pinning="{
+    left: ['select', 'name'],
+    right: ['actions'],
+  }"
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `enableColumnPinning` | `boolean` | `false` | Enable column pinning |
+| `defaultPinning` | `{ left?: string[], right?: string[] }` | - | Initial pinned columns |
+
+## Pinning Programmatically
+
+Via template ref or the `useDataTable` composable:
+
+```typescript
+const tableRef = ref()
+
+// Pin a column
+tableRef.value?.pinColumn('email', 'left')
+
+// Unpin a column
+tableRef.value?.unpinColumn('email')
+
+// Reset all pinning
+tableRef.value?.resetPinning()
+```
+
+## Visual Behavior
+
+- Pinned columns have solid backgrounds (no content scrolling behind them)
+- Shadow separators appear at the boundary between pinned and scrollable columns
+- Pinned columns maintain their background on hover and selection states
+- Works correctly with both header and body cells

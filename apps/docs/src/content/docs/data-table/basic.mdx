@@ -1,0 +1,69 @@
+---
+title: "Data Table: Basic Usage"
+description: Setting up a basic data table with sorting, pagination, and search.
+category: composites
+order: 2
+package: '@meldui/vue'
+---
+
+import DataTableBasicDemo from '../../../demos/data-table/DataTableBasicDemo.vue'
+
+## Basic Table
+
+A minimal DataTable with columns, sorting, pagination, and a search input. The `onServerSideChange` callback fires whenever the user sorts, filters, or paginates — you fetch data from your API and update the reactive `data` and `pageCount`.
+
+<DataTableBasicDemo client:only="vue" />
+
+## Core Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `columns` | `ColumnDef<TData>[]` | required | Column definitions from `createColumnHelper` |
+| `data` | `TData[]` | required | The current page of data |
+| `pageCount` | `number` | required | Total number of pages |
+| `onServerSideChange` | `(state) => void` | required | Callback when sort/filter/page changes |
+| `searchColumn` | `string` | - | Column ID to search on |
+| `searchPlaceholder` | `string` | - | Placeholder text for search input |
+| `defaultPerPage` | `number` | `10` | Default rows per page |
+| `pageSizeOptions` | `number[]` | `[10,20,30,40,50]` | Available page size options |
+| `loading` | `boolean` | `false` | Show loading state |
+| `error` | `string` | - | Show error message |
+| `density` | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'` | Row density |
+| `maxHeight` | `string` | `'600px'` | Max height with vertical scroll |
+
+## Pagination Position
+
+```typescript
+// Show pagination at top, bottom, or both
+<DataTable pagination-position="both" />
+<DataTable pagination-position="top" />
+```
+
+## Exposed Methods
+
+Access these via a template ref:
+
+```vue
+<script setup>
+const tableRef = ref()
+
+// Reset all state
+tableRef.value?.resetAll()
+
+// Refresh current data
+tableRef.value?.refresh()
+</script>
+
+<template>
+  <DataTable ref="tableRef" ... />
+</template>
+```
+
+| Method | Description |
+|--------|-------------|
+| `resetFilters()` | Clear all active filters |
+| `resetSorting()` | Clear sorting |
+| `resetSelection()` | Deselect all rows |
+| `resetPagination()` | Go to page 1 |
+| `resetAll()` | Reset everything |
+| `refresh()` | Re-trigger the server-side callback |

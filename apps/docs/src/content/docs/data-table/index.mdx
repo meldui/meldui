@@ -1,0 +1,86 @@
+---
+title: Data Table
+description: A powerful, feature-rich data table with server-side operations, filtering, sorting, pagination, row selection, column pinning, and keyboard navigation.
+category: composites
+order: 1
+package: '@meldui/vue'
+componentName: DataTable
+---
+
+## Overview
+
+The DataTable is MeldUI's most comprehensive component, built on [TanStack Table](https://tanstack.com/table/latest) for headless table logic with a fully styled UI layer. It's designed for **server-side operations** — every user interaction (sort, filter, paginate) triggers a callback you handle.
+
+### Key Features
+
+- **Server-side first** — pagination, sorting, and filtering all trigger a single callback
+- **8 filter types** — text, select, multiselect, number, range, boolean, date, daterange
+- **Advanced filter mode** — operator-based filtering (contains, equals, greaterThan, etc.)
+- **Column helpers** — type-safe column definitions with `createColumnHelper`
+- **Cell renderers** — pre-built formatters for badge, date, currency, number, boolean
+- **Row selection** — checkbox selection with bulk actions
+- **Column pinning** — sticky left/right columns
+- **Column resizing** — drag-to-resize with onChange/onEnd modes
+- **Row expansion** — master-detail pattern
+- **Keyboard navigation** — full keyboard support
+- **Density modes** — compact, comfortable, spacious
+
+### Installation
+
+The DataTable is part of `@meldui/vue`. You also need `@tanstack/vue-table` as a peer dependency:
+
+```bash
+pnpm add @meldui/vue @tanstack/vue-table
+```
+
+### Quick Start
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { DataTable, createColumnHelper } from '@meldui/vue'
+
+interface User {
+  id: string
+  name: string
+  email: string
+  role: string
+}
+
+const helper = createColumnHelper<User>()
+
+const columns = [
+  helper.accessor('name', { title: 'Name', enableSorting: true }),
+  helper.accessor('email', { title: 'Email' }),
+  helper.accessor('role', { title: 'Role' }),
+]
+
+const data = ref([])
+const pageCount = ref(1)
+
+function handleServerSideChange({ sorting, filters, pagination }) {
+  // Fetch data from your API
+}
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    :on-server-side-change="handleServerSideChange"
+  />
+</template>
+```
+
+### Pages in this section
+
+| Page | Description |
+|------|-------------|
+| [Basic Usage](/docs/data-table/basic) | Simple table setup with sorting and pagination |
+| [Columns & Cells](/docs/data-table/columns) | Column helpers, cell renderers, and aggregations |
+| [Filtering](/docs/data-table/filtering) | Filter types, advanced mode, and operators |
+| [Selection & Actions](/docs/data-table/selection) | Row selection and bulk actions |
+| [Column Pinning](/docs/data-table/pinning) | Sticky left/right columns |
+| [Row Expansion](/docs/data-table/expansion) | Master-detail pattern |
+| [Server-Side](/docs/data-table/server-side) | Server params, response format, and URL state |

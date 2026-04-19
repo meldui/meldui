@@ -1,0 +1,129 @@
+---
+title: "Data Table: Columns & Cells"
+description: Type-safe column definitions with createColumnHelper, cell renderers, and aggregation helpers.
+category: composites
+order: 3
+package: '@meldui/vue'
+---
+
+import DataTableColumnsDemo from '../../../demos/data-table/DataTableColumnsDemo.vue'
+
+## Column Helper
+
+Use `createColumnHelper<T>()` for type-safe column definitions:
+
+<DataTableColumnsDemo client:only="vue" />
+
+## Column Types
+
+```typescript
+import { createColumnHelper } from '@meldui/vue'
+
+const helper = createColumnHelper<User>()
+
+// Accessor — bound to a data property
+helper.accessor('name', {
+  title: 'Name',
+  enableSorting: true,
+  enableHiding: true,
+  size: 200,
+  minSize: 100,
+})
+
+// Display — custom content, no data binding
+helper.display({
+  id: 'custom',
+  title: 'Custom',
+  cell: ({ row }) => h('span', row.original.name),
+})
+
+// Selection — checkbox column
+helper.selection()
+
+// Expander — expand/collapse button
+helper.expander()
+
+// Actions — dropdown or inline action buttons
+helper.actions({
+  display: 'dropdown', // or 'inline'
+  actions: [
+    { label: 'Edit', icon: IconPencil, onClick: (row) => edit(row) },
+    { label: 'Delete', icon: IconTrash, variant: 'destructive', onClick: (row) => remove(row) },
+  ],
+})
+```
+
+## Cell Renderers
+
+Pre-built formatters for common data types:
+
+```typescript
+import { cellRenderers } from '@meldui/vue'
+
+// Badge — color-coded status
+helper.accessor('status', {
+  cell: cellRenderers.badge({
+    variants: {
+      active: { label: 'Active', variant: 'success' },
+      inactive: { label: 'Inactive', variant: 'destructive' },
+    },
+  }),
+})
+
+// Currency — formatted with symbol
+helper.accessor('price', {
+  cell: cellRenderers.currency({ currency: 'USD', locale: 'en-US' }),
+})
+
+// Number — with grouping and decimals
+helper.accessor('count', {
+  cell: cellRenderers.number({ useGrouping: true, decimals: 2 }),
+})
+
+// Date — locale-aware formatting
+helper.accessor('created_at', {
+  cell: cellRenderers.date({ format: 'medium' }), // short | medium | long | full
+})
+
+// Boolean — checkmark/x display
+helper.accessor('is_active', {
+  cell: cellRenderers.boolean({ trueText: 'Yes', falseText: 'No' }),
+})
+
+// Truncate — with tooltip on overflow
+helper.accessor('description', {
+  cell: cellRenderers.truncate({ maxLength: 50 }),
+})
+```
+
+## Aggregation Helpers
+
+Add footer aggregations:
+
+```typescript
+import { aggregations } from '@meldui/vue'
+
+helper.accessor('salary', {
+  title: 'Salary',
+  cell: cellRenderers.currency({ currency: 'USD' }),
+  footer: aggregations.sum({ format: 'currency', currency: 'USD' }),
+})
+
+helper.accessor('age', {
+  footer: aggregations.average({ format: 'number', decimals: 1 }),
+})
+
+helper.accessor('id', {
+  footer: aggregations.count({ label: 'Total:' }),
+})
+```
+
+| Aggregation | Description |
+|------------|-------------|
+| `sum()` | Sum of numeric values |
+| `count()` | Row count |
+| `average()` | Mean value |
+| `min()` | Minimum value |
+| `max()` | Maximum value |
+| `range()` | Min-max range string |
+| `custom()` | Custom aggregation function |

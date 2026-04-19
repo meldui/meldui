@@ -1,0 +1,76 @@
+---
+title: "Data Table: Row Expansion"
+description: Expand rows to show detail content using the master-detail pattern.
+category: composites
+order: 7
+package: '@meldui/vue'
+---
+
+## Row Expansion
+
+Add an expander column and provide detail content via the `#expanded-row` slot:
+
+```vue
+<script setup>
+import { DataTable, createColumnHelper } from '@meldui/vue'
+
+interface Order {
+  id: string
+  customer: string
+  total: number
+  items: { name: string; qty: number; price: number }[]
+}
+
+const helper = createColumnHelper<Order>()
+
+const columns = [
+  helper.expander(),  // Adds expand/collapse chevron
+  helper.accessor('customer', { title: 'Customer' }),
+  helper.accessor('total', { title: 'Total' }),
+]
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    :on-server-side-change="handleChange"
+    enable-row-expansion
+    :get-row-can-expand="(row) => row.original.items.length > 0"
+  >
+    <template #expanded-row="{ row }">
+      <div class="p-4">
+        <h4 class="font-medium mb-2">Order Items</h4>
+        <table class="w-full text-sm">
+          <tr v-for="item in row.original.items" :key="item.name">
+            <td>{{ item.name }}</td>
+            <td>x{{ item.qty }}</td>
+            <td class="text-right">${{ item.price }}</td>
+          </tr>
+        </table>
+      </div>
+    </template>
+  </DataTable>
+</template>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `enableRowExpansion` | `boolean` | `false` | Enable row expansion |
+| `getRowCanExpand` | `(row: Row<T>) => boolean` | - | Control which rows can expand |
+
+## Programmatic Control
+
+```typescript
+const tableRef = ref()
+
+// Expand/collapse all rows
+tableRef.value?.toggleAllRowsExpanded(true)
+tableRef.value?.toggleAllRowsExpanded(false)
+
+// Reset expansion state
+tableRef.value?.resetExpanded()
+```

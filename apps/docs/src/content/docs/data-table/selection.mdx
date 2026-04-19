@@ -1,0 +1,86 @@
+---
+title: "Data Table: Selection & Actions"
+description: Row selection with checkboxes, bulk actions, and per-row action menus.
+category: composites
+order: 5
+package: '@meldui/vue'
+---
+
+import DataTableSelectionDemo from '../../../demos/data-table/DataTableSelectionDemo.vue'
+
+## Row Selection
+
+Add `enableRowSelection` and use `helper.selection()` for a checkbox column:
+
+<DataTableSelectionDemo client:only="vue" />
+
+## Bulk Actions
+
+When rows are selected, bulk action buttons appear in the toolbar:
+
+```typescript
+import type { BulkActionOption } from '@meldui/vue'
+
+const bulkActions: BulkActionOption<User>[] = [
+  {
+    label: 'Delete',
+    icon: IconTrash,
+    variant: 'destructive',
+    action: (selectedRows) => {
+      // selectedRows is User[]
+      deleteUsers(selectedRows.map(r => r.id))
+    },
+  },
+  {
+    label: 'Export CSV',
+    icon: IconDownload,
+    action: (selectedRows) => exportToCsv(selectedRows),
+  },
+]
+```
+
+## Per-Row Actions
+
+Use `helper.actions()` for row-level action menus:
+
+```typescript
+const columns = [
+  helper.accessor('name', { title: 'Name' }),
+  helper.accessor('email', { title: 'Email' }),
+  helper.actions({
+    display: 'dropdown', // or 'inline'
+    actions: [
+      {
+        label: 'Edit',
+        icon: IconPencil,
+        onClick: (row) => router.push(`/users/${row.id}/edit`),
+      },
+      {
+        label: 'Delete',
+        icon: IconTrash,
+        variant: 'destructive',
+        onClick: (row) => deleteUser(row.id),
+        // Conditionally show/disable
+        show: (row) => row.role !== 'admin',
+        disabled: (row) => row.status === 'inactive',
+      },
+    ],
+  }),
+]
+```
+
+## Accessing Selection State
+
+Via template ref:
+
+```typescript
+const tableRef = ref()
+
+// Get selected row data
+const selected = tableRef.value?.selectedRows     // User[]
+const count = tableRef.value?.selectedRowCount     // number
+const hasAny = tableRef.value?.hasSelection        // boolean
+
+// Clear selection
+tableRef.value?.resetSelection()
+```

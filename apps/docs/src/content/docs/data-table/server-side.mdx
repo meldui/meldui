@@ -1,0 +1,131 @@
+---
+title: "Data Table: Server-Side"
+description: Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
+category: composites
+order: 8
+package: '@meldui/vue'
+---
+
+## How Server-Side Works
+
+The DataTable is designed for server-side operations. Every user interaction triggers the `onServerSideChange` callback with the current table state:
+
+```typescript
+function handleServerSideChange(state: {
+  sorting: SortingState
+  filters: ColumnFiltersState
+  pagination: PaginationState
+}) {
+  // Convert to your API format
+  const params = {
+    page: state.pagination.pageIndex + 1,
+    per_page: state.pagination.pageSize,
+    sort_by: state.sorting[0]?.id,
+    sort_order: state.sorting[0]?.desc ? 'desc' : 'asc',
+    filters: state.filters,
+  }
+
+  const response = await api.get('/users', { params })
+  data.value = response.data
+  pageCount.value = response.meta.total_pages
+}
+```
+
+## Server Params Helper
+
+Use `tableStateToServerParams` to convert TanStack state to a standard format:
+
+```typescript
+import { tableStateToServerParams } from '@meldui/vue'
+import type { ServerSideTableParams } from '@meldui/vue'
+
+function handleChange(state) {
+  const params: ServerSideTableParams = tableStateToServerParams(state)
+  // params = { page, per_page, sort_by, sort_order, filters }
+}
+```
+
+### ServerSideTableParams
+
+```typescript
+interface ServerSideTableParams {
+  page: number
+  per_page: number
+  sort_by?: string
+  sort_order?: 'asc' | 'desc'
+  filters?: Record<string, ServerFilterValue>
+}
+```
+
+## Server Response Format
+
+```typescript
+interface ServerSideTableResponse<T> {
+  data: T[]
+  meta: {
+    current_page: number
+    per_page: number
+    total: number
+    total_pages: number
+  }
+}
+```
+
+## URL State Persistence
+
+Restore table state from URL query params (e.g., after page refresh or shared links):
+
+```vue
+<DataTable
+  :columns="columns"
+  :data="data"
+  :page-count="pageCount"
+  :on-server-side-change="handleChange"
+  :initial-filters="filtersFromUrl"
+  :initial-sorting="sortingFromUrl"
+  :initial-pagination="paginationFromUrl"
+/>
+```
+
+## Slots
+
+| Slot | Props | Description |
+|------|-------|-------------|
+| `#toolbar` | `{ table }` | Replace entire toolbar |
+| `#toolbar-start` | - | Add content before search |
+| `#toolbar-end` | - | Add content after search |
+| `#empty` | - | Custom empty state |
+| `#error` | `{ error }` | Custom error state |
+| `#pagination` | `{ table }` | Custom pagination |
+| `#expanded-row` | `{ row }` | Row expansion content |
+| `#cell-[columnId]` | `{ row, getValue }` | Custom cell for a specific column |
+
+## Keyboard Navigation
+
+Enable with `enableKeyboardNavigation`:
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` | Navigate rows |
+| `Space` | Select/deselect row |
+| `Enter` | Activate row (expand or trigger action) |
+| `Home` / `End` | Jump to first/last row |
+| `PageUp` / `PageDown` | Previous/next page |
+| `Ctrl+PageUp` / `Ctrl+PageDown` | First/last page |
+
+## Column Resizing
+
+```vue
+<DataTable
+  enable-column-resizing
+  column-resize-mode="onChange"  <!-- or "onEnd" -->
+/>
+```
+
+## Column Visibility
+
+```vue
+<DataTable enable-column-hiding />
+```
+
+Shows a dropdown in the toolbar to toggle column visibility.

@@ -118,9 +118,21 @@ export const navigation: NavItem[] = [
     ],
   },
   {
+    title: 'Data Table',
+    items: [
+      { title: 'Overview', href: '/docs/data-table' },
+      { title: 'Basic Usage', href: '/docs/data-table/basic' },
+      { title: 'Columns & Cells', href: '/docs/data-table/columns' },
+      { title: 'Filtering', href: '/docs/data-table/filtering' },
+      { title: 'Selection & Actions', href: '/docs/data-table/selection' },
+      { title: 'Column Pinning', href: '/docs/data-table/pinning' },
+      { title: 'Row Expansion', href: '/docs/data-table/expansion' },
+      { title: 'Server-Side', href: '/docs/data-table/server-side' },
+    ],
+  },
+  {
     title: 'Composites',
     items: [
-      { title: 'Data Table', href: '/docs/composites/data-table' },
       { title: 'Date Range Picker', href: '/docs/composites/date-range-picker' },
       { title: 'Multi Select', href: '/docs/composites/multi-select' },
       { title: 'Mention', href: '/docs/composites/mention' },

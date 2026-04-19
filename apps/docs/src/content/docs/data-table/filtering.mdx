@@ -1,0 +1,147 @@
+---
+title: "Data Table: Filtering"
+description: Configure filter types, advanced mode with operators, and custom filter fields.
+category: composites
+order: 4
+package: '@meldui/vue'
+---
+
+import DataTableFilterDemo from '../../../demos/data-table/DataTableFilterDemo.vue'
+
+## Filter Fields
+
+Pass `filterFields` to enable the filter toolbar. Each field maps to a column ID:
+
+<DataTableFilterDemo client:only="vue" />
+
+## Filter Types
+
+| Type | Description | Value Format |
+|------|-------------|-------------|
+| `text` | Text input, multi-instance with OR logic | `string[]` |
+| `select` | Single dropdown | `string` |
+| `multiselect` | Multiple checkboxes (simple mode only) | `string[]` |
+| `number` | Number input, multi-instance | `number[]` |
+| `range` | Dual slider for min/max (simple mode only) | `[min, max]` |
+| `boolean` | Toggle switch | `boolean` |
+| `date` | Date picker, multi-instance | `DateValue[]` |
+| `daterange` | Start/end date range (simple mode only) | `{ start, end }` |
+
+## Filter Field Configuration
+
+```typescript
+import type { DataTableFilterField } from '@meldui/vue'
+
+const filterFields: DataTableFilterField<User>[] = [
+  // Text filter
+  {
+    id: 'name',
+    label: 'Name',
+    type: 'text',
+    placeholder: 'Filter by name...',
+  },
+
+  // Select with options
+  {
+    id: 'role',
+    label: 'Role',
+    type: 'select',
+    options: [
+      { label: 'Admin', value: 'admin' },
+      { label: 'User', value: 'user' },
+      { label: 'Guest', value: 'guest' },
+    ],
+  },
+
+  // Multiselect (simple mode only)
+  {
+    id: 'department',
+    label: 'Department',
+    type: 'multiselect',
+    options: [
+      { label: 'Engineering', value: 'engineering' },
+      { label: 'Marketing', value: 'marketing' },
+      { label: 'Sales', value: 'sales' },
+    ],
+  },
+
+  // Number with range constraints
+  {
+    id: 'age',
+    label: 'Age',
+    type: 'number',
+    min: 18,
+    max: 100,
+  },
+
+  // Range slider
+  {
+    id: 'salary',
+    label: 'Salary',
+    type: 'range',
+    range: [0, 200000],
+    step: 5000,
+    unit: '$',
+  },
+
+  // Boolean toggle
+  {
+    id: 'is_verified',
+    label: 'Verified',
+    type: 'boolean',
+  },
+
+  // Date picker
+  {
+    id: 'created_at',
+    label: 'Created',
+    type: 'date',
+  },
+
+  // Date range
+  {
+    id: 'last_login',
+    label: 'Last Login',
+    type: 'daterange',
+  },
+]
+```
+
+## Advanced Mode
+
+Enable operator-based filtering with `advancedMode`:
+
+```vue
+<DataTable
+  :columns="columns"
+  :data="data"
+  :page-count="pageCount"
+  :on-server-side-change="handleChange"
+  :filter-fields="filterFields"
+  :advanced-mode="true"
+/>
+```
+
+In advanced mode, each filter gets an operator dropdown. Only base types are allowed (text, number, date, select, boolean — not multiselect, range, or daterange).
+
+### Available Operators
+
+| Type | Operators |
+|------|-----------|
+| **Text** | contains, equals, startsWith, endsWith, notContains, notEquals, isEmpty, isNotEmpty |
+| **Number** | equals, notEquals, greaterThan, greaterThanOrEqual, lessThan, lessThanOrEqual, between, isEmpty, isNotEmpty |
+| **Date** | is, isBefore, isAfter, isBetween, isEmpty, isNotEmpty |
+| **Select** | is, isAnyOf, isNot, isNoneOf, isEmpty, isNotEmpty |
+| **Boolean** | is, isEmpty, isNotEmpty |
+
+You can customize available operators per field:
+
+```typescript
+{
+  id: 'name',
+  label: 'Name',
+  type: 'text',
+  defaultOperator: 'contains',
+  availableOperators: ['contains', 'equals', 'startsWith'],
+}
+```
