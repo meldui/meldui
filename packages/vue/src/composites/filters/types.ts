@@ -53,9 +53,7 @@ export const COMPLEX_TO_BASE_TYPE_MAP: Record<ComplexFilterType, BaseFilterType>
  * Check if filter type is complex (simple mode only).
  * Accepts plugin-registered string types and returns false for them.
  */
-export function isComplexFilterType(
-  type: FilterType | (string & {}),
-): type is ComplexFilterType {
+export function isComplexFilterType(type: FilterType | (string & {})): type is ComplexFilterType {
   return type === 'multiselect' || type === 'range' || type === 'daterange'
 }
 
