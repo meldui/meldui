@@ -16,6 +16,7 @@ import {
   type HTMLAttributes,
   ref,
   useSlots,
+  watch,
 } from 'vue'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -32,6 +33,7 @@ import {
 } from '@/components/ui/table'
 import type { RegisteredFilterPlugin } from '@/composites/filters/filterPlugins'
 import type { DataTableFilterField } from '@/composites/filters/types'
+import { useFilters, type UseFiltersReturn } from '@/composites/filters/useFilters'
 import DataTablePagination from './DataTablePagination.vue'
 import DataTableToolbar from './DataTableToolbar.vue'
 import type { BulkActionOption, DataTableFilterState } from './types'
@@ -172,6 +174,21 @@ const errorMessage = computed(() => {
   return props.error instanceof Error ? props.error.message : props.error
 })
 
+// Filter state composable (only when enableFilter is true). Single source of truth.
+// The toolbar receives this via prop and renders <Filters :state="filtersState">.
+// Constructed BEFORE useDataTable so its filterValues getter can be passed in.
+const filtersState: UseFiltersReturn<TData> | undefined = props.enableFilter
+  ? useFilters<TData>({
+      filterFields: props.filterFields,
+      filterPlugins: props.filterPlugins,
+      advancedMode: props.advancedMode,
+      initialValues: props.initialFilters,
+      searchField: props.searchColumn
+        ? { id: props.searchColumn, placeholder: props.searchPlaceholder }
+        : undefined,
+    })
+  : undefined
+
 const tableState = useDataTable({
   data: () => props.data,
   columns: () => props.columns,
@@ -179,9 +196,9 @@ const tableState = useDataTable({
   defaultPerPage: props.defaultPerPage,
   enableRowSelection: props.enableRowSelection,
   filterFields: props.filterFields,
+  filters: filtersState ? () => filtersState.filterValues.value : undefined,
   onServerSideChange: props.onServerSideChange,
   advancedMode: props.advancedMode,
-  initialFilters: props.initialFilters,
   initialSorting: props.initialSorting,
   initialPagination: props.initialPagination,
   defaultPinning: props.defaultPinning,
@@ -194,6 +211,21 @@ const tableState = useDataTable({
 })
 
 const { table } = tableState
+
+// Reset pagination to page 0 whenever filters change.
+// `flush: 'sync'` lands the mutation BEFORE useDataTable's pre-flush
+// `[sorting, pagination, filters]` watcher runs in the same microtask, so the
+// onServerSideChange emit observes both the new filters and the reset pageIndex
+// in a single fire (replaces the old implicit reset inside onColumnFiltersChange).
+if (filtersState) {
+  watch(
+    () => filtersState.filterValues.value,
+    () => {
+      tableState.pagination.value.pageIndex = 0
+    },
+    { deep: true, flush: 'sync' },
+  )
+}
 
 // Create a reactive reference to the table instance for pinning
 const tableInstanceRef = computed(() => table)
@@ -316,6 +348,7 @@ const hasFooterSlot = computed(() => !!slots.footer)
 defineExpose({
   ...tableState,
   ...keyboardState,
+  filtersState,
 })
 </script>
 
@@ -328,14 +361,13 @@ defineExpose({
           :table="table"
           :filter-fields="filterFields"
           :filter-plugins="filterPlugins"
-          :search-placeholder="searchPlaceholder"
-          :search-column="searchColumn"
           :bulk-select-options="bulkSelectOptions"
           :advanced-mode="advancedMode"
           :loading="loading"
           :show-refresh-button="showRefreshButton"
           :enable-column-hiding="enableColumnHiding"
           :enable-filter="enableFilter"
+          :filters-state="filtersState"
           @refresh="tableState.refresh"
         >
           <!-- Pass through toolbar slots -->

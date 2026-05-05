@@ -1,6 +1,5 @@
 import {
   type ColumnDef,
-  type ColumnFiltersState,
   type ColumnPinningState,
   type ColumnResizeMode,
   type ColumnSizingState,
@@ -29,6 +28,15 @@ export interface UseDataTableProps<TData> {
   enableRowSelection?: boolean
   filterFields?: DataTableFilterField<TData>[]
   /**
+   * Optional getter for filter state. When provided, its return value is forwarded
+   * to `onServerSideChange.filters` and changes to it trigger the watcher. When
+   * omitted, `onServerSideChange.filters` fires as `{}`.
+   *
+   * Filter state is owned by `useFilters` (in `<DataTable>` when `enableFilter: true`,
+   * or by the parent app when `enableFilter: false`); `useDataTable` does not store it.
+   */
+  filters?: () => DataTableFilterState
+  /**
    * Server-side change callback. Fires whenever sorting, filters, or pagination change.
    * `filters` is a record keyed by field id; values follow the same per-type shape
    * documented on `ServerSideTableParams.filters`.
@@ -43,8 +51,9 @@ export interface UseDataTableProps<TData> {
   advancedMode?: boolean // Static mode - true for advanced, false for simple
 
   // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
-  // Note: Reset methods reset to true defaults (empty), not to initial values
-  initialFilters?: DataTableFilterState
+  // Note: Reset methods reset to true defaults (empty), not to initial values.
+  // `initialFilters` is consumed directly by `useFilters` (in `<DataTable>`); this
+  // composable does not need to know about it.
   initialSorting?: SortingState
   initialPagination?: Partial<PaginationState>
 
@@ -93,13 +102,6 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   // Initial values are used for URL state restoration (e.g., page refresh)
   // Reset methods reset to true defaults (empty), not to initial values
   const sorting = ref<SortingState>(props.initialSorting || [])
-  // TanStack internally tracks columnFilters as Array<{id, value}>.
-  // We convert from the public record shape (DataTableFilterState) on the way in.
-  const columnFilters = ref<ColumnFiltersState>(
-    props.initialFilters
-      ? Object.entries(props.initialFilters).map(([id, value]) => ({ id, value }))
-      : [],
-  )
   const columnVisibility = ref<VisibilityState>({})
   const rowSelection = ref<RowSelectionState>({})
   const pagination = ref<PaginationState>({
@@ -113,12 +115,6 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   // Handle state changes
   const onSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
     valueUpdater(updaterOrValue, sorting as Ref<SortingState>)
-  }
-
-  const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (updaterOrValue) => {
-    valueUpdater(updaterOrValue, columnFilters as Ref<ColumnFiltersState>)
-    // Reset to first page when filters change
-    pagination.value.pageIndex = 0
   }
 
   const onColumnVisibilityChange: OnChangeFn<VisibilityState> = (updaterOrValue) => {
@@ -145,7 +141,10 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     valueUpdater(updaterOrValue, expanded as Ref<ExpandedState>)
   }
 
-  // Create table instance (server-side only)
+  // Create table instance (server-side only).
+  // Note: TanStack's `columnFilters` state is intentionally not registered. Filter
+  // state is owned by `useFilters`; `manualFiltering: true` keeps TanStack from
+  // attempting any client-side filter row model regardless.
   const table = useVueTable({
     get data() {
       return resolveValue(props.data)
@@ -159,9 +158,6 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     state: {
       get sorting() {
         return sorting.value
-      },
-      get columnFilters() {
-        return columnFilters.value
       },
       get columnVisibility() {
         return columnVisibility.value
@@ -204,7 +200,6 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     getRowCanExpand: props.enableRowExpansion ? (props.getRowCanExpand ?? (() => true)) : undefined,
     // State change handlers
     onSortingChange,
-    onColumnFiltersChange,
     onColumnVisibilityChange,
     onRowSelectionChange,
     onPaginationChange,
@@ -213,23 +208,19 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     onExpandedChange,
   })
 
-  // Convert TanStack's array-shaped columnFilters into the public record shape
-  // used by `onServerSideChange.filters` and `<Filters>`'s change event.
-  const columnFiltersAsRecord = (): DataTableFilterState => {
-    const out: DataTableFilterState = {}
-    for (const cf of columnFilters.value) {
-      out[cf.id] = cf.value as DataTableFilterState[string]
-    }
-    return out
-  }
+  // Read filters from the optional getter; tracked reactively because the getter
+  // accesses `useFilters.filterValues.value` (a Vue computed) inside.
+  const readFilters = (): DataTableFilterState => props.filters?.() ?? {}
 
-  // Watch for server-side changes
+  // Watch for server-side changes. Sorting, pagination, and the filter getter
+  // are all watched; any change emits one `onServerSideChange` per microtask
+  // (Vue batches synchronous reactive updates).
   watch(
-    [sorting, columnFilters, pagination],
+    [sorting, pagination, () => readFilters()],
     () => {
       props.onServerSideChange({
         sorting: sorting.value,
-        filters: columnFiltersAsRecord(),
+        filters: readFilters(),
         pagination: pagination.value,
       })
     },
@@ -237,11 +228,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   )
 
   // Helper methods
-  // Reset methods reset to true defaults (empty), not to initial values
-  const resetFilters = () => {
-    columnFilters.value = []
-  }
-
+  // Reset methods reset to true defaults (empty), not to initial values.
+  // Filter reset lives on `filtersState` (the `useFilters` instance), not here.
   const resetSorting = () => {
     sorting.value = []
   }
@@ -258,7 +246,6 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   }
 
   const resetAll = () => {
-    resetFilters()
     resetSorting()
     resetSelection()
     resetPagination()
@@ -318,7 +305,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   }
 
   // Computed properties
-  const isFiltered = computed(() => columnFilters.value.length > 0)
+  const isFiltered = computed(() => Object.keys(readFilters()).length > 0)
   const selectedRowCount = computed(() => Object.keys(rowSelection.value).length)
   const hasSelection = computed(() => selectedRowCount.value > 0)
 
@@ -331,7 +318,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   const refresh = () => {
     props.onServerSideChange({
       sorting: sorting.value,
-      filters: columnFiltersAsRecord(),
+      filters: readFilters(),
       pagination: pagination.value,
     })
   }
@@ -339,13 +326,11 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   return {
     table,
     sorting,
-    columnFilters,
     columnVisibility,
     rowSelection,
     pagination,
     columnPinning,
     columnSizing,
-    resetFilters,
     resetSorting,
     resetSelection,
     resetPagination,

@@ -159,12 +159,104 @@ export const MOCK_USERS = generateMockUsers(100)
 // Server-Side Simulation
 // ============================================================================
 
+type FilterWithOperator = { operator: string; value: unknown }
+
+function isAdvancedFilterValue(v: unknown): v is FilterWithOperator[] {
+  return (
+    Array.isArray(v) &&
+    v.length > 0 &&
+    typeof v[0] === 'object' &&
+    v[0] !== null &&
+    'operator' in (v[0] as object)
+  )
+}
+
+function evaluateAdvancedOperator(itemValue: unknown, op: FilterWithOperator): boolean {
+  const { operator, value } = op
+
+  // Nullary operators (don't consult op.value)
+  if (operator === 'isEmpty')
+    return itemValue === null || itemValue === undefined || itemValue === ''
+  if (operator === 'isNotEmpty')
+    return !(itemValue === null || itemValue === undefined || itemValue === '')
+
+  switch (operator) {
+    // Text
+    case 'contains':
+      return String(itemValue ?? '')
+        .toLowerCase()
+        .includes(String(value ?? '').toLowerCase())
+    case 'notContains':
+      return !String(itemValue ?? '')
+        .toLowerCase()
+        .includes(String(value ?? '').toLowerCase())
+    case 'startsWith':
+      return String(itemValue ?? '')
+        .toLowerCase()
+        .startsWith(String(value ?? '').toLowerCase())
+    case 'endsWith':
+      return String(itemValue ?? '')
+        .toLowerCase()
+        .endsWith(String(value ?? '').toLowerCase())
+
+    // Equality (works for text, number, boolean, select)
+    case 'equals':
+    case 'is':
+      return itemValue === value
+    case 'notEquals':
+    case 'isNot':
+      return itemValue !== value
+
+    // Numeric ordering
+    case 'greaterThan':
+      return Number(itemValue) > Number(value)
+    case 'greaterThanOrEqual':
+      return Number(itemValue) >= Number(value)
+    case 'lessThan':
+      return Number(itemValue) < Number(value)
+    case 'lessThanOrEqual':
+      return Number(itemValue) <= Number(value)
+    case 'between': {
+      const [min, max] = value as [number, number]
+      const n = Number(itemValue)
+      return n >= min && n <= max
+    }
+
+    // Set membership (select isAnyOf / isNoneOf)
+    case 'isAnyOf':
+      return Array.isArray(value) && (value as unknown[]).includes(itemValue)
+    case 'isNoneOf':
+      return Array.isArray(value) && !(value as unknown[]).includes(itemValue)
+
+    // Date operators — left as no-ops in this mock simulator (DateValue → Date
+    // conversion is non-trivial; in a real backend this would be handled).
+    case 'isBefore':
+    case 'isAfter':
+    case 'isBetween':
+      return true
+
+    default:
+      return true
+  }
+}
+
 export function simulateServerSide(data: User[], tableState: TableState): ServerResponse {
   let filteredData = [...data]
 
   // Apply filters
   for (const [id, value] of Object.entries(tableState.filters)) {
     if (value === undefined || value === null || value === '') continue
+
+    // Advanced mode: value is an array of {operator, value} objects.
+    // Evaluate each operator against the row's field value and OR them
+    // (multi-instance per field).
+    if (isAdvancedFilterValue(value)) {
+      filteredData = filteredData.filter((user) => {
+        const fieldValue = user[id as keyof User]
+        return value.some((op) => evaluateAdvancedOperator(fieldValue, op))
+      })
+      continue
+    }
 
     switch (id) {
       case 'name':

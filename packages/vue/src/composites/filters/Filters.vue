@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="TData">
 import { IconLoader2, IconSearch, IconX } from '@meldui/tabler-vue'
-import type { Column } from '@tanstack/vue-table'
 import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -42,12 +41,6 @@ interface Props {
    * filter from a button outside the component).
    */
   state?: UseFiltersReturn<TData>
-  /**
-   * Optional resolver for a TanStack column instance by field id. When supplied, the
-   * resolved column is forwarded to plugin filter components for backwards compatibility
-   * with plugins that read column-scoped state. Built-in filters do not consume this.
-   */
-  getColumn?: (fieldId: string) => Column<TData, unknown> | undefined
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -322,7 +315,6 @@ watch(searchValue, () => {
         <component
           v-else-if="isPluginFilter(instance.field.type)"
           :is="getPlugin(instance.field.type)?.component"
-          :column="getColumn?.(instance.fieldId)"
           :title="instance.field.label"
           :placeholder="instance.field.placeholder"
           :icon="instance.field.icon"

@@ -533,6 +533,24 @@ const handleServerSideChange = (params) => {
       </td>
       <td>Custom filter plugins for extending filter types</td>
     </tr>
+    <tr>
+      <td>
+        <code>enableFilter</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>
+        Render filter UI inside the toolbar. When <code>true</code>, the DataTable
+        instantiates <code>useFilters</code> internally and exposes it via{' '}
+        <code>tableRef.value.filtersState</code>. When <code>false</code> (default),
+        the parent owns filter state via a separate <code>&lt;Filters&gt;</code>
+        component and feeds pre-filtered <code>data</code>.
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -816,10 +834,11 @@ Access via template ref:
 const tableRef = ref()
 
 // Access methods
-tableRef.value.resetFilters()
+tableRef.value.filtersState?.resetAll() // when enable-filter="true"; for external <Filters>, call resetAll on your own useFilters
 tableRef.value.resetSorting()
 tableRef.value.resetSelection()
-tableRef.value.resetAll()
+tableRef.value.resetPagination()
+tableRef.value.resetAll() // resets sorting, selection, pagination (filters owned separately)
 tableRef.value.refresh() // Trigger data reload with current state
 
 // Access state

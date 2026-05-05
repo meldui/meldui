@@ -501,6 +501,8 @@ export const DataTableExternalFilters: Story = {
   render: () => ({
     components: { Filters, DataTable },
     setup() {
+      const dataTableRef = ref<InstanceType<typeof DataTable> | null>(null)
+
       const filtersState = useFilters<User>({
         filterFields: allTypeFields,
         searchField: { id: 'q' },
@@ -516,29 +518,35 @@ export const DataTableExternalFilters: Story = {
 
       const pageCount = computed(() => localData.value.meta.total_pages)
 
+      // <DataTable :enable-filter="false"> emits onServerSideChange.filters as {}
+      // (it owns no filter state). Merge in the externally-owned filterValues
+      // here before fetching.
       const handleChange = (state: TableState) => {
         const merged: TableState = {
           ...state,
-          filters: { ...state.filters, ...filtersState.filterValues.value },
+          filters: filtersState.filterValues.value,
         }
         localData.value = simulateServerSide(MOCK_USERS, merged)
       }
 
-      const refresh = () =>
-        handleChange({
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        })
+      // On filter change, reset to page 0 by calling DataTable's exposed
+      // resetPagination(). That mutation triggers DataTable's internal
+      // [sorting, pagination, filters-getter] watcher, which fires
+      // handleChange with the reset pagination — a single fetch per
+      // filter change, with the latest filtersState merged in.
+      const handleFiltersChange = () => {
+        dataTableRef.value?.resetPagination()
+      }
 
       return {
+        dataTableRef,
         filtersState,
         fields: allTypeFields,
         localData,
         pageCount,
         handleChange,
+        handleFiltersChange,
         columns: minimalColumns,
-        onFiltersChange: refresh,
       }
     },
     template: `
@@ -547,9 +555,10 @@ export const DataTableExternalFilters: Story = {
           :state="filtersState"
           :fields="fields"
           :search-field="{ id: 'q' }"
-          @change="onFiltersChange"
+          @change="handleFiltersChange"
         />
         <DataTable
+          ref="dataTableRef"
           :columns="columns"
           :data="localData.data"
           :page-count="pageCount"
