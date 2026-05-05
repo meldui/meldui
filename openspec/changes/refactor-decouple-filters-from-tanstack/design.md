@@ -76,13 +76,13 @@ The codebase uses **server-side filtering only**: `useDataTable.ts:200` sets `ma
 
 ## Risks / Trade-offs
 
-| Risk                                                                              | Mitigation                                                                                                                                                |
-| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Plugin filters using `getColumn` to read TanStack column-scoped filter state break | Documented breaking change; migration is one-line (accept `initialValue`, emit `valueChange`). No in-repo plugin uses this; impact bounded to third-party. |
-| Pagination reset behavior diverges between `enableFilter: true/false`             | Document explicitly in the `DataTableExternalFilters` story. `enableFilter: true` resets automatically (preserving today's behavior); `false` requires the parent to call `resetPagination()`. |
-| Hoisting `useFilters` to DataTable changes setup ordering                          | Vue setup is synchronous and DataTable setup runs before its template (which contains the toolbar). The hoist is strictly safer than the previous mount-time IIFE in the toolbar. |
-| `initialFilters` URL-state restoration breaks                                     | The new path (`initialFilters` → `useFilters.initialValues` → `seedFromInitialValues()`) is shorter and uses the same `seedFromInitialValues` already shipped. Verify against existing `InitialFilters.stories.ts`. |
-| `defineExpose` shape of `<DataTable>` changes (adds `filtersState`)               | Additive only. Existing exposed members (`tableState`, `keyboardState`) unchanged.                                                                        |
+| Risk                                                                               | Mitigation                                                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Plugin filters using `getColumn` to read TanStack column-scoped filter state break | Documented breaking change; migration is one-line (accept `initialValue`, emit `valueChange`). No in-repo plugin uses this; impact bounded to third-party.                                                          |
+| Pagination reset behavior diverges between `enableFilter: true/false`              | Document explicitly in the `DataTableExternalFilters` story. `enableFilter: true` resets automatically (preserving today's behavior); `false` requires the parent to call `resetPagination()`.                      |
+| Hoisting `useFilters` to DataTable changes setup ordering                          | Vue setup is synchronous and DataTable setup runs before its template (which contains the toolbar). The hoist is strictly safer than the previous mount-time IIFE in the toolbar.                                   |
+| `initialFilters` URL-state restoration breaks                                      | The new path (`initialFilters` → `useFilters.initialValues` → `seedFromInitialValues()`) is shorter and uses the same `seedFromInitialValues` already shipped. Verify against existing `InitialFilters.stories.ts`. |
+| `defineExpose` shape of `<DataTable>` changes (adds `filtersState`)                | Additive only. Existing exposed members (`tableState`, `keyboardState`) unchanged.                                                                                                                                  |
 
 ## Migration Plan
 

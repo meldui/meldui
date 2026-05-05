@@ -59,11 +59,11 @@ tableRef.value?.refresh()
 </template>
 ```
 
-| Method                          | Description                                                                                              |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `filtersState?.resetAll()`      | Clear all active filters (only when `enable-filter="true"`; otherwise call `resetAll()` on your own `useFilters`) |
-| `resetSorting()`                | Clear sorting                                                                                            |
-| `resetSelection()`              | Deselect all rows                                                                                        |
-| `resetPagination()`             | Go to page 1                                                                                             |
-| `resetAll()`                    | Reset sorting, selection, and pagination (filters are owned separately — see above)                      |
-| `refresh()`                     | Re-trigger the server-side callback                                                                      |
+| Method                     | Description                                                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `filtersState?.resetAll()` | Clear all active filters (only when `enable-filter="true"`; otherwise call `resetAll()` on your own `useFilters`) |
+| `resetSorting()`           | Clear sorting                                                                                                     |
+| `resetSelection()`         | Deselect all rows                                                                                                 |
+| `resetPagination()`        | Go to page 1                                                                                                      |
+| `resetAll()`               | Reset sorting, selection, and pagination (filters are owned separately — see above)                               |
+| `refresh()`                | Re-trigger the server-side callback                                                                               |
