@@ -55,7 +55,7 @@ export const PinLeft: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -104,7 +104,7 @@ export const PinRight: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -153,7 +153,7 @@ export const PinBothSides: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -201,7 +201,7 @@ export const PinMultipleLeft: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -249,7 +249,7 @@ export const WithVerticalScroll: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 50 },
         }),
       )
@@ -300,7 +300,7 @@ export const ProgrammaticPinning: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -405,7 +405,7 @@ export const DataColumnsOnly: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )

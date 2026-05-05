@@ -60,7 +60,7 @@ export const ColumnResizing: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -103,7 +103,7 @@ export const ColumnResizingOnEnd: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -147,7 +147,7 @@ export const ColumnResizingWithPinning: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -201,7 +201,7 @@ export const KeyboardNavigation: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -249,7 +249,7 @@ export const KeyboardWithSelection: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -308,7 +308,7 @@ export const KeyboardRowActivation: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -366,7 +366,7 @@ export const KeyboardPageNavigation: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 5 },
         }),
       )
@@ -422,7 +422,7 @@ export const RefreshButton: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -479,7 +479,7 @@ export const ProgrammaticFocus: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -547,7 +547,7 @@ export const AllFeaturesCombined: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )

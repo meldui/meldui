@@ -75,7 +75,7 @@ export const UserManagement: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -234,6 +234,7 @@ export const UserManagement: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
           :show-selected-count="true"
           :bulk-select-options="bulkSelectOptions"
@@ -261,7 +262,7 @@ export const MinimalProduction: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -311,6 +312,7 @@ export const MinimalProduction: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
           search-column="name"
           search-placeholder="Search..."
@@ -332,7 +334,7 @@ export const AdvancedFiltering: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -454,6 +456,7 @@ export const AdvancedFiltering: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
           :show-selected-count="true"
           :bulk-select-options="bulkSelectOptions"
@@ -477,7 +480,7 @@ export const ReadOnlyTable: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 20 },
         }),
       )
@@ -523,6 +526,7 @@ export const ReadOnlyTable: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :default-per-page="20"
           search-column="name"
           search-placeholder="Find user..."
@@ -543,7 +547,7 @@ export const CompactDisplay: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 25 },
         }),
       )

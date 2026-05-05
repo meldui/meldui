@@ -61,7 +61,7 @@ export const BasicEventLogging: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -129,7 +129,7 @@ export const SortingEvents: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -184,7 +184,7 @@ export const FilterEvents: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -214,7 +214,7 @@ export const FilterEvents: Story = {
       ]
 
       const handleChange = (state: TableState) => {
-        if (state.filters.length > 0) {
+        if (Object.keys(state.filters).length > 0) {
           filterState.value = JSON.stringify(state.filters, null, 2)
         } else {
           filterState.value = 'No filters'
@@ -244,6 +244,7 @@ export const FilterEvents: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           search-column="name"
           search-placeholder="Search..."
         />
@@ -269,7 +270,7 @@ export const PaginationEvents: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -331,7 +332,7 @@ export const ServerParamsConversion: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -392,6 +393,7 @@ export const ServerParamsConversion: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
           search-column="name"
           search-placeholder="Search..."
@@ -419,7 +421,7 @@ export const SimulatedAPIRequest: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -493,7 +495,7 @@ export const DebouncedSearch: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -503,10 +505,10 @@ export const DebouncedSearch: Story = {
       // Note: The DataTable component already handles input changes efficiently.
       // This example shows how to track search requests.
       const handleChange = (state: TableState) => {
-        const searchFilter = state.filters.find((f) => f.id === 'name')
-        if (searchFilter) {
+        const searchFilter = state.filters.name
+        if (searchFilter !== undefined) {
           searchCount.value++
-          lastSearch.value = String(searchFilter.value)
+          lastSearch.value = String(searchFilter)
         }
 
         localData.value = simulateServerSide(MOCK_USERS, state)

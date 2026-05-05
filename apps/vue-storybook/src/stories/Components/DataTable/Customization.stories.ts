@@ -93,7 +93,7 @@ export const ToolbarSlots: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -156,7 +156,7 @@ export const CustomCellSlot: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -216,7 +216,7 @@ export const CustomToolbarSlot: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -280,7 +280,7 @@ export const DensityCompact: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 15 },
         }),
       )
@@ -323,7 +323,7 @@ export const DensityComfortable: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -365,7 +365,7 @@ export const DensitySpacious: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 5 },
         }),
       )
@@ -408,7 +408,7 @@ export const DensityComparison: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 5 },
         }),
       )
@@ -462,7 +462,7 @@ export const ConditionalRowClass: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -511,7 +511,7 @@ export const ConditionalRowStyle: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -558,7 +558,7 @@ export const ConditionalRowProps: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -609,7 +609,7 @@ export const CustomHeaderTheme: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -650,7 +650,7 @@ export const StripedRows: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -698,7 +698,7 @@ export const BorderedCells: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -744,7 +744,7 @@ export const ColumnHidingDisabled: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -787,7 +787,7 @@ export const ColumnHidingEnabled: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -831,7 +831,7 @@ export const ColumnHidingWithLockedColumns: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )

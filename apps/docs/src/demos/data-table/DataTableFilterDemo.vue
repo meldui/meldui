@@ -101,6 +101,7 @@ const filterFields: DataTableFilterField\u003cUser>[] = [
     :page-count="pageCount"
     :on-server-side-change="handleChange"
     :filter-fields="filterFields"
+          :enable-filter="true"
     search-column="name"
   />
 \u003c/template>`
@@ -115,6 +116,7 @@ const filterFields: DataTableFilterField\u003cUser>[] = [
         :page-count="pageCount"
         :on-server-side-change="handleChange"
         :filter-fields="filterFields"
+          :enable-filter="true"
         search-column="name"
         search-placeholder="Search users..."
       />

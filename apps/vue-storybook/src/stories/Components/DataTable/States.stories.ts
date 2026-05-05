@@ -88,7 +88,7 @@ export const LoadingToggle: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -222,7 +222,7 @@ export const ErrorWithRetry: Story = {
           loading.value = false
           localData.value = simulateServerSide(MOCK_USERS, {
             sorting: [],
-            filters: [],
+            filters: {},
             pagination: { pageIndex: 0, pageSize: 10 },
           })
         }, 1000)
@@ -378,7 +378,7 @@ export const AllStates: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )

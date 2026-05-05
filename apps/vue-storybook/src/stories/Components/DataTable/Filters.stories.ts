@@ -71,7 +71,7 @@ export const TextFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -105,6 +105,7 @@ export const TextFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
         />
       </div>
     `,
@@ -122,7 +123,7 @@ export const SelectFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -156,6 +157,7 @@ export const SelectFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
         />
       </div>
     `,
@@ -173,7 +175,7 @@ export const MultiSelectFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -206,6 +208,7 @@ export const MultiSelectFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
         />
       </div>
     `,
@@ -222,7 +225,7 @@ export const MultipleMultiSelectFilters: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -269,6 +272,7 @@ export const MultipleMultiSelectFilters: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
         />
       </div>
@@ -287,7 +291,7 @@ export const NumberFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -322,6 +326,7 @@ export const NumberFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
         />
       </div>
@@ -339,7 +344,7 @@ export const NumberFilterWithConstraints: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -377,6 +382,7 @@ export const NumberFilterWithConstraints: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
         />
       </div>
@@ -395,7 +401,7 @@ export const RangeFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -431,6 +437,7 @@ export const RangeFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
         />
       </div>
@@ -449,7 +456,7 @@ export const BooleanFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -482,6 +489,7 @@ export const BooleanFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
         />
       </div>
@@ -500,7 +508,7 @@ export const DateFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -534,6 +542,7 @@ export const DateFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
         />
       </div>
@@ -552,7 +561,7 @@ export const DateRangeFilter: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -586,6 +595,7 @@ export const DateRangeFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
         />
       </div>
@@ -604,7 +614,7 @@ export const CombinedFilters: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -658,6 +668,7 @@ export const CombinedFilters: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
           search-column="name"
           search-placeholder="Search by name..."
@@ -678,7 +689,7 @@ export const AllFilterTypes: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -762,6 +773,7 @@ export const AllFilterTypes: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :enable-row-selection="true"
           search-column="name"
           search-placeholder="Search users..."

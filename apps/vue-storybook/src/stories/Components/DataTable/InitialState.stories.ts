@@ -15,9 +15,9 @@
  */
 
 import { IconBuilding, IconShield } from '@meldui/tabler-vue'
-import { DataTable, type DataTableFilterField } from '@meldui/vue'
+import { DataTable, type DataTableFilterField, type DataTableFilterState } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/vue-table'
+import type { PaginationState, SortingState } from '@tanstack/vue-table'
 import { computed, ref } from 'vue'
 import {
   departmentOptions,
@@ -128,7 +128,7 @@ export const InitialSortingAsc: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: initialSorting,
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -179,7 +179,7 @@ export const InitialSortingDesc: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: initialSorting,
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -238,7 +238,7 @@ export const InitialPaginationPage: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 2, pageSize: 10 },
         }),
       )
@@ -295,7 +295,7 @@ export const InitialPaginationPageSize: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 20 },
         }),
       )
@@ -354,7 +354,7 @@ export const SortingAndPagination: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: initialSorting,
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 1, pageSize: 20 },
         }),
       )
@@ -422,12 +422,12 @@ export const FullURLStateRestoration: Story = {
         pageSize: Number(simulatedURLParams.per_page || 10),
       }
 
-      const initialFilters: ColumnFiltersState = []
+      const initialFilters: DataTableFilterState = {}
       if (simulatedURLParams.role) {
-        initialFilters.push({ id: 'role', value: simulatedURLParams.role })
+        initialFilters.role = simulatedURLParams.role
       }
       if (simulatedURLParams.department) {
-        initialFilters.push({ id: 'department', value: [simulatedURLParams.department] })
+        initialFilters.department = [simulatedURLParams.department]
       }
 
       const localData = ref(
@@ -514,6 +514,7 @@ export const FullURLStateRestoration: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-sorting="initialSorting"
           :initial-pagination="initialPagination"
           :initial-filters="initialFilters"
@@ -558,7 +559,7 @@ export const URLParsingPattern: Story = {
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
           sorting: initialSorting,
-          filters: [],
+          filters: {},
           pagination: {
             pageIndex: initialPagination.pageIndex ?? 0,
             pageSize: initialPagination.pageSize ?? 10,

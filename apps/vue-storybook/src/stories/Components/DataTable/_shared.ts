@@ -7,6 +7,7 @@ import {
   Badge,
   Button,
   createColumnHelper,
+  type DataTableFilterState,
   DataTableColumnHeader,
   DropdownMenu,
   DropdownMenuContent,
@@ -15,14 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@meldui/vue'
-import type {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-  Table,
-} from '@tanstack/vue-table'
+import type { Column, ColumnDef, PaginationState, SortingState, Table } from '@tanstack/vue-table'
 import { type Component, h } from 'vue'
 
 // ============================================================================
@@ -46,7 +40,7 @@ export interface User {
 
 export interface TableState {
   sorting: SortingState
-  filters: ColumnFiltersState
+  filters: DataTableFilterState
   pagination: PaginationState
 }
 
@@ -169,9 +163,8 @@ export function simulateServerSide(data: User[], tableState: TableState): Server
   let filteredData = [...data]
 
   // Apply filters
-  tableState.filters.forEach((filter) => {
-    const { id, value } = filter
-    if (value === undefined || value === null || value === '') return
+  for (const [id, value] of Object.entries(tableState.filters)) {
+    if (value === undefined || value === null || value === '') continue
 
     switch (id) {
       case 'name':
@@ -227,7 +220,7 @@ export function simulateServerSide(data: User[], tableState: TableState): Server
         }
         break
     }
-  })
+  }
 
   // Apply sorting
   if (tableState.sorting.length > 0) {

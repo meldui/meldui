@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import type { FilterOption } from '../useDataTable'
+import type { FilterOption } from '../types'
 import { getFilterIcon } from './filter-icons'
 
 interface Props {
@@ -25,6 +25,7 @@ interface Props {
   icon?: Component
   defaultOpen?: boolean
   openTrigger?: number
+  initialValue?: string[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -40,7 +41,10 @@ const emit = defineEmits<{
 
 const isOpen = ref(props.defaultOpen)
 
-// Watch openTrigger to programmatically reopen the filter
+const appliedValue = ref<string[] | undefined>(
+  props.initialValue && props.initialValue.length > 0 ? [...props.initialValue] : undefined,
+)
+
 watch(
   () => props.openTrigger,
   (newValue, oldValue) => {
@@ -50,37 +54,31 @@ watch(
   },
 )
 
-// Watch popover close to emit close event
 watch(isOpen, (newValue, oldValue) => {
   if (oldValue && !newValue) {
-    // Popover closed - emit close event
     emit('close')
   }
 })
 
-const facets = computed(() => props.column?.getFacetedUniqueValues())
-const selectedValues = computed(() => new Set(props.column?.getFilterValue() as string[]))
+const selectedValues = computed(() => new Set(appliedValue.value ?? []))
 
 const isFiltered = computed(() => selectedValues.value.size > 0)
 
 const handleSelect = (value: string) => {
-  const filterValue = props.column?.getFilterValue() as string[] | undefined
-  const newSelectedValues = new Set(filterValue)
-
-  if (newSelectedValues.has(value)) {
-    newSelectedValues.delete(value)
+  const next = new Set(appliedValue.value ?? [])
+  if (next.has(value)) {
+    next.delete(value)
   } else {
-    newSelectedValues.add(value)
+    next.add(value)
   }
-
-  const filterValues = Array.from(newSelectedValues)
-  const newValue = filterValues.length ? filterValues : undefined
-  props.column?.setFilterValue(newValue)
+  const arr = Array.from(next)
+  const newValue = arr.length ? arr : undefined
+  appliedValue.value = newValue
   emit('valueChange', newValue)
 }
 
 const clearFilters = () => {
-  props.column?.setFilterValue(undefined)
+  appliedValue.value = undefined
   emit('valueChange', undefined)
   emit('remove')
 }
@@ -157,12 +155,6 @@ const clearFilters = () => {
                   class="mr-2 h-4 w-4 text-muted-foreground"
                 />
                 <span>{{ option.label }}</span>
-                <span
-                  v-if="facets?.get(option.value)"
-                  class="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs"
-                >
-                  {{ facets.get(option.value) }}
-                </span>
               </CommandItem>
             </CommandGroup>
             <!-- Clear button inside popover -->

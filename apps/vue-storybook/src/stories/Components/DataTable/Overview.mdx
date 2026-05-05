@@ -264,10 +264,10 @@ const handleServerSideChange = (params) => {
         <code>initialFilters</code>
       </td>
       <td>
-        <code>ColumnFiltersState</code>
+        <code>DataTableFilterState</code>
       </td>
       <td>
-        <code>[]</code>
+        <code>{}</code>
       </td>
       <td>Initial filter values for URL state restoration</td>
     </tr>
@@ -840,8 +840,8 @@ Use `initialFilters`, `initialSorting`, and `initialPagination` to restore table
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { DataTable } from '@meldui/vue'
-import type { ColumnFiltersState, SortingState, PaginationState } from '@tanstack/vue-table'
+import { DataTable, type DataTableFilterState } from '@meldui/vue'
+import type { SortingState, PaginationState } from '@tanstack/vue-table'
 
 const route = useRoute()
 
@@ -862,14 +862,14 @@ const initialSorting = computed<SortingState>(() => {
   }]
 })
 
-// Parse filters from URL
-const initialFilters = computed<ColumnFiltersState>(() => {
-  const filters: ColumnFiltersState = []
+// Parse filters from URL — keyed by field id, value follows the per-type shape
+const initialFilters = computed<DataTableFilterState>(() => {
+  const filters: DataTableFilterState = {}
   if (route.query.status) {
-    filters.push({ id: 'status', value: [route.query.status] })
+    filters.status = [String(route.query.status)] // multiselect → string[]
   }
   if (route.query.role) {
-    filters.push({ id: 'role', value: route.query.role })
+    filters.role = String(route.query.role) // select → string
   }
   return filters
 })

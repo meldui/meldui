@@ -15,46 +15,11 @@ import {
   useVueTable,
   type VisibilityState,
 } from '@tanstack/vue-table'
-import { type Component, computed, type Ref, ref, watch } from 'vue'
+import { computed, type Ref, ref, watch } from 'vue'
 import { valueUpdater } from '@/components/ui/table/utils'
-import type { FilterOperator, FilterType } from './types'
-import { isComplexFilterType } from './types'
-
-export interface FilterOption {
-  label: string
-  value: string
-  icon?: Component
-}
-
-export interface DataTableFilterField<TData> {
-  id: keyof TData
-  label: string
-  placeholder?: string
-  /**
-   * Filter type - can be a built-in type or a custom plugin type string
-   * Built-in types: text, number, date, select, boolean, multiselect, range, daterange
-   * Custom types: any string registered via filterPlugins
-   */
-  type: FilterType | (string & {}) // All 8 built-in types OR custom plugin type
-  options?: FilterOption[] // For select/multiselect
-  icon?: Component
-
-  // Number-specific
-  min?: number
-  max?: number
-  step?: number
-  unit?: string
-
-  // Range-specific (for range and daterange types)
-  range?: [number, number] // Min/max bounds for range slider
-
-  // Advanced mode configuration
-  defaultOperator?: FilterOperator // Override default operator
-  availableOperators?: FilterOperator[] // Limit available operators
-
-  // Allow additional custom properties for plugin filters
-  [key: string]: unknown
-}
+import type { DataTableFilterField } from '@/composites/filters/types'
+import { isComplexFilterType } from '@/composites/filters/types'
+import type { DataTableFilterState } from './types'
 
 export interface UseDataTableProps<TData> {
   data: TData[] | (() => TData[])
@@ -63,18 +28,23 @@ export interface UseDataTableProps<TData> {
   defaultPerPage?: number
   enableRowSelection?: boolean
   filterFields?: DataTableFilterField<TData>[]
+  /**
+   * Server-side change callback. Fires whenever sorting, filters, or pagination change.
+   * `filters` is a record keyed by field id; values follow the same per-type shape
+   * documented on `ServerSideTableParams.filters`.
+   */
   onServerSideChange: (params: {
     sorting: SortingState
-    filters: ColumnFiltersState
+    filters: DataTableFilterState
     pagination: PaginationState
-  }) => void // Required for server-side mode
+  }) => void
 
   // Advanced mode configuration (static - never changes after init)
   advancedMode?: boolean // Static mode - true for advanced, false for simple
 
   // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
   // Note: Reset methods reset to true defaults (empty), not to initial values
-  initialFilters?: ColumnFiltersState
+  initialFilters?: DataTableFilterState
   initialSorting?: SortingState
   initialPagination?: Partial<PaginationState>
 
@@ -123,7 +93,13 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   // Initial values are used for URL state restoration (e.g., page refresh)
   // Reset methods reset to true defaults (empty), not to initial values
   const sorting = ref<SortingState>(props.initialSorting || [])
-  const columnFilters = ref<ColumnFiltersState>(props.initialFilters || [])
+  // TanStack internally tracks columnFilters as Array<{id, value}>.
+  // We convert from the public record shape (DataTableFilterState) on the way in.
+  const columnFilters = ref<ColumnFiltersState>(
+    props.initialFilters
+      ? Object.entries(props.initialFilters).map(([id, value]) => ({ id, value }))
+      : [],
+  )
   const columnVisibility = ref<VisibilityState>({})
   const rowSelection = ref<RowSelectionState>({})
   const pagination = ref<PaginationState>({
@@ -237,13 +213,23 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     onExpandedChange,
   })
 
+  // Convert TanStack's array-shaped columnFilters into the public record shape
+  // used by `onServerSideChange.filters` and `<Filters>`'s change event.
+  const columnFiltersAsRecord = (): DataTableFilterState => {
+    const out: DataTableFilterState = {}
+    for (const cf of columnFilters.value) {
+      out[cf.id] = cf.value as DataTableFilterState[string]
+    }
+    return out
+  }
+
   // Watch for server-side changes
   watch(
     [sorting, columnFilters, pagination],
     () => {
       props.onServerSideChange({
         sorting: sorting.value,
-        filters: columnFilters.value,
+        filters: columnFiltersAsRecord(),
         pagination: pagination.value,
       })
     },
@@ -345,7 +331,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   const refresh = () => {
     props.onServerSideChange({
       sorting: sorting.value,
-      filters: columnFilters.value,
+      filters: columnFiltersAsRecord(),
       pagination: pagination.value,
     })
   }

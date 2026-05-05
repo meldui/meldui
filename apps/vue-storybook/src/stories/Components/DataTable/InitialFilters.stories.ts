@@ -23,9 +23,8 @@ import {
   IconMapPin,
   IconShield,
 } from '@meldui/tabler-vue'
-import { DataTable, type DataTableFilterField } from '@meldui/vue'
+import { DataTable, type DataTableFilterField, type DataTableFilterState } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import type { ColumnFiltersState } from '@tanstack/vue-table'
 import { computed, ref } from 'vue'
 import {
   departmentOptions,
@@ -85,7 +84,7 @@ export const SimpleTextFilter: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: email contains "john"
-      const initialFilters: ColumnFiltersState = [{ id: 'email', value: ['john'] }]
+      const initialFilters: DataTableFilterState = { email: ['john'] }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -131,6 +130,7 @@ export const SimpleTextFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
         />
       </div>
@@ -147,7 +147,7 @@ export const SimpleSelectFilter: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: role is "admin"
-      const initialFilters: ColumnFiltersState = [{ id: 'role', value: 'admin' }]
+      const initialFilters: DataTableFilterState = { role: 'admin' }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -194,6 +194,7 @@ export const SimpleSelectFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
         />
       </div>
@@ -210,7 +211,7 @@ export const SimpleMultiselectFilter: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: status is "active" OR "inactive" (both selected)
-      const initialFilters: ColumnFiltersState = [{ id: 'status', value: ['active'] }]
+      const initialFilters: DataTableFilterState = { status: ['active'] }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -255,6 +256,7 @@ export const SimpleMultiselectFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
         />
       </div>
@@ -271,7 +273,7 @@ export const SimpleBooleanFilter: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: is_verified is true
-      const initialFilters: ColumnFiltersState = [{ id: 'is_verified', value: true }]
+      const initialFilters: DataTableFilterState = { is_verified: true }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -316,6 +318,7 @@ export const SimpleBooleanFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :enable-row-selection="true"
         />
@@ -333,10 +336,10 @@ export const SimpleMultipleFilters: Story = {
     components: { DataTable },
     setup() {
       // Multiple initial filters - simulating URL: ?role=user&department=Engineering&department=Design
-      const initialFilters: ColumnFiltersState = [
-        { id: 'role', value: 'user' },
-        { id: 'department', value: ['Engineering', 'Design'] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        role: 'user',
+        department: ['Engineering', 'Design'],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -397,6 +400,7 @@ export const SimpleMultipleFilters: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :enable-row-selection="true"
         />
@@ -417,9 +421,9 @@ export const AdvancedTextFilter: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: email contains "smith" (advanced mode format)
-      const initialFilters: ColumnFiltersState = [
-        { id: 'email', value: [{ operator: 'contains', value: 'smith' }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        email: [{ operator: 'contains', value: 'smith' }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -467,6 +471,7 @@ export const AdvancedTextFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
         />
@@ -483,9 +488,9 @@ export const AdvancedTextStartsWith: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: email startsWith "john"
-      const initialFilters: ColumnFiltersState = [
-        { id: 'email', value: [{ operator: 'startsWith', value: 'john' }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        email: [{ operator: 'startsWith', value: 'john' }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -531,6 +536,7 @@ export const AdvancedTextStartsWith: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
         />
@@ -547,9 +553,9 @@ export const AdvancedNumberFilter: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: age greaterThan 40
-      const initialFilters: ColumnFiltersState = [
-        { id: 'age', value: [{ operator: 'greaterThan', value: 40 }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        age: [{ operator: 'greaterThan', value: 40 }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -597,6 +603,7 @@ export const AdvancedNumberFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
           :enable-row-selection="true"
@@ -614,9 +621,9 @@ export const AdvancedNumberBetween: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: salary between 50000 and 100000
-      const initialFilters: ColumnFiltersState = [
-        { id: 'salary', value: [{ operator: 'between', value: [50000, 100000] }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        salary: [{ operator: 'between', value: [50000, 100000] }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -664,6 +671,7 @@ export const AdvancedNumberBetween: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
           :enable-row-selection="true"
@@ -681,9 +689,9 @@ export const AdvancedSelectIsAnyOf: Story = {
     components: { DataTable },
     setup() {
       // Initial filter: role isAnyOf ["admin", "user"]
-      const initialFilters: ColumnFiltersState = [
-        { id: 'role', value: [{ operator: 'isAnyOf', value: ['admin', 'user'] }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        role: [{ operator: 'isAnyOf', value: ['admin', 'user'] }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -732,6 +740,7 @@ export const AdvancedSelectIsAnyOf: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
         />
@@ -749,11 +758,11 @@ export const AdvancedMultipleFilters: Story = {
     components: { DataTable },
     setup() {
       // Complex filter state: email startsWith "j" AND age > 30 AND role is admin or user
-      const initialFilters: ColumnFiltersState = [
-        { id: 'email', value: [{ operator: 'startsWith', value: 'j' }] },
-        { id: 'age', value: [{ operator: 'greaterThan', value: 30 }] },
-        { id: 'role', value: [{ operator: 'isAnyOf', value: ['admin', 'user'] }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        email: [{ operator: 'startsWith', value: 'j' }],
+        age: [{ operator: 'greaterThan', value: 30 }],
+        role: [{ operator: 'isAnyOf', value: ['admin', 'user'] }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -815,6 +824,7 @@ export const AdvancedMultipleFilters: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
           :enable-row-selection="true"
@@ -845,16 +855,16 @@ export const URLStateRestoration: Story = {
       }
 
       // Build initialFilters from URL params
-      const initialFilters: ColumnFiltersState = []
+      const initialFilters: DataTableFilterState = {}
 
       if (simulatedURLParams.email) {
-        initialFilters.push({ id: 'email', value: [simulatedURLParams.email] })
+        initialFilters.email = [simulatedURLParams.email]
       }
       if (simulatedURLParams.role) {
-        initialFilters.push({ id: 'role', value: simulatedURLParams.role })
+        initialFilters.role = simulatedURLParams.role
       }
       if (simulatedURLParams.verified) {
-        initialFilters.push({ id: 'is_verified', value: simulatedURLParams.verified === 'true' })
+        initialFilters.is_verified = simulatedURLParams.verified === 'true'
       }
 
       const localData = ref(
@@ -923,6 +933,7 @@ export const URLStateRestoration: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :enable-row-selection="true"
         />
@@ -945,7 +956,7 @@ export const InitialSearchFilter: Story = {
     setup() {
       // Initial filter for the search column (name)
       // Note: search filter uses plain string value, not wrapped in array
-      const initialFilters: ColumnFiltersState = [{ id: 'name', value: 'John' }]
+      const initialFilters: DataTableFilterState = { name: 'John' }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -999,11 +1010,11 @@ export const SearchWithOtherFilters: Story = {
     components: { DataTable },
     setup() {
       // URL: ?search=John&role=admin&status=active
-      const initialFilters: ColumnFiltersState = [
-        { id: 'name', value: 'John' }, // Search filter (plain string)
-        { id: 'role', value: 'admin' }, // Select filter
-        { id: 'status', value: ['active'] }, // Multiselect filter
-      ]
+      const initialFilters: DataTableFilterState = {
+        name: 'John', // Search filter (plain string)
+        role: 'admin', // Select filter
+        status: ['active'], // Multiselect filter
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -1058,6 +1069,7 @@ export const SearchWithOtherFilters: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           search-column="name"
           search-placeholder="Search by name..."
@@ -1083,7 +1095,7 @@ export const SimpleDateFilter: Story = {
       // Initial filter: created_at is December 1, 2024
       // CalendarDate uses (year, month, day) format
       const initialDate = new CalendarDate(2024, 12, 1)
-      const initialFilters: ColumnFiltersState = [{ id: 'created_at', value: [initialDate] }]
+      const initialFilters: DataTableFilterState = { created_at: [initialDate] }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -1131,6 +1143,7 @@ export const SimpleDateFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :enable-row-selection="true"
         />
@@ -1149,9 +1162,9 @@ export const AdvancedDateIsAfter: Story = {
     setup() {
       // Initial filter: created_at is after November 15, 2024
       const initialDate = new CalendarDate(2024, 11, 15)
-      const initialFilters: ColumnFiltersState = [
-        { id: 'created_at', value: [{ operator: 'isAfter', value: initialDate }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        created_at: [{ operator: 'isAfter', value: initialDate }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -1199,6 +1212,7 @@ export const AdvancedDateIsAfter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
           :enable-row-selection="true"
@@ -1219,9 +1233,9 @@ export const AdvancedDateIsBetween: Story = {
       // Initial filter: created_at is between Nov 1 and Dec 15, 2024
       const startDate = new CalendarDate(2024, 11, 1)
       const endDate = new CalendarDate(2024, 12, 15)
-      const initialFilters: ColumnFiltersState = [
-        { id: 'created_at', value: [{ operator: 'isBetween', value: [startDate, endDate] }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        created_at: [{ operator: 'isBetween', value: [startDate, endDate] }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -1269,6 +1283,7 @@ export const AdvancedDateIsBetween: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :advanced-mode="true"
           :enable-row-selection="true"
@@ -1293,9 +1308,9 @@ export const SimpleDateRangeFilter: Story = {
       // Initial filter: last_login_at range from Nov 1 to Dec 15, 2024
       const startDate = new CalendarDate(2024, 11, 1)
       const endDate = new CalendarDate(2024, 12, 15)
-      const initialFilters: ColumnFiltersState = [
-        { id: 'last_login_at', value: [{ start: startDate, end: endDate }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        last_login_at: [{ start: startDate, end: endDate }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -1343,6 +1358,7 @@ export const SimpleDateRangeFilter: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :enable-row-selection="true"
         />
@@ -1364,10 +1380,10 @@ export const CombinedDateFilters: Story = {
       const loginStart = new CalendarDate(2024, 11, 1)
       const loginEnd = new CalendarDate(2024, 12, 31)
 
-      const initialFilters: ColumnFiltersState = [
-        { id: 'created_at', value: [createdDate] },
-        { id: 'last_login_at', value: [{ start: loginStart, end: loginEnd }] },
-      ]
+      const initialFilters: DataTableFilterState = {
+        created_at: [createdDate],
+        last_login_at: [{ start: loginStart, end: loginEnd }],
+      }
 
       const localData = ref(
         simulateServerSide(MOCK_USERS, {
@@ -1421,6 +1437,7 @@ export const CombinedDateFilters: Story = {
           :page-count="pageCount"
           :on-server-side-change="handleChange"
           :filter-fields="filterFields"
+          :enable-filter="true"
           :initial-filters="initialFilters"
           :enable-row-selection="true"
         />

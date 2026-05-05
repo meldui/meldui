@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { getFilterIcon } from './filters/filter-icons'
-import type { DataTableFilterField } from './useDataTable'
+import type { DataTableFilterField } from './types'
 
 interface Props {
   filterFields: DataTableFilterField<TData>[]

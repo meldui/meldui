@@ -20,6 +20,7 @@ import {
   DataTable,
   DataTableColumnHeader,
   DataTableFilterField,
+  type DataTableFilterState,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -37,7 +38,6 @@ import {
 import type {
   CellContext,
   ColumnDef,
-  ColumnFiltersState,
   HeaderContext,
   PaginationState,
   SortingState,
@@ -57,7 +57,7 @@ const isCreateDialogOpen = ref(false)
 // Table state interface
 interface TableState {
   sorting: SortingState
-  filters: ColumnFiltersState
+  filters: DataTableFilterState
   pagination: PaginationState
 }
 
@@ -77,9 +77,8 @@ function simulateServerSide(data: Task[], tableState: TableState): ServerRespons
   let filteredData = [...data]
 
   // Apply filters
-  tableState.filters.forEach((filter: { id: string; value: unknown }) => {
-    const { id, value } = filter
-    if (value === undefined || value === null || value === '') return
+  for (const [id, value] of Object.entries(tableState.filters)) {
+    if (value === undefined || value === null || value === '') continue
 
     switch (id) {
       case 'title':
@@ -93,26 +92,26 @@ function simulateServerSide(data: Task[], tableState: TableState): ServerRespons
         break
 
       case 'status': {
-        const values = Array.isArray(value) ? value : [value]
+        const values = (Array.isArray(value) ? value : [value]) as string[]
         filteredData = filteredData.filter((task) => values.includes(task.status))
         break
       }
 
       case 'priority': {
-        const values = Array.isArray(value) ? value : [value]
+        const values = (Array.isArray(value) ? value : [value]) as string[]
         filteredData = filteredData.filter((task) => values.includes(task.priority))
         break
       }
 
       case 'projectId': {
-        const values = Array.isArray(value) ? value : [value]
+        const values = (Array.isArray(value) ? value : [value]) as string[]
         filteredData = filteredData.filter((task) =>
           task.projectId ? values.includes(task.projectId) : values.includes('none'),
         )
         break
       }
     }
-  })
+  }
 
   // Apply sorting
   if (tableState.sorting.length > 0) {
@@ -157,7 +156,7 @@ const dataTableRef = ref<InstanceType<typeof DataTable> | null>(null)
 const serverData = ref<ServerResponse>(
   simulateServerSide(allTasks.value, {
     sorting: [],
-    filters: [],
+    filters: {},
     pagination: { pageIndex: 0, pageSize: 10 },
   }),
 )

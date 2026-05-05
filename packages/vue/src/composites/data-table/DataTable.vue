@@ -3,7 +3,6 @@ import { IconAlertCircle, IconRefresh } from '@meldui/tabler-vue'
 import {
   type Cell,
   type ColumnDef,
-  type ColumnFiltersState,
   type ColumnPinningState,
   FlexRender,
   type PaginationState,
@@ -15,7 +14,6 @@ import {
   type CSSProperties,
   computed,
   type HTMLAttributes,
-  nextTick,
   ref,
   useSlots,
 } from 'vue'
@@ -32,11 +30,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import type { RegisteredFilterPlugin } from '@/composites/filters/filterPlugins'
+import type { DataTableFilterField } from '@/composites/filters/types'
 import DataTablePagination from './DataTablePagination.vue'
 import DataTableToolbar from './DataTableToolbar.vue'
-import type { RegisteredFilterPlugin } from './filterPlugins'
-import type { BulkActionOption } from './types'
-import { type DataTableFilterField, useDataTable } from './useDataTable'
+import type { BulkActionOption, DataTableFilterState } from './types'
+import { useDataTable } from './useDataTable'
 import { usePinnedColumns } from './usePinnedColumns'
 import { useTableKeyboard } from './useTableKeyboard'
 
@@ -50,7 +49,7 @@ interface Props {
   pageCount: number
   onServerSideChange: (params: {
     sorting: SortingState
-    filters: ColumnFiltersState
+    filters: DataTableFilterState
     pagination: PaginationState
   }) => void
   // Feature toggles
@@ -82,7 +81,7 @@ interface Props {
   advancedMode?: boolean
   // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
   // Note: Reset methods reset to true defaults (empty), not to initial values
-  initialFilters?: ColumnFiltersState
+  initialFilters?: DataTableFilterState
   initialSorting?: SortingState
   initialPagination?: Partial<PaginationState>
   // Column pinning
@@ -112,6 +111,15 @@ interface Props {
   getRowCanExpand?: (row: Row<TData>) => boolean
   // Custom filter plugins
   filterPlugins?: RegisteredFilterPlugin[]
+  /**
+   * Render filter UI inside the toolbar (default: true).
+   * When false, the parent owns filter state via a separate `<Filters>` component
+   * and feeds pre-filtered data via the `data` prop. Search, filter pills, the
+   * add-filter command, and the reset button are all suppressed in the toolbar.
+   * Sorting, pagination, bulk actions, refresh, view options, and toolbar slots
+   * continue to work normally.
+   */
+  enableFilter?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -141,6 +149,10 @@ const props = withDefaults(defineProps<Props>(), {
   showRefreshButton: false,
   enableRowExpansion: false,
   filterPlugins: () => [],
+  // Filters are opt-in. When false (default), the parent owns filter state via
+  // a separate <Filters> component and feeds pre-filtered data via the `data`
+  // prop. Set to true to render filters inside the DataTable toolbar.
+  enableFilter: false,
 })
 
 // Emits
@@ -323,6 +335,7 @@ defineExpose({
           :loading="loading"
           :show-refresh-button="showRefreshButton"
           :enable-column-hiding="enableColumnHiding"
+          :enable-filter="enableFilter"
           @refresh="tableState.refresh"
         >
           <!-- Pass through toolbar slots -->
@@ -431,7 +444,7 @@ defineExpose({
               :key="`skeleton-row-${rowIndex}`"
             >
               <TableCell
-                v-for="(column, colIndex) in columns"
+                v-for="(_column, colIndex) in columns"
                 :key="`skeleton-cell-${rowIndex}-${colIndex}`"
                 :class="{ 'border-r border-border last:border-r-0': bordered }"
               >
