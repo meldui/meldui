@@ -51,6 +51,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Combobox](/docs/components/combobox): An autocomplete input with a filterable dropdown list for selecting values.
 - [Command](/docs/components/command): A command palette for searching and executing actions, similar to Cmd+K interfaces.
 - [Context Menu](/docs/components/context-menu): A right-click context menu with items, groups, and sub-menus.
+- [Data Pagination](/docs/components/data-pagination): Pagination toolbar for tables, grids, and lists — first/last/prev/next buttons with a page-size selector and "Page X of Y" info.
 - [Dialog](/docs/components/dialog): A modal dialog that overlays content and requires user interaction.
 - [Dot](/docs/components/dot): A small status indicator dot with color variants and animation effects.
 - [Drawer](/docs/components/drawer): A touch-friendly drawer component that slides from the bottom of the screen.
@@ -102,10 +103,13 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Data Table: Column Pinning](/docs/data-table/pinning): Pin columns to the left or right edge for horizontal scroll tables.
 - [Data Table: Columns & Cells](/docs/data-table/columns): Type-safe column definitions with createColumnHelper, cell renderers, and aggregation helpers.
 - [Data Table: Filtering](/docs/data-table/filtering): Configure filter types, advanced mode with operators, and custom filter fields.
+- [Data Table: Recipes](/docs/data-table/recipes): Eight canonical wiring scenarios — internal, external, and mixed combinations of sorting, filtering, and pagination, with and without DataTable, with and without the controller composable.
 - [Data Table: Row Expansion](/docs/data-table/expansion): Expand rows to show detail content using the master-detail pattern.
 - [Data Table: Selection & Actions](/docs/data-table/selection): Row selection with checkboxes, bulk actions, and per-row action menus.
-- [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
+- [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the v-model emit contract.
+- [Data Table: useDataTableController](/docs/data-table/use-data-table-controller): The parent-side composable that bundles sorting / filters / pagination refs and applies the filter→page and sort→page reset rules with flush:'sync'.
 - [Date Range Picker](/docs/composites/date-range-picker): A composite date picker with presets, calendar, and support for single or range date selection.
+- [Filters](/docs/composites/filters): A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
 - [Mention](/docs/composites/mention): A rich text input that supports @-mention suggestions with customizable triggers and serialization.
 - [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
 - [Relative Time](/docs/composites/relative-time): Displays a human-readable relative timestamp that updates automatically.

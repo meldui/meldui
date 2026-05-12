@@ -88,7 +88,7 @@ const { sorting, filters, pagination, state } = useDataTableController({ pageSiz
 const filterSearch = { id: 'name', placeholder: 'Search users...' }
 
 watch(state, fetchPage, { deep: true })
-</script>
+<\/script>
 
 <template>
   <DataTable

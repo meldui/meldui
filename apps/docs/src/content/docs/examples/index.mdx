@@ -169,8 +169,13 @@ A complete DataTable setup with API fetching, filters, and selection:
 
 ```vue
 <script setup>
-import { ref } from 'vue'
-import { DataTable, createColumnHelper, cellRenderers } from '@meldui/vue'
+import { ref, watch } from 'vue'
+import {
+  DataTable,
+  cellRenderers,
+  createColumnHelper,
+  useDataTableController,
+} from '@meldui/vue'
 import type { DataTableFilterField, BulkActionOption } from '@meldui/vue'
 import { IconTrash } from '@meldui/tabler-vue'
 
@@ -244,16 +249,26 @@ const bulkActions: BulkActionOption<User>[] = [
   },
 ]
 
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
+
 const data = ref<User[]>([])
 const pageCount = ref(1)
 
-async function handleChange({ sorting, filters, pagination }) {
+async function fetchPage() {
   const response = await api.get('/users', {
-    params: { page: pagination.pageIndex + 1, per_page: pagination.pageSize, sorting, filters },
+    params: {
+      page: state.value.pagination.pageIndex + 1,
+      per_page: state.value.pagination.pageSize,
+      sorting: state.value.sorting,
+      filters: state.value.filters,
+    },
   })
   data.value = response.data
   pageCount.value = response.meta.total_pages
 }
+
+watch(state, fetchPage, { deep: true })
+fetchPage()
 </script>
 
 <template>
@@ -261,12 +276,16 @@ async function handleChange({ sorting, filters, pagination }) {
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
     :filter-fields="filterFields"
+    :filter-search="{ id: 'name', placeholder: 'Search users...' }"
     :bulk-select-options="bulkActions"
+    enable-sorting
+    enable-filter
+    enable-pagination
     enable-row-selection
-    search-column="name"
-    search-placeholder="Search users..."
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
   />
 </template>
 ```

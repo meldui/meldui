@@ -84,3 +84,65 @@ tableRef.value?.resetAll()
 | `unpinColumn(id)`     | Unpin a column                 |
 
 For sorting / filter / pagination reset, call `useDataTableController().reset()` in the parent.
+
+## Manual wiring (without the controller)
+
+The controller is sugar over three refs plus the page-reset rule. Skip it when you want full control — but you must replicate the `flush: 'sync'` watchers yourself, otherwise every filter or sort change triggers two fetches (once with the new filter and old `pageIndex`, then again after the reset).
+
+```vue
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import {
+  DataTable,
+  createColumnHelper,
+  type DataTableFilterState,
+  type PaginationState,
+  type SortingState,
+} from '@meldui/vue'
+
+const sorting = ref<SortingState>([])
+const filters = ref<DataTableFilterState>({})
+const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 20 })
+
+// Page-reset rule — flush:'sync' so the parent observes one coherent state per user action.
+watch(
+  filters,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  {
+    deep: true,
+    flush: 'sync',
+  },
+)
+watch(
+  sorting,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  {
+    deep: true,
+    flush: 'sync',
+  },
+)
+
+// Fetch when any of the three change.
+watch([sorting, filters, pagination], () => fetchPage(), { deep: true })
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    enable-sorting
+    enable-filter
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
+  />
+</template>
+```
+
+See [`useDataTableController`](/docs/data-table/use-data-table-controller) for the recommended path, and [Recipes](/docs/data-table/recipes) for both styles compared side-by-side.

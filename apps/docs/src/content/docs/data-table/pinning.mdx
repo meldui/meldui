@@ -21,8 +21,9 @@ Pin columns so they stay visible when scrolling horizontally. The `select` and `
   :columns="columns"
   :data="data"
   :page-count="pageCount"
-  :on-server-side-change="handleChange"
+  enable-pagination
   enable-column-pinning
+  v-model:pagination="pagination"
   :default-pinning="{
     left: ['select', 'name'],
     right: ['actions'],

@@ -1,0 +1,110 @@
+---
+title: 'Data Table: useDataTableController'
+description: The parent-side composable that bundles sorting / filters / pagination refs and applies the filter→page and sort→page reset rules with flush:'sync'.
+category: composites
+order: 9
+package: '@meldui/vue'
+---
+
+import DataTableControllerDemo from '../../../demos/data-table/DataTableControllerDemo.vue'
+import DataTableUrlStateDemo from '../../../demos/data-table/DataTableUrlStateDemo.vue'
+
+## Overview
+
+`useDataTableController` is the **parent-side** helper for `<DataTable>` and standalone `<Filters>` / `<DataPagination>` compositions. It owns the three v-model refs (`sorting`, `filters`, `pagination`), applies the filter→page and sort→page reset rule with `flush: 'sync'`, and exposes a single merged `state` computed for the parent's fetch watcher.
+
+It has **zero coupling** to `<DataTable>` — you can use it for grid views, card lists, virtualized layouts, or any custom render path that needs the same three pieces of state.
+
+<DataTableControllerDemo client:only="vue" />
+
+## Why the controller exists
+
+There are three load-bearing rules that any DataTable parent needs to enforce:
+
+1. **Reset to page 0 on filter change** — otherwise a user filtering down to a tiny result set is stranded on a now-non-existent page 5.
+2. **Reset to page 0 on sort change** — matches industry behaviour (MUI DataGrid, AG Grid, PrimeVue) and avoids "page 5 of the new sort order contains arbitrary rows".
+3. **`flush: 'sync'` on those reset watchers** — otherwise the parent's `watch(state, fetchPage)` fires twice per user action: once with the new filter and the old `pageIndex`, then again after the reset lands.
+
+Skip the controller and you must replicate all three rules yourself. The controller bundles them.
+
+## Options
+
+| Option                    | Type                   | Default                      | Description                                                            |
+| ------------------------- | ---------------------- | ---------------------------- | ---------------------------------------------------------------------- |
+| `pageSize`                | `number`               | `10`                         | Initial page size when `initialPagination` isn't supplied              |
+| `initialSorting`          | `SortingState`         | `[]`                         | Seed the `sorting` ref                                                 |
+| `initialFilters`          | `DataTableFilterState` | `{}`                         | Seed the `filters` ref                                                 |
+| `initialPagination`       | `PaginationState`      | `{ pageIndex: 0, pageSize }` | Seed the `pagination` ref. Overrides `pageSize` when both are provided |
+| `resetPageOnFilterChange` | `boolean`              | `true`                       | Reset `pageIndex` to 0 whenever filters mutate                         |
+| `resetPageOnSortChange`   | `boolean`              | `true`                       | Reset `pageIndex` to 0 whenever sorting mutates                        |
+
+## Return value
+
+| Member       | Type                                            | Description                                                                                 |
+| ------------ | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `sorting`    | `Ref<SortingState>`                             | The sorting v-model — bind with `v-model:sorting`                                           |
+| `filters`    | `Ref<DataTableFilterState>`                     | The filters v-model — bind with `v-model:filters`                                           |
+| `pagination` | `Ref<PaginationState>`                          | The pagination v-model — bind with `v-model:pagination`                                     |
+| `state`      | `ComputedRef<{ sorting, filters, pagination }>` | Merged read-only state. Watch with `deep: true` to fetch data                               |
+| `reset()`    | `() => void`                                    | Reset all three refs to the initial values (or defaults if no initial values were supplied) |
+
+## Single-fetch guarantee
+
+When the user changes a filter while `pagination.pageIndex > 0`, two refs mutate: `filters` (the user's change) and `pagination` (the controller's page-reset side-effect). Without `flush: 'sync'`, Vue would schedule the reset watcher to run later, which means the parent's `watch(state, fetchPage, { deep: true })` would fire **twice** — once with the new filter and stale `pageIndex`, then again after the reset.
+
+`flush: 'sync'` lands the reset before the next microtask flushes, so the parent observes one coherent state and fires one fetch.
+
+```ts
+watch(state, fetchPage, { deep: true })
+```
+
+If you opt out of either reset (or skip the composable entirely), restore the rule yourself — see the manual snippet on [Basic Usage](/docs/data-table/basic#manual-wiring-without-the-controller).
+
+## Opting out of resets
+
+Pass `resetPageOnSortChange: false` (or `resetPageOnFilterChange: false`) to preserve `pageIndex` across that axis. Generally don't — the defaults match every major data-grid library.
+
+```ts
+const { sorting, filters, pagination, state } = useDataTableController({
+  pageSize: 20,
+  resetPageOnSortChange: false,
+})
+```
+
+## URL state restoration
+
+Seed the controller from URL query params and persist back on every change. The composable doesn't validate that a seeded `pageIndex` is within the filtered dataset's bounds — that's the parent's job. After the first fetch resolves, clamp to `pageCount - 1` if the URL was stale.
+
+<DataTableUrlStateDemo client:only="vue" />
+
+```ts
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+const { sorting, filters, pagination, state } = useDataTableController({
+  pageSize: Number(route.query.size) || 20,
+  initialSorting: parseSorting(route.query.sort),
+  initialFilters: parseFilters(route.query.f),
+  initialPagination: {
+    pageIndex: Number(route.query.page) || 0,
+    pageSize: Number(route.query.size) || 20,
+  },
+})
+
+watch(
+  state,
+  (s) => {
+    router.replace({ query: serializeState(s) })
+    fetchPage()
+  },
+  { deep: true },
+)
+```
+
+## See also
+
+- [Basic Usage](/docs/data-table/basic) — the recommended setup using the controller.
+- [Server-Side](/docs/data-table/server-side) — `tableStateToServerParams` and the response format.
+- [Recipes](/docs/data-table/recipes) — eight canonical wiring scenarios (internal, external, grid, URL state, switchable view).

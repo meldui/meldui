@@ -76,7 +76,7 @@ async function fetchPage() {
 
 watch(state, fetchPage, { deep: true })
 fetchPage()
-</script>
+<\/script>
 
 <template>
   <DataTable

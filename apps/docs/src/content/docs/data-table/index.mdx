@@ -9,11 +9,22 @@ componentName: DataTable
 
 ## Overview
 
-The DataTable is MeldUI's most comprehensive component, built on [TanStack Table](https://tanstack.com/table/latest) for headless table logic with a fully styled UI layer. It's designed for **server-side operations** — every user interaction (sort, filter, paginate) triggers a callback you handle.
+The DataTable is MeldUI's most comprehensive component, built on [TanStack Table](https://tanstack.com/table/latest) for headless table logic with a fully styled UI layer. It's a **fully controlled component**: state for sorting, filtering, and pagination is owned by the parent via three `v-model` bindings, and the parent triggers a data fetch whenever that state changes.
+
+### Architecture
+
+DataTable runs TanStack in fully manual mode (`manualSorting`, `manualFiltering`, `manualPagination`). It never sorts, filters, or paginates rows itself — it just renders the page of data you give it and forwards user interactions through three independent emits:
+
+- `v-model:sorting` ↔ `update:sorting` — `SortingState`
+- `v-model:filters` ↔ `update:filters` — `DataTableFilterState`
+- `v-model:pagination` ↔ `update:pagination` — `{ pageIndex, pageSize }`
+
+The recommended path is to bundle the three refs with [`useDataTableController`](/docs/data-table/use-data-table-controller), which also encapsulates the load-bearing rule that pagination must reset to page 0 on filter or sort change (with `flush: 'sync'` to keep the parent watcher firing exactly once per user action).
 
 ### Key Features
 
-- **Server-side first** — pagination, sorting, and filtering all trigger a single callback
+- **Stateless contract** — three v-models, three update emits, no hidden internal state
+- **Server-side first** — fully manual mode; the parent owns every fetch
 - **8 filter types** — text, select, multiselect, number, range, boolean, date, daterange
 - **Advanced filter mode** — operator-based filtering (contains, equals, greaterThan, etc.)
 - **Column helpers** — type-safe column definitions with `createColumnHelper`
@@ -36,9 +47,9 @@ pnpm add @meldui/vue @tanstack/vue-table
 ### Quick Start
 
 ```vue
-<script setup>
-import { ref } from 'vue'
-import { DataTable, createColumnHelper } from '@meldui/vue'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 
 interface User {
   id: string
@@ -55,12 +66,24 @@ const columns = [
   helper.accessor('role', { title: 'Role' }),
 ]
 
-const data = ref([])
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
+
+const data = ref<User[]>([])
 const pageCount = ref(1)
 
-function handleServerSideChange({ sorting, filters, pagination }) {
-  // Fetch data from your API
+async function fetchPage() {
+  const res = await api.get('/users', {
+    params: {
+      page: state.value.pagination.pageIndex + 1,
+      per_page: state.value.pagination.pageSize,
+    },
+  })
+  data.value = res.data
+  pageCount.value = res.meta.total_pages
 }
+
+watch(state, fetchPage, { deep: true })
+fetchPage()
 </script>
 
 <template>
@@ -68,19 +91,25 @@ function handleServerSideChange({ sorting, filters, pagination }) {
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleServerSideChange"
+    enable-sorting
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
   />
 </template>
 ```
 
 ### Pages in this section
 
-| Page                                              | Description                                      |
-| ------------------------------------------------- | ------------------------------------------------ |
-| [Basic Usage](/docs/data-table/basic)             | Simple table setup with sorting and pagination   |
-| [Columns & Cells](/docs/data-table/columns)       | Column helpers, cell renderers, and aggregations |
-| [Filtering](/docs/data-table/filtering)           | Filter types, advanced mode, and operators       |
-| [Selection & Actions](/docs/data-table/selection) | Row selection and bulk actions                   |
-| [Column Pinning](/docs/data-table/pinning)        | Sticky left/right columns                        |
-| [Row Expansion](/docs/data-table/expansion)       | Master-detail pattern                            |
-| [Server-Side](/docs/data-table/server-side)       | Server params, response format, and URL state    |
+| Page                                                                   | Description                                                                  |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Basic Usage](/docs/data-table/basic)                                  | Simple table setup with sorting and pagination                               |
+| [Columns & Cells](/docs/data-table/columns)                            | Column helpers, cell renderers, and aggregations                             |
+| [Filtering](/docs/data-table/filtering)                                | Filter types, advanced mode, and operators                                   |
+| [Selection & Actions](/docs/data-table/selection)                      | Row selection and bulk actions                                               |
+| [Column Pinning](/docs/data-table/pinning)                             | Sticky left/right columns                                                    |
+| [Row Expansion](/docs/data-table/expansion)                            | Master-detail pattern                                                        |
+| [Server-Side](/docs/data-table/server-side)                            | Server params, response format, and URL state                                |
+| [`useDataTableController`](/docs/data-table/use-data-table-controller) | Composable that bundles the three refs and reset rules                       |
+| [Recipes](/docs/data-table/recipes)                                    | Eight canonical wiring scenarios (internal, external, grid views, URL state) |

@@ -1,0 +1,229 @@
+---
+title: Filters
+description: A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
+category: composites
+order: 4
+package: '@meldui/vue'
+componentName: Filters
+---
+
+import FiltersStandaloneDemo from '../../../demos/filters/FiltersStandaloneDemo.vue'
+import FiltersAdvancedModeDemo from '../../../demos/filters/FiltersAdvancedModeDemo.vue'
+
+## Overview
+
+`<Filters>` is the chip-based filter toolbar that powers `<DataTable>`'s filter row. It's a standalone composite — use it on top of any data view (table, card grid, virtualised list) to give users the same filter language they expect from the DataTable.
+
+The component owns its own internal `useFilters` state by default. Provide a `v-model:filterValues` ref to mirror the aggregated value externally, or hand in a pre-instantiated `state` (from `useFilters()`) when you need imperative access (adding filters from outside, custom command palettes, etc.).
+
+<FiltersStandaloneDemo client:only="vue" />
+
+## V-model contract
+
+`update:filterValues` fires whenever a chip's value changes or the debounced search input settles. The aggregate is a single object keyed by field id:
+
+```ts
+import type { FilterInstanceValue } from '@meldui/vue'
+
+// Shape of update:filterValues — same as DataTable's v-model:filters
+const filterValues: Record<string, FilterInstanceValue> = {
+  name: 'jane', // text — single value
+  role: 'admin', // select — single value
+  status: ['active'], // multiselect — array
+  age: [22, 35], // number — multi-instance (multiple chips)
+}
+```
+
+The search value (when `searchField` is provided) is stored under `searchField.id` in the same object — there is no separate `searchValue` event.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Filters, type DataTableFilterField } from '@meldui/vue'
+
+const filters = ref({})
+
+const fields: DataTableFilterField<User>[] = [
+  { id: 'role', label: 'Role', type: 'select', options: [...] },
+  { id: 'status', label: 'Status', type: 'multiselect', options: [...] },
+]
+</script>
+
+<template>
+  <Filters
+    :fields="fields"
+    :search-field="{ id: 'name', placeholder: 'Search by name' }"
+    v-model:filterValues="filters"
+  />
+</template>
+```
+
+## Props
+
+| Prop            | Type                                  | Default  | Description                                                                                                        |
+| --------------- | ------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| `fields`        | `DataTableFilterField<TData>[]`       | required | The set of filterable fields. Each entry maps to a chip kind via `type`                                            |
+| `filterValues`  | `Record<string, FilterInstanceValue>` | —        | `v-model:filterValues` target. When the parent replaces this ref, the component reseeds its chips                  |
+| `searchField`   | `{ id, placeholder?, debounceMs? }`   | —        | Renders the search input. Search lives in `filterValues` under `searchField.id`. Default debounce is 300 ms        |
+| `advancedMode`  | `boolean`                             | `false`  | Operator-based chips (`contains`/`equals`/`greaterThan`/…). Base types only — no `multiselect`/`range`/`daterange` |
+| `plugins`       | `RegisteredFilterPlugin[]`            | `[]`     | Custom chip kinds registered via `defineFilter()`                                                                  |
+| `initialValues` | `Record<string, FilterInstanceValue>` | —        | One-shot seed for uncontrolled use. Ignored when `filterValues` is bound                                           |
+| `initialSearch` | `string`                              | —        | Initial value for the search input                                                                                 |
+| `loading`       | `boolean`                             | `false`  | Disables inputs and swaps the search icon for a spinner                                                            |
+| `state`         | `UseFiltersReturn<TData>`             | —        | Advanced wiring: pre-instantiated `useFilters()` return. Takes precedence over `filterValues`                      |
+
+## Emits
+
+| Event                 | Payload                               | Description                                                         |
+| --------------------- | ------------------------------------- | ------------------------------------------------------------------- |
+| `update:filterValues` | `Record<string, FilterInstanceValue>` | Fires on any chip change or debounced search settle                 |
+| `reset`               | —                                     | User clicked Reset; the component has already cleared its own state |
+
+## Slots
+
+| Slot     | Description                                                               |
+| -------- | ------------------------------------------------------------------------- |
+| `#start` | Rendered before the search input — use for view-mode toggles, view labels |
+| `#right` | Rendered on the right edge — use for "Add filter" extensions, refresh     |
+
+## Filter field types
+
+The eight built-in field types map directly onto chip components:
+
+| `type`        | Value shape                            | Multi-instance? | Advanced-mode? |
+| ------------- | -------------------------------------- | --------------- | -------------- |
+| `text`        | `string`                               | Yes (OR logic)  | Yes            |
+| `number`      | `number`                               | Yes             | Yes            |
+| `date`        | `DateValue`                            | Yes             | Yes            |
+| `select`      | `string`                               | No              | Yes            |
+| `boolean`     | `boolean`                              | No              | Yes            |
+| `multiselect` | `string[]`                             | No              | —              |
+| `range`       | `[number, number]`                     | No              | —              |
+| `daterange`   | `{ start: DateValue, end: DateValue }` | No              | —              |
+
+See [Data Table → Filtering](/docs/data-table/filtering) for field-configuration recipes — every field shape there applies here verbatim.
+
+## Advanced mode
+
+Each chip exposes an operator dropdown (`contains` / `equals` / `greaterThan` / `between` / …). Only base types are eligible — `multiselect`, `range`, and `daterange` already encode their own multi-value semantics and are skipped.
+
+<FiltersAdvancedModeDemo client:only="vue" />
+
+The emitted `FilterInstanceValue` becomes an array of `{ operator, value }` entries because the same field can have multiple chips:
+
+```ts
+// advancedMode: true
+filterValues = {
+  name: [
+    { operator: 'contains', value: 'jane' },
+    { operator: 'notContains', value: 'doe' },
+  ],
+}
+```
+
+## Custom chip plugins
+
+Register a custom chip type with `defineFilter()` and pass it via `plugins`. Plugins work in both simple and advanced mode.
+
+```ts
+import { defineFilter, type FilterPluginComponentProps } from '@meldui/vue'
+import RatingFilter from './RatingFilter.vue'
+
+export const ratingFilterPlugin = defineFilter({
+  type: 'rating',
+  component: RatingFilter,
+  operators: ['is', 'isAtLeast', 'isAtMost'],
+})
+```
+
+```vue
+<Filters :fields="fields" :plugins="[ratingFilterPlugin]" v-model:filterValues="filters" />
+```
+
+`RatingFilter.vue` follows the same `FilterPluginComponentProps` contract as the built-in chips (`title`, `defaultOpen`, `defaultOperator`, `availableOperators`, `initialValue`, plus `value-change` / `remove` / `close` emits).
+
+## `useFilters` composable
+
+The composable that powers `<Filters>` internally. Hand its return value to `<Filters :state="...">` when you need imperative access — for instance, adding a filter from a command palette outside the toolbar.
+
+```ts
+import { useFilters } from '@meldui/vue'
+
+const filterState = useFilters<User>({
+  filterFields: fields,
+  filterPlugins: [],
+  advancedMode: false,
+  initialValues: {},
+  searchField: { id: 'name', placeholder: 'Search' },
+})
+
+// Imperative: open a fresh filter chip
+filterState.addFilter('role')
+
+// Imperative: replace the entire filter state (e.g. URL restoration)
+filterState.setValues({ role: 'admin' })
+```
+
+### Options
+
+| Option          | Type                                  | Description                                                                 |
+| --------------- | ------------------------------------- | --------------------------------------------------------------------------- |
+| `filterFields`  | `DataTableFilterField<TData>[]`       | Required. Same shape as `<Filters>`'s `fields` prop                         |
+| `filterPlugins` | `RegisteredFilterPlugin[]`            | Custom chip types                                                           |
+| `advancedMode`  | `boolean`                             | Operator-based chips                                                        |
+| `initialValues` | `Record<string, FilterInstanceValue>` | Seed instances. Each entry becomes one chip (or N chips for multi-instance) |
+| `initialSearch` | `string`                              | Seed the search ref                                                         |
+| `searchField`   | `{ id, placeholder?, debounceMs? }`   | Search config — debounce defaults to 300 ms                                 |
+
+### Return value
+
+| Member                                | Type                                                 | Description                                                       |
+| ------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------- |
+| `filterInstances`                     | `Ref<FilterInstance<TData>[]>`                       | The currently visible chips (each is a `field` + an `instanceId`) |
+| `filterValues`                        | `Readonly<Ref<Record<string, FilterInstanceValue>>>` | Aggregated value — same shape as the v-model                      |
+| `searchValue`                         | `Ref<string ǀ undefined>`                            | Debounced search ref                                              |
+| `isFiltered`                          | `Readonly<Ref<boolean>>`                             | True when any chip has a value or the search input is non-empty   |
+| `addFilter(fieldId)`                  | `(fieldId: string) => void`                          | Add a new chip for a field. Auto-opens the popover                |
+| `removeInstance(instanceId)`          | `(instanceId: string) => void`                       | Remove a specific chip                                            |
+| `setInstanceValue(instanceId, value)` | `(instanceId: string, value) => void`                | Update a chip's value                                             |
+| `setValues(record)`                   | `(record) => void`                                   | Replace the entire state. Rebuilds chips from the record          |
+| `resetAll()`                          | `() => void`                                         | Clear chips and search                                            |
+| `getInstanceValue(instanceId)`        | `(instanceId: string) => FilterValue ǀ undefined`    | Read a chip's current value                                       |
+| `setSearchValue(value)`               | `(value: string ǀ number) => void`                   | Programmatically update the search ref (debounce applies)         |
+
+## With `<DataTable>`
+
+Inside `<DataTable :enable-filter>`, the component renders an internal `<Filters>` automatically. Use the standalone form when you want filters outside the table — for example, above a grid of cards driven by the same `useDataTableController` instance.
+
+```vue
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { DataTable, Filters, useDataTableController } from '@meldui/vue'
+
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
+watch(state, fetchPage, { deep: true })
+</script>
+
+<template>
+  <Filters :fields="fields" :search-field="{ id: 'q' }" v-model:filterValues="filters" />
+  <!-- Filter UI is external — DataTable receives the same `filters` ref but doesn't render its own toolbar. -->
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    enable-sorting
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:pagination="pagination"
+    v-model:filters="filters"
+  />
+</template>
+```
+
+See [Recipes](/docs/data-table/recipes) for the full set of internal/external/mixed wiring patterns.
+
+## See also
+
+- [Data Table → Filtering](/docs/data-table/filtering) — field-configuration recipes.
+- [`useDataTableController`](/docs/data-table/use-data-table-controller) — bundle this `filters` ref with sorting and pagination.
+- [`<DataPagination>`](/docs/components/data-pagination) — the matching toolbar for pagination.
