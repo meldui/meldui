@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
-import { DataTable, createColumnHelper } from '@meldui/vue'
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 import type { BulkActionOption } from '@meldui/vue'
 import { IconTrash, IconDownload } from '@meldui/tabler-vue'
 
@@ -33,13 +33,19 @@ const users: User[] = Array.from({ length: 20 }, (_, i) => ({
   role: ['Admin', 'User', 'User', 'Guest'][i % 4],
 }))
 
-const data = ref(users.slice(0, 10))
-const pageCount = ref(2)
+const { sorting, pagination, state } = useDataTableController({ pageSize: 10 })
 
-function handleChange({ pagination }: any) {
-  const start = pagination.pageIndex * pagination.pageSize
-  data.value = users.slice(start, start + pagination.pageSize)
+const data = ref<User[]>([])
+const pageCount = computed(() => Math.ceil(users.length / pagination.value.pageSize))
+const totalRows = ref(users.length)
+
+function loadPage() {
+  const start = state.value.pagination.pageIndex * state.value.pagination.pageSize
+  data.value = users.slice(start, start + state.value.pagination.pageSize)
 }
+
+loadPage()
+watch(state, loadPage, { deep: true })
 
 const code = `\u003cscript setup>
 import { DataTable, createColumnHelper } from '@meldui/vue'
@@ -75,9 +81,13 @@ const bulkActions: BulkActionOption\u003cUser>[] = [
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
-    enable-row-selection
+    :total-rows="totalRows"
     :bulk-select-options="bulkActions"
+    enable-row-selection
+    enable-sorting
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:pagination="pagination"
   />
 \u003c/template>`
 </script>
@@ -89,9 +99,13 @@ const bulkActions: BulkActionOption\u003cUser>[] = [
         :columns="columns"
         :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
-        enable-row-selection
+        :total-rows="totalRows"
         :bulk-select-options="bulkActions"
+        enable-row-selection
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
       />
     </div>
   </DemoBlock>

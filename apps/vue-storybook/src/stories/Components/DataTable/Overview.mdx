@@ -4,31 +4,28 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # DataTable
 
-A powerful, feature-rich data table component designed for server-side operations with comprehensive filtering, sorting, pagination, row selection, and column pinning capabilities.
+A stateless, controlled-component data table designed for server-side data fetching. Sorting, filtering, and pagination state flow through `v-model:*` bindings; the parent owns state and triggers data fetches.
 
 ## Features
 
-- **Server-Side Operations**: Built for server-side pagination, sorting, and filtering
-- **Multiple Filter Types**: Text, select, multiselect, number, range, boolean, date, and daterange filters
-- **Row Selection**: Single and bulk row selection with customizable bulk actions
-- **Column Pinning**: Pin columns to left or right for better data visibility
-- **Advanced Filter Mode**: Enable operator selection for complex filtering logic
-- **Customizable**: Full control over column definitions, cell rendering, and styling
+- **Stateless data axes**: Parent owns `sorting`, `filters`, `pagination` via v-model — no duplicated internal state.
+- **Per-feature opt-in**: `enableSorting`, `enableFilter`, `enablePagination` independently control whether DataTable renders the corresponding UI.
+- **Identical components inside or outside**: The same `<Filters>` and `<Pagination>` composites render in DataTable's toolbar/footer or anywhere else in the parent.
+- **Composable helper**: `useDataTableController` bundles the three refs, encapsulates the `flush: 'sync'` page-reset rule, and exposes a single merged `state` computed.
+- **Visual concerns stay internal**: Row selection, expansion, column visibility / pinning / sizing remain managed inside DataTable.
 
 ## Installation
-
-The DataTable is included in `@meldui/vue`. Ensure you have the required peer dependencies:
 
 ```bash
 pnpm add @meldui/vue @tanstack/vue-table
 ```
 
-## Basic Usage
+## Recommended setup (with composable)
 
 ```vue
 <script setup lang="ts">
-import { ref, computed, h } from 'vue'
-import { DataTable, DataTableColumnHeader } from '@meldui/vue'
+import { computed, ref, watch, h } from 'vue'
+import { DataTable, DataTableColumnHeader, useDataTableController } from '@meldui/vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 
 interface User {
@@ -48,21 +45,42 @@ const columns: ColumnDef<User>[] = [
   },
 ]
 
-const users = ref<User[]>([])
+const data = ref<User[]>([])
 const pageCount = ref(1)
+const totalRows = ref(0)
 
-const handleServerSideChange = (params) => {
-  // Fetch data from server with params.sorting, params.filters, params.pagination
-  console.log('Server params:', params)
+const { sorting, filters, pagination, state } = useDataTableController({
+  pageSize: 20,
+})
+
+async function fetchPage() {
+  const res = await api.listUsers({
+    sort: state.value.sorting,
+    filters: state.value.filters,
+    page: state.value.pagination.pageIndex + 1,
+    perPage: state.value.pagination.pageSize,
+  })
+  data.value = res.data
+  pageCount.value = res.meta.total_pages
+  totalRows.value = res.meta.total
 }
+
+watch(state, fetchPage, { deep: true })
+fetchPage()
 </script>
 
 <template>
   <DataTable
     :columns="columns"
-    :data="users"
+    :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleServerSideChange"
+    :total-rows="totalRows"
+    enable-sorting
+    enable-filter
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
   />
 </template>
 ```
@@ -84,10 +102,10 @@ const handleServerSideChange = (params) => {
         <code>columns</code>
       </td>
       <td>
-        <code>ColumnDef&lt;TData&gt;[]</code>
+        <code>ColumnDef[]</code>
       </td>
       <td>Required</td>
-      <td>Column definitions from @tanstack/vue-table</td>
+      <td>Column definitions (TanStack)</td>
     </tr>
     <tr>
       <td>
@@ -97,7 +115,7 @@ const handleServerSideChange = (params) => {
         <code>TData[]</code>
       </td>
       <td>Required</td>
-      <td>Array of data to display</td>
+      <td>Rows for the current page (server-paginated)</td>
     </tr>
     <tr>
       <td>
@@ -106,116 +124,24 @@ const handleServerSideChange = (params) => {
       <td>
         <code>number</code>
       </td>
-      <td>Required</td>
-      <td>Total number of pages (server-side)</td>
+      <td>—</td>
+      <td>
+        Required when <code>enablePagination</code> is true. Total pages from the server.
+      </td>
     </tr>
     <tr>
       <td>
-        <code>onServerSideChange</code>
-      </td>
-      <td>
-        <code>Function</code>
-      </td>
-      <td>Required</td>
-      <td>Callback when table state changes</td>
-    </tr>
-    <tr>
-      <td>
-        <code>enableRowSelection</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Enable row selection checkboxes</td>
-    </tr>
-    <tr>
-      <td>
-        <code>defaultPerPage</code>
+        <code>totalRows</code>
       </td>
       <td>
         <code>number</code>
       </td>
-      <td>
-        <code>10</code>
-      </td>
-      <td>Default page size</td>
+      <td>—</td>
+      <td>Optional. Enables "X of Y" displays in pagination / selection.</td>
     </tr>
     <tr>
       <td>
-        <code>pageSizeOptions</code>
-      </td>
-      <td>
-        <code>number[]</code>
-      </td>
-      <td>
-        <code>[10,20,30,40,50]</code>
-      </td>
-      <td>Available page sizes</td>
-    </tr>
-    <tr>
-      <td>
-        <code>filterFields</code>
-      </td>
-      <td>
-        <code>DataTableFilterField[]</code>
-      </td>
-      <td>
-        <code>[]</code>
-      </td>
-      <td>Filter configurations</td>
-    </tr>
-    <tr>
-      <td>
-        <code>searchColumn</code>
-      </td>
-      <td>
-        <code>string</code>
-      </td>
-      <td>-</td>
-      <td>Column to use for search input</td>
-    </tr>
-    <tr>
-      <td>
-        <code>searchPlaceholder</code>
-      </td>
-      <td>
-        <code>string</code>
-      </td>
-      <td>
-        <code>'Search...'</code>
-      </td>
-      <td>Placeholder for search input</td>
-    </tr>
-    <tr>
-      <td>
-        <code>showToolbar</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>true</code>
-      </td>
-      <td>Show/hide toolbar</td>
-    </tr>
-    <tr>
-      <td>
-        <code>showPagination</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>true</code>
-      </td>
-      <td>Show/hide pagination</td>
-    </tr>
-    <tr>
-      <td>
-        <code>showSelectedCount</code>
+        <code>enableSorting</code>
       </td>
       <td>
         <code>boolean</code>
@@ -223,315 +149,9 @@ const handleServerSideChange = (params) => {
       <td>
         <code>false</code>
       </td>
-      <td>Show selected row count</td>
-    </tr>
-    <tr>
       <td>
-        <code>bulkSelectOptions</code>
+        Render the sort dropdown in column headers. Requires <code>v-model:sorting</code>.
       </td>
-      <td>
-        <code>BulkActionOption[]</code>
-      </td>
-      <td>-</td>
-      <td>Bulk action buttons</td>
-    </tr>
-    <tr>
-      <td>
-        <code>emptyMessage</code>
-      </td>
-      <td>
-        <code>string</code>
-      </td>
-      <td>
-        <code>'No results found.'</code>
-      </td>
-      <td>Empty state message</td>
-    </tr>
-    <tr>
-      <td>
-        <code>advancedMode</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Enable advanced filter operators</td>
-    </tr>
-    <tr>
-      <td>
-        <code>initialFilters</code>
-      </td>
-      <td>
-        <code>DataTableFilterState</code>
-      </td>
-      <td>
-        <code>{}</code>
-      </td>
-      <td>Initial filter values for URL state restoration</td>
-    </tr>
-    <tr>
-      <td>
-        <code>initialSorting</code>
-      </td>
-      <td>
-        <code>SortingState</code>
-      </td>
-      <td>
-        <code>[]</code>
-      </td>
-      <td>Initial sorting state for URL state restoration</td>
-    </tr>
-    <tr>
-      <td>
-        <code>initialPagination</code>
-      </td>
-      <td>
-        <code>Partial&lt;PaginationState&gt;</code>
-      </td>
-      <td>-</td>
-      <td>Initial pagination for URL state restoration (pageIndex, pageSize)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>defaultPinning</code>
-      </td>
-      <td>
-        <code>ColumnPinningState</code>
-      </td>
-      <td>-</td>
-      <td>Default pinned columns</td>
-    </tr>
-    <tr>
-      <td>
-        <code>enableColumnPinning</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Enable column pinning</td>
-    </tr>
-    <tr>
-      <td>
-        <code>enableColumnHiding</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Enable column hiding (shows View button in toolbar)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>enableColumnResizing</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Enable column resizing by dragging</td>
-    </tr>
-    <tr>
-      <td>
-        <code>columnResizeMode</code>
-      </td>
-      <td>
-        <code>'onChange' | 'onEnd'</code>
-      </td>
-      <td>
-        <code>'onChange'</code>
-      </td>
-      <td>When to apply resize (during drag or after)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>maxHeight</code>
-      </td>
-      <td>
-        <code>string</code>
-      </td>
-      <td>
-        <code>'600px'</code>
-      </td>
-      <td>Maximum table height</td>
-    </tr>
-    <tr>
-      <td>
-        <code>density</code>
-      </td>
-      <td>
-        <code>'compact' | 'comfortable' | 'spacious'</code>
-      </td>
-      <td>
-        <code>'comfortable'</code>
-      </td>
-      <td>Table density (affects cell padding and font size)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>rowClass</code>
-      </td>
-      <td>
-        <code>(row: Row) =&gt; string | Record&lt;string, boolean&gt;</code>
-      </td>
-      <td>-</td>
-      <td>Function to add conditional CSS classes to rows</td>
-    </tr>
-    <tr>
-      <td>
-        <code>rowStyle</code>
-      </td>
-      <td>
-        <code>(row: Row) =&gt; CSSProperties</code>
-      </td>
-      <td>-</td>
-      <td>Function to add conditional inline styles to rows</td>
-    </tr>
-    <tr>
-      <td>
-        <code>rowProps</code>
-      </td>
-      <td>
-        <code>(row: Row) =&gt; HTMLAttributes</code>
-      </td>
-      <td>-</td>
-      <td>Function to add custom attributes/handlers to rows</td>
-    </tr>
-    <tr>
-      <td>
-        <code>loading</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Show loading skeleton state</td>
-    </tr>
-    <tr>
-      <td>
-        <code>loadingMessage</code>
-      </td>
-      <td>
-        <code>string</code>
-      </td>
-      <td>
-        <code>'Loading data...'</code>
-      </td>
-      <td>Message shown during loading</td>
-    </tr>
-    <tr>
-      <td>
-        <code>error</code>
-      </td>
-      <td>
-        <code>string | Error</code>
-      </td>
-      <td>-</td>
-      <td>Error to display (shows error state)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>showPageSizeSelector</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>true</code>
-      </td>
-      <td>Show page size dropdown</td>
-    </tr>
-    <tr>
-      <td>
-        <code>showPageInfo</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>true</code>
-      </td>
-      <td>Show "Page X of Y" text indicator</td>
-    </tr>
-    <tr>
-      <td>
-        <code>paginationPosition</code>
-      </td>
-      <td>
-        <code>'bottom' | 'top' | 'both'</code>
-      </td>
-      <td>
-        <code>'bottom'</code>
-      </td>
-      <td>Where to render pagination</td>
-    </tr>
-    <tr>
-      <td>
-        <code>enableKeyboardNavigation</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Enable keyboard navigation for accessibility</td>
-    </tr>
-    <tr>
-      <td>
-        <code>showRefreshButton</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Show refresh button in toolbar</td>
-    </tr>
-    <tr>
-      <td>
-        <code>enableRowExpansion</code>
-      </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>
-        <code>false</code>
-      </td>
-      <td>Enable row expansion for master-detail patterns</td>
-    </tr>
-    <tr>
-      <td>
-        <code>getRowCanExpand</code>
-      </td>
-      <td>
-        <code>(row: Row) =&gt; boolean</code>
-      </td>
-      <td>-</td>
-      <td>Function to determine if a row can be expanded</td>
-    </tr>
-    <tr>
-      <td>
-        <code>filterPlugins</code>
-      </td>
-      <td>
-        <code>RegisteredFilterPlugin[]</code>
-      </td>
-      <td>
-        <code>[]</code>
-      </td>
-      <td>Custom filter plugins for extending filter types</td>
     </tr>
     <tr>
       <td>
@@ -544,1201 +164,88 @@ const handleServerSideChange = (params) => {
         <code>false</code>
       </td>
       <td>
-        Render filter UI inside the toolbar. When <code>true</code>, the DataTable instantiates{' '}
-        <code>useFilters</code> internally and exposes it via{' '}
-        <code>tableRef.value.filtersState</code>. When <code>false</code> (default), the parent owns
-        filter state via a separate <code>&lt;Filters&gt;</code>
-        component and feeds pre-filtered <code>data</code>.
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-## Events
-
-<table>
-  <thead>
-    <tr>
-      <th>Event</th>
-      <th>Payload</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>@retry</code>
-      </td>
-      <td>-</td>
-      <td>Emitted when retry button is clicked in error state</td>
-    </tr>
-    <tr>
-      <td>
-        <code>@rowActivate</code>
-      </td>
-      <td>
-        <code>Row&lt;TData&gt;</code>
-      </td>
-      <td>
-        Emitted when Enter is pressed on a focused row (requires{' '}
-        <code>enableKeyboardNavigation</code>)
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-## Slots
-
-The DataTable provides several slots for customization:
-
-<table>
-  <thead>
-    <tr>
-      <th>Slot</th>
-      <th>Props</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>#toolbar</code>
-      </td>
-      <td>
-        <code>{'{table, loading}'}</code>
-      </td>
-      <td>Replace the entire toolbar</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#toolbar-start</code>
-      </td>
-      <td>
-        <code>{'{table}'}</code>
-      </td>
-      <td>Content before search input</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#toolbar-end</code>
-      </td>
-      <td>
-        <code>{'{table}'}</code>
-      </td>
-      <td>Content after bulk actions</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#empty</code>
-      </td>
-      <td>
-        <code>{'{message, columns}'}</code>
-      </td>
-      <td>Custom empty state</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#error</code>
-      </td>
-      <td>
-        <code>{'{error, retry}'}</code>
-      </td>
-      <td>Custom error state</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#pagination</code>
-      </td>
-      <td>
-        <code>{'{table, pageCount, currentPage, pageSize, canPrevious, canNext}'}</code>
-      </td>
-      <td>Custom pagination</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#row</code>
-      </td>
-      <td>
-        <code>{'{row, cells, isSelected, index}'}</code>
-      </td>
-      <td>Custom row rendering</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#cell-[columnId]</code>
-      </td>
-      <td>
-        <code>{'{cell, row, value}'}</code>
-      </td>
-      <td>Custom cell for specific column</td>
-    </tr>
-    <tr>
-      <td>
-        <code>#expanded-row</code>
-      </td>
-      <td>
-        <code>{'{row}'}</code>
-      </td>
-      <td>
-        Content for expanded row (requires <code>enableRowExpansion</code>)
+        Render the <code>&lt;Filters&gt;</code> row in the toolbar. Requires{' '}
+        <code>v-model:filters</code>.
       </td>
     </tr>
     <tr>
       <td>
-        <code>#footer</code>
-      </td>
-      <td>
-        <code>{'{table, footerGroups}'}</code>
-      </td>
-      <td>Custom footer content (replaces column footers)</td>
-    </tr>
-  </tbody>
-</table>
-
-### Slot Examples
-
-```vue
-<DataTable :columns="columns" :data="data" ...>
-  <!-- Add button before search -->
-  <template #toolbar-start="{ table }">
-    <Button @click="addNew">Add New</Button>
-  </template>
-
-  <!-- Custom cell for status column -->
-  <template #cell-status="{ value }">
-    <Badge :variant="value === 'active' ? 'default' : 'secondary'">
-      {{ value }}
-    </Badge>
-  </template>
-
-  <!-- Custom empty state -->
-  <template #empty="{ message }">
-    <div class="py-8 text-center">
-      <p>{{ message }}</p>
-      <Button @click="refresh">Refresh</Button>
-    </div>
-  </template>
-</DataTable>
-```
-
-## Filter Types
-
-### Simple Mode (default)
-
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-      <th>Value Format</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>text</code>
-      </td>
-      <td>Text input</td>
-      <td>
-        <code>string[]</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>select</code>
-      </td>
-      <td>Single dropdown</td>
-      <td>
-        <code>string</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>multiselect</code>
-      </td>
-      <td>Multi checkbox</td>
-      <td>
-        <code>string[]</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>number</code>
-      </td>
-      <td>Number input</td>
-      <td>
-        <code>number[]</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>range</code>
-      </td>
-      <td>Range slider</td>
-      <td>
-        <code>{'{start, end}[]'}</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>Toggle switch</td>
-      <td>
-        <code>boolean</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>date</code>
-      </td>
-      <td>Date picker</td>
-      <td>
-        <code>DateValue[]</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>daterange</code>
-      </td>
-      <td>Date range</td>
-      <td>
-        <code>{'{start, end}[]'}</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-### Advanced Mode
-
-In advanced mode (`advancedMode: true`), each filter shows an operator selector.
-
-**Available Operators:**
-
-- **Text**: contains, equals, startsWith, endsWith, notContains, isEmpty, isNotEmpty
-- **Number**: equals, greaterThan, lessThan, between, isEmpty, isNotEmpty
-- **Date**: is, isBefore, isAfter, isBetween, isEmpty, isNotEmpty
-- **Select**: is, isAnyOf, isNot, isEmpty, isNotEmpty
-- **Boolean**: is, isEmpty, isNotEmpty
-
-## Exposed Methods
-
-Access via template ref:
-
-```vue
-<template>
-  <DataTable ref="tableRef" ... />
-</template>
-
-<script setup>
-const tableRef = ref()
-
-// Access methods
-tableRef.value.filtersState?.resetAll() // when enable-filter="true"; for external <Filters>, call resetAll on your own useFilters
-tableRef.value.resetSorting()
-tableRef.value.resetSelection()
-tableRef.value.resetPagination()
-tableRef.value.resetAll() // resets sorting, selection, pagination (filters owned separately)
-tableRef.value.refresh() // Trigger data reload with current state
-
-// Access state
-const selected = tableRef.value.selectedRows
-const hasSelection = tableRef.value.hasSelection
-
-// Keyboard navigation methods (when enableKeyboardNavigation is true)
-tableRef.value.focusTable() // Focus the table
-tableRef.value.blurTable() // Remove focus from table
-</script>
-```
-
-## URL State Restoration
-
-Use `initialFilters`, `initialSorting`, and `initialPagination` to restore table state from URL parameters on page load:
-
-```vue
-<script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { DataTable, type DataTableFilterState } from '@meldui/vue'
-import type { SortingState, PaginationState } from '@tanstack/vue-table'
-
-const route = useRoute()
-
-// URL format: ?page=2&per_page=20&sort_by=name&sort_order=desc&status=active&role=admin
-
-// Parse pagination from URL
-const initialPagination = computed<Partial<PaginationState>>(() => ({
-  pageIndex: Math.max(0, Number(route.query.page || 1) - 1), // Convert 1-indexed to 0-indexed
-  pageSize: Number(route.query.per_page) || 10,
-}))
-
-// Parse sorting from URL
-const initialSorting = computed<SortingState>(() => {
-  if (!route.query.sort_by) return []
-  return [{
-    id: String(route.query.sort_by),
-    desc: route.query.sort_order === 'desc',
-  }]
-})
-
-// Parse filters from URL — keyed by field id, value follows the per-type shape
-const initialFilters = computed<DataTableFilterState>(() => {
-  const filters: DataTableFilterState = {}
-  if (route.query.status) {
-    filters.status = [String(route.query.status)] // multiselect → string[]
-  }
-  if (route.query.role) {
-    filters.role = String(route.query.role) // select → string
-  }
-  return filters
-})
-</script>
-
-<template>
-  <DataTable
-    :columns="columns"
-    :data="data"
-    :page-count="pageCount"
-    :on-server-side-change="handleChange"
-    :initial-filters="initialFilters"
-    :initial-sorting="initialSorting"
-    :initial-pagination="initialPagination"
-    :filter-fields="filterFields"
-  />
-</template>
-```
-
-**Note:** Reset methods reset to true defaults (empty), not to initial values. This ensures the filter UI reflects the URL state when the page loads, avoiding double API calls.
-
-## Keyboard Navigation
-
-Enable keyboard navigation for improved accessibility with the `enableKeyboardNavigation` prop.
-
-### Usage
-
-```vue
-<template>
-  <DataTable
-    :columns="columns"
-    :data="data"
-    enable-keyboard-navigation
-    enable-row-selection
-    @row-activate="handleRowActivate"
-  />
-</template>
-
-<script setup>
-const handleRowActivate = (row) => {
-  // Handle row activation (e.g., open detail view)
-  console.log('Activated row:', row.original)
-}
-</script>
-```
-
-### Keyboard Shortcuts
-
-<table>
-  <thead>
-    <tr>
-      <th>Key</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>↑</code> / <code>↓</code>
-      </td>
-      <td>Navigate between rows</td>
-    </tr>
-    <tr>
-      <td>
-        <code>Home</code>
-      </td>
-      <td>Jump to first row</td>
-    </tr>
-    <tr>
-      <td>
-        <code>End</code>
-      </td>
-      <td>Jump to last row</td>
-    </tr>
-    <tr>
-      <td>
-        <code>PageUp</code>
-      </td>
-      <td>Previous page</td>
-    </tr>
-    <tr>
-      <td>
-        <code>PageDown</code>
-      </td>
-      <td>Next page</td>
-    </tr>
-    <tr>
-      <td>
-        <code>Ctrl+PageUp</code>
-      </td>
-      <td>First page</td>
-    </tr>
-    <tr>
-      <td>
-        <code>Ctrl+PageDown</code>
-      </td>
-      <td>Last page</td>
-    </tr>
-    <tr>
-      <td>
-        <code>Space</code>
-      </td>
-      <td>
-        Toggle row selection (when <code>enableRowSelection</code> is true)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>Enter</code>
-      </td>
-      <td>
-        Activate row (emits <code>@rowActivate</code> event)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>Escape</code>
-      </td>
-      <td>Clear selection and focus</td>
-    </tr>
-  </tbody>
-</table>
-
-### Focus Behavior
-
-When keyboard navigation is enabled:
-
-- The table container receives `tabindex="0"` to make it focusable
-- Pressing `↑`/`↓` when entering the table focuses the first row
-- The focused row is highlighted with a visible outline
-- Focus is maintained when navigating between pages
-
-## Row Expansion
-
-Enable expandable rows for master-detail patterns with the `enableRowExpansion` prop.
-
-### Usage
-
-```vue
-<script setup>
-import { createColumnHelper } from '@meldui/vue'
-
-const helper = createColumnHelper<Order>()
-
-const columns = [
-  helper.expander(), // Add expander toggle column
-  helper.accessor('id', { title: 'Order ID' }),
-  helper.accessor('customer', { title: 'Customer' }),
-  helper.accessor('total', { title: 'Total' }),
-]
-</script>
-
-<template>
-  <DataTable
-    :columns="columns"
-    :data="orders"
-    enable-row-expansion
-    :get-row-can-expand="(row) => row.original.items.length > 0"
-  >
-    <template #expanded-row="{ row }">
-      <div class="p-4">
-        <h4 class="font-medium mb-2">Order Items</h4>
-        <ul>
-          <li v-for="item in row.original.items" :key="item.id">
-            {{ item.name }} - {{ item.quantity }}x
-          </li>
-        </ul>
-      </div>
-    </template>
-  </DataTable>
-</template>
-```
-
-### Exposed Methods
-
-```typescript
-// Programmatic expansion control
-tableRef.value.expanded // Current expansion state
-tableRef.value.resetExpanded() // Collapse all rows
-tableRef.value.toggleAllRowsExpanded(true) // Expand all
-tableRef.value.toggleAllRowsExpanded(false) // Collapse all
-```
-
-## Footer & Aggregations
-
-Add footer rows with summary data using column `footer` definitions or the `#footer` slot.
-
-### Using Column Footers with Aggregation Helpers
-
-```typescript
-import { createColumnHelper, aggregations } from '@meldui/vue'
-
-interface Invoice {
-  id: string
-  description: string
-  amount: number
-  tax: number
-  date: Date
-}
-
-const helper = createColumnHelper<Invoice>()
-
-const columns = [
-  helper.accessor('id', {
-    title: 'ID',
-    // Count total rows
-    footer: aggregations.count({ format: '{count} invoices' }),
-  }),
-  helper.accessor('description', {
-    title: 'Description',
-  }),
-  helper.accessor('amount', {
-    title: 'Amount',
-    // Sum with currency formatting
-    footer: aggregations.sum({ format: 'currency', currency: 'USD' }),
-  }),
-  helper.accessor('tax', {
-    title: 'Tax Rate',
-    // Average with percent formatting
-    footer: aggregations.average({ format: 'percent', decimals: 1 }),
-  }),
-  helper.accessor('date', {
-    title: 'Date',
-    // Show date range
-    footer: aggregations.min({ format: 'date' }),
-  }),
-]
-```
-
-### Available Aggregation Helpers
-
-<table>
-  <thead>
-    <tr>
-      <th>Helper</th>
-      <th>Description</th>
-      <th>Options</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>aggregations.sum(options)</code>
-      </td>
-      <td>Sum of all values</td>
-      <td>
-        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
-        <code>prefix</code>, <code>suffix</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>aggregations.count(options)</code>
-      </td>
-      <td>Count of rows</td>
-      <td>
-        <code>format</code> (use <code>{'{count}'}</code> placeholder), <code>locale</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>aggregations.average(options)</code>
-      </td>
-      <td>Average of all values</td>
-      <td>
-        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
-        <code>prefix</code>, <code>suffix</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>aggregations.min(options)</code>
-      </td>
-      <td>Minimum value</td>
-      <td>
-        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
-        <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>aggregations.max(options)</code>
-      </td>
-      <td>Maximum value</td>
-      <td>
-        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
-        <code>dateOptions</code>, <code>prefix</code>, <code>suffix</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>aggregations.range(options)</code>
-      </td>
-      <td>Range (min – max)</td>
-      <td>
-        <code>format</code>, <code>currency</code>, <code>locale</code>, <code>decimals</code>,{' '}
-        <code>prefix</code>, <code>suffix</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>aggregations.custom(fn)</code>
-      </td>
-      <td>Custom aggregation</td>
-      <td>
-        Function receiving <code>{'{table, column}'}</code> context
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-### Format Options
-
-The `format` option supports:
-
-- `'number'` - Plain number formatting (default)
-- `'currency'` - Currency formatting (requires `currency` option)
-- `'percent'` - Percentage formatting
-- `'date'` - Date formatting (only for `min`/`max`)
-
-### Custom Aggregation Example
-
-```typescript
-helper.accessor('status', {
-  title: 'Status',
-  footer: aggregations.custom(({ table }) => {
-    const rows = table.getFilteredRowModel().rows
-    const completed = rows.filter((r) => r.original.status === 'completed').length
-    return `${completed}/${rows.length} completed`
-  }),
-})
-```
-
-### Custom Footer Slot
-
-For complete control over footer content, use the `#footer` slot:
-
-```vue
-<DataTable :columns="columns" :data="data" ...>
-  <template #footer="{ table }">
-    <tr>
-      <td colspan="2" class="font-medium">Totals</td>
-      <td class="font-medium">
-        {{ formatCurrency(calculateTotal(table)) }}
-      </td>
-      <td></td>
-    </tr>
-  </template>
-</DataTable>
-```
-
-## Styling
-
-The DataTable uses your theme's CSS custom properties directly for consistent styling. Colors, borders, and states automatically adapt to your theme.
-
-### Theme Variables Used
-
-The DataTable references these standard theme variables:
-
-- `--background`, `--foreground` - Base colors
-- `--muted`, `--muted-foreground` - Header and footer backgrounds
-- `--accent` - Hover states
-- `--border` - All borders
-- `--ring`, `--primary` - Focus states
-
-### Density
-
-Control cell padding and font size with the `density` prop:
-
-```vue
-<template>
-  <DataTable density="compact" ... />
-  <!-- Tight spacing -->
-  <DataTable density="comfortable" ... />
-  <!-- Default -->
-  <DataTable density="spacious" ... />
-  <!-- Relaxed spacing -->
-</template>
-```
-
-The density system uses these CSS variables (customizable per density level):
-
-```css
-:root {
-  --dt-cell-padding-y: 0.5rem;
-  --dt-cell-padding-x: 0.75rem;
-  --dt-font-size: 0.875rem;
-  --dt-line-height: 1.5;
-}
-
-[data-density='compact'] {
-  --dt-cell-padding-y: 0.25rem;
-  --dt-cell-padding-x: 0.5rem;
-  --dt-font-size: 0.75rem;
-  --dt-line-height: 1.25;
-}
-
-[data-density='spacious'] {
-  --dt-cell-padding-y: 0.75rem;
-  --dt-cell-padding-x: 1rem;
-  --dt-font-size: 0.875rem;
-  --dt-line-height: 1.75;
-}
-```
-
-### Conditional Row Styling
-
-Use the `rowClass`, `rowStyle`, and `rowProps` props for dynamic row styling:
-
-```vue
-<template>
-  <DataTable
-    :columns="columns"
-    :data="data"
-    :row-class="
-      (row) => ({
-        'bg-red-50 dark:bg-red-950': row.original.isOverdue,
-        'bg-green-50 dark:bg-green-950': row.original.isCompleted,
-      })
-    "
-    :row-style="
-      (row) => ({
-        opacity: row.original.isArchived ? 0.5 : 1,
-      })
-    "
-    :row-props="
-      (row) => ({
-        'data-status': row.original.status,
-        onClick: () => handleRowClick(row.original),
-      })
-    "
-  />
-</template>
-```
-
-### Striped Rows
-
-```vue
-<template>
-  <DataTable class="striped-table" ... />
-</template>
-
-<style>
-.striped-table :deep(tbody tr:nth-child(even) td) {
-  background-color: var(--muted);
-}
-</style>
-```
-
-## Column Definition Helpers
-
-Use `createColumnHelper` to reduce column definition boilerplate and get automatic header rendering.
-
-### Basic Usage
-
-```typescript
-import { createColumnHelper, cellRenderers } from '@meldui/vue'
-
-interface User {
-  id: string
-  name: string
-  email: string
-  status: 'active' | 'inactive'
-  salary: number
-  createdAt: Date
-}
-
-const helper = createColumnHelper<User>()
-
-const columns = [
-  // Selection checkbox column
-  helper.selection(),
-
-  // Accessor column with auto-generated header
-  helper.accessor('name', {
-    title: 'Name',
-    enableSorting: true,
-  }),
-
-  helper.accessor('email', {
-    title: 'Email',
-  }),
-
-  // With cell renderer
-  helper.accessor('status', {
-    title: 'Status',
-    cell: cellRenderers.badge({
-      variantMap: { active: 'default', inactive: 'secondary' },
-    }),
-  }),
-
-  helper.accessor('salary', {
-    title: 'Salary',
-    cell: cellRenderers.currency({ currency: 'USD' }),
-  }),
-
-  helper.accessor('createdAt', {
-    title: 'Created',
-    cell: cellRenderers.date({ format: 'medium' }),
-  }),
-
-  // Actions column (dropdown mode)
-  helper.actions({
-    display: 'dropdown',
-    actions: [
-      {
-        label: 'Edit',
-        onClick: (row) => console.log('Edit', row.original),
-      },
-      {
-        label: 'Delete',
-        variant: 'destructive',
-        onClick: (row) => console.log('Delete', row.original),
-      },
-    ],
-  }),
-]
-```
-
-### Column Helper Methods
-
-<table>
-  <thead>
-    <tr>
-      <th>Method</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>helper.accessor(key, options)</code>
-      </td>
-      <td>Creates an accessor column with auto-generated header</td>
-    </tr>
-    <tr>
-      <td>
-        <code>helper.display(options)</code>
-      </td>
-      <td>Creates a display column (no data accessor)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>helper.selection(options?)</code>
-      </td>
-      <td>Creates a selection checkbox column</td>
-    </tr>
-    <tr>
-      <td>
-        <code>helper.expander(options?)</code>
-      </td>
-      <td>Creates an expander toggle column for row expansion</td>
-    </tr>
-    <tr>
-      <td>
-        <code>helper.actions(options)</code>
-      </td>
-      <td>Creates an actions column (inline or dropdown)</td>
-    </tr>
-  </tbody>
-</table>
-
-### Cell Renderers
-
-<table>
-  <thead>
-    <tr>
-      <th>Renderer</th>
-      <th>Description</th>
-      <th>Options</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>cellRenderers.badge(options)</code>
-      </td>
-      <td>Renders a Badge component</td>
-      <td>
-        <code>variantMap</code>, <code>defaultVariant</code>, <code>format</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>cellRenderers.date(options)</code>
-      </td>
-      <td>Formats date values</td>
-      <td>
-        <code>format</code>, <code>locale</code>, <code>fallback</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>cellRenderers.currency(options)</code>
-      </td>
-      <td>Formats as currency</td>
-      <td>
-        <code>currency</code>, <code>locale</code>, <code>minimumFractionDigits</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>cellRenderers.number(options)</code>
-      </td>
-      <td>Formats numbers</td>
-      <td>
-        <code>locale</code>, <code>useGrouping</code>, <code>compact</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>cellRenderers.boolean(options)</code>
-      </td>
-      <td>Formats boolean values</td>
-      <td>
-        <code>trueText</code>, <code>falseText</code>, <code>asBadge</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>cellRenderers.truncate(maxLength)</code>
-      </td>
-      <td>Truncates text with ellipsis</td>
-      <td>
-        <code>showTooltip</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-### Actions Column Options
-
-```typescript
-helper.actions({
-  display: 'dropdown', // or 'inline'
-  id: 'actions', // default: 'actions'
-  title: 'Actions', // header title
-  dropdownLabel: 'Open menu', // for dropdown trigger
-  actions: [
-    {
-      label: 'Edit',
-      icon: IconEdit, // optional icon
-      variant: 'ghost', // button variant (inline mode)
-      onClick: (row) => {}, // handler
-      show: (row) => true, // conditional visibility
-      disabled: (row) => false, // conditional disable
-    },
-  ],
-})
-```
-
-## Custom Filter Plugins
-
-Register custom filter types with the filter plugin system.
-
-### Creating a Custom Filter
-
-```typescript
-import { defineFilter, type FilterPluginComponentProps } from '@meldui/vue'
-import CurrencyFilterComponent from './CurrencyFilter.vue'
-
-// Define a custom filter plugin
-const currencyFilter = defineFilter({
-  type: 'currency',
-  component: CurrencyFilterComponent,
-  operators: ['equals', 'greaterThan', 'lessThan', 'between'],
-  defaultOperator: 'equals',
-  supportsMultiInstance: true,
-})
-
-// Use in DataTable
-<DataTable
-  :filter-plugins="[currencyFilter]"
-  :filter-fields="[
-    { id: 'price', label: 'Price', type: 'currency', currency: 'USD' }
-  ]"
-/>
-```
-
-### Custom Filter Component
-
-```vue
-<script setup lang="ts">
-import type { FilterPluginComponentProps } from '@meldui/vue'
-
-// Extend with your custom props
-const props = defineProps<
-  FilterPluginComponentProps & {
-    currency?: string
-    min?: number
-    max?: number
-  }
->()
-
-// Required emit events
-const emit = defineEmits<{
-  'value-change': [value: number | undefined]
-  remove: []
-  close: []
-}>()
-</script>
-
-<template>
-  <!-- Your filter UI here -->
-</template>
-```
-
-### Plugin Options
-
-<table>
-  <thead>
-    <tr>
-      <th>Option</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>type</code>
-      </td>
-      <td>
-        <code>string</code>
-      </td>
-      <td>Unique filter type identifier</td>
-    </tr>
-    <tr>
-      <td>
-        <code>component</code>
-      </td>
-      <td>
-        <code>Component</code>
-      </td>
-      <td>Vue component that renders the filter</td>
-    </tr>
-    <tr>
-      <td>
-        <code>operators</code>
-      </td>
-      <td>
-        <code>FilterOperator[]</code>
-      </td>
-      <td>Available operators (optional)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>defaultOperator</code>
-      </td>
-      <td>
-        <code>FilterOperator</code>
-      </td>
-      <td>Default operator (optional)</td>
-    </tr>
-    <tr>
-      <td>
-        <code>supportsMultiInstance</code>
+        <code>enablePagination</code>
       </td>
       <td>
         <code>boolean</code>
       </td>
-      <td>Allow multiple instances (default: false)</td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>
+        Render the <code>&lt;Pagination&gt;</code> footer. Requires <code>v-model:pagination</code>{' '}
+        and <code>pageCount</code>.
+      </td>
     </tr>
     <tr>
       <td>
-        <code>serialize</code>
+        <code>sorting</code>
       </td>
       <td>
-        <code>(value) =&gt; unknown</code>
+        <code>SortingState</code>
       </td>
-      <td>Transform value for server (optional)</td>
+      <td>—</td>
+      <td>
+        <code>v-model:sorting</code> target. Required when <code>enableSorting</code> is true.
+      </td>
     </tr>
     <tr>
       <td>
-        <code>deserialize</code>
+        <code>filters</code>
       </td>
       <td>
-        <code>(value) =&gt; T</code>
+        <code>DataTableFilterState</code>
       </td>
-      <td>Transform server value back (optional)</td>
-    </tr>
-  </tbody>
-</table>
-
-### Component Props
-
-Your filter component will receive these props:
-
-<table>
-  <thead>
-    <tr>
-      <th>Prop</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
+      <td>—</td>
       <td>
-        <code>column</code>
+        <code>v-model:filters</code> target. Required when <code>enableFilter</code> is true.
       </td>
-      <td>
-        <code>Column</code>
-      </td>
-      <td>The table column being filtered</td>
     </tr>
     <tr>
       <td>
-        <code>title</code>
+        <code>pagination</code>
       </td>
       <td>
-        <code>string</code>
+        <code>PaginationState</code>
       </td>
-      <td>Filter title/label</td>
+      <td>—</td>
+      <td>
+        <code>v-model:pagination</code> target — <code>&#123; pageIndex, pageSize &#125;</code>.
+      </td>
     </tr>
     <tr>
       <td>
-        <code>placeholder</code>
+        <code>filterFields</code>
       </td>
       <td>
-        <code>string</code>
+        <code>DataTableFilterField[]</code>
       </td>
-      <td>Placeholder text</td>
+      <td>
+        <code>[]</code>
+      </td>
+      <td>
+        Filter field definitions for the internal <code>&lt;Filters&gt;</code> row.
+      </td>
     </tr>
     <tr>
       <td>
-        <code>icon</code>
+        <code>filterSearch</code>
       </td>
       <td>
-        <code>Component</code>
+        <code>&#123; id, placeholder?, debounceMs? &#125;</code>
       </td>
-      <td>Icon component</td>
-    </tr>
-    <tr>
+      <td>—</td>
       <td>
-        <code>defaultOpen</code>
+        Search input config (rendered inside the filter toolbar). Search value travels in{' '}
+        <code>filters</code> under <code>filterSearch.id</code>. Requires <code>enable-filter</code>
+        .
       </td>
-      <td>
-        <code>boolean</code>
-      </td>
-      <td>Auto-open on mount</td>
-    </tr>
-    <tr>
-      <td>
-        <code>openTrigger</code>
-      </td>
-      <td>
-        <code>number</code>
-      </td>
-      <td>Trigger to re-open</td>
     </tr>
     <tr>
       <td>
@@ -1747,72 +254,218 @@ Your filter component will receive these props:
       <td>
         <code>boolean</code>
       </td>
-      <td>Whether advanced mode is enabled</td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Switch filters into operator-object mode.</td>
     </tr>
     <tr>
       <td>
-        <code>defaultOperator</code>
+        <code>enableRowSelection</code>
       </td>
       <td>
-        <code>FilterOperator</code>
+        <code>boolean</code>
       </td>
-      <td>Default operator</td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Row selection (internal state).</td>
     </tr>
     <tr>
       <td>
-        <code>availableOperators</code>
+        <code>enableColumnPinning</code>
       </td>
       <td>
-        <code>FilterOperator[]</code>
+        <code>boolean</code>
       </td>
-      <td>Available operators</td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Column pinning (internal state).</td>
     </tr>
     <tr>
       <td>
-        <code>...custom</code>
+        <code>enableColumnHiding</code>
       </td>
       <td>
-        <code>unknown</code>
+        <code>boolean</code>
       </td>
-      <td>Custom props from filter field</td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Column hide/show via header dropdown (internal state).</td>
+    </tr>
+    <tr>
+      <td>
+        <code>enableColumnResizing</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Column resize drag handles (internal state).</td>
+    </tr>
+    <tr>
+      <td>
+        <code>enableRowExpansion</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Per-row expansion (internal state).</td>
+    </tr>
+    <tr>
+      <td>
+        <code>loading</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Skeleton rows while data is fetching.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>error</code>
+      </td>
+      <td>
+        <code>string | Error</code>
+      </td>
+      <td>—</td>
+      <td>Show error alert with retry button.</td>
     </tr>
   </tbody>
 </table>
 
-### Required Events
+## Emits
 
-Your component must emit these events:
+`<DataTable>` emits three per-axis v-model events:
 
-- `value-change`: Emitted when the filter value changes
-- `remove`: Emitted when the filter is removed
-- `close`: Emitted when the filter popover closes
+- `update:sorting` — payload `SortingState`
+- `update:filters` — payload `DataTableFilterState`
+- `update:pagination` — payload `PaginationState`
 
-## Story Navigation
+Plus:
 
-Explore the following stories for detailed examples:
+- `@retry` — fired when the user clicks Retry in the error state.
+- `@refresh` — fired when the toolbar refresh button is clicked.
+- `@rowActivate` — fired by keyboard navigation (Enter/Space).
 
-### Core Features
+## useDataTableController
 
-- **Basic** - Simple table, search, pagination, and sorting
-- **Filters** - All filter types with examples
-- **Selection** - Row selection and bulk actions
-- **Advanced Filters** - Operator-based filtering
+Parent-side composable bundling the three v-model refs, the page-reset rule, and a merged `state` computed.
 
-### Visual Customization
+```ts
+const { sorting, filters, pagination, state, reset } = useDataTableController({
+  pageSize: 20,
+  // Optional:
+  initialSorting: [{ id: 'name', desc: false }],
+  initialFilters: { role: 'admin' },
+  initialPagination: { pageIndex: 0, pageSize: 20 },
+  resetPageOnFilterChange: true, // default
+  resetPageOnSortChange: true, // default
+})
 
-- **States** - Loading skeleton, error with retry, empty with custom slot
-- **Customization** - Slots, density variants, conditional row styling, CSS theming
+watch(state, fetchPage, { deep: true })
+```
 
-### Developer Experience
+The composable applies `flush: 'sync'` page-reset watchers internally so a single user action produces exactly one fetch. Without it, a filter change would fire `fetchPage` twice (once before the reset, once after).
 
-- **ColumnHelpers** - `createColumnHelper`, selection column, actions column (inline/dropdown), cell renderers, aggregations
-- **Column Pinning** - Pinning columns left/right with sticky headers
+## Mixed and external scenarios
 
-### Advanced Interactions
+See **Components/DataTable/Usage Examples** for canonical wirings:
 
-- **InteractiveFeatures** - Column resizing, keyboard navigation, refresh button
-- **Events** - Event handling and callbacks
+1. Everything internal (recommended)
+2. Everything internal, manual wiring (no composable)
+3. Everything external (DataTable as pure renderer)
+4. Mixed: external filter, internal sort + pagination
+5. Grid view with composable
+6. URL state restoration
+7. Switchable table / grid view
+8. Grid view, no DataTable, no composable
 
-### Complete Examples
+## Feature coverage matrix
 
-- **Full Example** - Complete implementation with all features
+Each feature → the Storybook story that demonstrates it.
+
+| Feature                                     | Story                                                                                                                        |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Minimal setup, search, page sizes           | Basic                                                                                                                        |
+| 8 canonical wiring scenarios                | Usage Examples                                                                                                               |
+| Per-axis emits (`update:*`)                 | Events / BasicEventLogging                                                                                                   |
+| `tableStateToServerParams` helper           | Events / StateToServerParams                                                                                                 |
+| `useDataTableController` options            | useDataTableController                                                                                                       |
+| Loading skeleton                            | States / Loading, LoadingToggle                                                                                              |
+| Error state + retry                         | States / ErrorString, ErrorObject, ErrorWithRecovery                                                                         |
+| Empty state                                 | States / Empty                                                                                                               |
+| Custom `#empty` slot                        | States / CustomEmptySlot                                                                                                     |
+| Custom `#error` slot                        | States / CustomErrorSlot                                                                                                     |
+| Row selection (checkbox column)             | Selection / BasicSelection, SelectedCount                                                                                    |
+| Bulk actions                                | Selection / SingleBulkAction, MultipleBulkActions                                                                            |
+| Bulk action with AlertDialog confirm        | Selection / BulkActionsWithDialog                                                                                            |
+| Imperative selection access                 | Selection / AccessSelectedRowsImperatively                                                                                   |
+| Selection across pages                      | Selection / SelectionAcrossPages                                                                                             |
+| Row expansion + `#expanded-row` slot        | RowExpansion / BasicExpansion                                                                                                |
+| Conditional row expansion                   | RowExpansion / ConditionalExpansion                                                                                          |
+| Nested DataTable in expansion               | RowExpansion / NestedTableInExpansion                                                                                        |
+| Rich content in expansion                   | RowExpansion / ExpansionWithRichContent                                                                                      |
+| `toggleAllRowsExpanded()`                   | RowExpansion / ExpandAllToggle                                                                                               |
+| `helper.accessor()` / `display()`           | Columns / Accessor, Display                                                                                                  |
+| `helper.selection()` / `expander()`         | Columns / Selection, Expander                                                                                                |
+| `helper.actions()` (dropdown + inline)      | Columns / ActionsDropdown, ActionsInline                                                                                     |
+| Actions with `show` / `disabled`            | Columns / ActionsConditional                                                                                                 |
+| Column pinning (left / right / both)        | Columns / PinLeft, PinRight, PinBothSides, PinMultipleLeft                                                                   |
+| Programmatic pin / unpin / reset            | Columns / ProgrammaticPinning                                                                                                |
+| Protected `defaultPinning`                  | Columns / ProtectedDefaultPinning                                                                                            |
+| Column hiding (with locked columns)         | Columns / EnableHiding, LockedColumns                                                                                        |
+| Programmatic column visibility              | Columns / ProgrammaticVisibility                                                                                             |
+| Column resizing                             | Columns / ResizeOnChange, ResizeOnEnd, ResizingWithPinning                                                                   |
+| Footer aggregations                         | Columns / CountFooter, SumAndAverage, MinMaxRange, CustomAggregation                                                         |
+| Cell renderers (badge / currency / etc.)    | Cells / BadgeRenderer, CurrencyRenderer, NumberRenderer, DateRenderer, BooleanAsBadge, TruncateRenderer, CombinedRenderers   |
+| Avatar + Avatar Group in cell               | Cells / AvatarCell, AvatarGroupCell                                                                                          |
+| Inline badges in cell                       | Cells / InlineBadges                                                                                                         |
+| Progress / Tooltip / Link cell              | Cells / ProgressCell, TooltipOnCell, LinkCell                                                                                |
+| Button opens Sheet                          | Cells / ButtonOpenSheet                                                                                                      |
+| Inline edit cell                            | Cells / InlineEditCell                                                                                                       |
+| Switch cell                                 | Cells / SwitchCell                                                                                                           |
+| AlertDialog action cell                     | Cells / DialogActionCell                                                                                                     |
+| Compound rich cell (icon + badge)           | Cells / CompoundRichCell                                                                                                     |
+| 8 simple-mode filter types                  | Filters / TextFilter, NumberFilter, SelectFilter, MultiSelectFilter, BooleanFilter, RangeFilter, DateFilter, DateRangeFilter |
+| Advanced-mode operators (per type)          | Filters / TextOperators, NumberOperators, DateOperators, SelectOperators, BooleanOperators                                   |
+| Restrict operators via `availableOperators` | Filters / AvailableOperatorsSubset                                                                                           |
+| Multi-instance filters                      | Filters / MultipleInstancesPerField                                                                                          |
+| Advanced filter payload format              | Filters / AdvancedPayloadFormat                                                                                              |
+| Custom filter plugin (`defineFilter`)       | Filters / DefineRatingPlugin, PluginInSimpleMode, PluginInAdvancedMode                                                       |
+| Keyboard navigation (arrows / Home / End)   | Keyboard / BasicKeyboardNav                                                                                                  |
+| Space toggles selection                     | Keyboard / KeyboardSelection                                                                                                 |
+| Enter row activation                        | Keyboard / KeyboardRowActivation                                                                                             |
+| PageUp / Down / Ctrl+ variants              | Keyboard / PageNavigation                                                                                                    |
+| Programmatic focus                          | Keyboard / ProgrammaticFocus                                                                                                 |
+| Toolbar slots                               | Customization / ToolbarStartEnd, ReplaceToolbar                                                                              |
+| Footer / Pagination / Row slots             | Customization / FooterSlot, PaginationSlot, RowSlot                                                                          |
+| Row class / style / props                   | Customization / ConditionalRowClass, ConditionalRowStyle, RowProps                                                           |
+| `headerClass`, `bordered`, striped          | Customization / HeaderClass, BorderedCells, StripedRows                                                                      |
+| Density variants                            | Customization / DensityCompact, DensityComfortable, DensitySpacious, DensityToggle                                           |
+| URL state restoration (each axis)           | URLState / SortingFromURL, PaginationFromURL, FiltersFromURL, AdvancedFiltersFromURL, DateFiltersFromURL                     |
+| Full URL persistence loop                   | URLState / FullURLPersistence                                                                                                |
+| Production kitchen-sink                     | FullExample / CompleteUserManagement, AdvancedFilterProduction, ReadOnlyTable                                                |
+| Standalone `<Pagination>` composite         | Pagination / Standalone                                                                                                      |
+
+## Migration from v1
+
+| v1                                                        | v2                                                                              |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `onServerSideChange`                                      | `update:sorting` / `update:filters` / `update:pagination`                       |
+| `initialFilters` / `initialSorting` / `initialPagination` | `useDataTableController({ initialFilters, initialSorting, initialPagination })` |
+| `showPagination`                                          | `enablePagination` (default **false**)                                          |
+| `searchColumn` / `searchPlaceholder`                      | `filterSearch={ id, placeholder }`                                              |
+| `DataTablePagination`                                     | `Pagination` (standalone composite)                                             |
+
+Pagination now resets to page 0 on **sort change** in addition to filter change (industry-aligned). Opt-out via `useDataTableController({ resetPageOnSortChange: false })`.

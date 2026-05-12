@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
 import { DataTable, createColumnHelper, cellRenderers } from '@meldui/vue'
 
@@ -91,7 +91,7 @@ const columns = [
         :columns="columns"
         :data="data"
         :page-count="pageCount"
-        :on-server-side-change="() => {}"
+        
       />
     </div>
   </DemoBlock>

@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button'
 import type { RegisteredFilterPlugin } from '@/composites/filters/filterPlugins'
 import Filters from '@/composites/filters/Filters.vue'
 import type { DataTableFilterField } from '@/composites/filters/types'
-import type { UseFiltersReturn } from '@/composites/filters/useFilters'
-import type { BulkActionOption } from './types'
+import type { BulkActionOption, DataTableFilterState } from './types'
 import DataTableBulkActions from './DataTableBulkActions.vue'
 import DataTableViewOptions from './DataTableViewOptions.vue'
 
@@ -16,24 +15,17 @@ interface Props {
   filterFields?: DataTableFilterField<TData>[]
   filterPlugins?: RegisteredFilterPlugin[]
   bulkSelectOptions?: BulkActionOption<TData>[]
-
-  // Advanced mode (static - never changes)
   advancedMode?: boolean
-
-  // Loading state
   loading?: boolean
-
-  // Refresh button
   showRefreshButton?: boolean
-
-  // Column hiding
   enableColumnHiding?: boolean
-
-  // Filter UI gate (true = render filters in toolbar, false = parent owns filtering)
   enableFilter?: boolean
-
-  // Filter state hoisted from <DataTable>. Provided when enableFilter is true.
-  filtersState?: UseFiltersReturn<TData>
+  /**
+   * Controlled `filterValues` v-model from `<DataTable>`. Passed through to
+   * the internal `<Filters>` instance when `enableFilter` is true.
+   */
+  filterValues?: DataTableFilterState
+  searchField?: { id: string; placeholder?: string; debounceMs?: number }
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -48,9 +40,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   refresh: []
+  'update:filterValues': [next: DataTableFilterState]
 }>()
 
-// Pinning helpers (unchanged)
 const hasUserPins = computed(() => {
   const tableMeta = props.table.options.meta as
     | { defaultPinning?: { left: string[]; right: string[] } }
@@ -79,16 +71,17 @@ const resetPinning = () => {
 
 <template>
   <div class="flex flex-wrap justify-between gap-2">
-    <!-- Filter row (rendered only when enableFilter is true and filtersState provided by parent) -->
+    <!-- Internal filter mode: render <Filters> controlled by the parent's v-model:filters -->
     <Filters
-      v-if="enableFilter && filtersState"
+      v-if="enableFilter"
       class="flex-1"
-      :state="filtersState"
+      :filter-values="filterValues"
       :fields="filterFields"
       :plugins="filterPlugins"
       :advanced-mode="advancedMode"
-      :search-field="filtersState.searchField"
+      :search-field="searchField"
       :loading="loading"
+      @update:filter-values="(next) => emit('update:filterValues', next)"
     >
       <template #start>
         <slot name="toolbar-start" :table="table" />
@@ -117,7 +110,7 @@ const resetPinning = () => {
       </template>
     </Filters>
 
-    <!-- When filtering is delegated to the parent: render only the right-side area -->
+    <!-- External filter mode: render only slots + right-side actions -->
     <template v-else>
       <div class="flex flex-1 items-center flex-wrap gap-2">
         <slot name="toolbar-start" :table="table" />

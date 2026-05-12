@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
-import { DataTable, createColumnHelper } from '@meldui/vue'
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 
 interface Employee {
   id: string
@@ -44,13 +44,10 @@ const employees: Employee[] = Array.from({ length: 15 }, (_, i) => ({
 const data = ref(employees.slice(0, 10))
 const pageCount = ref(2)
 
-function handleChange({ pagination }: any) {
-  const start = pagination.pageIndex * pagination.pageSize
-  data.value = employees.slice(start, start + pagination.pageSize)
-}
+
 
 const code = `\u003cscript setup lang="ts">
-import { DataTable, createColumnHelper } from '@meldui/vue'
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 
 const helper = createColumnHelper\u003cEmployee>()
 
@@ -74,7 +71,10 @@ const columns = [
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
+    enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
     enable-column-pinning
     enable-row-selection
     :default-pinning="{
@@ -92,7 +92,10 @@ const columns = [
         :columns="columns"
         :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
         enable-column-pinning
         enable-row-selection
         :default-pinning="{

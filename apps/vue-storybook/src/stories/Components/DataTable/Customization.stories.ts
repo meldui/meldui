@@ -1,24 +1,16 @@
 /**
  * DataTable Customization Examples
  *
- * Demonstrates visual customization capabilities:
- * - Slot usage (toolbar, row, cell)
- * - Density variants (compact, comfortable, spacious)
- * - Conditional row styling
- * - CSS custom property theming
+ * Visual customisation via slots, density modes, row styling functions,
+ * and visual flags like `bordered` / `headerClass`.
  */
 
 import { IconDownload, IconPlus, IconRefresh } from '@meldui/tabler-vue'
-import { Badge, Button, DataTable } from '@meldui/vue'
+import { Button, DataTable, Pagination } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { computed, ref } from 'vue'
-import {
-  MOCK_USERS,
-  minimalColumns,
-  simulateServerSide,
-  type TableState,
-  type User,
-} from './_shared'
+import type { Row } from '@tanstack/vue-table'
+import { ref } from 'vue'
+import { type User, extendedColumns, minimalColumns, useStoryData } from './_shared'
 
 const meta: Meta<typeof DataTable> = {
   title: 'Components/DataTable/Customization',
@@ -28,14 +20,8 @@ const meta: Meta<typeof DataTable> = {
     docs: {
       description: {
         component: `
-DataTable customization examples.
-
-These examples demonstrate:
-- Toolbar slots for adding custom controls
-- Row and cell slots for custom rendering
-- Density options for different use cases
-- Conditional row styling based on data
-- CSS custom properties for theming
+Slots (\`#toolbar\`, \`#toolbar-start\`, \`#toolbar-end\`, \`#row\`, \`#footer\`,
+\`#pagination\`), density modes, row styling functions, and visual flags.
         `,
       },
     },
@@ -45,849 +31,482 @@ These examples demonstrate:
 export default meta
 type Story = StoryObj<typeof meta>
 
-// Helper functions for row customization
-function refreshCustomAction() {
-  alert('Custom refresh action!')
-}
-
-function getRowClassByStatus(row: { original: User }) {
-  return {
-    'bg-red-50 dark:bg-red-950/30': row.original.status === 'inactive',
-    'bg-green-50 dark:bg-green-950/30': row.original.role === 'admin',
-  }
-}
-
-function getRowStyleByStatus(row: { original: User }) {
-  return {
-    opacity: row.original.status === 'inactive' ? 0.5 : 1,
-    fontWeight: row.original.role === 'admin' ? 600 : 400,
-  }
-}
-
-function getRowPropsWithHandlers(row: { original: User }) {
-  return {
-    'data-user-id': row.original.id,
-    'data-status': row.original.status,
-    onClick: () => console.log('Clicked:', row.original.name),
-    class: 'cursor-pointer',
-  }
-}
-
-function getStripedRowClass(row: { index: number }) {
-  return {
-    'bg-muted/50': row.index % 2 === 1,
-  }
-}
-
 // ============================================================================
-// Slot Examples
+// SLOTS
 // ============================================================================
 
 /**
- * Adding custom content to the toolbar using slots.
+ * Add buttons before / after the toolbar's main row.
  */
-export const ToolbarSlots: Story = {
+export const ToolbarStartEnd: Story = {
   render: () => ({
-    components: { DataTable, Button, IconPlus, IconDownload, IconRefresh },
+    components: { DataTable, Button, IconPlus, IconDownload },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        columns: minimalColumns,
-      }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Use <code>#toolbar-start</code> and <code>#toolbar-end</code> slots to add custom buttons.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-        >
-          <template #toolbar-start>
-            <Button size="sm">
-              <IconPlus class="mr-2 h-4 w-4" />
-              Add User
-            </Button>
-          </template>
-          <template #toolbar-end>
-            <div class="flex gap-2">
-              <Button variant="outline" size="sm">
-                <IconDownload class="mr-2 h-4 w-4" />
-                Export
-              </Button>
-              <Button variant="ghost" size="icon-sm">
-                <IconRefresh class="h-4 w-4" />
-              </Button>
-            </div>
-          </template>
-        </DataTable>
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      >
+        <template #toolbar-start>
+          <h3 class="text-sm font-medium mr-2">Users</h3>
+        </template>
+        <template #toolbar-end>
+          <Button size="sm" variant="outline"><IconDownload class="mr-1 h-4 w-4" /> Export</Button>
+          <Button size="sm"><IconPlus class="mr-1 h-4 w-4" /> Add user</Button>
+        </template>
+      </DataTable>
     `,
   }),
 }
 
 /**
- * Custom cell rendering using dynamic slot.
+ * Replace the entire toolbar via the `#toolbar` slot.
+ * Receives `{ table, loading }` as slot props.
  */
-export const CustomCellSlot: Story = {
-  render: () => ({
-    components: { DataTable, Badge },
-    setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        columns: minimalColumns,
-      }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Use <code>#cell-[columnId]</code> slots for custom cell rendering.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-        >
-          <template #cell-status="{ value }">
-            <div class="flex items-center gap-2">
-              <span
-                class="h-2 w-2 rounded-full"
-                :class="value === 'active' ? 'bg-green-500' : 'bg-gray-400'"
-              />
-              <span class="capitalize">{{ value }}</span>
-            </div>
-          </template>
-          <template #cell-role="{ value }">
-            <Badge :variant="value === 'admin' ? 'default' : 'secondary'">
-              {{ value }}
-            </Badge>
-          </template>
-        </DataTable>
-      </div>
-    `,
-  }),
-}
-
-/**
- * Complete toolbar replacement using #toolbar slot.
- */
-export const CustomToolbarSlot: Story = {
+export const ReplaceToolbar: Story = {
   render: () => ({
     components: { DataTable, Button, IconRefresh },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        refresh: refreshCustomAction,
-        columns: minimalColumns,
-      }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Use <code>#toolbar</code> slot to completely replace the default toolbar.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-        >
-          <template #toolbar="{ table, loading }">
-            <div class="flex items-center justify-between p-4 bg-muted/50 rounded-t-lg">
-              <h3 class="text-lg font-semibold">User Management</h3>
-              <div class="flex items-center gap-2">
-                <span class="text-sm text-muted-foreground">
-                  {{ table.getFilteredRowModel().rows.length }} users
-                </span>
-                <Button variant="outline" size="sm" @click="refresh" :disabled="loading">
-                  <IconRefresh class="h-4 w-4" />
-                </Button>
-              </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      >
+        <template #toolbar="{ table, loading }">
+          <div class="flex items-center justify-between rounded-md border bg-muted/30 px-3 py-2">
+            <div class="text-sm">
+              <span class="font-medium">{{ table.getRowModel().rows.length }}</span>
+              <span class="text-muted-foreground"> rows shown</span>
             </div>
-          </template>
-        </DataTable>
-      </div>
+            <Button size="sm" variant="outline" :disabled="loading">
+              <IconRefresh class="mr-1 h-4 w-4" /> Refresh
+            </Button>
+          </div>
+        </template>
+      </DataTable>
     `,
   }),
 }
 
-// ============================================================================
-// Density Examples
-// ============================================================================
-
 /**
- * Compact density - minimal padding, smaller text.
- * Best for dense data displays.
+ * Custom footer slot.
  */
-export const DensityCompact: Story = {
+export const FooterSlot: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 15 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Compact density with minimal cell padding (0.25rem vertical, 0.5rem horizontal).
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          :default-per-page="15"
-          density="compact"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      >
+        <template #footer="{ table }">
+          <tr>
+            <td :colspan="columns.length" class="bg-muted p-2 text-sm text-muted-foreground">
+              Showing {{ table.getRowModel().rows.length }} on this page
+            </td>
+          </tr>
+        </template>
+      </DataTable>
     `,
   }),
 }
 
 /**
- * Comfortable density - balanced padding (default).
- * Best for general use.
+ * Replace the default pagination with a custom layout.
  */
-export const DensityComfortable: Story = {
+export const PaginationSlot: Story = {
+  render: () => ({
+    components: { DataTable, Pagination },
+    setup() {
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
+    },
+    template: `
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      >
+        <template #pagination="{ pagination: p, pageCount: pc, totalRows: tr }">
+          <div class="rounded-md border bg-muted/30 p-2">
+            <p class="text-xs text-muted-foreground mb-2">Custom pagination footer ({{ tr }} total rows)</p>
+            <Pagination
+              :pagination="p"
+              :page-count="pc"
+              :total-rows="tr"
+              @update:pagination="(v) => pagination = v"
+            />
+          </div>
+        </template>
+      </DataTable>
+    `,
+  }),
+}
+
+/**
+ * Replace row rendering entirely via the `#row` slot.
+ * Use when you need a completely custom row layout (e.g., card-style rows).
+ */
+export const RowSlot: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 5 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Comfortable density (default) with balanced cell padding.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          density="comfortable"
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Spacious density - generous padding.
- * Best for touch interfaces or accessibility.
- */
-export const DensitySpacious: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 5 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Spacious density with generous cell padding (0.75rem vertical, 1rem horizontal).
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          :default-per-page="5"
-          density="spacious"
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Compare all density options side by side.
- */
-export const DensityComparison: Story = {
-  render: () => ({
-    components: { DataTable, Button },
-    setup() {
-      const density = ref<'compact' | 'comfortable' | 'spacious'>('comfortable')
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 5 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { density, localData, pageCount, handleChange, columns: minimalColumns }
-    },
-    template: `
-      <div class="space-y-4">
-        <div class="flex gap-2">
-          <Button
-            v-for="d in ['compact', 'comfortable', 'spacious']"
-            :key="d"
-            :variant="density === d ? 'default' : 'outline'"
-            size="sm"
-            @click="density = d"
-          >
-            {{ d }}
-          </Button>
-        </div>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          :default-per-page="5"
-          :density="density"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      >
+        <template #row="{ row, index }">
+          <tr :class="['hover:bg-muted/40', index % 2 === 0 ? 'bg-muted/10' : '']">
+            <td :colspan="columns.length" class="p-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="font-medium">{{ row.original.name }}</div>
+                  <div class="text-xs text-muted-foreground">{{ row.original.email }}</div>
+                </div>
+                <div class="text-sm">{{ row.original.role }}</div>
+              </div>
+            </td>
+          </tr>
+        </template>
+      </DataTable>
     `,
   }),
 }
 
 // ============================================================================
-// Conditional Row Styling
+// ROW STYLING
 // ============================================================================
 
 /**
- * Conditional row classes based on data.
+ * `:row-class` returns classes per row — highlight inactive and admin rows.
  */
 export const ConditionalRowClass: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        getRowClass: getRowClassByStatus,
-        columns: minimalColumns,
-      }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      const rowClass = (row: Row<User>) => ({
+        'bg-red-50 dark:bg-red-950/30': row.original.status === 'inactive',
+        'bg-green-50 dark:bg-green-950/30':
+          row.original.role === 'admin' && row.original.status === 'active',
+      })
+      return { sorting, pagination, data, pageCount, totalRows, columns: extendedColumns, rowClass }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Rows are highlighted based on status and role:
-          <span class="inline-block px-2 bg-green-50 dark:bg-green-950/30 rounded ml-1">Admin</span>
-          <span class="inline-block px-2 bg-red-50 dark:bg-red-950/30 rounded ml-1">Inactive</span>
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          :row-class="getRowClass"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :row-class="rowClass"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Conditional row styles using inline styles.
+ * `:row-style` returns inline styles per row.
  */
 export const ConditionalRowStyle: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        getRowStyle: getRowStyleByStatus,
-        columns: minimalColumns,
-      }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      const rowStyle = (row: Row<User>) =>
+        row.original.is_verified ? { opacity: '1' } : { opacity: '0.5', fontStyle: 'italic' }
+      return { sorting, pagination, data, pageCount, totalRows, columns: extendedColumns, rowStyle }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Inactive users are dimmed (50% opacity), admins are bold.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          :row-style="getRowStyle"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :row-style="rowStyle"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Custom row attributes and event handlers.
+ * `:row-props` adds attributes and event handlers per row.
  */
-export const ConditionalRowProps: Story = {
+export const RowProps: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      const lastClicked = ref<string>('')
+      const rowProps = (row: Row<User>) => ({
+        'data-user-id': row.original.id,
+        onClick: () => {
+          lastClicked.value = `${row.original.name} (id: ${row.original.id})`
+        },
+        class: 'cursor-pointer',
+      })
       return {
-        localData,
+        sorting,
+        pagination,
+        data,
         pageCount,
-        handleChange,
-        getRowProps: getRowPropsWithHandlers,
+        totalRows,
         columns: minimalColumns,
+        rowProps,
+        lastClicked,
       }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Each row has custom data attributes and click handlers. Check the console when clicking a row.
-        </p>
+      <div class="space-y-2">
+        <p class="text-sm">Last clicked: <span class="font-mono">{{ lastClicked || '(none)' }}</span></p>
         <DataTable
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          :row-props="getRowProps"
+          :total-rows="totalRows"
+          :row-props="rowProps"
+          enable-sorting enable-pagination
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
         />
       </div>
     `,
   }),
 }
 
-// ============================================================================
-// Header & Theme Customization
-// ============================================================================
-
 /**
- * Custom header styling using Tailwind classes via headerClass prop.
+ * Custom header background via the `headerClass` prop.
  */
-export const CustomHeaderTheme: Story = {
+export const HeaderClass: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Custom header with blue accent using <code>header-class</code> prop.
-        </p>
-        <DataTable
-          header-class="bg-blue-500 text-white"
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        header-class="bg-primary text-primary-foreground"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Striped rows using row-class prop.
- */
-export const StripedRows: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        columns: minimalColumns,
-        getRowClass: getStripedRowClass,
-      }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Alternating row colors (zebra striping) using the <code>row-class</code> prop with <code>row.index</code>.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-          :row-class="getRowClass"
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Bordered cells for a spreadsheet-like appearance.
- * Use the `bordered` prop to add vertical cell dividers.
+ * `bordered` prop adds vertical dividers between cells.
  */
 export const BorderedCells: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: extendedColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Spreadsheet-style vertical borders using the <code>bordered</code> prop.
-        </p>
-        <DataTable
-          bordered
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        bordered
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
+    `,
+  }),
+}
+
+/**
+ * Zebra striping via `row-class`.
+ */
+export const StripedRows: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      const rowClass = (row: Row<User>) => (row.index % 2 === 1 ? 'bg-muted/40' : '')
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns, rowClass }
+    },
+    template: `
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :row-class="rowClass"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 // ============================================================================
-// Column Hiding Examples
+// DENSITY
 // ============================================================================
 
 /**
- * Default behavior - column hiding disabled.
- * No "View" button in toolbar and no "Hide" option in column header dropdowns.
+ * Compact density — minimal padding, fits more rows in the viewport.
  */
-export const ColumnHidingDisabled: Story = {
+export const DensityCompact: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 15 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Default behavior: <code>enableColumnHiding</code> is <code>false</code> by default.
-          Notice there is no "View" button in the toolbar, and column header dropdowns do not have a "Hide" option.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-          search-placeholder="Search users..."
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        density="compact"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Column hiding enabled - shows "View" button and "Hide" options.
- * Users can hide/show columns via the View button or column header dropdown.
+ * Comfortable density (default).
  */
-export const ColumnHidingEnabled: Story = {
+export const DensityComfortable: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Column hiding enabled with <code>enable-column-hiding</code> prop.
-          Click the "View" button to toggle column visibility, or click a column header and select "Hide".
-        </p>
-        <DataTable
-          enable-column-hiding
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-          search-placeholder="Search users..."
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        density="comfortable"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Column hiding with specific columns locked.
- * Some columns can be prevented from hiding using enableHiding: false in column definition.
+ * Spacious density — generous padding for low-density UIs.
  */
-export const ColumnHidingWithLockedColumns: Story = {
+export const DensitySpacious: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 5 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
+    },
+    template: `
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        density="spacious"
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
+    `,
+  }),
+}
 
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      // Columns with enableHiding set to false for specific columns
-      const columnsWithLockedHiding = [
-        {
-          accessorKey: 'name',
-          header: 'Name',
-          enableHiding: false, // Cannot be hidden
-        },
-        {
-          accessorKey: 'email',
-          header: 'Email',
-          // enableHiding defaults to true, can be hidden
-        },
-        {
-          accessorKey: 'role',
-          header: 'Role',
-          // enableHiding defaults to true, can be hidden
-        },
-        {
-          accessorKey: 'status',
-          header: 'Status',
-          enableHiding: false, // Cannot be hidden
-        },
-      ]
-
+/**
+ * Runtime density toggle.
+ */
+export const DensityToggle: Story = {
+  render: () => ({
+    components: { DataTable, Button },
+    setup() {
+      const density = ref<'compact' | 'comfortable' | 'spacious'>('comfortable')
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
       return {
-        localData,
+        density,
+        sorting,
+        pagination,
+        data,
         pageCount,
-        handleChange,
-        columns: columnsWithLockedHiding,
+        totalRows,
+        columns: minimalColumns,
       }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Column hiding enabled, but "Name" and "Status" columns have <code>enableHiding: false</code>.
-          These columns won't appear in the View menu and won't have a "Hide" option in their dropdown.
-          Try clicking on column headers - only "Email" and "Role" have the "Hide" option.
-        </p>
+      <div class="space-y-3">
+        <div class="flex gap-2">
+          <Button :variant="density === 'compact' ? 'default' : 'outline'" size="sm" @click="density = 'compact'">Compact</Button>
+          <Button :variant="density === 'comfortable' ? 'default' : 'outline'" size="sm" @click="density = 'comfortable'">Comfortable</Button>
+          <Button :variant="density === 'spacious' ? 'default' : 'outline'" size="sm" @click="density = 'spacious'">Spacious</Button>
+        </div>
         <DataTable
-          enable-column-hiding
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-          search-placeholder="Search users..."
+          :total-rows="totalRows"
+          :density="density"
+          enable-sorting enable-pagination
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
         />
       </div>
     `,

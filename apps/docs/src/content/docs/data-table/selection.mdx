@@ -21,20 +21,26 @@ When rows are selected, bulk action buttons appear in the toolbar:
 ```typescript
 import type { BulkActionOption } from '@meldui/vue'
 
+// `action` receives the IDs (per `getRowId`) of every selected row across
+// all pages. Server-paginated data means full row data isn't available for
+// rows on other pages — resolve IDs against your own source when needed.
 const bulkActions: BulkActionOption<User>[] = [
   {
     label: 'Delete',
     icon: IconTrash,
     variant: 'destructive',
-    action: (selectedRows) => {
-      // selectedRows is User[]
-      deleteUsers(selectedRows.map((r) => r.id))
+    action: async (ids) => {
+      await api.delete('/users', { ids })
+      refetch()
     },
   },
   {
     label: 'Export CSV',
     icon: IconDownload,
-    action: (selectedRows) => exportToCsv(selectedRows),
+    action: async (ids) => {
+      const users = await api.fetchUsers({ ids })
+      exportToCsv(users)
+    },
   },
 ]
 ```

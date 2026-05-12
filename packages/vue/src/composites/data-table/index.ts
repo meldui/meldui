@@ -4,7 +4,6 @@ export { default as ActionsCellInline } from './ActionsCellInline.vue'
 export { default as DataTable } from './DataTable.vue'
 export { default as DataTableBulkActions } from './DataTableBulkActions.vue'
 export { default as DataTableColumnHeader } from './DataTableColumnHeader.vue'
-export { default as DataTablePagination } from './DataTablePagination.vue'
 export { default as DataTableSelectHeader } from './DataTableSelectHeader.vue'
 export { default as DataTableToolbar } from './DataTableToolbar.vue'
 export { default as DataTableViewOptions } from './DataTableViewOptions.vue'
@@ -53,6 +52,11 @@ export type {
 // Composables
 export type { UseDataTableProps } from './useDataTable'
 export { useDataTable } from './useDataTable'
+export type {
+  UseDataTableControllerOptions,
+  UseDataTableControllerReturn,
+} from './useDataTableController'
+export { useDataTableController } from './useDataTableController'
 export type { UseTableKeyboardOptions, UseTableKeyboardReturn } from './useTableKeyboard'
 export { useTableKeyboard } from './useTableKeyboard'
 

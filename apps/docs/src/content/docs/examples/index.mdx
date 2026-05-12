@@ -240,7 +240,7 @@ const bulkActions: BulkActionOption<User>[] = [
     label: 'Delete',
     icon: IconTrash,
     variant: 'destructive',
-    action: (rows) => deleteUsers(rows.map(r => r.id)),
+    action: (ids) => deleteUsers(ids),
   },
 ]
 

@@ -50,6 +50,12 @@ export interface UseFiltersReturn<TData = unknown> {
   addFilter: (fieldId: string) => void
   removeInstance: (instanceId: string) => void
   setInstanceValue: (instanceId: string, value: FilterValue | undefined) => void
+  /**
+   * Replace all current filter instances and values with the supplied record.
+   * Used by `<Filters>` when its controlled `filterValues` prop changes externally.
+   * Mirrors the construction-time `initialValues` seeding logic.
+   */
+  setValues: (next: Record<string, FilterInstanceValue>) => void
   resetAll: () => void
 
   // Internal helpers (exposed for the <Filters> component to render instances)
@@ -171,9 +177,17 @@ export function useFilters<TData = unknown>(
     () => filterInstances.value.length > 0 || (searchField !== undefined && !!searchValue.value),
   )
 
-  function seedFromInitialValues() {
-    if (!initialValues) return
-    for (const [fieldId, filterValue] of Object.entries(initialValues)) {
+  function seedFromValues(values: Record<string, FilterInstanceValue>) {
+    for (const [fieldId, filterValue] of Object.entries(values)) {
+      if (searchField && fieldId === searchField.id) {
+        // Search value travels in filterValues under searchField.id;
+        // route it to searchValue rather than creating a chip instance.
+        if (typeof filterValue === 'string') {
+          searchValue.value = filterValue || undefined
+        }
+        continue
+      }
+
       const field = fields.value.find((f) => String(f.id) === fieldId)
       if (!field) continue
 
@@ -206,6 +220,20 @@ export function useFilters<TData = unknown>(
         }
       }
     }
+  }
+
+  function seedFromInitialValues() {
+    if (!initialValues) return
+    seedFromValues(initialValues)
+  }
+
+  function setValues(next: Record<string, FilterInstanceValue>) {
+    filterInstances.value = []
+    instanceValues.value.clear()
+    if (searchField && next[searchField.id] === undefined) {
+      searchValue.value = undefined
+    }
+    seedFromValues(next)
   }
 
   function createInstance(
@@ -303,6 +331,7 @@ export function useFilters<TData = unknown>(
     addFilter,
     removeInstance,
     setInstanceValue,
+    setValues,
     resetAll,
 
     getInstanceValue,

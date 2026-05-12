@@ -15,9 +15,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  useDataTableController,
+  type UseDataTableControllerOptions,
 } from '@meldui/vue'
 import type { Column, ColumnDef, PaginationState, SortingState, Table } from '@tanstack/vue-table'
-import { type Component, h } from 'vue'
+import { type Component, computed, h, ref, watch } from 'vue'
 
 // ============================================================================
 // Types
@@ -154,6 +156,32 @@ export function generateMockUsers(count: number = 100): User[] {
 
 // Pre-generated mock data
 export const MOCK_USERS = generateMockUsers(100)
+
+// ============================================================================
+// Story Helper — wires useDataTableController to the mock server simulator.
+// Each story uses this so the DataTable receives data/pageCount/totalRows that
+// react to v-model:sorting/filters/pagination mutations.
+// ============================================================================
+
+export function useStoryData(options?: UseDataTableControllerOptions, source: User[] = MOCK_USERS) {
+  const controller = useDataTableController(options)
+  const localData = ref(simulateServerSide(source, controller.state.value))
+
+  watch(
+    controller.state,
+    (next) => {
+      localData.value = simulateServerSide(source, next)
+    },
+    { deep: true },
+  )
+
+  return {
+    ...controller,
+    data: computed(() => localData.value.data),
+    pageCount: computed(() => localData.value.meta.total_pages),
+    totalRows: computed(() => localData.value.meta.total),
+  }
+}
 
 // ============================================================================
 // Server-Side Simulation
@@ -296,9 +324,17 @@ export function simulateServerSide(data: User[], tableState: TableState): Server
         break
 
       case 'salary':
+        // `useFilters` emits range values as tuples `[[min, max]]`, not
+        // `[{start, end}]`. `tableStateToServerParams` transforms tuples
+        // to `{start, end}` for the server, but this in-storybook simulator
+        // consumes the raw filter shape directly, so we read tuples here.
         if (Array.isArray(value)) {
           filteredData = filteredData.filter((user) =>
             value.some((range) => {
+              if (Array.isArray(range)) {
+                const [min, max] = range as [number, number]
+                return user.salary >= min && user.salary <= max
+              }
               const { start, end } = range as { start: number; end: number }
               return user.salary >= start && user.salary <= end
             }),
@@ -420,10 +456,12 @@ const helper = createColumnHelper<User>()
 export const columnsWithSelection: ColumnDef<User>[] = [helper.selection(), ...minimalColumns]
 
 /**
- * Extended columns with more fields
+ * Extended columns with more data fields than `minimalColumns`. Does NOT
+ * include the selection checkbox column — use `columnsWithSelection` or
+ * compose explicitly (`[helper.selection(), ...extendedColumns]`) when you
+ * also want row selection.
  */
 export const extendedColumns: ColumnDef<User>[] = [
-  helper.selection(),
   {
     accessorKey: 'name',
     header: ({ column, table }) => createColumnHeader(column, 'Name', table),

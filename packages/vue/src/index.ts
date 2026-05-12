@@ -83,6 +83,7 @@ export * from './composites/date-range-picker'
 export * from './composites/filters'
 export * from './composites/mention'
 export * from './composites/multi-select'
+export * from './composites/pagination'
 export * from './composites/relative-time'
 export * from './composites/timeline'
 // Export utility functions

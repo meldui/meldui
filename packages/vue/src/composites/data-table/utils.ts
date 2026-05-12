@@ -29,10 +29,10 @@ export function createColumns<T>(columns: ColumnDef<T, unknown>[]): ColumnDef<T,
 /**
  * Helper to transform DataTable state into the server-params shape.
  *
- * `filters` is the record passed to `onServerSideChange.filters` (keyed by
- * field id). This helper applies per-type transformations expected by typical
- * REST APIs (e.g., wrapping single text values in arrays, converting range
- * tuples to `{start, end}` objects, etc.).
+ * `filters` is the record observed via `v-model:filters` (keyed by field id).
+ * This helper applies per-type transformations expected by typical REST APIs
+ * (e.g., wrapping single text values in arrays, converting range tuples to
+ * `{start, end}` objects, etc.).
  *
  * @param tableState - sorting, filters (record), pagination
  * @param filterFields - filter field definitions used to determine type-based transformations

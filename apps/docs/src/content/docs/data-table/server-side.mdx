@@ -1,6 +1,6 @@
 ---
 title: 'Data Table: Server-Side'
-description: Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
+description: Server-side operation params, response format, URL state persistence, and the v-model emit contract.
 category: composites
 order: 8
 package: '@meldui/vue'
@@ -8,41 +8,35 @@ package: '@meldui/vue'
 
 ## How Server-Side Works
 
-The DataTable is designed for server-side operations. Every user interaction triggers the `onServerSideChange` callback with the current table state:
+The DataTable runs in fully manual mode — TanStack never sorts, filters, or paginates. The parent owns state via three v-model bindings (`sorting`, `filters`, `pagination`) and triggers fetches whenever the merged state changes. Use `useDataTableController` to bundle the three refs and apply the page-reset rule with `flush: 'sync'`.
 
-```typescript
-function handleServerSideChange(state: {
-  sorting: SortingState
-  filters: DataTableFilterState
-  pagination: PaginationState
-}) {
-  // Convert to your API format
-  const params = {
-    page: state.pagination.pageIndex + 1,
-    per_page: state.pagination.pageSize,
-    sort_by: state.sorting[0]?.id,
-    sort_order: state.sorting[0]?.desc ? 'desc' : 'asc',
-    filters: state.filters,
-  }
+```ts
+import { useDataTableController, tableStateToServerParams } from '@meldui/vue'
 
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
+
+async function fetchPage() {
+  const params = tableStateToServerParams(state.value)
   const response = await api.get('/users', { params })
   data.value = response.data
   pageCount.value = response.meta.total_pages
+  totalRows.value = response.meta.total
 }
+
+watch(state, fetchPage, { deep: true })
+fetchPage()
 ```
 
 ## Server Params Helper
 
-Use `tableStateToServerParams` to convert TanStack state to a standard format:
+`tableStateToServerParams` converts the merged state to a standard REST shape:
 
 ```typescript
 import { tableStateToServerParams } from '@meldui/vue'
 import type { ServerSideTableParams } from '@meldui/vue'
 
-function handleChange(state) {
-  const params: ServerSideTableParams = tableStateToServerParams(state)
-  // params = { page, per_page, sort_by, sort_order, filters }
-}
+const params: ServerSideTableParams = tableStateToServerParams(state.value)
+// params = { page, per_page, sort_by, sort_order, filters }
 ```
 
 ### ServerSideTableParams
@@ -71,34 +65,72 @@ interface ServerSideTableResponse<T> {
 }
 ```
 
+## Single-Fetch Guarantee
+
+`useDataTableController` applies `flush: 'sync'` watchers internally so that when a filter or sort change auto-resets `pageIndex`, the parent observes **one** state mutation per user action. Without `flush: 'sync'`, every filter change would trigger two fetches — once with the new filter + old pageIndex, then again after the reset.
+
+If you skip the composable, you must replicate the rule:
+
+```ts
+watch(
+  filters,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  { deep: true, flush: 'sync' },
+)
+watch(
+  sorting,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  { deep: true, flush: 'sync' },
+)
+```
+
 ## URL State Persistence
 
-Restore table state from URL query params (e.g., after page refresh or shared links):
+Seed the controller from URL query params and persist back on every change:
 
-```vue
-<DataTable
-  :columns="columns"
-  :data="data"
-  :page-count="pageCount"
-  :on-server-side-change="handleChange"
-  :initial-filters="filtersFromUrl"
-  :initial-sorting="sortingFromUrl"
-  :initial-pagination="paginationFromUrl"
-/>
+```ts
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+const { sorting, filters, pagination, state } = useDataTableController({
+  pageSize: Number(route.query.size) || 20,
+  initialSorting: parseSorting(route.query.sort),
+  initialFilters: parseFilters(route.query.f),
+  initialPagination: {
+    pageIndex: Number(route.query.page) || 0,
+    pageSize: Number(route.query.size) || 20,
+  },
+})
+
+watch(
+  state,
+  (s) => {
+    router.replace({ query: serializeState(s) })
+  },
+  { deep: true },
+)
+
+watch(state, fetchPage, { deep: true })
 ```
 
 ## Slots
 
-| Slot               | Props               | Description                       |
-| ------------------ | ------------------- | --------------------------------- |
-| `#toolbar`         | `{ table }`         | Replace entire toolbar            |
-| `#toolbar-start`   | -                   | Add content before search         |
-| `#toolbar-end`     | -                   | Add content after search          |
-| `#empty`           | -                   | Custom empty state                |
-| `#error`           | `{ error }`         | Custom error state                |
-| `#pagination`      | `{ table }`         | Custom pagination                 |
-| `#expanded-row`    | `{ row }`           | Row expansion content             |
-| `#cell-[columnId]` | `{ row, getValue }` | Custom cell for a specific column |
+| Slot               | Props                                  | Description                       |
+| ------------------ | -------------------------------------- | --------------------------------- |
+| `#toolbar`         | `{ table, loading }`                   | Replace entire toolbar            |
+| `#toolbar-start`   | `{ table }`                            | Add content before filter row     |
+| `#toolbar-end`     | `{ table }`                            | Add content after filter row      |
+| `#empty`           | `{ message, columns }`                 | Custom empty state                |
+| `#error`           | `{ error, retry }`                     | Custom error state                |
+| `#pagination`      | `{ pagination, pageCount, totalRows }` | Custom pagination footer          |
+| `#expanded-row`    | `{ row }`                              | Row expansion content             |
+| `#cell-[columnId]` | `{ cell, row, value }`                 | Custom cell for a specific column |
 
 ## Keyboard Navigation
 
@@ -116,10 +148,7 @@ Enable with `enableKeyboardNavigation`:
 ## Column Resizing
 
 ```vue
-<DataTable
-  enable-column-resizing
-  column-resize-mode="onChange"  <!-- or "onEnd" -->
-/>
+<DataTable enable-column-resizing column-resize-mode="onChange" />
 ```
 
 ## Column Visibility

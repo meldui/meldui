@@ -111,7 +111,10 @@ const columns = [
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
+    enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
     enable-row-expansion
     :get-row-can-expand="(row) => row.original.items.length > 0"
   >
@@ -147,7 +150,7 @@ const columns = [
         :columns="columns"
         :data="data"
         :page-count="pageCount"
-        :on-server-side-change="() => {}"
+        
         enable-row-expansion
         :get-row-can-expand="(row: any) => row.original.items.length > 0"
       >

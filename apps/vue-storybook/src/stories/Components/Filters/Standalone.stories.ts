@@ -3,8 +3,8 @@
  *
  * The <Filters> component renders the same filter UX used by <DataTable>
  * but works with any view (grid, card list, kanban). The parent owns the
- * data, listens for `change` events (or v-model:filterValues), and feeds
- * filtered results to its view of choice.
+ * data, listens via `v-model:filterValues` (or `@update:filter-values`),
+ * and feeds filtered results to its view of choice.
  *
  * Search is part of the same component (via the `searchField` prop) and the
  * search value is included inside `filterValues` keyed by `searchField.id`
@@ -21,24 +21,15 @@ import {
   IconMapPin,
   IconUser,
 } from '@meldui/tabler-vue'
-import {
-  type DataTableFilterField,
-  DataTable,
-  defineFilter,
-  Filters,
-  useFilters,
-} from '@meldui/vue'
+import { type DataTableFilterField, defineFilter, Filters, useFilters } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed, defineComponent, h, ref } from 'vue'
 import {
-  type TableState,
   type User,
-  MOCK_USERS,
   departmentOptions,
   locationOptions,
-  minimalColumns,
+  MOCK_USERS,
   roleOptions,
-  simulateServerSide,
   statusOptions,
 } from '../DataTable/_shared'
 
@@ -230,12 +221,12 @@ export const AllFilterTypes: Story = {
   render: () => ({
     components: { Filters },
     setup() {
-      const lastChange = ref<{ filterValues: Record<string, unknown> } | null>(null)
+      const lastChange = ref<Record<string, unknown> | null>(null)
       return {
         fields: allTypeFields,
         lastChange,
-        onChange: (payload: typeof lastChange.value) => {
-          lastChange.value = payload
+        onChange: (next: Record<string, unknown>) => {
+          lastChange.value = next
         },
       }
     },
@@ -247,7 +238,7 @@ export const AllFilterTypes: Story = {
         <Filters
           :fields="fields"
           :search-field="{ id: 'q', placeholder: 'Search...' }"
-          @change="onChange"
+          @update:filter-values="onChange"
         />
         <pre class="text-xs bg-muted p-3 rounded-md overflow-auto">{{ JSON.stringify(lastChange, null, 2) }}</pre>
       </div>
@@ -282,7 +273,7 @@ export const AdvancedMode: Story = {
           :fields="fields"
           :advanced-mode="true"
           :search-field="{ id: 'q' }"
-          @change="onChange"
+          @update:filter-values="onChange"
         />
         <pre class="text-xs bg-muted p-3 rounded-md overflow-auto">{{ JSON.stringify(lastChange, null, 2) }}</pre>
       </div>
@@ -315,7 +306,7 @@ export const MultiSelect: Story = {
     },
     template: `
       <div class="space-y-4">
-        <Filters :fields="fields" @change="onChange" />
+        <Filters :fields="fields" @update:filter-values="onChange" />
         <pre class="text-xs bg-muted p-3 rounded-md overflow-auto">{{ JSON.stringify(lastChange, null, 2) }}</pre>
       </div>
     `,
@@ -348,7 +339,7 @@ export const MultiInstance: Story = {
         <p class="text-sm text-muted-foreground">
           Click the Filter button and add the same field multiple times — values aggregate into an array.
         </p>
-        <Filters :fields="fields" @change="onChange" />
+        <Filters :fields="fields" @update:filter-values="onChange" />
         <pre class="text-xs bg-muted p-3 rounded-md overflow-auto">{{ JSON.stringify(lastChange, null, 2) }}</pre>
       </div>
     `,
@@ -376,7 +367,7 @@ export const WithPluginFilter: Story = {
     },
     template: `
       <div class="space-y-4">
-        <Filters :fields="fields" :plugins="plugins" @change="onChange" />
+        <Filters :fields="fields" :plugins="plugins" @update:filter-values="onChange" />
         <pre class="text-xs bg-muted p-3 rounded-md overflow-auto">{{ JSON.stringify(lastChange, null, 2) }}</pre>
       </div>
     `,
@@ -491,80 +482,6 @@ export const DrivesCardGrid: Story = {
   }),
 }
 
-/**
- * DataTable in external-filter mode. enableFilter:false (the new default)
- * turns off the toolbar's filter UI; the same <Filters> instance drives
- * the table data. Useful when filters live in a sidebar or share state
- * across multiple views.
- */
-export const DataTableExternalFilters: Story = {
-  render: () => ({
-    components: { Filters, DataTable },
-    setup() {
-      const dataTableRef = ref<InstanceType<typeof DataTable> | null>(null)
-
-      const filtersState = useFilters<User>({
-        filterFields: allTypeFields,
-        searchField: { id: 'q' },
-      })
-
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: {},
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      // <DataTable :enable-filter="false"> emits onServerSideChange.filters as {}
-      // (it owns no filter state). Merge in the externally-owned filterValues
-      // here before fetching.
-      const handleChange = (state: TableState) => {
-        const merged: TableState = {
-          ...state,
-          filters: filtersState.filterValues.value,
-        }
-        localData.value = simulateServerSide(MOCK_USERS, merged)
-      }
-
-      // On filter change, reset to page 0 by calling DataTable's exposed
-      // resetPagination(). That mutation triggers DataTable's internal
-      // [sorting, pagination, filters-getter] watcher, which fires
-      // handleChange with the reset pagination — a single fetch per
-      // filter change, with the latest filtersState merged in.
-      const handleFiltersChange = () => {
-        dataTableRef.value?.resetPagination()
-      }
-
-      return {
-        dataTableRef,
-        filtersState,
-        fields: allTypeFields,
-        localData,
-        pageCount,
-        handleChange,
-        handleFiltersChange,
-        columns: minimalColumns,
-      }
-    },
-    template: `
-      <div class="space-y-4">
-        <Filters
-          :state="filtersState"
-          :fields="fields"
-          :search-field="{ id: 'q' }"
-          @change="handleFiltersChange"
-        />
-        <DataTable
-          ref="dataTableRef"
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-        />
-      </div>
-    `,
-  }),
-}
+// The "DataTable in external-filter mode" story used to live here. It's
+// now covered by Components/DataTable/Usage Examples / Example 4 (mixed:
+// external filter + internal pagination/sort) under the v2 API.

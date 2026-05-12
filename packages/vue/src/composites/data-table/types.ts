@@ -25,8 +25,8 @@ export type ServerFilterValue =
  *
  * `filters` is keyed by field id. In simple mode each value follows the natural
  * per-type shape; in advanced mode each value is an array of `{ operator, value }`
- * objects. This shape matches `DataTableFilterState` forwarded to
- * `onServerSideChange.filters` and `<Filters>`'s `change` event payload.
+ * objects. This shape matches `DataTableFilterState` observed via
+ * `v-model:filters` on `<DataTable>` and `v-model:filterValues` on `<Filters>`.
  *
  * Simple Mode Examples:
  * {
@@ -86,13 +86,31 @@ export interface ServerSideTableResponse<T> {
 // ============================================================================
 
 /**
- * Bulk action option for DataTable row selection actions
+ * Bulk action option for DataTable row selection actions.
+ *
+ * The `action` callback receives the IDs (per `getRowId`) of every selected
+ * row across all pages — not the row data. TanStack only has row data for
+ * the current page in server-side mode, so passing IDs is the only honest
+ * way to support cross-page bulk operations. Resolve the IDs against your
+ * own data source (store, server fetch) when you need full row data.
+ *
+ * Example:
+ * ```ts
+ * {
+ *   label: 'Delete',
+ *   variant: 'destructive',
+ *   action: async (ids) => {
+ *     await api.delete('/users', { ids })
+ *     refetch()
+ *   },
+ * }
+ * ```
  */
-export interface BulkActionOption<TData = unknown> {
+export interface BulkActionOption<_TData = unknown> {
   label: string
   icon?: Component
   variant?: 'default' | 'destructive'
-  action: (selectedRows: TData[]) => void
+  action: (selectedIds: string[]) => void
 }
 
 // ============================================================================
@@ -121,12 +139,13 @@ export interface DataTablePinningConfig {
 }
 
 // ============================================================================
-// Aggregated filter state forwarded to onServerSideChange.
+// Aggregated filter state
 // ============================================================================
 
 /**
- * Filter state shape passed to `onServerSideChange.filters` and emitted by
- * `<Filters>`'s `change` event. Keyed by field id; values follow the per-type
- * shapes documented on `ServerSideTableParams.filters` above.
+ * Filter state shape carried by `<DataTable>`'s `v-model:filters` and emitted
+ * by `<Filters>`'s `update:filterValues` event. Keyed by field id; values
+ * follow the per-type shapes documented on `ServerSideTableParams.filters`
+ * above.
  */
 export type DataTableFilterState = Record<string, FilterInstanceValue>

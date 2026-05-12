@@ -10,48 +10,62 @@ import DataTableBasicDemo from '../../../demos/data-table/DataTableBasicDemo.vue
 
 ## Basic Table
 
-A minimal DataTable with columns, sorting, pagination, and a search input. The `onServerSideChange` callback fires whenever the user sorts, filters, or paginates — you fetch data from your API and update the reactive `data` and `pageCount`.
+A minimal DataTable with column-header sorting, a `<Filters>` row in the toolbar, and a `<Pagination>` footer. The parent owns sorting / filters / pagination state via `v-model` and fetches data when the merged state changes.
+
+The recommended path uses `useDataTableController` to bundle the three refs and encapsulate the page-reset rule.
 
 <DataTableBasicDemo client:only="vue" />
 
 ## Core Props
 
-| Prop                 | Type                                       | Default            | Description                                  |
-| -------------------- | ------------------------------------------ | ------------------ | -------------------------------------------- |
-| `columns`            | `ColumnDef<TData>[]`                       | required           | Column definitions from `createColumnHelper` |
-| `data`               | `TData[]`                                  | required           | The current page of data                     |
-| `pageCount`          | `number`                                   | required           | Total number of pages                        |
-| `onServerSideChange` | `(state) => void`                          | required           | Callback when sort/filter/page changes       |
-| `searchColumn`       | `string`                                   | -                  | Column ID to search on                       |
-| `searchPlaceholder`  | `string`                                   | -                  | Placeholder text for search input            |
-| `defaultPerPage`     | `number`                                   | `10`               | Default rows per page                        |
-| `pageSizeOptions`    | `number[]`                                 | `[10,20,30,40,50]` | Available page size options                  |
-| `loading`            | `boolean`                                  | `false`            | Show loading state                           |
-| `error`              | `string`                                   | -                  | Show error message                           |
-| `density`            | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'`    | Row density                                  |
-| `maxHeight`          | `string`                                   | `'600px'`          | Max height with vertical scroll              |
+| Prop               | Type                                       | Default            | Description                                                                                                                                                               |
+| ------------------ | ------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `columns`          | `ColumnDef<TData>[]`                       | required           | Column definitions from `createColumnHelper`                                                                                                                              |
+| `data`             | `TData[]`                                  | required           | The current page of data                                                                                                                                                  |
+| `pageCount`        | `number`                                   | -                  | Required when `enablePagination` is true                                                                                                                                  |
+| `totalRows`        | `number`                                   | -                  | Optional. Enables "X of Y" displays                                                                                                                                       |
+| `enableSorting`    | `boolean`                                  | `false`            | Render column-header sort dropdown. Requires `v-model:sorting`                                                                                                            |
+| `enableFilter`     | `boolean`                                  | `false`            | Render `<Filters>` row in toolbar. Requires `v-model:filters`                                                                                                             |
+| `enablePagination` | `boolean`                                  | `false`            | Render `<Pagination>` footer. Requires `v-model:pagination` + `pageCount`                                                                                                 |
+| `sorting`          | `SortingState`                             | -                  | `v-model:sorting` target                                                                                                                                                  |
+| `filters`          | `DataTableFilterState`                     | -                  | `v-model:filters` target                                                                                                                                                  |
+| `pagination`       | `PaginationState`                          | -                  | `v-model:pagination` target — `{ pageIndex, pageSize }`                                                                                                                   |
+| `getRowId`         | `(row, index) => string`                   | -                  | Stable row identifier. Strongly recommended when `enable-row-selection` is on with server-side pagination; without it, selection state follows the row index across pages |
+| `filterSearch`     | `{ id, placeholder?, debounceMs? }`        | -                  | Search input config (search travels in `filters` under `filterSearch.id`)                                                                                                 |
+| `pageSizeOptions`  | `number[]`                                 | `[10,20,30,40,50]` | Available page size options                                                                                                                                               |
+| `loading`          | `boolean`                                  | `false`            | Show loading state                                                                                                                                                        |
+| `error`            | `string \| Error`                          | -                  | Show error message with retry button                                                                                                                                      |
+| `density`          | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'`    | Row density                                                                                                                                                               |
+| `maxHeight`        | `string`                                   | `'600px'`          | Max height with vertical scroll                                                                                                                                           |
+
+## Emits
+
+| Event               | Payload                | Description                                 |
+| ------------------- | ---------------------- | ------------------------------------------- |
+| `update:sorting`    | `SortingState`         | Fires on sort change (v-model)              |
+| `update:filters`    | `DataTableFilterState` | Fires on filter change (v-model)            |
+| `update:pagination` | `PaginationState`      | Fires on page or page-size change (v-model) |
+| `retry`             | —                      | User clicked Retry in the error state       |
+| `refresh`           | —                      | User clicked the toolbar refresh button     |
+| `rowActivate`       | `Row<TData>`           | Keyboard activation (Enter/Space)           |
 
 ## Pagination Position
 
-```typescript
-// Show pagination at top, bottom, or both
+```vue
 <DataTable pagination-position="both" />
 <DataTable pagination-position="top" />
 ```
 
 ## Exposed Methods
 
-Access these via a template ref:
+Access via a template ref. Methods cover **visual concerns only** — sorting / filter / pagination are owned by the parent.
 
 ```vue
 <script setup>
 const tableRef = ref()
 
-// Reset all state
+// Reset visual state (selection, pinning, sizing, expansion, column visibility)
 tableRef.value?.resetAll()
-
-// Refresh current data
-tableRef.value?.refresh()
 </script>
 
 <template>
@@ -59,11 +73,14 @@ tableRef.value?.refresh()
 </template>
 ```
 
-| Method                     | Description                                                                                                       |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `filtersState?.resetAll()` | Clear all active filters (only when `enable-filter="true"`; otherwise call `resetAll()` on your own `useFilters`) |
-| `resetSorting()`           | Clear sorting                                                                                                     |
-| `resetSelection()`         | Deselect all rows                                                                                                 |
-| `resetPagination()`        | Go to page 1                                                                                                      |
-| `resetAll()`               | Reset sorting, selection, and pagination (filters are owned separately — see above)                               |
-| `refresh()`                | Re-trigger the server-side callback                                                                               |
+| Method                | Description                    |
+| --------------------- | ------------------------------ |
+| `resetSelection()`    | Deselect all rows              |
+| `resetPinning()`      | Restore default column pinning |
+| `resetColumnSizing()` | Restore default column widths  |
+| `resetExpanded()`     | Collapse all expanded rows     |
+| `resetAll()`          | Reset all visual concerns      |
+| `pinColumn(id, side)` | Pin a column left or right     |
+| `unpinColumn(id)`     | Unpin a column                 |
+
+For sorting / filter / pagination reset, call `useDataTableController().reset()` in the parent.

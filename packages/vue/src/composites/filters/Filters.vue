@@ -38,9 +38,15 @@ interface Props {
    * Optional pre-instantiated useFilters() return value. When provided, the component
    * renders against this state and does NOT instantiate its own composable. This is
    * the advanced wiring path for parents that need imperative access (e.g., adding a
-   * filter from a button outside the component).
+   * filter from a button outside the component). Takes precedence over `filterValues`.
    */
   state?: UseFiltersReturn<TData>
+  /**
+   * Controlled v-model target for the aggregated filter values. When provided, the
+   * component reseeds its internal instances whenever the parent replaces this prop
+   * with a new object reference. Ignored when `state` is also provided.
+   */
+  filterValues?: Record<string, FilterInstanceValue>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -50,13 +56,14 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  'update:filterValues': [value: Record<string, FilterInstanceValue>]
   /**
-   * `change` fires when any filter or the search input updates. The search value
-   * (if a `searchField` was provided) is included inside `filterValues` under
-   * `searchField.id` — there is no separate `searchValue` field.
+   * Fires whenever a filter chip or the search input updates. The search
+   * value (if a `searchField` was provided) is included under
+   * `searchField.id` — there is no separate `searchValue` event.
+   *
+   * Listen via `v-model:filterValues="filters"` or `@update:filter-values`.
    */
-  change: [payload: { filterValues: Record<string, FilterInstanceValue> }]
+  'update:filterValues': [value: Record<string, FilterInstanceValue>]
   reset: []
 }>()
 
@@ -66,7 +73,9 @@ const internalState = props.state
       filterFields: props.fields,
       filterPlugins: props.plugins,
       advancedMode: props.advancedMode,
-      initialValues: props.initialValues,
+      // Controlled prop, if provided, seeds the initial instances. Falls back to
+      // initialValues for the uncontrolled / one-shot-seed case.
+      initialValues: props.filterValues ?? props.initialValues,
       initialSearch: props.initialSearch,
       searchField: props.searchField,
     })
@@ -99,9 +108,16 @@ const onSearchInput = (value: string | number) => {
   state.value.setSearchValue(stringValue)
 }
 
+// Tracks the most recently emitted filterValues so the controlled-prop watcher
+// below can skip re-seeding when the parent simply echoes our own emission back
+// through v-model. Reference equality is sufficient because Vue's v-model assigns
+// without cloning.
+let lastEmittedValues: Record<string, FilterInstanceValue> | undefined
+
 const emitChange = () => {
-  emit('update:filterValues', filterValues.value)
-  emit('change', { filterValues: filterValues.value })
+  const next = filterValues.value
+  lastEmittedValues = next
+  emit('update:filterValues', next)
 }
 
 const onInstanceValueChange = (instanceId: string, value: FilterValue | undefined) => {
@@ -136,6 +152,20 @@ const onReset = () => {
 watch(searchValue, () => {
   emitChange()
 })
+
+// Controlled `filterValues` prop: when the parent replaces the bound ref with a
+// new object reference, reseed instances. Ignored when an external `state` prop
+// is provided (explicit state ownership takes precedence). Shallow watch on
+// purpose — parents must replace the ref, not mutate it in place.
+watch(
+  () => props.filterValues,
+  (next) => {
+    if (props.state) return
+    if (next === undefined) return
+    if (next === lastEmittedValues) return
+    state.value.setValues(next)
+  },
+)
 </script>
 
 <template>
