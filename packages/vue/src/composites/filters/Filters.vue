@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="TData">
 import { IconLoader2, IconSearch, IconX } from '@meldui/tabler-vue'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, toRaw, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import DataTableFilterCommand from './DataTableFilterCommand.vue'
@@ -162,7 +162,10 @@ watch(
   (next) => {
     if (props.state) return
     if (next === undefined) return
-    if (next === lastEmittedValues) return
+    // Vue's ref<object> wraps the assigned value in a reactive Proxy, so the
+    // object we emitted is no longer reference-equal to what comes back via
+    // v-model. Compare the raw underlying object to detect our own echo.
+    if (toRaw(next) === lastEmittedValues) return
     state.value.setValues(next)
   },
 )
