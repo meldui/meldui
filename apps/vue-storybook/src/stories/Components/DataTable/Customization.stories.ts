@@ -6,7 +6,7 @@
  */
 
 import { IconDownload, IconPlus, IconRefresh } from '@meldui/tabler-vue'
-import { Button, DataTable, Pagination } from '@meldui/vue'
+import { Button, DataPagination, DataTable } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import type { Row } from '@tanstack/vue-table'
 import { ref } from 'vue'
@@ -141,7 +141,7 @@ export const FooterSlot: Story = {
  */
 export const PaginationSlot: Story = {
   render: () => ({
-    components: { DataTable, Pagination },
+    components: { DataTable, DataPagination },
     setup() {
       const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
       return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
@@ -159,7 +159,7 @@ export const PaginationSlot: Story = {
         <template #pagination="{ pagination: p, pageCount: pc, totalRows: tr }">
           <div class="rounded-md border bg-muted/30 p-2">
             <p class="text-xs text-muted-foreground mb-2">Custom pagination footer ({{ tr }} total rows)</p>
-            <Pagination
+            <DataPagination
               :pagination="p"
               :page-count="pc"
               :total-rows="tr"

@@ -25,7 +25,7 @@
 
 ### Requirement: DataTable Per-Feature Render Toggles
 
-`<DataTable>` SHALL accept three independent boolean props (`enableSorting`, `enableFilter`, `enablePagination`), each defaulting to `false`. Each prop SHALL gate the rendering of the corresponding UI (sort dropdown in column headers, `<Filters>` row in toolbar, `<Pagination>` below the table) and SHALL have no effect on the other two features.
+`<DataTable>` SHALL accept three independent boolean props (`enableSorting`, `enableFilter`, `enablePagination`), each defaulting to `false`. Each prop SHALL gate the rendering of the corresponding UI (sort dropdown in column headers, `<Filters>` row in toolbar, `<DataPagination>` below the table) and SHALL have no effect on the other two features.
 
 #### Scenario: enableSorting false hides column-header dropdown
 
@@ -44,7 +44,7 @@
 - **WHEN** `<DataTable :enable-sorting="true" :enable-filter="false" :enable-pagination="true">` is rendered
 - **THEN** column headers render the sort dropdown
 - **AND** the toolbar does not render the `<Filters>` row
-- **AND** the `<Pagination>` component renders below the table
+- **AND** the `<DataPagination>` component renders below the table
 
 ### Requirement: DataTable V-Model Emits
 
@@ -59,23 +59,23 @@
 
 #### Scenario: Page-size change emits only update:pagination
 
-- **WHEN** a user selects a new page size in `<Pagination>` (rendered internally via `enablePagination: true`)
+- **WHEN** a user selects a new page size in `<DataPagination>` (rendered internally via `enablePagination: true`)
 - **THEN** `update:pagination` fires with the new `{ pageIndex, pageSize }`
 - **AND** neither `update:sorting` nor `update:filters` fires
 
 ### Requirement: DataTable Page-Count and Total-Rows Inputs
 
-When `enablePagination: true`, `<DataTable>` SHALL accept `pageCount: number` and optionally `totalRows: number` as display-only props. These props MUST NOT be carried inside `v-model:pagination` because they are server-derived and never mutated by user interaction. `<DataTable>` SHALL forward these to its internal `<Pagination>` instance.
+When `enablePagination: true`, `<DataTable>` SHALL accept `pageCount: number` and optionally `totalRows: number` as display-only props. These props MUST NOT be carried inside `v-model:pagination` because they are server-derived and never mutated by user interaction. `<DataTable>` SHALL forward these to its internal `<DataPagination>` instance.
 
 #### Scenario: pageCount drives Next/Last button disabled state
 
 - **WHEN** `pageCount` is `5` and `pagination.pageIndex` is `4`
-- **THEN** the Next and Last buttons are disabled in the rendered `<Pagination>`
+- **THEN** the Next and Last buttons are disabled in the rendered `<DataPagination>`
 
 #### Scenario: totalRows omitted does not render "X of Y" display
 
 - **WHEN** `totalRows` is not provided and `showPageInfo` is true
-- **THEN** the pagination footer omits the total-rows indicator (or substitutes a fallback per the `<Pagination>` spec)
+- **THEN** the pagination footer omits the total-rows indicator (or substitutes a fallback per the `<DataPagination>` spec)
 
 ### Requirement: DataTable Dev-Mode Missing-Binding Warning
 
@@ -134,7 +134,7 @@ A composable `useDataTableController` SHALL be exported from `@meldui/vue` that 
 
 ### Requirement: Removed DataTable Props
 
-`<DataTable>` SHALL NOT accept the following props (removed in this change): `onServerSideChange`, `initialFilters`, `initialSorting`, `initialPagination`, `showPagination`, `searchColumn`, `searchPlaceholder`, `paginationPosition`, `defaultPerPage`, `pageSizeOptions`. Consumers migrating from prior versions MUST use `v-model:*` for state and configure search/page-size on `<Filters>` and `<Pagination>` directly.
+`<DataTable>` SHALL NOT accept the following props (removed in this change): `onServerSideChange`, `initialFilters`, `initialSorting`, `initialPagination`, `showPagination`, `searchColumn`, `searchPlaceholder`, `paginationPosition`, `defaultPerPage`, `pageSizeOptions`. Consumers migrating from prior versions MUST use `v-model:*` for state and configure search/page-size on `<Filters>` and `<DataPagination>` directly.
 
 #### Scenario: Old onServerSideChange callback prop is no longer recognised
 

@@ -1,29 +1,31 @@
 /**
- * Standalone Pagination Composite
+ * Standalone DataPagination Composite
  *
- * The `<Pagination>` composite is decoupled from DataTable and can drive any
+ * The `<DataPagination>` composite is decoupled from DataTable and can drive any
  * list view (cards, custom layouts, etc.). It takes a single `:pagination`
  * v-model of shape `{ pageIndex, pageSize }` plus display-only props.
  */
 
-import { Pagination } from '@meldui/vue'
+import { DataPagination } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import type { PaginationState } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
-const meta: Meta<typeof Pagination> = {
-  title: 'Components/Pagination/Standalone',
-  component: Pagination,
+const meta: Meta<typeof DataPagination> = {
+  title: 'Components/DataPagination/Standalone',
+  component: DataPagination,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component: `
-The standalone \`<Pagination>\` composite mirrors the pagination footer of
-\`<DataTable>\` but takes plain props — no TanStack \`Table\` instance required.
+The standalone \`<DataPagination>\` composite mirrors the pagination footer
+of \`<DataTable>\` but takes plain props — no TanStack \`Table\` instance
+required.
 
-Bind the same \`pagination\` ref to both \`<DataTable>\`'s \`v-model:pagination\`
-and a sibling \`<Pagination>\` and they stay in sync via Vue reactivity.
+Bind the same \`pagination\` ref to both \`<DataTable>\`'s
+\`v-model:pagination\` and a sibling \`<DataPagination>\` and they stay in
+sync via Vue reactivity.
         `,
       },
     },
@@ -38,7 +40,7 @@ type Story = StoryObj<typeof meta>
  */
 export const Default: Story = {
   render: () => ({
-    components: { Pagination },
+    components: { DataPagination },
     setup() {
       const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
       return { pagination }
@@ -46,7 +48,7 @@ export const Default: Story = {
     template: `
       <div class="space-y-2">
         <pre class="rounded-md bg-muted p-2 text-xs">{{ pagination }}</pre>
-        <Pagination v-model:pagination="pagination" :page-count="10" :total-rows="100" />
+        <DataPagination v-model:pagination="pagination" :page-count="10" :total-rows="100" />
       </div>
     `,
   }),
@@ -57,7 +59,7 @@ export const Default: Story = {
  */
 export const CustomPageSizeOptions: Story = {
   render: () => ({
-    components: { Pagination },
+    components: { DataPagination },
     setup() {
       const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 25 })
       return { pagination }
@@ -78,7 +80,7 @@ export const CustomPageSizeOptions: Story = {
  */
 export const HidePageSizeSelector: Story = {
   render: () => ({
-    components: { Pagination },
+    components: { DataPagination },
     setup() {
       const pagination = ref<PaginationState>({ pageIndex: 2, pageSize: 10 })
       return { pagination }
@@ -98,7 +100,7 @@ export const HidePageSizeSelector: Story = {
  */
 export const HidePageInfo: Story = {
   render: () => ({
-    components: { Pagination },
+    components: { DataPagination },
     setup() {
       const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
       return { pagination }
@@ -118,7 +120,7 @@ export const HidePageInfo: Story = {
  */
 export const WithSelectedCount: Story = {
   render: () => ({
-    components: { Pagination },
+    components: { DataPagination },
     setup() {
       const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
       return { pagination }
@@ -140,7 +142,7 @@ export const WithSelectedCount: Story = {
  */
 export const EmptyState: Story = {
   render: () => ({
-    components: { Pagination },
+    components: { DataPagination },
     setup() {
       const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
       return { pagination }

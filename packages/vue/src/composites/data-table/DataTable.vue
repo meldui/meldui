@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/table'
 import type { RegisteredFilterPlugin } from '@/composites/filters/filterPlugins'
 import type { DataTableFilterField } from '@/composites/filters/types'
-import { Pagination } from '@/composites/pagination'
+import { DataPagination } from '@/composites/pagination'
 import type { BulkActionOption, DataTableFilterState } from './types'
 import DataTableToolbar from './DataTableToolbar.vue'
 import { useDataTable } from './useDataTable'
@@ -356,7 +356,7 @@ defineExpose({
       v-if="enablePagination && (paginationPosition === 'top' || paginationPosition === 'both')"
     >
       <slot name="pagination" v-bind="paginationSlotProps">
-        <Pagination
+        <DataPagination
           v-if="pagination"
           :pagination="pagination"
           :page-count="pageCount ?? 0"
@@ -557,7 +557,7 @@ defineExpose({
       v-if="enablePagination && (paginationPosition === 'bottom' || paginationPosition === 'both')"
     >
       <slot name="pagination" v-bind="paginationSlotProps">
-        <Pagination
+        <DataPagination
           v-if="pagination"
           :pagination="pagination"
           :page-count="pageCount ?? 0"

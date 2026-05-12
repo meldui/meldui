@@ -12,7 +12,7 @@ import {
   CardTitle,
   DataTable,
   Filters,
-  Pagination,
+  DataPagination,
   Select,
   SelectContent,
   SelectItem,
@@ -206,12 +206,12 @@ export const Example2_FullyInternalManual: Story = {
 /**
  * Example 3 — Everything external. DataTable as pure renderer.
  *
- * Filters and Pagination are rendered as siblings; sorting is external too
+ * Filters and DataPagination are rendered as siblings; sorting is external too
  * (column headers render plain text). Same composable plumbing as Example 1.
  */
 export const Example3_FullyExternal: Story = {
   render: () => ({
-    components: { DataTable, Filters, Pagination },
+    components: { DataTable, Filters, DataPagination },
     setup() {
       const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 10 })
       const localData = ref<ServerResponse>(simulateServerSide(MOCK_USERS, state.value))
@@ -237,7 +237,7 @@ export const Example3_FullyExternal: Story = {
       <div class="space-y-4">
         <Filters v-model:filterValues="filters" :fields="filterFields" />
         <DataTable :data="data" :columns="columns" />
-        <Pagination
+        <DataPagination
           v-model:pagination="pagination"
           :page-count="pageCount"
           :total-rows="totalRows"
@@ -308,7 +308,7 @@ export const Example5_GridViewWithComposable: Story = {
       CardHeader,
       CardTitle,
       Filters,
-      Pagination,
+      DataPagination,
       Select,
       SelectContent,
       SelectItem,
@@ -384,7 +384,7 @@ export const Example5_GridViewWithComposable: Story = {
             <CardContent><p>{{ user.role }} · {{ user.status }}</p></CardContent>
           </Card>
         </div>
-        <Pagination
+        <DataPagination
           v-model:pagination="pagination"
           :page-count="pageCount"
           :total-rows="totalRows"
@@ -473,7 +473,7 @@ export const Example7_SwitchableView: Story = {
       CardTitle,
       DataTable,
       Filters,
-      Pagination,
+      DataPagination,
     },
     setup() {
       const view = ref<'table' | 'grid'>('table')
@@ -527,7 +527,7 @@ export const Example7_SwitchableView: Story = {
             <CardContent><p>{{ user.role }} · {{ user.status }}</p></CardContent>
           </Card>
         </div>
-        <Pagination
+        <DataPagination
           v-if="view === 'grid'"
           v-model:pagination="pagination"
           :page-count="pageCount"
@@ -553,7 +553,7 @@ export const Example8_GridViewManual: Story = {
       CardHeader,
       CardTitle,
       Filters,
-      Pagination,
+      DataPagination,
       Select,
       SelectContent,
       SelectItem,
@@ -652,7 +652,7 @@ export const Example8_GridViewManual: Story = {
             <CardContent><p>{{ user.role }} · {{ user.status }}</p></CardContent>
           </Card>
         </div>
-        <Pagination
+        <DataPagination
           v-model:pagination="pagination"
           :page-count="pageCount"
           :total-rows="totalRows"

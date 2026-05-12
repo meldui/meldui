@@ -2,7 +2,7 @@
 '@meldui/vue': major
 ---
 
-Make `<DataTable>` a stateless, controlled component for sorting, filtering, and pagination. Parents now own all three state pieces via Vue `v-model:*` bindings and trigger data fetches when a merged state computed changes. A new `useDataTableController` composable bundles the three refs, applies the `flush: 'sync'` page-reset rule, and exposes a single merged `state` for fetch watchers. A new standalone `<Pagination>` composite replaces `<DataTablePagination>` and can be rendered inside or outside the DataTable — same component, same prop shape.
+Make `<DataTable>` a stateless, controlled component for sorting, filtering, and pagination. Parents now own all three state pieces via Vue `v-model:*` bindings and trigger data fetches when a merged state computed changes. A new `useDataTableController` composable bundles the three refs, applies the `flush: 'sync'` page-reset rule, and exposes a single merged `state` for fetch watchers. A new standalone `<DataPagination>` composite replaces `<DataTablePagination>` and can be rendered inside or outside the DataTable — same component, same prop shape.
 
 ### Breaking changes
 
@@ -10,9 +10,8 @@ Make `<DataTable>` a stateless, controlled component for sorting, filtering, and
 - **`initialFilters`, `initialSorting`, `initialPagination` props are removed.** Seed the parent's refs at construction time, typically via `useDataTableController({ initialSorting, initialFilters, initialPagination })`.
 - **`showPagination` prop is removed.** Replaced by `enablePagination` (default `false`, was always-on). Explicit opt-in.
 - **`searchColumn` and `searchPlaceholder` props are removed** from `<DataTable>`. Pass a `filterSearch` object instead (`{ id, placeholder?, debounceMs? }`), or configure search on a standalone `<Filters>` directly via its `searchField` prop.
-- **`DataTablePagination` is removed.** Replaced by a new standalone `<Pagination>` composite at `@meldui/vue` package root that takes plain props (no TanStack `Table` instance dependency).
+- **`DataTablePagination` is removed.** Replaced by a new standalone `<DataPagination>` composite at `@meldui/vue` package root that takes plain props (no TanStack `Table` instance dependency). Named with the `Data*` prefix to distinguish it from the existing Reka-based `<Pagination>` (page-number link bar), which it complements rather than replaces.
 - **`useDataTable.resetSorting`, `resetPagination`, `resetFilters`, `refresh` are removed.** Data-axis state lives in the parent now; reset via the parent (typically `controller.reset()`).
-- **`ui/Pagination` Reka primitive export renamed to `PaginationRoot`** to free up the `Pagination` name for the new composite.
 - **`BulkActionOption.action` signature changes from `(selectedRows: TData[]) => void` to `(selectedIds: string[]) => void`.** TanStack only has row data for the current page in server-side mode, so the previous signature silently dropped off-page selections. The new signature passes IDs (per `getRowId`) for ALL selected rows across all pages — parents resolve to row data against their own source. Combine with a `getRowId` prop for stable identity.
 - **`<Filters>`'s `change` event is removed.** It duplicated `update:filterValues` exactly (same data, just wrapped in `{ filterValues: ... }`). Migrate `@change="handler"` to `@update:filter-values="handler"` and unwrap: payload changes from `{ filterValues: {...} }` to `{...}` directly. Or use `v-model:filterValues` for the standard Vue idiom.
 
@@ -23,11 +22,11 @@ Make `<DataTable>` a stateless, controlled component for sorting, filtering, and
 ### Additions
 
 - `enableSorting` prop on `<DataTable>` (default `false`). Renders column-header sort dropdown.
-- `enablePagination` prop on `<DataTable>` (default `false`). Renders the new `<Pagination>` footer.
+- `enablePagination` prop on `<DataTable>` (default `false`). Renders the new `<DataPagination>` footer.
 - `sorting`, `filters`, `pagination` v-model targets on `<DataTable>`.
 - `pageCount` and `totalRows` display-only props on `<DataTable>`.
 - `useDataTableController` composable — parent-side helper for the three v-model refs and reset rules.
-- Standalone `<Pagination>` composite — same v-model shape as `<DataTable>`'s `v-model:pagination`.
+- Standalone `<DataPagination>` composite — same v-model shape as `<DataTable>`'s `v-model:pagination`. Use it independently with grids, card lists, or any custom data view.
 - Controlled `filterValues` v-model on `<Filters>`; the component now reactively rebuilds chips when the parent replaces the bound ref.
 - Dev-mode warning when an `enable*` flag is true but the corresponding v-model prop is unbound.
 - `getRowId` prop on `<DataTable>` (forwarded to TanStack). Fixes a pre-existing latent bug where row selection state followed the row index across server-side page changes (selecting row 0 on page 1 visually selected row 0 on page 2). Provide `(row) => String(row.id)` when using `enable-row-selection` with server-side pagination.

@@ -10,7 +10,7 @@ import DataTableBasicDemo from '../../../demos/data-table/DataTableBasicDemo.vue
 
 ## Basic Table
 
-A minimal DataTable with column-header sorting, a `<Filters>` row in the toolbar, and a `<Pagination>` footer. The parent owns sorting / filters / pagination state via `v-model` and fetches data when the merged state changes.
+A minimal DataTable with column-header sorting, a `<Filters>` row in the toolbar, and a `<DataPagination>` footer. The parent owns sorting / filters / pagination state via `v-model` and fetches data when the merged state changes.
 
 The recommended path uses `useDataTableController` to bundle the three refs and encapsulate the page-reset rule.
 
@@ -26,7 +26,7 @@ The recommended path uses `useDataTableController` to bundle the three refs and 
 | `totalRows`        | `number`                                   | -                  | Optional. Enables "X of Y" displays                                                                                                                                       |
 | `enableSorting`    | `boolean`                                  | `false`            | Render column-header sort dropdown. Requires `v-model:sorting`                                                                                                            |
 | `enableFilter`     | `boolean`                                  | `false`            | Render `<Filters>` row in toolbar. Requires `v-model:filters`                                                                                                             |
-| `enablePagination` | `boolean`                                  | `false`            | Render `<Pagination>` footer. Requires `v-model:pagination` + `pageCount`                                                                                                 |
+| `enablePagination` | `boolean`                                  | `false`            | Render `<DataPagination>` footer. Requires `v-model:pagination` + `pageCount`                                                                                             |
 | `sorting`          | `SortingState`                             | -                  | `v-model:sorting` target                                                                                                                                                  |
 | `filters`          | `DataTableFilterState`                     | -                  | `v-model:filters` target                                                                                                                                                  |
 | `pagination`       | `PaginationState`                          | -                  | `v-model:pagination` target — `{ pageIndex, pageSize }`                                                                                                                   |

@@ -77,6 +77,7 @@ export const navigation: NavItem[] = [
           { title: 'Menubar', href: '/docs/components/menubar' },
           { title: 'Navigation Menu', href: '/docs/components/navigation-menu' },
           { title: 'Pagination', href: '/docs/components/pagination' },
+          { title: 'Data Pagination', href: '/docs/components/data-pagination' },
         ],
       },
       {

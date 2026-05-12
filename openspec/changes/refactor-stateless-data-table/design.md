@@ -17,7 +17,7 @@ The goal is symmetry: each of the three features must support being either inter
 
 - DataTable is a pure controlled component for sorting, filtering, pagination. No internal state for these three.
 - Vue idiom: `v-model:sorting`, `v-model:filters`, `v-model:pagination`.
-- The same `<Filters>` and `<Pagination>` components are usable inside DataTable's toolbar/footer or rendered standalone by the parent. Single source of truth for each UI piece.
+- The same `<Filters>` and `<DataPagination>` components are usable inside DataTable's toolbar/footer or rendered standalone by the parent. Single source of truth for each UI piece.
 - Mixed modes work without special cases (e.g., external filter + internal pagination + internal sort).
 - A `useDataTableController` composable removes the page-reset footgun for typical consumers.
 
@@ -63,10 +63,10 @@ The goal is symmetry: each of the three features must support being either inter
   - _Auto-reset inside `<DataTable>` instead of the composable_. Rejected: cannot fire when filters are external (DataTable doesn't see them); puts an implicit mutation in a "stateless" component.
   - _Document `flush: 'sync'` as a parent contract_. Rejected as primary path: too easy to forget; silent failure mode (double fetch). Available as the manual-wiring fallback (Example 8 in the design plan).
 
-### Decision: Standalone `<Pagination>` composite
+### Decision: Standalone `<DataPagination>` composite
 
-- **What**: Move `DataTablePagination.vue` to `composites/pagination/Pagination.vue`. Take a single `:pagination` v-model plus display props. No TanStack `Table` instance dependency.
-- **Why**: The existing `ui/Pagination` is a Reka primitive without page-size selector, first/last, or page info. Building external pagination on it would require duplicating those features. A richer standalone composite with the same shape as DataTable's `v-model:pagination` lets parents bind one ref to either rendering path.
+- **What**: Move `DataTablePagination.vue` to `composites/pagination/DataPagination.vue`. Take a single `:pagination` v-model plus display props. No TanStack `Table` instance dependency.
+- **Why**: The existing `ui/Pagination` is a Reka primitive page-number link bar without page-size selector, first/last, or page info. Building external pagination on it would require duplicating those features. A richer standalone composite (`<DataPagination>`) with the same shape as DataTable's `v-model:pagination` lets parents bind one ref to either rendering path. The `Data*` prefix distinguishes the data-list-toolbar composite from the Reka primitive (matching the `DataTable` naming convention) and keeps the door open for a future layered architecture where a variant-aware `<Pagination>` wrapper is consumed internally by `<DataPagination>` without changing the external API.
 - **Alternatives considered**:
   - _Keep `DataTablePagination` coupled to TanStack `Table` and have external consumers re-build their own_. Rejected: bad ergonomics; duplicates work.
 

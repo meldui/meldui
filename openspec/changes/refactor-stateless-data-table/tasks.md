@@ -1,10 +1,10 @@
 # Tasks: Stateless DataTable with controlled v-model state
 
-## 1. Standalone `<Pagination>` composite
+## 1. Standalone `<DataPagination>` composite
 
-- [ ] 1.1 Create `packages/vue/src/composites/pagination/Pagination.vue`. Props: `pagination: PaginationState` (v-model target), `pageCount: number`, `totalRows?: number`, `pageSizeOptions?: number[]` (default `[10, 20, 30, 40, 50]`), `showPageSizeSelector?: boolean` (default true), `showPageInfo?: boolean` (default true), `showSelectedCount?: boolean` (default false). Emits `update:pagination`.
+- [ ] 1.1 Create `packages/vue/src/composites/pagination/DataPagination.vue`. Props: `pagination: PaginationState` (v-model target), `pageCount: number`, `totalRows?: number`, `pageSizeOptions?: number[]` (default `[10, 20, 30, 40, 50]`), `showPageSizeSelector?: boolean` (default true), `showPageInfo?: boolean` (default true), `showSelectedCount?: boolean` (default false). Emits `update:pagination`.
 - [ ] 1.2 Port styling, icons, first/last/prev/next button logic, and page-size `<Select>` from `composites/data-table/DataTablePagination.vue`. Drop the TanStack `Table` instance dependency — derive button-disabled state from `pageCount` and `pagination.pageIndex` directly.
-- [ ] 1.3 Create `packages/vue/src/composites/pagination/index.ts` exporting `Pagination` and re-exporting `PaginationState` type.
+- [ ] 1.3 Create `packages/vue/src/composites/pagination/index.ts` exporting `DataPagination` and re-exporting `PaginationState` type.
 - [ ] 1.4 Add `export * from './composites/pagination'` to `packages/vue/src/index.ts`.
 
 ## 2. Controlled `filterValues` v-model on `<Filters>`
@@ -33,10 +33,10 @@
 
 - [ ] 5.1 In `packages/vue/src/composites/data-table/DataTable.vue`, replace `onServerSideChange` callback prop with three v-model props (`sorting`, `filters`, `pagination`) and three update emits.
 - [ ] 5.2 Add `enableSorting?: boolean` (default `false`) and `enablePagination?: boolean` (default `false`). Change `enableFilter` default to remain `false`.
-- [ ] 5.3 Remove `initialFilters`, `initialSorting`, `initialPagination`, `searchColumn`, `searchPlaceholder`, `showPagination`, `paginationPosition`, `defaultPerPage`, `pageSizeOptions` props that are now moved/removed. (`pageSizeOptions` moves to `<Pagination>` directly.)
+- [ ] 5.3 Remove `initialFilters`, `initialSorting`, `initialPagination`, `searchColumn`, `searchPlaceholder`, `showPagination`, `paginationPosition`, `defaultPerPage`, `pageSizeOptions` props that are now moved/removed. (`pageSizeOptions` moves to `<DataPagination>` directly.)
 - [ ] 5.4 Drop the internal `useFilters` instantiation. Toolbar receives `filterValues` from the parent via v-model:filters and renders `<Filters v-model:filterValues="filtersFromProp" :fields="filterFields" ...>`. The toolbar's `<Filters>` is uncontrolled-style (internal `useFilters`) with the controlled `:filterValues` prop bridging external updates.
 - [ ] 5.5 Drop the internal `flush: 'sync'` filter→page reset watcher. Now lives in `useDataTableController`.
-- [ ] 5.6 Replace `<DataTablePagination>` import and usage with `<Pagination>`. Gate on `enablePagination`. Pass `:pagination="pagination"` (v-model from prop) and `:page-count`, `:total-rows` from props.
+- [ ] 5.6 Replace `<DataTablePagination>` import and usage with `<DataPagination>`. Gate on `enablePagination`. Pass `:pagination="pagination"` (v-model from prop) and `:page-count`, `:total-rows` from props.
 - [ ] 5.7 Add dev-mode warnings (`if (import.meta.env.DEV && props.enableX && props.X === undefined) console.warn(...)`) for sorting, filters, pagination.
 - [ ] 5.8 Verify `defineExpose` still exposes table state, keyboard state, and (when relevant) `filtersState` for advanced consumers.
 
@@ -49,15 +49,15 @@
 
 ## 7. Index and type exports
 
-- [ ] 7.1 In `packages/vue/src/composites/data-table/index.ts`, remove `DataTablePagination` export. Re-export `Pagination` from `../pagination`. Add `useDataTableController` export and type re-exports.
+- [ ] 7.1 In `packages/vue/src/composites/data-table/index.ts`, remove `DataTablePagination` export. Re-export `DataPagination` from `../pagination`. Add `useDataTableController` export and type re-exports.
 - [ ] 7.2 In `packages/vue/src/composites/data-table/types.ts`, document `DataTableFilterState`, `PaginationState`, `SortingState` as the canonical v-model shapes. Drop `ServerSideTableParams` / `ServerSideTableResponse` if no longer load-bearing (verify with grep).
-- [ ] 7.3 Verify `packages/vue/src/index.ts` re-exports everything consumers need (`Pagination`, `useDataTableController`, types).
+- [ ] 7.3 Verify `packages/vue/src/index.ts` re-exports everything consumers need (`DataPagination`, `useDataTableController`, types).
 
 ## 8. Storybook migration
 
 - [ ] 8.1 Migrate `apps/vue-storybook/src/stories/Components/DataTable/Events.stories.ts` from `onServerSideChange` to `update:sorting` / `update:filters` / `update:pagination`.
 - [ ] 8.2 Add Storybook examples mirroring the design plan's Examples 1–8 (recommended internal, manual internal, all external, mixed external filter, grid view with composable, URL state restoration, switchable view, grid view manual).
-- [ ] 8.3 Create `apps/vue-storybook/src/stories/Components/Pagination/Standalone.stories.ts` mirroring the existing standalone Filters story.
+- [ ] 8.3 Create `apps/vue-storybook/src/stories/Components/DataPagination/Standalone.stories.ts` mirroring the existing standalone Filters story.
 - [ ] 8.4 Create `apps/vue-storybook/src/stories/Components/DataTable/UseDataTableController.stories.ts` walking through composable options.
 - [ ] 8.5 Migrate every other DataTable story (Selection, Pinning, Resizing, Expansion, Hiding) to the new v-model API. They were using `onServerSideChange` for data-fetch wiring — convert each.
 
