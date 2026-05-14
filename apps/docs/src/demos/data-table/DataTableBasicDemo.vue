@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
-import { DataTable, createColumnHelper } from '@meldui/vue'
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 
 interface User {
   id: string
@@ -28,31 +28,26 @@ const allUsers: User[] = Array.from({ length: 50 }, (_, i) => ({
   status: i % 4 === 0 ? 'Inactive' : 'Active',
 }))
 
+const { sorting, pagination, state } = useDataTableController({ pageSize: 10 })
+
 const data = ref<User[]>([])
-const pageCount = ref(1)
+const pageCount = computed(() => Math.ceil(allUsers.length / pagination.value.pageSize))
+const totalRows = ref(allUsers.length)
 
-function handleChange({ pagination }: any) {
-  const start = pagination.pageIndex * pagination.pageSize
-  const end = start + pagination.pageSize
+function loadPage() {
+  const start = state.value.pagination.pageIndex * state.value.pagination.pageSize
+  const end = start + state.value.pagination.pageSize
   data.value = allUsers.slice(start, end)
-  pageCount.value = Math.ceil(allUsers.length / pagination.pageSize)
 }
 
-handleChange({ pagination: { pageIndex: 0, pageSize: 10 } })
+loadPage()
+watch(state, loadPage, { deep: true })
 
-const code = `\u003cscript setup>
-import { ref } from 'vue'
-import { DataTable, createColumnHelper } from '@meldui/vue'
+const code = `<script setup>
+import { watch } from 'vue'
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 
-interface User {
-  id: string
-  name: string
-  email: string
-  role: string
-  status: string
-}
-
-const helper = createColumnHelper\u003cUser>()
+const helper = createColumnHelper<User>()
 
 const columns = [
   helper.accessor('name', { title: 'Name', enableSorting: true }),
@@ -61,27 +56,39 @@ const columns = [
   helper.accessor('status', { title: 'Status' }),
 ]
 
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 10 })
+
 const data = ref([])
 const pageCount = ref(1)
+const totalRows = ref(0)
 
-function handleChange({ sorting, filters, pagination }) {
-  // Fetch from your API using sorting, filters, pagination
-  const response = await api.getUsers({ ...pagination, ...sorting })
-  data.value = response.data
-  pageCount.value = response.meta.total_pages
+async function fetchPage() {
+  const res = await api.getUsers({
+    sort: state.value.sorting,
+    filters: state.value.filters,
+    page: state.value.pagination.pageIndex + 1,
+    perPage: state.value.pagination.pageSize,
+  })
+  data.value = res.data
+  pageCount.value = res.meta.total_pages
+  totalRows.value = res.meta.total
 }
-\u003c/script>
 
-\u003ctemplate>
+watch(state, fetchPage, { deep: true })
+fetchPage()
+<\/script>
+
+<template>
   <DataTable
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
-    search-column="name"
-    search-placeholder="Search users..."
+    :total-rows="totalRows"
+    enable-sorting enable-pagination
+    v-model:sorting="sorting"
+    v-model:pagination="pagination"
   />
-\u003c/template>`
+</template>`
 </script>
 
 <template>
@@ -91,9 +98,11 @@ function handleChange({ sorting, filters, pagination }) {
         :columns="columns"
         :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
-        search-column="name"
-        search-placeholder="Search users..."
+        :total-rows="totalRows"
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
       />
     </div>
   </DemoBlock>

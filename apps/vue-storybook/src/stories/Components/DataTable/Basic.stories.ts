@@ -11,8 +11,7 @@
 
 import { DataTable } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { computed, ref } from 'vue'
-import { MOCK_USERS, minimalColumns, simulateServerSide, type TableState } from './_shared'
+import { minimalColumns, useStoryData } from './_shared'
 
 const meta: Meta<typeof DataTable> = {
   title: 'Components/DataTable/Basic',
@@ -25,8 +24,8 @@ const meta: Meta<typeof DataTable> = {
 Basic DataTable examples showing minimal setup and core features.
 
 These examples demonstrate:
-- Minimal table configuration
-- Search input functionality
+- Minimal table configuration with v-model
+- Search input via filter field configuration
 - Pagination with various options
 - Column sorting
 - Empty state handling
@@ -39,39 +38,26 @@ These examples demonstrate:
 export default meta
 type Story = StoryObj<typeof meta>
 
-// Empty handler for stories that don't need change handling
-function emptyChangeHandler() {}
-
 /**
- * Minimal DataTable setup with just data and columns.
- * Shows basic pagination and sorting out of the box.
+ * Minimal DataTable setup — sorting + pagination internal, parent owns state.
  */
 export const Minimal: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
+        :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
+        :total-rows="totalRows"
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
         :show-toolbar="false"
       />
     `,
@@ -79,108 +65,131 @@ export const Minimal: Story = {
 }
 
 /**
- * DataTable with search input for filtering by name.
- * The search column is specified to filter results.
+ * DataTable with search input — enable filter and configure `filterSearch`.
+ *
+ * Search lives inside the `<Filters>` row, so to render just a search bar you
+ * still need three pieces:
+ *   1. `enable-filter`     — turn on the filter toolbar (search is part of it)
+ *   2. `:filter-search`    — `{ id, placeholder?, debounceMs? }` config
+ *   3. `v-model:filters`   — search value is written under `filterSearch.id`
+ *
+ * `filter-fields` can be empty when you only want search.
  */
 export const WithSearch: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const { sorting, filters, pagination, data, pageCount, totalRows } = useStoryData({
+        pageSize: 10,
+      })
+      const filterSearch = { id: 'name', placeholder: 'Search by name...' }
+      return {
+        sorting,
+        filters,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        columns: minimalColumns,
+        filterSearch,
       }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
+        :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
-        search-column="name"
-        search-placeholder="Search by name..."
+        :total-rows="totalRows"
+        :filter-search="filterSearch"
+        enable-sorting
+        enable-filter
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:filters="filters"
+        v-model:pagination="pagination"
       />
     `,
   }),
 }
 
 /**
- * Custom search placeholder text for better UX.
+ * Search with a custom debounce window.
+ *
+ * `filterSearch.debounceMs` controls how long the component waits after the
+ * last keystroke before emitting the new value upward (default: 300ms). A
+ * higher value reduces server-side query volume for fast typists; a lower
+ * value makes search feel snappier.
+ *
+ * Open the browser console while typing — the `update:filters` log only
+ * fires once the user pauses for ~800ms.
  */
-export const CustomSearchPlaceholder: Story = {
+export const WithSearchDebounce: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const { sorting, filters, pagination, data, pageCount, totalRows } = useStoryData({
+        pageSize: 10,
+      })
+      const filterSearch = {
+        id: 'name',
+        placeholder: 'Type to find users (800ms debounce)...',
+        debounceMs: 800,
       }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const onFilters = (next: unknown) => {
+        // eslint-disable-next-line no-console
+        console.log('[update:filters]', next)
+      }
+      return {
+        sorting,
+        filters,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        columns: minimalColumns,
+        filterSearch,
+        onFilters,
+      }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
+        :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
-        search-column="name"
-        search-placeholder="Type to find users..."
+        :total-rows="totalRows"
+        :filter-search="filterSearch"
+        enable-sorting
+        enable-filter
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:filters="filters"
+        v-model:pagination="pagination"
+        @update:filters="onFilters"
       />
     `,
   }),
 }
 
 /**
- * Table with custom default page size (20 items per page).
+ * Custom default page size (20 items per page).
  */
 export const CustomDefaultPageSize: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 20 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 20 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
+        :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
-        :default-per-page="20"
+        :total-rows="totalRows"
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
         :show-toolbar="false"
       />
     `,
@@ -194,30 +203,20 @@ export const CustomPageSizeOptions: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 5 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 5 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
+        :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
-        :default-per-page="5"
+        :total-rows="totalRows"
         :page-size-options="[5, 15, 25, 50]"
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
         :show-toolbar="false"
       />
     `,
@@ -231,28 +230,19 @@ export const WithoutToolbar: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
+        :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
+        :total-rows="totalRows"
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
         :show-toolbar="false"
       />
     `,
@@ -260,36 +250,23 @@ export const WithoutToolbar: Story = {
 }
 
 /**
- * Table without pagination controls.
+ * Table without pagination — relies on the data prop holding the entire set.
  */
 export const WithoutPagination: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, data, totalRows } = useStoryData({ pageSize: 100 })
+      return { sorting, data, totalRows, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
-        :page-count="pageCount"
-        :on-server-side-change="handleChange"
+        :data="data"
+        :total-rows="totalRows"
+        enable-sorting
+        v-model:sorting="sorting"
         :show-toolbar="false"
-        :show-pagination="false"
       />
     `,
   }),
@@ -302,14 +279,12 @@ export const EmptyState: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      return { handleChange: emptyChangeHandler, columns: minimalColumns }
+      return { columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
         :data="[]"
-        :page-count="0"
-        :on-server-side-change="handleChange"
       />
     `,
   }),
@@ -322,14 +297,12 @@ export const CustomEmptyMessage: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      return { handleChange: emptyChangeHandler, columns: minimalColumns }
+      return { columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
         :data="[]"
-        :page-count="0"
-        :on-server-side-change="handleChange"
         empty-message="No users found. Try adjusting your search criteria."
       />
     `,
@@ -343,29 +316,19 @@ export const WithMaxHeight: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 50 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 50 })
+      return { sorting, pagination, data, pageCount, totalRows, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
-        :data="localData.data"
+        :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
-        :default-per-page="50"
+        :total-rows="totalRows"
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
         :show-toolbar="false"
         max-height="300px"
       />
@@ -374,28 +337,27 @@ export const WithMaxHeight: Story = {
 }
 
 /**
- * Complete basic setup with search and pagination.
- * This is the recommended minimal configuration.
+ * Recommended complete setup — sorting, search, and pagination wired with
+ * the controller composable.
  */
 export const RecommendedSetup: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const { sorting, filters, pagination, data, pageCount, totalRows } = useStoryData({
+        pageSize: 10,
+      })
+      const filterSearch = { id: 'name', placeholder: 'Search users...' }
+      return {
+        sorting,
+        filters,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        columns: minimalColumns,
+        filterSearch,
       }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns }
     },
     template: `
       <div class="space-y-2">
@@ -404,13 +366,17 @@ export const RecommendedSetup: Story = {
         </p>
         <DataTable
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-          search-placeholder="Search users..."
-          :default-per-page="10"
+          :total-rows="totalRows"
+          :filter-search="filterSearch"
           :page-size-options="[10, 20, 50, 100]"
+          enable-sorting
+          enable-filter
+          enable-pagination
+          v-model:sorting="sorting"
+          v-model:filters="filters"
+          v-model:pagination="pagination"
         />
       </div>
     `,

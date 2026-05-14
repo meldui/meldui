@@ -1,0 +1,163 @@
+---
+title: Data Pagination
+description: Pagination toolbar for tables, grids, and lists — first/last/prev/next buttons with a page-size selector and "Page X of Y" info.
+category: components
+subcategory: Data
+order: 46
+package: '@meldui/vue'
+componentName: DataPagination
+---
+
+import DataPaginationGridDemo from '../../../demos/data-pagination/DataPaginationGridDemo.vue'
+import DataPaginationListDemo from '../../../demos/data-pagination/DataPaginationListDemo.vue'
+import DataPaginationSelectedCountDemo from '../../../demos/data-pagination/DataPaginationSelectedCountDemo.vue'
+
+## Overview
+
+`<DataPagination>` is the toolbar style of pagination used by `<DataTable>`'s
+footer. It's a focused composite for data-listy views: first / previous /
+next / last buttons, a page-size dropdown, and a "Page X of Y" indicator.
+
+Unlike [`<Pagination>`](/docs/components/pagination) — which renders a
+page-number link bar (e.g. `1 · 2 · [3] · … · 10`) — `<DataPagination>`
+favours compact controls over enumerating pages. It's the right pick when
+the dataset has a large or unknown number of pages.
+
+`<DataTable>` renders a `<DataPagination>` internally when
+`enable-pagination` is set. You can also use it standalone with any custom
+view (cards, grids, virtualized lists) by binding the same v-model shape.
+
+## V-model contract
+
+```ts
+import type { PaginationState } from '@meldui/vue'
+
+const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
+```
+
+```vue
+<DataPagination
+  v-model:pagination="pagination"
+  :page-count="totalPages"
+  :total-rows="totalRecords"
+/>
+```
+
+`pageIndex` is 0-indexed (TanStack convention). Convert to 1-indexed when
+talking to a server that expects `?page=N`.
+
+## Props
+
+| Prop                   | Type              | Default                | Description                                                 |
+| ---------------------- | ----------------- | ---------------------- | ----------------------------------------------------------- |
+| `pagination`           | `PaginationState` | required               | v-model target — `{ pageIndex, pageSize }`                  |
+| `pageCount`            | `number`          | required               | Total number of pages                                       |
+| `totalRows`            | `number`          | —                      | Total record count. Required when `showSelectedCount` is on |
+| `pageSizeOptions`      | `number[]`        | `[10, 20, 30, 40, 50]` | Choices in the page-size dropdown                           |
+| `showPageSizeSelector` | `boolean`         | `true`                 | Toggle the page-size dropdown                               |
+| `showPageInfo`         | `boolean`         | `true`                 | Toggle the "Page X of Y" indicator                          |
+| `showSelectedCount`    | `boolean`         | `false`                | Toggle the "X of Y selected" indicator                      |
+| `selectedCount`        | `number`          | `0`                    | Count to show when `showSelectedCount` is `true`            |
+
+## Emits
+
+| Event               | Payload           | Description                                   |
+| ------------------- | ----------------- | --------------------------------------------- |
+| `update:pagination` | `PaginationState` | Fires when the user changes page or page size |
+
+## Standalone recipes
+
+### Card grid
+
+A typical content grid: bind the same `v-model:pagination` shape `<DataTable>` uses, derive `pageCount` from the total record count divided by `pagination.pageSize`, and slice the current page client-side (or fetch it server-side).
+
+<DataPaginationGridDemo client:only="vue" />
+
+### Compact list
+
+Hide the page-size selector with `:show-page-size-selector="false"` when the list has a fixed cadence — ledgers, transaction tables, timelines.
+
+<DataPaginationListDemo client:only="vue" />
+
+### Selected row count
+
+Pair `show-selected-count` with a `selectedCount` you maintain in the parent. The indicator appears on the left side of the toolbar as **`X of Y row(s) selected`** — and only renders when **all three** conditions hold: `showSelectedCount` is `true`, `selectedCount > 0`, and `totalRows` is provided. Track the selection set in the parent (not the page-local rows) so the count survives page changes.
+
+<DataPaginationSelectedCountDemo client:only="vue" />
+
+```vue
+<DataPagination
+  v-model:pagination="pagination"
+  :page-count="pageCount"
+  :total-rows="totalRows"
+  :selected-count="selectedIds.size"
+  show-selected-count
+/>
+```
+
+For tables, `<DataTable :enable-row-selection>` exposes a `selectedIds` ref (full set across all pages) via `defineExpose` — bind that count directly to `:selected-count`.
+
+## Standalone usage
+
+When you don't want a full table but still need pagination — for example a
+card grid driven by server-side data — bind the same `pagination` ref the
+table would have used.
+
+```vue
+<script setup>
+import { ref, watch } from 'vue'
+import { DataPagination, type PaginationState } from '@meldui/vue'
+
+const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 12 })
+const items = ref<Item[]>([])
+const pageCount = ref(1)
+const totalRows = ref(0)
+
+async function fetchPage() {
+  const res = await api.list({ page: pagination.value.pageIndex + 1, perPage: pagination.value.pageSize })
+  items.value = res.data
+  pageCount.value = res.meta.total_pages
+  totalRows.value = res.meta.total
+}
+
+watch(pagination, fetchPage, { deep: true })
+fetchPage()
+</script>
+
+<template>
+  <div class="grid grid-cols-3 gap-4">
+    <Card v-for="item in items" :key="item.id">{{ item.name }}</Card>
+  </div>
+  <DataPagination v-model:pagination="pagination" :page-count="pageCount" :total-rows="totalRows" />
+</template>
+```
+
+## Inside `<DataTable>`
+
+When `<DataTable enable-pagination v-model:pagination="…">` is set, the
+table renders a `<DataPagination>` in its footer using the same v-model
+ref. To customise the footer, use the `#pagination` slot — you can replace
+it with your own layout (the composite is still available to drop in):
+
+```vue
+<DataTable enable-pagination v-model:pagination="pagination" :page-count="pageCount" …>
+  <template #pagination="{ pagination: p, pageCount: pc, totalRows: tr }">
+    <div class="flex items-center justify-between">
+      <span class="text-xs text-muted-foreground">Custom footer</span>
+      <DataPagination
+        :pagination="p"
+        :page-count="pc"
+        :total-rows="tr"
+        :show-page-size-selector="false"
+        @update:pagination="(v) => pagination = v"
+      />
+    </div>
+  </template>
+</DataTable>
+```
+
+## See also
+
+- [`Pagination`](/docs/components/pagination) — page-number link bar style. Use
+  this for search results, blog indexes, or any content pagination where
+  enumerating pages is useful.

@@ -43,8 +43,9 @@ const columns = [
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
+    enable-pagination
     enable-row-expansion
+    v-model:pagination="pagination"
     :get-row-can-expand="(row) => row.original.items.length > 0"
   >
     <template #expanded-row="{ row }">

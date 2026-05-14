@@ -1,5 +1,14 @@
+// DataTable components
 export { default as ActionsCellDropdown } from './ActionsCellDropdown.vue'
 export { default as ActionsCellInline } from './ActionsCellInline.vue'
+export { default as DataTable } from './DataTable.vue'
+export { default as DataTableBulkActions } from './DataTableBulkActions.vue'
+export { default as DataTableColumnHeader } from './DataTableColumnHeader.vue'
+export { default as DataTableSelectHeader } from './DataTableSelectHeader.vue'
+export { default as DataTableToolbar } from './DataTableToolbar.vue'
+export { default as DataTableViewOptions } from './DataTableViewOptions.vue'
+
+// Aggregation helpers for footer
 export type {
   AverageOptions,
   CountOptions,
@@ -7,8 +16,9 @@ export type {
   RangeOptions,
   SumOptions,
 } from './aggregations'
-// Aggregation helpers for footer
 export { aggregations } from './aggregations'
+
+// Column helpers and cell renderers
 export type {
   BadgeOptions,
   BooleanOptions,
@@ -16,7 +26,6 @@ export type {
   DateOptions,
   NumberOptions,
 } from './cellRenderers'
-// Column helpers and cell renderers
 export { cellRenderers } from './cellRenderers'
 export type {
   AccessorColumnOptions,
@@ -28,68 +37,30 @@ export type {
   SelectionColumnOptions,
 } from './columnHelpers'
 export { createColumnHelper } from './columnHelpers'
-export { default as DataTable } from './DataTable.vue'
-export { default as DataTableBulkActions } from './DataTableBulkActions.vue'
-export { default as DataTableColumnHeader } from './DataTableColumnHeader.vue'
-export { default as DataTableFilterCommand } from './DataTableFilterCommand.vue'
-export { default as DataTablePagination } from './DataTablePagination.vue'
-export { default as DataTableSelectHeader } from './DataTableSelectHeader.vue'
-export { default as DataTableToolbar } from './DataTableToolbar.vue'
-export { default as DataTableViewOptions } from './DataTableViewOptions.vue'
+
+// Table-only types
 export type {
-  BuiltInFilterType,
-  FilterPlugin,
-  FilterPluginComponentProps,
-  RegisteredFilterPlugin,
-} from './filterPlugins'
-// Filter plugin system
-export { BUILT_IN_FILTER_TYPES, defineFilter, isBuiltInFilterType } from './filterPlugins'
-// Filter components
-export { default as BooleanFilter } from './filters/BooleanFilter.vue'
-export { default as DateFilter } from './filters/DateFilter.vue'
-export { default as DateRangeFilter } from './filters/DateRangeFilter.vue'
-export { default as MultiSelectFilter } from './filters/MultiSelectFilter.vue'
-export { default as NumberFilter } from './filters/NumberFilter.vue'
-// Re-export operator utilities
-export {
-  getAvailableOperators,
-  getDefaultOperator,
-  getOperatorLabel,
-  isArrayOperator,
-  isBinaryOperator,
-  isNullaryOperator,
-  isValidOperator,
-} from './filters/operators'
-export { default as RangeFilter } from './filters/RangeFilter.vue'
-export { default as SelectFilter } from './filters/SelectFilter.vue'
-export { default as TextFilter } from './filters/TextFilter.vue'
-// Re-export types
-export type {
-  AdvancedFilterValue,
-  BooleanOperator,
   BulkActionOption,
   ColumnPinningState,
+  DataTableFilterState,
   DataTablePinningConfig,
-  DateOperator,
-  FilterInstanceValue,
-  FilterOperator,
-  FilterType,
-  FilterValue,
-  FilterWithOperator,
-  NumberOperator,
-  SelectOperator,
+  ServerFilterValue,
   ServerSideTableParams,
   ServerSideTableResponse,
-  SimpleFilterValue,
-  TextOperator,
 } from './types'
-export { getBaseFilterType, isComplexFilterType } from './types'
-export type { DataTableFilterField, FilterOption, UseDataTableProps } from './useDataTable'
-// Re-export composables
+
+// Composables
+export type { UseDataTableProps } from './useDataTable'
 export { useDataTable } from './useDataTable'
+export type {
+  UseDataTableControllerOptions,
+  UseDataTableControllerReturn,
+} from './useDataTableController'
+export { useDataTableController } from './useDataTableController'
 export type { UseTableKeyboardOptions, UseTableKeyboardReturn } from './useTableKeyboard'
 export { useTableKeyboard } from './useTableKeyboard'
-// Re-export utility functions
+
+// Utility functions
 export {
   createColumns,
   type FilterFieldType,

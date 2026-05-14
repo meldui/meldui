@@ -19,16 +19,19 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const selectedRows = computed(() => {
-  return props.table.getSelectedRowModel().rows.map((row) => row.original)
+// Read selection state directly so we include rows on other pages — TanStack's
+// `getSelectedRowModel()` only returns rows in the current row model.
+const selectedIds = computed(() => {
+  const state = props.table.getState().rowSelection
+  return Object.keys(state).filter((k) => state[k])
 })
 
-const selectedCount = computed(() => selectedRows.value.length)
+const selectedCount = computed(() => selectedIds.value.length)
 
 const hasSelection = computed(() => selectedCount.value > 0)
 
-const handleAction = (action: (selectedRows: TData[]) => void) => {
-  action(selectedRows.value)
+const handleAction = (action: (selectedIds: string[]) => void) => {
+  action(selectedIds.value)
 }
 
 const clearSelection = () => {

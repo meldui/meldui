@@ -1,26 +1,27 @@
 /**
  * DataTable Selection Examples
  *
- * Examples demonstrating row selection and bulk actions:
- * - Basic row selection
- * - Select all functionality
- * - Selected count display
- * - Bulk action buttons
- * - Accessing selected data
+ * Row selection (checkbox column) + bulk actions.
  */
 
-import { IconDownload, IconMail, IconTrash, IconUser, IconUserPlus } from '@meldui/tabler-vue'
-import { type BulkActionOption, DataTable } from '@meldui/vue'
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { computed, ref } from 'vue'
+import { IconDownload, IconMail, IconTrash, IconUserPlus } from '@meldui/tabler-vue'
 import {
-  columnsWithSelection,
-  extendedColumns,
-  MOCK_USERS,
-  simulateServerSide,
-  type TableState,
-  type User,
-} from './_shared'
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  type BulkActionOption,
+  Button,
+  DataTable,
+} from '@meldui/vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { ref } from 'vue'
+import { columnsWithSelection, MOCK_USERS, type User, useStoryData } from './_shared'
 
 const meta: Meta<typeof DataTable> = {
   title: 'Components/DataTable/Selection',
@@ -30,13 +31,17 @@ const meta: Meta<typeof DataTable> = {
     docs: {
       description: {
         component: `
-Row selection examples with bulk actions.
+Row selection is enabled via \`enable-row-selection\` plus a selection column
+(\`helper.selection()\`). Bulk actions appear in the toolbar when at least one
+row is selected.
 
-Features:
-- Select individual rows or all rows on the page
-- Display selected count
-- Bulk action buttons for batch operations
-- Access selected row data via ref
+**Stable IDs:** when data is server-paginated, pass \`:get-row-id="(row) =>
+row.id"\` so selection tracks row identity (not row index) across pages.
+
+**Reading the selection across pages:** TanStack only has row data for the
+current page, so the table ref's \`selectedRows\` returns current-page rows
+only. For the FULL set of selected rows, read \`selectedIds\` from the table
+ref and resolve them against your own data source (store, server fetch).
         `,
       },
     },
@@ -47,193 +52,152 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 /**
- * Basic row selection with checkboxes.
- * Select individual rows using the checkbox column.
+ * Basic per-row + select-all checkbox.
  */
 export const BasicSelection: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const getRowId = (row: User) => row.id
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return {
+        getRowId,
+        sorting,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        columns: columnsWithSelection,
       }
-
-      return { localData, pageCount, handleChange, columns: columnsWithSelection }
     },
     template: `
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">
-          Click checkboxes to select rows. Use the header checkbox to select all visible rows.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-row-selection="true"
-          :show-toolbar="false"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :get-row-id="getRowId"
+        enable-row-selection
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Row selection with selected count display.
- * Shows "X of Y row(s) selected" in the pagination area.
+ * Show selected count in the pagination footer.
  */
-export const WithSelectedCount: Story = {
+export const SelectedCount: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const getRowId = (row: User) => row.id
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      return {
+        getRowId,
+        sorting,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        columns: columnsWithSelection,
       }
-
-      return { localData, pageCount, handleChange, columns: columnsWithSelection }
     },
     template: `
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">
-          Selection count is displayed at the bottom left of the table.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-row-selection="true"
-          :show-selected-count="true"
-          :show-toolbar="false"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :get-row-id="getRowId"
+        enable-row-selection
+        enable-pagination
+        show-selected-count
+        v-model:pagination="pagination"
+        v-model:sorting="sorting"
+        enable-sorting
+      />
     `,
   }),
 }
 
 /**
- * Bulk actions with single action button.
- * Delete selected rows.
+ * Single destructive bulk action.
  */
 export const SingleBulkAction: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const dataTableRef = ref()
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const bulkSelectOptions: BulkActionOption<User>[] = [
-        {
-          label: 'Delete Selected',
-          icon: IconTrash,
-          variant: 'destructive',
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            const count = selectedRows?.length || 0
-            alert(`Would delete ${count} user(s):\n${selectedRows?.map((u) => u.name).join(', ')}`)
-            dataTableRef.value?.resetSelection()
-          },
-        },
-      ]
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        dataTableRef,
-        localData,
-        pageCount,
-        handleChange,
-        columns: columnsWithSelection,
-        bulkSelectOptions,
-      }
-    },
-    template: `
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">
-          Select rows and click "Delete Selected" to see the action. Button appears when rows are selected.
-        </p>
-        <DataTable
-          ref="dataTableRef"
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-row-selection="true"
-          :show-selected-count="true"
-          :bulk-select-options="bulkSelectOptions"
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Multiple bulk actions.
- * Several action buttons for different operations.
- */
-export const MultipleBulkActions: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const dataTableRef = ref()
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
+      const getRowId = (row: User) => row.id
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
       const bulkSelectOptions: BulkActionOption<User>[] = [
         {
           label: 'Delete',
           icon: IconTrash,
           variant: 'destructive',
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            alert(`Delete ${selectedRows?.length} user(s)`)
-            dataTableRef.value?.resetSelection()
+          // Resolve IDs to user data from the source. In a real app this
+          // would be a server DELETE call with the ids.
+          action: (ids) => {
+            const users = MOCK_USERS.filter((u) => ids.includes(u.id))
+            alert(`Delete ${ids.length} user(s): ${users.map((u) => u.name).join(', ')}`)
           },
         },
+      ]
+      return {
+        getRowId,
+        sorting,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        columns: columnsWithSelection,
+        bulkSelectOptions,
+      }
+    },
+    template: `
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :bulk-select-options="bulkSelectOptions"
+        :get-row-id="getRowId"
+        enable-row-selection
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
+    `,
+  }),
+}
+
+/**
+ * Multiple bulk actions with mixed variants.
+ */
+export const MultipleBulkActions: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      const getRowId = (row: User) => row.id
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      const bulkSelectOptions: BulkActionOption<User>[] = [
         {
-          label: 'Export',
+          label: 'Send email',
+          icon: IconMail,
+          action: (ids) => alert(`Email ${ids.length} user(s)`),
+        },
+        {
+          label: 'Export JSON',
           icon: IconDownload,
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            const data = JSON.stringify(selectedRows, null, 2)
-            const blob = new Blob([data], { type: 'application/json' })
+          action: (ids) => {
+            // Resolve IDs to user records before export. In a real app this
+            // would fetch the records from the server by ID.
+            const users = MOCK_USERS.filter((u) => ids.includes(u.id))
+            const blob = new Blob([JSON.stringify(users, null, 2)], { type: 'application/json' })
             const url = URL.createObjectURL(blob)
             const a = document.createElement('a')
             a.href = url
@@ -243,214 +207,104 @@ export const MultipleBulkActions: Story = {
           },
         },
         {
-          label: 'Send Email',
-          icon: IconMail,
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            const emails = selectedRows?.map((u) => u.email).join(', ')
-            alert(`Would send email to:\n${emails}`)
-          },
-        },
-      ]
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        dataTableRef,
-        localData,
-        pageCount,
-        handleChange,
-        columns: columnsWithSelection,
-        bulkSelectOptions,
-      }
-    },
-    template: `
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">
-          Multiple bulk actions: Delete, Export, and Send Email. Select rows to see the action buttons.
-        </p>
-        <DataTable
-          ref="dataTableRef"
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-row-selection="true"
-          :show-selected-count="true"
-          :bulk-select-options="bulkSelectOptions"
-          search-column="name"
-          search-placeholder="Search users..."
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Bulk actions with different button variants.
- * Shows how to style action buttons differently.
- */
-export const BulkActionVariants: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const dataTableRef = ref()
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const bulkSelectOptions: BulkActionOption<User>[] = [
-        {
-          label: 'Destructive',
+          label: 'Delete',
           icon: IconTrash,
           variant: 'destructive',
-          action: () => alert('Destructive action'),
-        },
-        {
-          label: 'Default',
-          icon: IconUser,
-          // No variant = default
-          action: () => alert('Default action'),
-        },
-        {
-          label: 'Secondary',
-          icon: IconUserPlus,
-          variant: 'secondary',
-          action: () => alert('Secondary action'),
-        },
-        {
-          label: 'Outline',
-          icon: IconDownload,
-          variant: 'outline',
-          action: () => alert('Outline action'),
+          action: (ids) => alert(`Delete ${ids.length} user(s)`),
         },
       ]
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
       return {
-        dataTableRef,
-        localData,
+        getRowId,
+        sorting,
+        pagination,
+        data,
         pageCount,
-        handleChange,
+        totalRows,
         columns: columnsWithSelection,
         bulkSelectOptions,
       }
     },
     template: `
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">
-          Different button variants: destructive, default, secondary, and outline.
-        </p>
-        <DataTable
-          ref="dataTableRef"
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-row-selection="true"
-          :show-selected-count="true"
-          :bulk-select-options="bulkSelectOptions"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :bulk-select-options="bulkSelectOptions"
+        :get-row-id="getRowId"
+        enable-row-selection
+        enable-sorting
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Accessing selected rows programmatically.
- * Demonstrates how to read selection state via ref.
+ * Imperatively read selected rows from the template ref.
  */
-export const AccessSelectedRows: Story = {
+export const AccessSelectedRowsImperatively: Story = {
   render: () => ({
-    components: { DataTable },
+    components: { DataTable, Button },
     setup() {
-      const dataTableRef = ref()
-      const selectedInfo = ref('')
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
+      const getRowId = (row: User) => row.id
+      // defineExpose-d refs are auto-unwrapped when accessed through a
+      // template ref, so the types here are the unwrapped values (not Refs).
+      const tableRef = ref<{
+        selectedIds: string[]
+        selectedRowCount: number
+        hasSelection: boolean
+        resetSelection: () => void
+      } | null>(null)
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
 
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const checkSelection = () => {
-        const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-        const hasSelection = dataTableRef.value?.hasSelection
-        const count = dataTableRef.value?.selectedRowCount
-
-        if (hasSelection) {
-          selectedInfo.value = `Selected ${count} user(s):\n${selectedRows?.map((u) => `- ${u.name} (${u.email})`).join('\n')}`
-        } else {
-          selectedInfo.value = 'No rows selected'
-        }
+      const log = () => {
+        const ids = tableRef.value?.selectedIds ?? []
+        // Resolve IDs to user data using the parent's own source. In a real
+        // app this might be a Pinia/Vuex store or a server fetch by ID; here
+        // we look up against the mock dataset.
+        const selected = MOCK_USERS.filter((u) => ids.includes(u.id))
+        alert(
+          `Selected ${ids.length} across all pages:\n` +
+            selected.map((u) => `- ${u.name}`).join('\n'),
+        )
       }
-
-      const clearSelection = () => {
-        dataTableRef.value?.resetSelection()
-        selectedInfo.value = 'Selection cleared'
-      }
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
+      const clear = () => tableRef.value?.resetSelection()
 
       return {
-        dataTableRef,
-        selectedInfo,
-        localData,
+        getRowId,
+        tableRef,
+        sorting,
+        pagination,
+        data,
         pageCount,
-        handleChange,
+        totalRows,
         columns: columnsWithSelection,
-        checkSelection,
-        clearSelection,
+        log,
+        clear,
       }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Access selected rows via ref. Click buttons below to interact with selection state.
-        </p>
-
+      <div class="space-y-3">
         <div class="flex gap-2">
-          <button
-            @click="checkSelection"
-            class="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
-          >
-            Check Selection
-          </button>
-          <button
-            @click="clearSelection"
-            class="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded hover:bg-secondary/90"
-          >
-            Clear Selection
-          </button>
+          <Button size="sm" variant="outline" @click="log">Log selected rows</Button>
+          <Button size="sm" variant="outline" @click="clear">Clear selection</Button>
         </div>
-
-        <pre v-if="selectedInfo" class="p-3 bg-muted rounded text-sm whitespace-pre-wrap">{{ selectedInfo }}</pre>
-
         <DataTable
-          ref="dataTableRef"
+          ref="tableRef"
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-row-selection="true"
-          :show-selected-count="true"
-          :show-toolbar="false"
+          :total-rows="totalRows"
+          :get-row-id="getRowId"
+        enable-row-selection
+          enable-sorting
+          enable-pagination
+          show-selected-count
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
         />
       </div>
     `,
@@ -458,108 +312,102 @@ export const AccessSelectedRows: Story = {
 }
 
 /**
- * Complete selection example with search and filters.
+ * Bulk action wired to an AlertDialog confirmation flow.
+ * Demonstrates embedding MeldUI dialog components alongside DataTable selection.
  */
-export const CompleteSelectionExample: Story = {
+export const BulkActionsWithDialog: Story = {
   render: () => ({
-    components: { DataTable },
+    components: {
+      DataTable,
+      Button,
+      AlertDialog,
+      AlertDialogAction,
+      AlertDialogCancel,
+      AlertDialogContent,
+      AlertDialogDescription,
+      AlertDialogFooter,
+      AlertDialogHeader,
+      AlertDialogTitle,
+      AlertDialogTrigger,
+    },
     setup() {
-      const dataTableRef = ref()
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
+      const getRowId = (row: User) => row.id
+      // defineExpose-d refs are auto-unwrapped when accessed through a
+      // template ref, so the types here are the unwrapped values (not Refs).
+      const tableRef = ref<{
+        selectedIds: string[]
+        selectedRowCount: number
+        resetSelection: () => void
+      } | null>(null)
+      const dialogOpen = ref(false)
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
 
       const bulkSelectOptions: BulkActionOption<User>[] = [
+        {
+          label: 'Invite again',
+          icon: IconUserPlus,
+          action: (ids) => alert(`Re-invited ${ids.length} user(s)`),
+        },
         {
           label: 'Delete',
           icon: IconTrash,
           variant: 'destructive',
           action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            if (confirm(`Delete ${selectedRows?.length} user(s)?`)) {
-              alert('Deleted!')
-              dataTableRef.value?.resetSelection()
-            }
-          },
-        },
-        {
-          label: 'Export JSON',
-          icon: IconDownload,
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows
-            const data = JSON.stringify(selectedRows, null, 2)
-            const blob = new Blob([data], { type: 'application/json' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `users-${new Date().toISOString().slice(0, 10)}.json`
-            a.click()
-            URL.revokeObjectURL(url)
-          },
-        },
-        {
-          label: 'Export CSV',
-          icon: IconDownload,
-          variant: 'outline',
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            if (!selectedRows?.length) return
-
-            const headers = ['id', 'name', 'email', 'role', 'status']
-            const csv = [
-              headers.join(','),
-              ...selectedRows.map((row) =>
-                headers.map((h) => JSON.stringify(row[h as keyof User])).join(','),
-              ),
-            ].join('\\n')
-
-            const blob = new Blob([csv], { type: 'text/csv' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `users-${new Date().toISOString().slice(0, 10)}.csv`
-            a.click()
-            URL.revokeObjectURL(url)
+            dialogOpen.value = true
           },
         },
       ]
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const confirmDelete = () => {
+        // In a real app this would be `DELETE /users?ids=...` to the server.
+        const ids = tableRef.value?.selectedIds ?? []
+        alert(`Confirmed delete of ${ids.length} user(s) by ID:\n${ids.join(', ')}`)
+        tableRef.value?.resetSelection()
+        dialogOpen.value = false
       }
 
       return {
-        dataTableRef,
-        localData,
+        getRowId,
+        tableRef,
+        sorting,
+        pagination,
+        data,
         pageCount,
-        handleChange,
-        columns: extendedColumns,
+        totalRows,
         bulkSelectOptions,
+        dialogOpen,
+        confirmDelete,
+        columns: columnsWithSelection,
       }
     },
     template: `
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">
-          Complete example with search, bulk actions (Delete, Export JSON, Export CSV).
-        </p>
+      <div>
         <DataTable
-          ref="dataTableRef"
+          ref="tableRef"
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-row-selection="true"
-          :show-selected-count="true"
+          :total-rows="totalRows"
           :bulk-select-options="bulkSelectOptions"
-          search-column="name"
-          search-placeholder="Search users..."
+          :get-row-id="getRowId"
+        enable-row-selection
+          enable-sorting
+          enable-pagination
+          show-selected-count
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
         />
+        <AlertDialog v-model:open="dialogOpen">
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete selected users?</AlertDialogTitle>
+              <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction @click="confirmDelete">Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     `,
   }),

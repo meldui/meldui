@@ -7,6 +7,7 @@ import {
   Badge,
   Button,
   createColumnHelper,
+  type DataTableFilterState,
   DataTableColumnHeader,
   DropdownMenu,
   DropdownMenuContent,
@@ -14,16 +15,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  useDataTableController,
+  type UseDataTableControllerOptions,
 } from '@meldui/vue'
-import type {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-  Table,
-} from '@tanstack/vue-table'
-import { type Component, h } from 'vue'
+import type { Column, ColumnDef, PaginationState, SortingState, Table } from '@tanstack/vue-table'
+import { type Component, computed, h, ref, watch } from 'vue'
 
 // ============================================================================
 // Types
@@ -46,7 +42,7 @@ export interface User {
 
 export interface TableState {
   sorting: SortingState
-  filters: ColumnFiltersState
+  filters: DataTableFilterState
   pagination: PaginationState
 }
 
@@ -162,16 +158,133 @@ export function generateMockUsers(count: number = 100): User[] {
 export const MOCK_USERS = generateMockUsers(100)
 
 // ============================================================================
+// Story Helper — wires useDataTableController to the mock server simulator.
+// Each story uses this so the DataTable receives data/pageCount/totalRows that
+// react to v-model:sorting/filters/pagination mutations.
+// ============================================================================
+
+export function useStoryData(options?: UseDataTableControllerOptions, source: User[] = MOCK_USERS) {
+  const controller = useDataTableController(options)
+  const localData = ref(simulateServerSide(source, controller.state.value))
+
+  watch(
+    controller.state,
+    (next) => {
+      localData.value = simulateServerSide(source, next)
+    },
+    { deep: true },
+  )
+
+  return {
+    ...controller,
+    data: computed(() => localData.value.data),
+    pageCount: computed(() => localData.value.meta.total_pages),
+    totalRows: computed(() => localData.value.meta.total),
+  }
+}
+
+// ============================================================================
 // Server-Side Simulation
 // ============================================================================
+
+type FilterWithOperator = { operator: string; value: unknown }
+
+function isAdvancedFilterValue(v: unknown): v is FilterWithOperator[] {
+  return (
+    Array.isArray(v) &&
+    v.length > 0 &&
+    typeof v[0] === 'object' &&
+    v[0] !== null &&
+    'operator' in (v[0] as object)
+  )
+}
+
+function evaluateAdvancedOperator(itemValue: unknown, op: FilterWithOperator): boolean {
+  const { operator, value } = op
+
+  // Nullary operators (don't consult op.value)
+  if (operator === 'isEmpty')
+    return itemValue === null || itemValue === undefined || itemValue === ''
+  if (operator === 'isNotEmpty')
+    return !(itemValue === null || itemValue === undefined || itemValue === '')
+
+  switch (operator) {
+    // Text
+    case 'contains':
+      return String(itemValue ?? '')
+        .toLowerCase()
+        .includes(String(value ?? '').toLowerCase())
+    case 'notContains':
+      return !String(itemValue ?? '')
+        .toLowerCase()
+        .includes(String(value ?? '').toLowerCase())
+    case 'startsWith':
+      return String(itemValue ?? '')
+        .toLowerCase()
+        .startsWith(String(value ?? '').toLowerCase())
+    case 'endsWith':
+      return String(itemValue ?? '')
+        .toLowerCase()
+        .endsWith(String(value ?? '').toLowerCase())
+
+    // Equality (works for text, number, boolean, select)
+    case 'equals':
+    case 'is':
+      return itemValue === value
+    case 'notEquals':
+    case 'isNot':
+      return itemValue !== value
+
+    // Numeric ordering
+    case 'greaterThan':
+      return Number(itemValue) > Number(value)
+    case 'greaterThanOrEqual':
+      return Number(itemValue) >= Number(value)
+    case 'lessThan':
+      return Number(itemValue) < Number(value)
+    case 'lessThanOrEqual':
+      return Number(itemValue) <= Number(value)
+    case 'between': {
+      const [min, max] = value as [number, number]
+      const n = Number(itemValue)
+      return n >= min && n <= max
+    }
+
+    // Set membership (select isAnyOf / isNoneOf)
+    case 'isAnyOf':
+      return Array.isArray(value) && (value as unknown[]).includes(itemValue)
+    case 'isNoneOf':
+      return Array.isArray(value) && !(value as unknown[]).includes(itemValue)
+
+    // Date operators — left as no-ops in this mock simulator (DateValue → Date
+    // conversion is non-trivial; in a real backend this would be handled).
+    case 'isBefore':
+    case 'isAfter':
+    case 'isBetween':
+      return true
+
+    default:
+      return true
+  }
+}
 
 export function simulateServerSide(data: User[], tableState: TableState): ServerResponse {
   let filteredData = [...data]
 
   // Apply filters
-  tableState.filters.forEach((filter) => {
-    const { id, value } = filter
-    if (value === undefined || value === null || value === '') return
+  for (const [id, value] of Object.entries(tableState.filters)) {
+    if (value === undefined || value === null || value === '') continue
+
+    // Advanced mode: value is an array of {operator, value} objects.
+    // Evaluate each operator against the row's field value and OR them
+    // (multi-instance per field).
+    if (isAdvancedFilterValue(value)) {
+      filteredData = filteredData.filter((user) => {
+        const fieldValue = user[id as keyof User]
+        return value.some((op) => evaluateAdvancedOperator(fieldValue, op))
+      })
+      continue
+    }
 
     switch (id) {
       case 'name':
@@ -211,9 +324,17 @@ export function simulateServerSide(data: User[], tableState: TableState): Server
         break
 
       case 'salary':
+        // `useFilters` emits range values as tuples `[[min, max]]`, not
+        // `[{start, end}]`. `tableStateToServerParams` transforms tuples
+        // to `{start, end}` for the server, but this in-storybook simulator
+        // consumes the raw filter shape directly, so we read tuples here.
         if (Array.isArray(value)) {
           filteredData = filteredData.filter((user) =>
             value.some((range) => {
+              if (Array.isArray(range)) {
+                const [min, max] = range as [number, number]
+                return user.salary >= min && user.salary <= max
+              }
               const { start, end } = range as { start: number; end: number }
               return user.salary >= start && user.salary <= end
             }),
@@ -227,7 +348,7 @@ export function simulateServerSide(data: User[], tableState: TableState): Server
         }
         break
     }
-  })
+  }
 
   // Apply sorting
   if (tableState.sorting.length > 0) {
@@ -335,10 +456,12 @@ const helper = createColumnHelper<User>()
 export const columnsWithSelection: ColumnDef<User>[] = [helper.selection(), ...minimalColumns]
 
 /**
- * Extended columns with more fields
+ * Extended columns with more data fields than `minimalColumns`. Does NOT
+ * include the selection checkbox column — use `columnsWithSelection` or
+ * compose explicitly (`[helper.selection(), ...extendedColumns]`) when you
+ * also want row selection.
  */
 export const extendedColumns: ColumnDef<User>[] = [
-  helper.selection(),
   {
     accessorKey: 'name',
     header: ({ column, table }) => createColumnHeader(column, 'Name', table),

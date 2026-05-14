@@ -3,7 +3,6 @@ import { IconAlertCircle, IconRefresh } from '@meldui/tabler-vue'
 import {
   type Cell,
   type ColumnDef,
-  type ColumnFiltersState,
   type ColumnPinningState,
   FlexRender,
   type PaginationState,
@@ -15,7 +14,7 @@ import {
   type CSSProperties,
   computed,
   type HTMLAttributes,
-  nextTick,
+  onMounted,
   ref,
   useSlots,
 } from 'vue'
@@ -32,105 +31,119 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import DataTablePagination from './DataTablePagination.vue'
+import type { RegisteredFilterPlugin } from '@/composites/filters/filterPlugins'
+import type { DataTableFilterField } from '@/composites/filters/types'
+import { DataPagination } from '@/composites/pagination'
+import type { BulkActionOption, DataTableFilterState } from './types'
 import DataTableToolbar from './DataTableToolbar.vue'
-import type { RegisteredFilterPlugin } from './filterPlugins'
-import type { BulkActionOption } from './types'
-import { type DataTableFilterField, useDataTable } from './useDataTable'
+import { useDataTable } from './useDataTable'
 import { usePinnedColumns } from './usePinnedColumns'
 import { useTableKeyboard } from './useTableKeyboard'
 
-// Get slots for dynamic cell slot detection
 const slots = useSlots()
 
 interface Props {
   columns: ColumnDef<TData, unknown>[]
   data: TData[]
-  // Server-side props (required)
-  pageCount: number
-  onServerSideChange: (params: {
-    sorting: SortingState
-    filters: ColumnFiltersState
-    pagination: PaginationState
-  }) => void
-  // Feature toggles
-  enableRowSelection?: boolean
-  // Pagination options
-  defaultPerPage?: number
+
+  // Per-feature UI toggles (default false — explicit opt-in)
+  enableSorting?: boolean
+  enableFilter?: boolean
+  enablePagination?: boolean
+
+  // Controlled state — v-model targets. Required (in practice) when the
+  // corresponding enable* is true.
+  sorting?: SortingState
+  filters?: DataTableFilterState
+  pagination?: PaginationState
+
+  // Pagination server-derived display props (required when enablePagination)
+  pageCount?: number
+  totalRows?: number
   pageSizeOptions?: number[]
   showPageSizeSelector?: boolean
   showPageInfo?: boolean
-  paginationPosition?: 'bottom' | 'top' | 'both'
-  // Toolbar options
-  filterFields?: DataTableFilterField<TData>[]
-  searchPlaceholder?: string
-  searchColumn?: string
-  showToolbar?: boolean
-  showPagination?: boolean
   showSelectedCount?: boolean
+  paginationPosition?: 'bottom' | 'top' | 'both'
+
+  // Filter configuration (used by internal <Filters> when enableFilter is true)
+  filterFields?: DataTableFilterField<TData>[]
+  filterPlugins?: RegisteredFilterPlugin[]
+  advancedMode?: boolean
+  filterSearch?: { id: string; placeholder?: string; debounceMs?: number }
+
+  // Row selection / bulk actions
+  enableRowSelection?: boolean
   bulkSelectOptions?: BulkActionOption<TData>[]
+
+  // Toolbar visibility
+  showToolbar?: boolean
+
   // Column hiding
   enableColumnHiding?: boolean
-  // Empty state
-  emptyMessage?: string
-  // Loading state
-  loading?: boolean
-  loadingMessage?: string
-  // Error state
-  error?: string | Error
-  // Advanced filter mode (static - never changes)
-  advancedMode?: boolean
-  // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
-  // Note: Reset methods reset to true defaults (empty), not to initial values
-  initialFilters?: ColumnFiltersState
-  initialSorting?: SortingState
-  initialPagination?: Partial<PaginationState>
+
   // Column pinning
   defaultPinning?: ColumnPinningState
   enableColumnPinning?: boolean
+
   // Column resizing
   enableColumnResizing?: boolean
   columnResizeMode?: 'onChange' | 'onEnd'
-  // Table container styling
+
+  // Container styling
   maxHeight?: string
-  // Table density
   density?: 'compact' | 'comfortable' | 'spacious'
+  bordered?: boolean
+
   // Row styling
   rowClass?: (row: Row<TData>) => string | Record<string, boolean> | undefined
   rowStyle?: (row: Row<TData>) => CSSProperties | undefined
   rowProps?: (row: Row<TData>) => HTMLAttributes | undefined
-  // Header styling
   headerClass?: HTMLAttributes['class']
-  // Bordered cells (spreadsheet-like)
-  bordered?: boolean
+
+  // Empty / loading / error
+  emptyMessage?: string
+  loading?: boolean
+  loadingMessage?: string
+  error?: string | Error
+
   // Keyboard navigation
   enableKeyboardNavigation?: boolean
-  // Refresh button
+
+  // Refresh button (parent-driven via @refresh)
   showRefreshButton?: boolean
+
   // Row expansion
   enableRowExpansion?: boolean
   getRowCanExpand?: (row: Row<TData>) => boolean
-  // Custom filter plugins
-  filterPlugins?: RegisteredFilterPlugin[]
+
+  /**
+   * Stable per-row identifier. Strongly recommended when `enable-row-selection`
+   * is true and the data is server-side paginated — without it, TanStack uses
+   * the row index, so selection state "follows" the index across pages.
+   * Typical implementation: `(row) => String(row.id)`.
+   */
+  getRowId?: (row: TData, index: number) => string
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  enableSorting: false,
+  enableFilter: false,
+  enablePagination: false,
   enableRowSelection: false,
-  defaultPerPage: 10,
   pageSizeOptions: () => [10, 20, 30, 40, 50],
   showPageSizeSelector: true,
   showPageInfo: true,
+  showSelectedCount: false,
   paginationPosition: 'bottom',
   filterFields: () => [],
-  searchPlaceholder: 'Search...',
+  filterPlugins: () => [],
+  advancedMode: false,
   showToolbar: true,
-  showPagination: true,
-  showSelectedCount: false,
   enableColumnHiding: false,
   emptyMessage: 'No results found.',
   loading: false,
   loadingMessage: 'Loading data...',
-  advancedMode: false,
   enableColumnPinning: false,
   enableColumnResizing: false,
   columnResizeMode: 'onChange',
@@ -140,38 +153,69 @@ const props = withDefaults(defineProps<Props>(), {
   enableKeyboardNavigation: false,
   showRefreshButton: false,
   enableRowExpansion: false,
-  filterPlugins: () => [],
 })
 
-// Emits
 const emit = defineEmits<{
+  'update:sorting': [next: SortingState]
+  'update:filters': [next: DataTableFilterState]
+  'update:pagination': [next: PaginationState]
   retry: []
+  refresh: []
   rowActivate: [row: Row<TData>]
 }>()
 
-// Retry handler for error state
-const handleRetry = () => {
-  emit('retry')
+// Dev-mode warning when a feature is enabled but the corresponding v-model
+// prop is unbound. Silent in production builds.
+if (import.meta.env.DEV) {
+  onMounted(() => {
+    if (props.enableSorting && props.sorting === undefined) {
+      console.warn(
+        '[DataTable] `enableSorting` is true but `:sorting` is not bound. ' +
+          'Sort clicks will be lost. Did you forget `v-model:sorting`?',
+      )
+    }
+    if (props.enableFilter && props.filters === undefined) {
+      console.warn(
+        '[DataTable] `enableFilter` is true but `:filters` is not bound. ' +
+          'Filter changes will be lost. Did you forget `v-model:filters`?',
+      )
+    }
+    if (props.enablePagination && props.pagination === undefined) {
+      console.warn(
+        '[DataTable] `enablePagination` is true but `:pagination` is not bound. ' +
+          'Pagination changes will be lost. Did you forget `v-model:pagination`?',
+      )
+    }
+    if (props.enableRowSelection && props.getRowId === undefined) {
+      console.warn(
+        '[DataTable] `enableRowSelection` is true but `:get-row-id` is not provided. ' +
+          'TanStack defaults to the row index for row identity, which causes selection ' +
+          'state to "follow" the index across server-side page changes (selecting row 0 ' +
+          'on page 1 will also appear selected on page 2). Pass ' +
+          '`:get-row-id="(row) => String(row.id)"` (or any stable identifier) to fix this.',
+      )
+    }
+  })
 }
 
-// Computed error message
+const handleRetry = () => emit('retry')
+
 const errorMessage = computed(() => {
   if (!props.error) return ''
   return props.error instanceof Error ? props.error.message : props.error
 })
 
-const tableState = useDataTable({
+const tableState = useDataTable<TData>({
   data: () => props.data,
   columns: () => props.columns,
-  pageCount: () => props.pageCount,
-  defaultPerPage: props.defaultPerPage,
+  pageCount: () => props.pageCount ?? 0,
+  enableSorting: props.enableSorting,
+  sorting: () => props.sorting,
+  pagination: () => props.pagination,
+  onSortingChange: (next) => emit('update:sorting', next),
+  onPaginationChange: (next) => emit('update:pagination', next),
   enableRowSelection: props.enableRowSelection,
   filterFields: props.filterFields,
-  onServerSideChange: props.onServerSideChange,
-  advancedMode: props.advancedMode,
-  initialFilters: props.initialFilters,
-  initialSorting: props.initialSorting,
-  initialPagination: props.initialPagination,
   defaultPinning: props.defaultPinning,
   enableColumnPinning: props.enableColumnPinning,
   enableColumnHiding: props.enableColumnHiding,
@@ -179,14 +223,13 @@ const tableState = useDataTable({
   columnResizeMode: props.columnResizeMode,
   enableRowExpansion: props.enableRowExpansion,
   getRowCanExpand: props.getRowCanExpand,
+  getRowId: props.getRowId,
 })
 
 const { table } = tableState
 
-// Create a reactive reference to the table instance for pinning
 const tableInstanceRef = computed(() => table)
 
-// Pinning composable (only when pinning is enabled)
 const {
   tableRef: pinnedTableRef,
   isScrolled,
@@ -199,27 +242,22 @@ const {
       hasRightScroll: ref(false),
     }
 
-// Ref for the table container (used for both pinning and keyboard navigation)
 const tableContainerRef = ref<HTMLElement | null>(null)
 
-// Ref callback function for the table container
-// The outer container handles scrolling; inner Table.vue overflow is disabled via CSS
 const setTableContainerRef = (el: Element | ComponentPublicInstance | null) => {
   const element = el instanceof Element ? el : null
   tableContainerRef.value = element as HTMLElement | null
-
   if (element && pinnedTableRef) {
     pinnedTableRef.value = element as HTMLElement
   }
 }
 
-// Keyboard navigation composable (only when enabled)
 const keyboardState = props.enableKeyboardNavigation
   ? useTableKeyboard({
       table,
       tableContainerRef,
       enableSelection: props.enableRowSelection,
-      enablePagination: props.showPagination,
+      enablePagination: props.enablePagination,
       onRowActivate: (row) => emit('rowActivate', row),
     })
   : {
@@ -229,78 +267,54 @@ const keyboardState = props.enableKeyboardNavigation
       blurTable: () => {},
     }
 
-// Helper to get pinning class for a column
 const getPinningClass = (columnId: string) => {
   if (!props.enableColumnPinning) return ''
-
   const { left = [], right = [] } = table.getState().columnPinning
-
-  // Check if column is pinned left
   if (left.includes(columnId)) {
     const isLastLeftPinned = left[left.length - 1] === columnId
     return isLastLeftPinned ? 'pinned-left pinned-left-last' : 'pinned-left'
   }
-
-  // Check if column is pinned right
   if (right.includes(columnId)) {
     const isFirstRightPinned = right[0] === columnId
     return isFirstRightPinned ? 'pinned-right pinned-right-first' : 'pinned-right'
   }
-
   return ''
 }
 
-// Helper to check if a cell slot exists for a column
-const hasCellSlot = (columnId: string) => {
-  return !!slots[`cell-${columnId}`]
-}
+const hasCellSlot = (columnId: string) => !!slots[`cell-${columnId}`]
 
-// Helper to get cell slot props
-const getCellSlotProps = (cell: Cell<TData, unknown>, row: Row<TData>) => {
-  return {
-    cell,
-    row,
-    value: cell.getValue(),
-  }
-}
+const getCellSlotProps = (cell: Cell<TData, unknown>, row: Row<TData>) => ({
+  cell,
+  row,
+  value: cell.getValue(),
+})
 
-// Helper to get row slot props
-const getRowSlotProps = (row: Row<TData>, index: number) => {
-  return {
-    row,
-    cells: row.getVisibleCells(),
-    isSelected: row.getIsSelected(),
-    index,
-  }
-}
+const getRowSlotProps = (row: Row<TData>, index: number) => ({
+  row,
+  cells: row.getVisibleCells(),
+  isSelected: row.getIsSelected(),
+  index,
+})
 
-// Pagination slot props
 const paginationSlotProps = computed(() => ({
-  table,
-  pageCount: table.getPageCount(),
-  currentPage: table.getState().pagination.pageIndex + 1,
-  pageSize: table.getState().pagination.pageSize,
-  canPrevious: table.getCanPreviousPage(),
-  canNext: table.getCanNextPage(),
+  pagination: props.pagination,
+  pageCount: props.pageCount ?? 0,
+  totalRows: props.totalRows,
 }))
 
-// Footer slot props
 const footerSlotProps = computed(() => ({
   table,
   footerGroups: table.getFooterGroups(),
 }))
 
-// Check if any column has a footer defined
 const hasColumnFooters = computed(() => {
   return table
     .getFooterGroups()
     .some((group) => group.headers.some((header) => header.column.columnDef.footer))
 })
 
-// Check if footer slot is provided
 const hasFooterSlot = computed(() => !!slots.footer)
 
-// Expose table state for parent components to access selected rows
 defineExpose({
   ...tableState,
   ...keyboardState,
@@ -309,23 +323,24 @@ defineExpose({
 
 <template>
   <div class="w-full space-y-4">
-    <!-- Toolbar: Use #toolbar slot to completely replace, or use default with #toolbar-start/#toolbar-end -->
+    <!-- Toolbar -->
     <template v-if="showToolbar">
       <slot name="toolbar" :table="table" :loading="loading">
         <DataTableToolbar
           :table="table"
           :filter-fields="filterFields"
           :filter-plugins="filterPlugins"
-          :search-placeholder="searchPlaceholder"
-          :search-column="searchColumn"
           :bulk-select-options="bulkSelectOptions"
           :advanced-mode="advancedMode"
           :loading="loading"
           :show-refresh-button="showRefreshButton"
           :enable-column-hiding="enableColumnHiding"
-          @refresh="tableState.refresh"
+          :enable-filter="enableFilter"
+          :filter-values="filters"
+          :search-field="filterSearch"
+          @update:filter-values="(next) => emit('update:filters', next)"
+          @refresh="emit('refresh')"
         >
-          <!-- Pass through toolbar slots -->
           <template #toolbar-start="slotProps">
             <slot name="toolbar-start" v-bind="slotProps" />
           </template>
@@ -336,22 +351,27 @@ defineExpose({
       </slot>
     </template>
 
-    <!-- Top Pagination (when position is 'top' or 'both') -->
+    <!-- Top pagination -->
     <template
-      v-if="showPagination && (paginationPosition === 'top' || paginationPosition === 'both')"
+      v-if="enablePagination && (paginationPosition === 'top' || paginationPosition === 'both')"
     >
       <slot name="pagination" v-bind="paginationSlotProps">
-        <DataTablePagination
-          :table="table"
+        <DataPagination
+          v-if="pagination"
+          :pagination="pagination"
+          :page-count="pageCount ?? 0"
+          :total-rows="totalRows"
           :page-size-options="pageSizeOptions"
-          :show-selected-count="showSelectedCount"
           :show-page-size-selector="showPageSizeSelector"
           :show-page-info="showPageInfo"
+          :show-selected-count="showSelectedCount"
+          :selected-count="tableState.selectedRowCount.value"
+          @update:pagination="(next) => emit('update:pagination', next)"
         />
       </slot>
     </template>
 
-    <!-- Table Container wrapper - scrolling happens here, inner Table overflow is disabled -->
+    <!-- Table container -->
     <div
       :ref="setTableContainerRef"
       class="rounded-md border table-container overflow-auto custom-scrollbar"
@@ -365,7 +385,6 @@ defineExpose({
       :tabindex="enableKeyboardNavigation ? 0 : undefined"
       :data-keyboard-navigation="enableKeyboardNavigation || undefined"
     >
-      <!--maxHeight needs to be added in style property to add this style in container of <Table> component which has over-flow: auto-->
       <Table :style="{ maxHeight: maxHeight }">
         <TableHeader :class="headerClass ?? 'bg-muted'">
           <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
@@ -391,7 +410,6 @@ defineExpose({
                 :render="header.column.columnDef.header"
                 :props="header.getContext()"
               />
-              <!-- Column resize handle -->
               <div
                 v-if="enableColumnResizing && header.column.getCanResize()"
                 class="resize-handle"
@@ -403,7 +421,6 @@ defineExpose({
           </TableRow>
         </TableHeader>
         <TableBody>
-          <!-- Error state -->
           <template v-if="error">
             <TableRow>
               <TableCell :colspan="columns.length" class="p-0">
@@ -424,26 +441,25 @@ defineExpose({
             </TableRow>
           </template>
 
-          <!-- Loading state -->
           <template v-else-if="loading">
             <TableRow
-              v-for="rowIndex in table.getState().pagination.pageSize"
+              v-for="rowIndex in pagination?.pageSize ?? 10"
               :key="`skeleton-row-${rowIndex}`"
             >
               <TableCell
-                v-for="(column, colIndex) in columns"
+                v-for="(_column, colIndex) in columns"
                 :key="`skeleton-cell-${rowIndex}-${colIndex}`"
-                :class="{ 'border-r border-border last:border-r-0': bordered }"
+                :class="{
+                  'border-r border-border last:border-r-0': bordered,
+                }"
               >
                 <Skeleton class="h-5 w-full" />
               </TableCell>
             </TableRow>
           </template>
 
-          <!-- Data rows -->
           <template v-else-if="table.getRowModel().rows?.length">
             <template v-for="(row, index) in table.getRowModel().rows" :key="row.id">
-              <!-- Row slot: Use #row to completely replace row rendering -->
               <slot name="row" v-bind="getRowSlotProps(row, index)">
                 <TableRow
                   :data-state="row.getIsSelected() ? 'selected' : undefined"
@@ -457,7 +473,9 @@ defineExpose({
                     :data-column-id="cell.column.id"
                     :class="[
                       getPinningClass(cell.column.id),
-                      { 'border-r border-border last:border-r-0': bordered },
+                      {
+                        'border-r border-border last:border-r-0': bordered,
+                      },
                     ]"
                     :style="{
                       minWidth:
@@ -465,7 +483,6 @@ defineExpose({
                       width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined,
                     }"
                   >
-                    <!-- Cell slot: Use #cell-[columnId] to customize specific column cells -->
                     <slot
                       v-if="hasCellSlot(cell.column.id)"
                       :name="`cell-${cell.column.id}`"
@@ -478,7 +495,6 @@ defineExpose({
                     />
                   </TableCell>
                 </TableRow>
-                <!-- Expanded row content -->
                 <TableRow
                   v-if="enableRowExpansion && row.getIsExpanded()"
                   class="expanded-row"
@@ -494,7 +510,6 @@ defineExpose({
             </template>
           </template>
 
-          <!-- Empty state slot -->
           <TableRow v-else>
             <TableCell :colspan="columns.length" class="p-0">
               <slot name="empty" :message="emptyMessage" :columns="columns.length">
@@ -511,7 +526,6 @@ defineExpose({
           </TableRow>
         </TableBody>
 
-        <!-- Footer: Use #footer slot to completely replace, or use column footers -->
         <TableFooter v-if="hasFooterSlot || hasColumnFooters" class="table-footer">
           <slot name="footer" v-bind="footerSlotProps">
             <TableRow v-for="footerGroup in table.getFooterGroups()" :key="footerGroup.id">
@@ -538,17 +552,22 @@ defineExpose({
       </Table>
     </div>
 
-    <!-- Bottom Pagination (when position is 'bottom' or 'both') -->
+    <!-- Bottom pagination -->
     <template
-      v-if="showPagination && (paginationPosition === 'bottom' || paginationPosition === 'both')"
+      v-if="enablePagination && (paginationPosition === 'bottom' || paginationPosition === 'both')"
     >
       <slot name="pagination" v-bind="paginationSlotProps">
-        <DataTablePagination
-          :table="table"
+        <DataPagination
+          v-if="pagination"
+          :pagination="pagination"
+          :page-count="pageCount ?? 0"
+          :total-rows="totalRows"
           :page-size-options="pageSizeOptions"
-          :show-selected-count="showSelectedCount"
           :show-page-size-selector="showPageSizeSelector"
           :show-page-info="showPageInfo"
+          :show-selected-count="showSelectedCount"
+          :selected-count="tableState.selectedRowCount.value"
+          @update:pagination="(next) => emit('update:pagination', next)"
         />
       </slot>
     </template>
@@ -556,26 +575,15 @@ defineExpose({
 </template>
 
 <style scoped>
-/*
- * DataTable Styles
- *
- * NOTE: Most styles are in @meldui/vue/themes/default.css using global selectors.
- * They use global selectors (.table-container .pinned-left, etc.) because
- * Vue scoped CSS with :deep() doesn't reliably apply to nested child components.
- */
-
-/* Disable inner Table.vue overflow - scrolling happens on .table-container */
 :deep([data-slot='table-container']) {
   overflow: visible !important;
 }
 
-/* Loading state overlay effect */
 .table-container[data-loading='true'] {
   opacity: 0.6;
   pointer-events: none;
 }
 
-/* Expanded row styles */
 :deep(.expanded-row) {
   background-color: var(--muted);
 }
@@ -588,7 +596,6 @@ defineExpose({
   padding: 1rem;
 }
 
-/* Footer styles - sticky positioning */
 :deep(.table-footer) {
   position: sticky;
   bottom: 0;
@@ -602,13 +609,11 @@ defineExpose({
   font-weight: 500;
 }
 
-/* Column resizing - use fixed table layout for consistent resizing */
 .table-container[data-column-resizing] :deep(table) {
   table-layout: fixed;
   width: 100%;
 }
 
-/* Column resizing - prevent content overflow in cells */
 .table-container[data-column-resizing] :deep(th),
 .table-container[data-column-resizing] :deep(td) {
   overflow: hidden;
@@ -616,12 +621,10 @@ defineExpose({
   white-space: nowrap;
 }
 
-/* Add extra padding to header cells for resize handle clearance */
 .table-container[data-column-resizing] :deep(th) {
   padding-right: calc(var(--dt-cell-padding-x) + 8px);
 }
 
-/* Apply overflow handling to body cell content (nested elements) */
 .table-container[data-column-resizing] :deep(td > *) {
   overflow: hidden;
   text-overflow: ellipsis;

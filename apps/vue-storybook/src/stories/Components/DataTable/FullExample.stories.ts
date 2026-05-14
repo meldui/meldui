@@ -1,18 +1,16 @@
 /**
  * DataTable Full Examples
  *
- * Complete, production-ready examples:
- * - Full featured table with all options
- * - User management dashboard
- * - Advanced filtering with all features
+ * Production-grade kitchen-sink scenarios combining every feature.
  */
 
 import {
   IconBuilding,
   IconCalendar,
   IconCheck,
-  IconCurrencyDollar,
+  IconCoin,
   IconDownload,
+  IconEdit,
   IconHash,
   IconMail,
   IconMapPin,
@@ -20,41 +18,35 @@ import {
   IconTrash,
   IconUserPlus,
 } from '@meldui/tabler-vue'
-import { type BulkActionOption, DataTable, type DataTableFilterField } from '@meldui/vue'
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import type { ColumnPinningState } from '@tanstack/vue-table'
-import { computed, ref } from 'vue'
 import {
-  departmentOptions,
-  fullColumns,
-  locationOptions,
-  MOCK_USERS,
-  roleOptions,
-  simulateServerSide,
-  statusOptions,
-  type TableState,
+  type BulkActionOption,
+  DataTable,
+  type DataTableFilterField,
+  aggregations,
+  cellRenderers,
+  createColumnHelper,
+} from '@meldui/vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { ColumnDef, ColumnPinningState } from '@tanstack/vue-table'
+import { h } from 'vue'
+import {
   type User,
+  departmentOptions,
+  locationOptions,
+  roleOptions,
+  statusOptions,
+  useStoryData,
 } from './_shared'
 
 const meta: Meta<typeof DataTable> = {
-  title: 'Components/DataTable/Full Example',
+  title: 'Components/DataTable/FullExample',
   component: DataTable,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: `
-Complete, production-ready examples demonstrating all DataTable features together.
-
-These examples show how to combine:
-- Sorting and pagination
-- Multiple filter types
-- Row selection with bulk actions
-- Column pinning
-- Search functionality
-
-Use these as starting points for your own implementations.
-        `,
+        component:
+          'Production kitchen-sink examples — every feature wired together: sorting, filtering, pagination, selection, bulk actions, pinning, expansion, column hiding, custom cells, aggregations.',
       },
     },
   },
@@ -63,529 +55,308 @@ Use these as starting points for your own implementations.
 export default meta
 type Story = StoryObj<typeof meta>
 
+const helper = createColumnHelper<User>()
+
+const richColumns: ColumnDef<User>[] = [
+  helper.selection(),
+  helper.expander(),
+  helper.accessor('name', {
+    title: 'Name',
+    enableSorting: true,
+    cell: ({ row }) => h('span', { class: 'font-medium' }, row.getValue('name')),
+    footer: aggregations.count({ format: '{count} users' }),
+  }),
+  helper.accessor('email', { title: 'Email', enableSorting: true }),
+  helper.accessor('role', {
+    title: 'Role',
+    cell: cellRenderers.badge<User, string>({
+      variantMap: { admin: 'default', user: 'secondary', guest: 'outline' },
+    }),
+  }),
+  helper.accessor('status', {
+    title: 'Status',
+    cell: cellRenderers.badge<User, string>({
+      variantMap: { active: 'default', inactive: 'destructive' },
+    }),
+  }),
+  helper.accessor('department', { title: 'Department' }),
+  helper.accessor('age', {
+    title: 'Age',
+    enableSorting: true,
+    cell: cellRenderers.number(),
+    footer: aggregations.average({ decimals: 1, suffix: ' avg' }),
+  }),
+  helper.accessor('salary', {
+    title: 'Salary',
+    enableSorting: true,
+    cell: cellRenderers.currency({ currency: 'USD' }),
+    footer: aggregations.sum({ format: 'currency', currency: 'USD' }),
+  }),
+  helper.accessor('is_verified', {
+    title: 'Verified',
+    cell: cellRenderers.boolean({ asBadge: true }),
+  }),
+  helper.accessor('created_at', {
+    title: 'Joined',
+    cell: cellRenderers.date({ format: 'short' }),
+  }),
+  helper.actions({
+    display: 'dropdown',
+    actions: [
+      { label: 'Edit', icon: IconEdit, onClick: (r) => alert(`Edit ${r.original.name}`) },
+      {
+        label: 'Delete',
+        icon: IconTrash,
+        variant: 'destructive',
+        onClick: (r) => alert(`Delete ${r.original.name}`),
+      },
+    ],
+  }),
+]
+
+const filterFields: DataTableFilterField<User>[] = [
+  { id: 'email', label: 'Email', type: 'text', icon: IconMail },
+  { id: 'role', label: 'Role', type: 'select', icon: IconShield, options: roleOptions },
+  { id: 'status', label: 'Status', type: 'multiselect', icon: IconCheck, options: statusOptions },
+  {
+    id: 'department',
+    label: 'Department',
+    type: 'multiselect',
+    icon: IconBuilding,
+    options: departmentOptions,
+  },
+  {
+    id: 'location',
+    label: 'Location',
+    type: 'multiselect',
+    icon: IconMapPin,
+    options: locationOptions,
+  },
+  { id: 'age', label: 'Age', type: 'number', icon: IconHash, min: 18, max: 100 },
+  {
+    id: 'salary',
+    label: 'Salary',
+    type: 'range',
+    icon: IconCoin,
+    range: [30000, 150000],
+    step: 1000,
+  },
+  { id: 'is_verified', label: 'Verified', type: 'boolean', icon: IconCheck },
+  { id: 'created_at', label: 'Created', type: 'date', icon: IconCalendar },
+]
+
+const bulkSelectOptions: BulkActionOption<User>[] = [
+  { label: 'Invite', icon: IconUserPlus, action: (ids) => alert(`Invite ${ids.length}`) },
+  { label: 'Export', icon: IconDownload, action: (ids) => alert(`Export ${ids.length}`) },
+  {
+    label: 'Delete',
+    icon: IconTrash,
+    variant: 'destructive',
+    action: (ids) => alert(`Delete ${ids.length}`),
+  },
+]
+
 /**
- * Complete user management table.
- * This is a production-ready example with all features enabled.
+ * The full ecosystem: sorting, filtering, pagination, selection, bulk actions,
+ * column pinning, row expansion, column hiding, refresh button, density,
+ * footer aggregations, cell renderers, and an actions column.
  */
-export const UserManagement: Story = {
+export const CompleteUserManagement: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const dataTableRef = ref()
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const filterFields: DataTableFilterField<User>[] = [
-        {
-          id: 'email',
-          label: 'Email',
-          type: 'text',
-          icon: IconMail,
-          placeholder: 'Filter by email...',
-        },
-        {
-          id: 'role',
-          label: 'Role',
-          type: 'select',
-          icon: IconShield,
-          placeholder: 'Select role',
-          options: roleOptions,
-        },
-        {
-          id: 'status',
-          label: 'Status',
-          type: 'multiselect',
-          options: statusOptions,
-        },
-        {
-          id: 'department',
-          label: 'Department',
-          type: 'multiselect',
-          icon: IconBuilding,
-          options: departmentOptions,
-        },
-        {
-          id: 'location',
-          label: 'Location',
-          type: 'multiselect',
-          icon: IconMapPin,
-          options: locationOptions,
-        },
-        {
-          id: 'age',
-          label: 'Age',
-          type: 'number',
-          icon: IconHash,
-          placeholder: 'Enter age',
-          unit: 'yrs',
-        },
-        {
-          id: 'salary',
-          label: 'Salary',
-          type: 'range',
-          icon: IconCurrencyDollar,
-          range: [30000, 150000],
-          step: 5000,
-          unit: '$',
-        },
-        {
-          id: 'is_verified',
-          label: 'Verified',
-          type: 'boolean',
-          icon: IconCheck,
-        },
-      ]
-
-      const bulkSelectOptions: BulkActionOption<User>[] = [
-        {
-          label: 'Delete',
-          icon: IconTrash,
-          variant: 'destructive',
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            if (confirm(`Delete ${selectedRows?.length} user(s)?`)) {
-              console.log(
-                'Deleting users:',
-                selectedRows?.map((u) => u.id),
-              )
-              alert(`Deleted ${selectedRows?.length} user(s)`)
-              dataTableRef.value?.resetSelection()
-            }
-          },
-        },
-        {
-          label: 'Export',
-          icon: IconDownload,
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows
-            const data = JSON.stringify(selectedRows, null, 2)
-            const blob = new Blob([data], { type: 'application/json' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `users-${new Date().toISOString().slice(0, 10)}.json`
-            a.click()
-            URL.revokeObjectURL(url)
-          },
-        },
-        {
-          label: 'Send Email',
-          icon: IconMail,
-          variant: 'outline',
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            const emails = selectedRows?.map((u) => u.email).join(', ')
-            alert(`Would send email to:\n${emails}`)
-          },
-        },
-        {
-          label: 'Assign Role',
-          icon: IconUserPlus,
-          variant: 'secondary',
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows as User[] | undefined
-            alert(`Would assign role to ${selectedRows?.length} user(s)`)
-          },
-        },
-      ]
-
+      const getRowId = (row: User) => row.id
+      const { sorting, filters, pagination, data, pageCount, totalRows } = useStoryData({
+        pageSize: 10,
+      })
       const defaultPinning: ColumnPinningState = {
-        left: ['select', 'name'],
+        left: ['select', 'expander', 'name'],
         right: ['actions'],
       }
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
       return {
-        dataTableRef,
-        localData,
+        getRowId,
+        sorting,
+        filters,
+        pagination,
+        data,
         pageCount,
-        handleChange,
-        columns: fullColumns,
+        totalRows,
+        columns: richColumns,
         filterFields,
         bulkSelectOptions,
         defaultPinning,
+        filterSearch: { id: 'name', placeholder: 'Search users...' },
       }
     },
     template: `
-      <div class="space-y-4">
-        <div class="flex justify-between items-center">
-          <div>
-            <h2 class="text-lg font-semibold">User Management</h2>
-            <p class="text-sm text-muted-foreground">
-              Manage users with full filtering, sorting, and bulk actions.
-            </p>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :filter-fields="filterFields"
+        :bulk-select-options="bulkSelectOptions"
+        :default-pinning="defaultPinning"
+        :filter-search="filterSearch"
+        :page-size-options="[10, 25, 50, 100]"
+        enable-sorting enable-filter enable-pagination
+        :get-row-id="getRowId"
+        enable-row-selection enable-row-expansion enable-column-pinning enable-column-hiding
+        show-selected-count show-refresh-button
+        v-model:sorting="sorting"
+        v-model:filters="filters"
+        v-model:pagination="pagination"
+        max-height="500px"
+      >
+        <template #expanded-row="{ row }">
+          <div class="space-y-1 text-sm">
+            <div><span class="text-muted-foreground">Email:</span> {{ row.original.email }}</div>
+            <div><span class="text-muted-foreground">Location:</span> {{ row.original.location }}</div>
+            <div><span class="text-muted-foreground">Last login:</span> {{ row.original.last_login_at.slice(0, 10) }}</div>
           </div>
-        </div>
-
-        <DataTable
-          ref="dataTableRef"
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :filter-fields="filterFields"
-          :enable-row-selection="true"
-          :show-selected-count="true"
-          :bulk-select-options="bulkSelectOptions"
-          :enable-column-pinning="true"
-          :default-pinning="defaultPinning"
-          :default-per-page="10"
-          :page-size-options="[10, 20, 50, 100]"
-          search-column="name"
-          search-placeholder="Search users..."
-          max-height="500px"
-        />
-      </div>
+        </template>
+      </DataTable>
     `,
   }),
 }
 
 /**
- * Minimal production setup.
- * Shows the minimum configuration for a production-ready table.
+ * Production layout in advanced filter mode (every filter has operator selection).
  */
-export const MinimalProduction: Story = {
+export const AdvancedFilterProduction: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const filterFields: DataTableFilterField<User>[] = [
-        {
-          id: 'role',
-          label: 'Role',
-          type: 'select',
-          options: roleOptions,
-        },
-        {
-          id: 'status',
-          label: 'Status',
-          type: 'multiselect',
-          options: statusOptions,
-        },
-      ]
-
-      const handleChange = (state: TableState) => {
-        // In production, this would be an API call:
-        // const response = await fetch('/api/users', {
-        //   method: 'POST',
-        //   body: JSON.stringify(tableStateToServerParams(state, filterFields, 'name'))
-        // })
-        // localData.value = await response.json()
-
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: fullColumns, filterFields }
-    },
-    template: `
-      <div class="space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold">Users</h2>
-          <p class="text-sm text-muted-foreground">
-            Minimal setup with search and basic filters.
-          </p>
-        </div>
-
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :filter-fields="filterFields"
-          :enable-row-selection="true"
-          search-column="name"
-          search-placeholder="Search..."
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Advanced filtering example.
- * Uses advanced mode with operators for complex queries.
- */
-export const AdvancedFiltering: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const dataTableRef = ref()
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      // Advanced mode only uses base filter types
-      const filterFields: DataTableFilterField<User>[] = [
-        {
-          id: 'email',
-          label: 'Email',
-          type: 'text',
-          icon: IconMail,
-          placeholder: 'Filter email...',
-          defaultOperator: 'contains',
-        },
+      const getRowId = (row: User) => row.id
+      const { sorting, filters, pagination, data, pageCount, totalRows } = useStoryData({
+        pageSize: 10,
+      })
+      const advancedFilterFields: DataTableFilterField<User>[] = [
+        { id: 'email', label: 'Email', type: 'text', icon: IconMail, defaultOperator: 'contains' },
         {
           id: 'role',
           label: 'Role',
           type: 'select',
           icon: IconShield,
-          placeholder: 'Select role',
           options: roleOptions,
-          defaultOperator: 'is',
+          defaultOperator: 'isAnyOf',
         },
-        {
-          id: 'age',
-          label: 'Age',
-          type: 'number',
-          icon: IconHash,
-          placeholder: 'Enter age',
-          unit: 'yrs',
-          defaultOperator: 'greaterThan',
-        },
+        { id: 'age', label: 'Age', type: 'number', icon: IconHash, defaultOperator: 'greaterThan' },
         {
           id: 'salary',
           label: 'Salary',
           type: 'number',
-          icon: IconCurrencyDollar,
-          placeholder: 'Enter salary',
-          unit: '$',
+          icon: IconCoin,
           defaultOperator: 'between',
-        },
-        {
-          id: 'is_verified',
-          label: 'Verified',
-          type: 'boolean',
-          icon: IconCheck,
-        },
-        {
-          id: 'last_login_at',
-          label: 'Last Login',
-          type: 'date',
-          icon: IconCalendar,
-          placeholder: 'Pick date',
-          defaultOperator: 'is',
         },
         {
           id: 'created_at',
           label: 'Created',
           type: 'date',
           icon: IconCalendar,
-          placeholder: 'Date range',
-          defaultOperator: 'isBetween',
-        },
-      ]
-
-      const bulkSelectOptions: BulkActionOption<User>[] = [
-        {
-          label: 'Delete',
-          icon: IconTrash,
-          variant: 'destructive',
-          action: () => {
-            const count = dataTableRef.value?.selectedRowCount || 0
-            alert(`Would delete ${count} user(s)`)
-            dataTableRef.value?.resetSelection()
-          },
+          defaultOperator: 'isAfter',
         },
         {
-          label: 'Export',
-          icon: IconDownload,
-          action: () => {
-            const selectedRows = dataTableRef.value?.selectedRows
-            console.log('Exporting:', selectedRows)
-            alert(`Would export ${selectedRows?.length} user(s)`)
-          },
+          id: 'is_verified',
+          label: 'Verified',
+          type: 'boolean',
+          icon: IconCheck,
+          defaultOperator: 'is',
         },
       ]
-
-      const handleChange = (state: TableState) => {
-        console.log('Advanced filter state:', state.filters)
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
+      const defaultPinning: ColumnPinningState = { left: ['select', 'name'], right: ['actions'] }
       return {
-        dataTableRef,
-        localData,
+        getRowId,
+        sorting,
+        filters,
+        pagination,
+        data,
         pageCount,
-        handleChange,
-        columns: fullColumns,
-        filterFields,
+        totalRows,
+        columns: richColumns.filter((c) => c.id !== 'expander'),
+        filterFields: advancedFilterFields,
         bulkSelectOptions,
+        defaultPinning,
       }
     },
     template: `
-      <div class="space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold">Advanced User Search</h2>
-          <p class="text-sm text-muted-foreground">
-            Each filter has an operator selector for precise queries.
-            Use "contains", "equals", "greater than", "between", etc.
-          </p>
-        </div>
-
-        <DataTable
-          ref="dataTableRef"
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :filter-fields="filterFields"
-          :enable-row-selection="true"
-          :show-selected-count="true"
-          :bulk-select-options="bulkSelectOptions"
-          :advanced-mode="true"
-          search-column="name"
-          search-placeholder="Search by name..."
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :filter-fields="filterFields"
+        :bulk-select-options="bulkSelectOptions"
+        :default-pinning="defaultPinning"
+        advanced-mode
+        enable-sorting enable-filter enable-pagination
+        :get-row-id="getRowId"
+        enable-row-selection enable-column-pinning enable-column-hiding
+        show-selected-count
+        v-model:sorting="sorting"
+        v-model:filters="filters"
+        v-model:pagination="pagination"
+        max-height="500px"
+      />
     `,
   }),
 }
 
 /**
- * Read-only table without selection.
- * For display-only data without interactive selection.
+ * Read-only table — no selection, no actions, no toolbar add buttons.
+ * Sorting / filtering / pagination only.
  */
 export const ReadOnlyTable: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 20 },
+      const { sorting, filters, pagination, data, pageCount, totalRows } = useStoryData({
+        pageSize: 20,
+      })
+      const readOnlyColumns: ColumnDef<User>[] = [
+        helper.accessor('name', { title: 'Name', enableSorting: true }),
+        helper.accessor('email', { title: 'Email' }),
+        helper.accessor('role', {
+          title: 'Role',
+          cell: cellRenderers.badge<User, string>({
+            variantMap: { admin: 'default', user: 'secondary', guest: 'outline' },
+          }),
         }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const filterFields: DataTableFilterField<User>[] = [
-        {
-          id: 'role',
-          label: 'Role',
-          type: 'select',
-          options: roleOptions,
-        },
-        {
-          id: 'status',
-          label: 'Status',
-          type: 'multiselect',
-          options: statusOptions,
-        },
+        helper.accessor('department', { title: 'Department' }),
+        helper.accessor('age', { title: 'Age', cell: cellRenderers.number() }),
+        helper.accessor('created_at', {
+          title: 'Joined',
+          cell: cellRenderers.date({ format: 'short' }),
+        }),
       ]
-
-      // Remove selection column for read-only view
-      const readOnlyColumns = fullColumns.filter((col) => col.id !== 'select')
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const readOnlyFilters: DataTableFilterField<User>[] = [
+        { id: 'role', label: 'Role', type: 'select', options: roleOptions },
+        { id: 'department', label: 'Department', type: 'multiselect', options: departmentOptions },
+      ]
+      return {
+        sorting,
+        filters,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        columns: readOnlyColumns,
+        filterFields: readOnlyFilters,
       }
-
-      return { localData, pageCount, handleChange, columns: readOnlyColumns, filterFields }
     },
     template: `
-      <div class="space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold">User Directory</h2>
-          <p class="text-sm text-muted-foreground">
-            View-only table with filtering and sorting, no selection.
-          </p>
-        </div>
-
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :filter-fields="filterFields"
-          :default-per-page="20"
-          search-column="name"
-          search-placeholder="Find user..."
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Compact table for dense data display.
- * More rows visible with less padding.
- */
-export const CompactDisplay: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 25 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const defaultPinning: ColumnPinningState = {
-        left: ['name'],
-        right: ['actions'],
-      }
-
-      const handleChange = (state: TableState) => {
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      // Remove selection column for compact view
-      const compactColumns = fullColumns.filter((col) => col.id !== 'select')
-
-      return { localData, pageCount, handleChange, columns: compactColumns, defaultPinning }
-    },
-    template: `
-      <div class="space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold">Compact View</h2>
-          <p class="text-sm text-muted-foreground">
-            25 rows with 350px height. Pinned columns for navigation.
-          </p>
-        </div>
-
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :enable-column-pinning="true"
-          :default-pinning="defaultPinning"
-          :default-per-page="25"
-          :page-size-options="[25, 50, 100]"
-          :show-toolbar="false"
-          max-height="350px"
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="data"
+        :page-count="pageCount"
+        :total-rows="totalRows"
+        :filter-fields="filterFields"
+        :page-size-options="[20, 50, 100]"
+        enable-sorting enable-filter enable-pagination
+        v-model:sorting="sorting"
+        v-model:filters="filters"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }

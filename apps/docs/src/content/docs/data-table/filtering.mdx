@@ -116,11 +116,16 @@ Enable operator-based filtering with `advancedMode`:
   :columns="columns"
   :data="data"
   :page-count="pageCount"
-  :on-server-side-change="handleChange"
   :filter-fields="filterFields"
-  :advanced-mode="true"
+  enable-filter
+  enable-pagination
+  advanced-mode
+  v-model:filters="filters"
+  v-model:pagination="pagination"
 />
 ```
+
+See the [`<Filters>` composite](/docs/composites/filters) page for the props and types in detail, or the [Recipes](/docs/data-table/recipes) page for how filters compose with sorting and pagination in different layouts.
 
 In advanced mode, each filter gets an operator dropdown. Only base types are allowed (text, number, date, select, boolean — not multiselect, range, or daterange).
 

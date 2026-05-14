@@ -21,8 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import type { SelectOperator } from '../types'
-import type { FilterOption } from '../useDataTable'
+import type { FilterOption, SelectOperator } from '../types'
 import { getFilterIcon } from './filter-icons'
 import {
   getAvailableOperators,

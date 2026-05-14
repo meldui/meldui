@@ -1,6 +1,5 @@
 import {
   type ColumnDef,
-  type ColumnFiltersState,
   type ColumnPinningState,
   type ColumnResizeMode,
   type ColumnSizingState,
@@ -15,135 +14,87 @@ import {
   useVueTable,
   type VisibilityState,
 } from '@tanstack/vue-table'
-import { type Component, computed, type Ref, ref, watch } from 'vue'
+import { computed, type Ref, ref } from 'vue'
 import { valueUpdater } from '@/components/ui/table/utils'
-import type { FilterOperator, FilterType } from './types'
-import { isComplexFilterType } from './types'
+import type { DataTableFilterField } from '@/composites/filters/types'
 
-export interface FilterOption {
-  label: string
-  value: string
-  icon?: Component
-}
-
-export interface DataTableFilterField<TData> {
-  id: keyof TData
-  label: string
-  placeholder?: string
-  /**
-   * Filter type - can be a built-in type or a custom plugin type string
-   * Built-in types: text, number, date, select, boolean, multiselect, range, daterange
-   * Custom types: any string registered via filterPlugins
-   */
-  type: FilterType | (string & {}) // All 8 built-in types OR custom plugin type
-  options?: FilterOption[] // For select/multiselect
-  icon?: Component
-
-  // Number-specific
-  min?: number
-  max?: number
-  step?: number
-  unit?: string
-
-  // Range-specific (for range and daterange types)
-  range?: [number, number] // Min/max bounds for range slider
-
-  // Advanced mode configuration
-  defaultOperator?: FilterOperator // Override default operator
-  availableOperators?: FilterOperator[] // Limit available operators
-
-  // Allow additional custom properties for plugin filters
-  [key: string]: unknown
-}
+const DEFAULT_PAGINATION: PaginationState = { pageIndex: 0, pageSize: 10 }
+const EMPTY_SORTING: SortingState = []
 
 export interface UseDataTableProps<TData> {
   data: TData[] | (() => TData[])
   columns: ColumnDef<TData, unknown>[] | (() => ColumnDef<TData, unknown>[])
-  pageCount: number | (() => number) // Required for server-side pagination
-  defaultPerPage?: number
+  pageCount: number | (() => number)
+
   enableRowSelection?: boolean
   filterFields?: DataTableFilterField<TData>[]
-  onServerSideChange: (params: {
-    sorting: SortingState
-    filters: ColumnFiltersState
-    pagination: PaginationState
-  }) => void // Required for server-side mode
 
-  // Advanced mode configuration (static - never changes after init)
-  advancedMode?: boolean // Static mode - true for advanced, false for simple
+  /**
+   * Controlled sorting state from the parent. Required (in practice) when
+   * `enableSorting: true` because TanStack's column header dropdown calls
+   * `onSortingChange` synchronously and we forward to the parent via emit.
+   * When omitted the table reads an empty `SortingState`.
+   */
+  sorting?: () => SortingState | undefined
+  onSortingChange?: (next: SortingState) => void
 
-  // Initial state for URL state restoration (e.g., page refresh with applied filters/sorting)
-  // Note: Reset methods reset to true defaults (empty), not to initial values
-  initialFilters?: ColumnFiltersState
-  initialSorting?: SortingState
-  initialPagination?: Partial<PaginationState>
+  /**
+   * Controlled pagination state from the parent. When omitted the table reads
+   * `{ pageIndex: 0, pageSize: 10 }`. `pageCount` remains a separate prop.
+   */
+  pagination?: () => PaginationState | undefined
+  onPaginationChange?: (next: PaginationState) => void
 
-  // Column pinning configuration
+  /**
+   * Whether TanStack should treat columns as sortable at the table level.
+   * When false, column-header sort affordances are suppressed regardless of
+   * per-column defaults.
+   */
+  enableSorting?: boolean
+
+  // Column pinning
   defaultPinning?: ColumnPinningState
   enableColumnPinning?: boolean
 
-  // Column hiding configuration
+  // Column hiding
   enableColumnHiding?: boolean
 
-  // Column resizing configuration
+  // Column resizing
   enableColumnResizing?: boolean
   columnResizeMode?: ColumnResizeMode
 
-  // Row expansion configuration
+  // Row expansion
   enableRowExpansion?: boolean
   getRowCanExpand?: (row: Row<TData>) => boolean
+
+  /**
+   * Stable per-row identifier for TanStack's internal row tracking.
+   * Required for correct row-selection behaviour across server-side
+   * pagination — without it, TanStack uses the row index, so selection
+   * state "follows" the index when a new page of rows replaces the
+   * current page. Typical implementation: `(row) => String(row.id)`.
+   */
+  getRowId?: (row: TData, index: number) => string
 }
 
-/**
- * Helper to resolve getter or value
- * Moved to module scope for better reusability
- */
 function resolveValue<T>(value: T | (() => T)): T {
   return typeof value === 'function' ? (value as () => T)() : value
 }
 
+/**
+ * Sets up a TanStack Table instance configured for fully server-side ops
+ * (manual sorting / filtering / pagination). Sorting and pagination state is
+ * sourced from prop getters — the parent owns them via `v-model:*` on
+ * `<DataTable>`. Visual concerns (selection, expansion, column visibility /
+ * pinning / sizing) remain internally managed in this composable.
+ */
 export function useDataTable<TData>(props: UseDataTableProps<TData>) {
-  // Validate: No complex types in advanced mode
-  if (props.advancedMode && props.filterFields) {
-    const invalidFields = props.filterFields.filter((field) => isComplexFilterType(field.type))
-
-    if (invalidFields.length > 0) {
-      throw new Error(
-        `[DataTable] Complex filter types (multiselect, range, daterange) are not allowed in advanced mode.\n` +
-          `Use base types with operators instead:\n` +
-          `  - multiselect → select with defaultOperator: "isAnyOf"\n` +
-          `  - range → number with defaultOperator: "between"\n` +
-          `  - daterange → date with defaultOperator: "isBetween"\n` +
-          `Invalid fields: ${invalidFields.map((f) => String(f.id)).join(', ')}`,
-      )
-    }
-  }
-
-  // State management
-  // Initial values are used for URL state restoration (e.g., page refresh)
-  // Reset methods reset to true defaults (empty), not to initial values
-  const sorting = ref<SortingState>(props.initialSorting || [])
-  const columnFilters = ref<ColumnFiltersState>(props.initialFilters || [])
+  // Visual-concern state (internally owned)
   const columnVisibility = ref<VisibilityState>({})
   const rowSelection = ref<RowSelectionState>({})
-  const pagination = ref<PaginationState>({
-    pageIndex: props.initialPagination?.pageIndex ?? 0,
-    pageSize: props.initialPagination?.pageSize ?? props.defaultPerPage ?? 10,
-  })
   const columnPinning = ref<ColumnPinningState>(props.defaultPinning || { left: [], right: [] })
   const columnSizing = ref<ColumnSizingState>({})
   const expanded = ref<ExpandedState>({})
-
-  // Handle state changes
-  const onSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
-    valueUpdater(updaterOrValue, sorting as Ref<SortingState>)
-  }
-
-  const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (updaterOrValue) => {
-    valueUpdater(updaterOrValue, columnFilters as Ref<ColumnFiltersState>)
-    // Reset to first page when filters change
-    pagination.value.pageIndex = 0
-  }
 
   const onColumnVisibilityChange: OnChangeFn<VisibilityState> = (updaterOrValue) => {
     valueUpdater(updaterOrValue, columnVisibility as Ref<VisibilityState>)
@@ -151,10 +102,6 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   const onRowSelectionChange: OnChangeFn<RowSelectionState> = (updaterOrValue) => {
     valueUpdater(updaterOrValue, rowSelection as Ref<RowSelectionState>)
-  }
-
-  const onPaginationChange: OnChangeFn<PaginationState> = (updaterOrValue) => {
-    valueUpdater(updaterOrValue, pagination as Ref<PaginationState>)
   }
 
   const onColumnPinningChange: OnChangeFn<ColumnPinningState> = (updaterOrValue) => {
@@ -169,7 +116,24 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     valueUpdater(updaterOrValue, expanded as Ref<ExpandedState>)
   }
 
-  // Create table instance (server-side only)
+  // Data-axis state (parent-owned). We read current values via getters so we
+  // can resolve TanStack's updater-function-style onChange payloads, then
+  // forward the next value to the parent via the supplied callbacks.
+  const readSorting = (): SortingState => props.sorting?.() ?? EMPTY_SORTING
+  const readPagination = (): PaginationState => props.pagination?.() ?? DEFAULT_PAGINATION
+
+  const onSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
+    const current = readSorting()
+    const next = typeof updaterOrValue === 'function' ? updaterOrValue(current) : updaterOrValue
+    props.onSortingChange?.(next)
+  }
+
+  const onPaginationChange: OnChangeFn<PaginationState> = (updaterOrValue) => {
+    const current = readPagination()
+    const next = typeof updaterOrValue === 'function' ? updaterOrValue(current) : updaterOrValue
+    props.onPaginationChange?.(next)
+  }
+
   const table = useVueTable({
     get data() {
       return resolveValue(props.data)
@@ -182,10 +146,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     },
     state: {
       get sorting() {
-        return sorting.value
-      },
-      get columnFilters() {
-        return columnFilters.value
+        return readSorting()
       },
       get columnVisibility() {
         return columnVisibility.value
@@ -194,7 +155,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
         return rowSelection.value
       },
       get pagination() {
-        return pagination.value
+        return readPagination()
       },
       get columnPinning() {
         return columnPinning.value
@@ -206,29 +167,26 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
         return expanded.value
       },
     },
+    enableSorting: props.enableSorting ?? false,
     enableRowSelection: props.enableRowSelection ?? false,
     enableExpanding: props.enableRowExpansion ?? false,
     enableColumnPinning: props.enableColumnPinning ?? false,
     enableColumnResizing: props.enableColumnResizing ?? false,
     columnResizeMode: props.columnResizeMode ?? 'onChange',
-    // Add meta with configuration accessible to all columns
     meta: {
       defaultPinning: props.defaultPinning || { left: [], right: [] },
       enableColumnPinning: props.enableColumnPinning ?? false,
       enableColumnHiding: props.enableColumnHiding ?? false,
       enableColumnResizing: props.enableColumnResizing ?? false,
     },
-    // Server-side mode: all operations handled by server
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: props.enableRowExpansion ? getExpandedRowModel() : undefined,
-    // Default to allowing all rows to expand when enableRowExpansion is true
     getRowCanExpand: props.enableRowExpansion ? (props.getRowCanExpand ?? (() => true)) : undefined,
-    // State change handlers
+    getRowId: props.getRowId,
     onSortingChange,
-    onColumnFiltersChange,
     onColumnVisibilityChange,
     onRowSelectionChange,
     onPaginationChange,
@@ -237,82 +195,10 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     onExpandedChange,
   })
 
-  // Watch for server-side changes
-  watch(
-    [sorting, columnFilters, pagination],
-    () => {
-      props.onServerSideChange({
-        sorting: sorting.value,
-        filters: columnFilters.value,
-        pagination: pagination.value,
-      })
-    },
-    { deep: true },
-  )
-
-  // Helper methods
-  // Reset methods reset to true defaults (empty), not to initial values
-  const resetFilters = () => {
-    columnFilters.value = []
-  }
-
-  const resetSorting = () => {
-    sorting.value = []
-  }
-
+  // Helpers for visual concerns only. Sort/filter/pagination resets live on the
+  // parent (typically via `useDataTableController.reset()`).
   const resetSelection = () => {
     rowSelection.value = {}
-  }
-
-  const resetPagination = () => {
-    pagination.value = {
-      pageIndex: 0,
-      pageSize: props.defaultPerPage || 10,
-    }
-  }
-
-  const resetAll = () => {
-    resetFilters()
-    resetSorting()
-    resetSelection()
-    resetPagination()
-  }
-
-  // Column pinning helpers
-  const pinColumn = (columnId: string, position: 'left' | 'right') => {
-    const current = { ...columnPinning.value }
-
-    // Remove from opposite side if exists
-    if (position === 'left' && current.right) {
-      current.right = current.right.filter((id) => id !== columnId)
-    } else if (position === 'right' && current.left) {
-      current.left = current.left.filter((id) => id !== columnId)
-    }
-
-    // Add to new position if not already there
-    const side = current[position] || []
-    if (!side.includes(columnId)) {
-      if (position === 'left') {
-        // Left: Add to end (stack to the right, toward separator)
-        current[position] = [...side, columnId]
-      } else {
-        // Right: Add to start (stack to the left, toward separator)
-        current[position] = [columnId, ...side]
-      }
-    }
-
-    columnPinning.value = current
-  }
-
-  const unpinColumn = (columnId: string) => {
-    const current = { ...columnPinning.value }
-    if (current.left) {
-      current.left = current.left.filter((id) => id !== columnId)
-    }
-    if (current.right) {
-      current.right = current.right.filter((id) => id !== columnId)
-    }
-    columnPinning.value = current
   }
 
   const resetPinning = () => {
@@ -327,54 +213,86 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     expanded.value = {}
   }
 
+  const resetAll = () => {
+    resetSelection()
+    resetPinning()
+    resetColumnSizing()
+    resetExpanded()
+    columnVisibility.value = {}
+  }
+
+  const pinColumn = (columnId: string, position: 'left' | 'right') => {
+    const current = { ...columnPinning.value }
+    if (position === 'left' && current.right) {
+      current.right = current.right.filter((id) => id !== columnId)
+    } else if (position === 'right' && current.left) {
+      current.left = current.left.filter((id) => id !== columnId)
+    }
+    const side = current[position] || []
+    if (!side.includes(columnId)) {
+      if (position === 'left') {
+        current[position] = [...side, columnId]
+      } else {
+        current[position] = [columnId, ...side]
+      }
+    }
+    columnPinning.value = current
+  }
+
+  const unpinColumn = (columnId: string) => {
+    const current = { ...columnPinning.value }
+    if (current.left) {
+      current.left = current.left.filter((id) => id !== columnId)
+    }
+    if (current.right) {
+      current.right = current.right.filter((id) => id !== columnId)
+    }
+    columnPinning.value = current
+  }
+
   const toggleAllRowsExpanded = (isExpanded?: boolean) => {
     table.toggleAllRowsExpanded(isExpanded)
   }
 
-  // Computed properties
-  const isFiltered = computed(() => columnFilters.value.length > 0)
-  const selectedRowCount = computed(() => Object.keys(rowSelection.value).length)
+  /**
+   * IDs (per `getRowId`) of every row currently selected. Stable across page
+   * changes because it's derived directly from `rowSelection` state.
+   *
+   * Use this for bulk actions on server-paginated data — the parent
+   * resolves IDs against their own data source (store, server fetch, etc.).
+   */
+  const selectedIds = computed(() =>
+    Object.keys(rowSelection.value).filter((k) => rowSelection.value[k]),
+  )
+  const selectedRowCount = computed(() => selectedIds.value.length)
   const hasSelection = computed(() => selectedRowCount.value > 0)
 
-  // Selected rows data
-  const selectedRows = computed(() => {
-    return table.getSelectedRowModel().rows.map((row) => row.original)
-  })
-
-  // Refresh method - triggers server-side change with current state
-  const refresh = () => {
-    props.onServerSideChange({
-      sorting: sorting.value,
-      filters: columnFilters.value,
-      pagination: pagination.value,
-    })
-  }
+  /**
+   * Selected rows whose data is currently loaded. In server-side mode this
+   * only includes rows on the current page — TanStack doesn't have row data
+   * for rows on other pages. For the FULL set of selected rows across pages,
+   * use `selectedIds` + your own data source.
+   */
+  const selectedRows = computed(() => table.getSelectedRowModel().rows.map((row) => row.original))
 
   return {
     table,
-    sorting,
-    columnFilters,
     columnVisibility,
     rowSelection,
-    pagination,
     columnPinning,
     columnSizing,
-    resetFilters,
-    resetSorting,
+    expanded,
     resetSelection,
-    resetPagination,
     resetPinning,
     resetColumnSizing,
+    resetExpanded,
     resetAll,
-    isFiltered,
+    selectedIds,
     selectedRowCount,
     hasSelection,
     selectedRows,
     pinColumn,
     unpinColumn,
-    refresh,
-    expanded,
-    resetExpanded,
     toggleAllRowsExpanded,
   }
 }

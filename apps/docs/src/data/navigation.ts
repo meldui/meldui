@@ -77,6 +77,7 @@ export const navigation: NavItem[] = [
           { title: 'Menubar', href: '/docs/components/menubar' },
           { title: 'Navigation Menu', href: '/docs/components/navigation-menu' },
           { title: 'Pagination', href: '/docs/components/pagination' },
+          { title: 'Data Pagination', href: '/docs/components/data-pagination' },
         ],
       },
       {
@@ -129,13 +130,16 @@ export const navigation: NavItem[] = [
       { title: 'Column Pinning', href: '/docs/data-table/pinning' },
       { title: 'Row Expansion', href: '/docs/data-table/expansion' },
       { title: 'Server-Side', href: '/docs/data-table/server-side' },
+      { title: 'useDataTableController', href: '/docs/data-table/use-data-table-controller' },
+      { title: 'Recipes', href: '/docs/data-table/recipes' },
     ],
   },
   {
     title: 'Composites',
-    label: '7',
+    label: '8',
     items: [
       { title: 'Date Range Picker', href: '/docs/composites/date-range-picker' },
+      { title: 'Filters', href: '/docs/composites/filters' },
       { title: 'Multi Select', href: '/docs/composites/multi-select' },
       { title: 'Mention', href: '/docs/composites/mention' },
       { title: 'Timeline', href: '/docs/composites/timeline' },

@@ -48,6 +48,7 @@ import {
   Checkbox,
   DataTable,
   DataTableColumnHeader,
+  type DataTableFilterState,
   DataTableSelectHeader,
   DropdownMenu,
   DropdownMenuContent,
@@ -85,7 +86,6 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import type {
   Column,
   ColumnDef,
-  ColumnFiltersState,
   PaginationState,
   SortingState,
   Table as TanStackTable,
@@ -143,7 +143,7 @@ interface Transaction {
 
 interface TransactionTableState {
   sorting: SortingState
-  filters: ColumnFiltersState
+  filters: DataTableFilterState
   pagination: PaginationState
 }
 
@@ -239,9 +239,8 @@ function simulateTransactionServerSide(
   let filteredData = [...data]
 
   // Apply filters
-  tableState.filters.forEach((filter) => {
-    const { id, value } = filter
-    if (value === undefined || value === null || value === '') return
+  for (const [id, value] of Object.entries(tableState.filters)) {
+    if (value === undefined || value === null || value === '') continue
 
     switch (id) {
       case 'symbol':
@@ -312,7 +311,7 @@ function simulateTransactionServerSide(
         }
         break
     }
-  })
+  }
 
   // Apply sorting
   if (tableState.sorting.length > 0) {
@@ -657,7 +656,7 @@ export const FullApplication: Story = {
       const transactionData = ref(
         simulateTransactionServerSide(MOCK_TRANSACTIONS, {
           sorting: [],
-          filters: [],
+          filters: {},
           pagination: { pageIndex: 0, pageSize: 10 },
         }),
       )
@@ -1432,6 +1431,7 @@ export const FullApplication: Story = {
               :page-count="transactionPageCount"
               :on-server-side-change="handleTransactionChange"
               :filter-fields="transactionFilterFields"
+              :enable-filter="true"
               :enable-row-selection="true"
               :show-selected-count="true"
               :bulk-select-options="transactionBulkActions"

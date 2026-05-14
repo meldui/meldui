@@ -1,0 +1,102 @@
+---
+title: 'Data Table: Recipes'
+description: Eight canonical wiring scenarios — internal, external, and mixed combinations of sorting, filtering, and pagination, with and without DataTable, with and without the controller composable.
+category: composites
+order: 10
+package: '@meldui/vue'
+---
+
+import Recipe1FullyInternal from '../../../demos/data-table/recipes/Recipe1FullyInternal.vue'
+import Recipe2FullyInternalManual from '../../../demos/data-table/recipes/Recipe2FullyInternalManual.vue'
+import Recipe3FullyExternal from '../../../demos/data-table/recipes/Recipe3FullyExternal.vue'
+import Recipe4MixedExternalFilter from '../../../demos/data-table/recipes/Recipe4MixedExternalFilter.vue'
+import Recipe5GridWithController from '../../../demos/data-table/recipes/Recipe5GridWithController.vue'
+import Recipe6UrlStateRestoration from '../../../demos/data-table/recipes/Recipe6UrlStateRestoration.vue'
+import Recipe7SwitchableView from '../../../demos/data-table/recipes/Recipe7SwitchableView.vue'
+import Recipe8GridManual from '../../../demos/data-table/recipes/Recipe8GridManual.vue'
+
+## Overview
+
+Pick the recipe that matches your data view's shape. Each recipe is a working demo plus a "When to use this" note. The first four cover `<DataTable>` configurations; recipes 5–8 cover grid-style views and URL-state restoration.
+
+| #                                | Sorting  | Filter   | Pagination | Composable       |
+| -------------------------------- | -------- | -------- | ---------- | ---------------- |
+| [1](#fully-internal-recommended) | internal | internal | internal   | yes              |
+| [2](#fully-internal-manual)      | internal | internal | internal   | no               |
+| [3](#fully-external)             | external | external | external   | yes              |
+| [4](#mixed-external-filter)      | internal | external | internal   | yes              |
+| [5](#grid-view-with-controller)  | dropdown | external | external   | yes (grid)       |
+| [6](#url-state-restoration)      | internal | internal | internal   | yes (URL)        |
+| [7](#switchable-view)            | mixed    | external | external   | yes (switchable) |
+| [8](#grid-view-manual)           | dropdown | external | external   | no (grid)        |
+
+## Fully internal (recommended) \{#fully-internal-recommended\}
+
+DataTable renders all three UI surfaces (sort dropdown, filter row, pagination footer). The parent owns state via [`useDataTableController`](/docs/data-table/use-data-table-controller) and triggers fetches from a single watcher on the merged `state` computed.
+
+**When to use this:** the default — every standard table.
+
+<Recipe1FullyInternal client:only="vue" />
+
+## Fully internal, manual wiring \{#fully-internal-manual\}
+
+Same UI as Recipe 1, but the parent constructs the three refs directly and replicates the controller's `flush: 'sync'` watchers. Drop the controller when you need to compose it differently — for example, deriving `sorting` from a parent computed.
+
+**When to use this:** rarely. Skip the controller only when you have a concrete reason — see the [controller deep-dive](/docs/data-table/use-data-table-controller#single-fetch-guarantee) for the rationale.
+
+<Recipe2FullyInternalManual client:only="vue" />
+
+## Fully external \{#fully-external\}
+
+`<DataTable>` is a pure renderer (no `enable-*` flags, no v-models). `<Filters>` and `<DataPagination>` are rendered as siblings, bound to the same controller refs. Column headers render plain text — sort, if needed, comes from a sibling control (or omit it entirely).
+
+**When to use this:** dense filter/pagination toolbars that must live outside the table chrome — for example, when filters share state with a chart or summary card above the table.
+
+<Recipe3FullyExternal client:only="vue" />
+
+## Mixed: external filter \{#mixed-external-filter\}
+
+Filter UI lives outside `<DataTable>` (in a panel, a popover, anywhere). Sort and pagination remain internal. The same `filters` ref still drives the table because the v-model binding flows through.
+
+**When to use this:** dashboards with prominent filter chrome above the table (advanced search panels, saved-views menus).
+
+<Recipe4MixedExternalFilter client:only="vue" />
+
+## Grid view with the controller \{#grid-view-with-controller\}
+
+No `<DataTable>` at all. The same controller-driven state powers a card grid, a standalone `<Filters>` toolbar, a `<Select>` sort dropdown (since there's no column header), and a sibling `<DataPagination>`.
+
+**When to use this:** non-tabular layouts — product cards, image galleries, project boards — that still need familiar filter/sort/page UX.
+
+<Recipe5GridWithController client:only="vue" />
+
+## URL state restoration \{#url-state-restoration\}
+
+Seed the controller from URL query params at mount, and persist back on every state change. The controller doesn't clamp `pageIndex` against `pageCount` — if a bookmarked URL points at a now-non-existent page, clamp manually after the first fetch resolves.
+
+**When to use this:** shareable, bookmarkable views — search results, reports, dashboards linked from emails.
+
+<Recipe6UrlStateRestoration client:only="vue" />
+
+## Switchable view \{#switchable-view\}
+
+Toggle between `<DataTable>` and a card grid. Because state lives in the controller (not the rendering component), filters and pagination persist across the toggle. The grid uses a sibling `<DataPagination>`; the table uses its internal footer.
+
+**When to use this:** apps where the same data is meaningful in both layouts — e.g. people directories, file managers.
+
+<Recipe7SwitchableView client:only="vue" />
+
+## Grid view, manual wiring \{#grid-view-manual\}
+
+Same UI as Recipe 5 but with all state and watchers wired manually. The two `flush: 'sync'` watchers are the cost of skipping the controller; they're what guarantee a single fetch per user action.
+
+**When to use this:** when you need to compose state with refs you already own (Pinia store, parent computed). Otherwise, prefer Recipe 5.
+
+<Recipe8GridManual client:only="vue" />
+
+## See also
+
+- [`useDataTableController`](/docs/data-table/use-data-table-controller) — the composable powering recipes 1, 3, 4, 5, 6, 7.
+- [`<Filters>`](/docs/composites/filters) — the standalone filter toolbar used in recipes 3, 4, 5, 7, 8.
+- [`<DataPagination>`](/docs/components/data-pagination) — the toolbar pagination used in recipes 3, 5, 7, 8.
+- [Server-Side](/docs/data-table/server-side) — `tableStateToServerParams` and the canonical response shape.

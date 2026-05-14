@@ -1,11 +1,11 @@
-<script setup lang="ts" generic="TData">
+<script setup lang="ts">
 import {
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
 } from '@meldui/tabler-vue'
-import type { Table } from '@tanstack/vue-table'
+import type { PaginationState } from '@tanstack/vue-table'
 import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,45 +17,53 @@ import {
 } from '@/components/ui/select'
 
 interface Props {
-  table: Table<TData>
+  pagination: PaginationState
+  pageCount: number
+  totalRows?: number
   pageSizeOptions?: number[]
-  showSelectedCount?: boolean
   showPageSizeSelector?: boolean
   showPageInfo?: boolean
+  showSelectedCount?: boolean
+  selectedCount?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   pageSizeOptions: () => [10, 20, 30, 40, 50],
-  showSelectedCount: false,
   showPageSizeSelector: true,
   showPageInfo: true,
+  showSelectedCount: false,
+  selectedCount: 0,
 })
 
-const selectedCount = computed(() => props.table.getFilteredSelectedRowModel().rows.length)
-const totalCount = computed(() => props.table.getFilteredRowModel().rows.length)
+const emit = defineEmits<{
+  'update:pagination': [next: PaginationState]
+}>()
 
-const currentPage = computed(() => props.table.getState().pagination.pageIndex + 1)
-
-const pageCount = computed(() => props.table.getPageCount())
-
-const canPreviousPage = computed(() => props.table.getCanPreviousPage())
-const canNextPage = computed(() => props.table.getCanNextPage())
+const currentPage = computed(() => props.pagination.pageIndex + 1)
+const canPreviousPage = computed(() => props.pagination.pageIndex > 0)
+const canNextPage = computed(() => props.pagination.pageIndex < props.pageCount - 1)
 
 const pageSize = computed({
-  get: () => props.table.getState().pagination.pageSize,
-  set: (value) => props.table.setPageSize(value),
+  get: () => props.pagination.pageSize,
+  set: (value) => {
+    emit('update:pagination', { pageIndex: props.pagination.pageIndex, pageSize: value })
+  },
 })
+
+function setPageIndex(next: number) {
+  if (next === props.pagination.pageIndex) return
+  emit('update:pagination', { pageIndex: next, pageSize: props.pagination.pageSize })
+}
 </script>
 
 <template>
   <div class="flex items-center justify-between px-2">
     <div class="flex-1 text-sm text-muted-foreground">
-      <span v-if="showSelectedCount && selectedCount > 0">
-        {{ selectedCount }} of {{ totalCount }} row(s) selected
+      <span v-if="showSelectedCount && selectedCount > 0 && totalRows !== undefined">
+        {{ selectedCount }} of {{ totalRows }} row(s) selected
       </span>
     </div>
     <div class="flex items-center space-x-6 lg:space-x-8">
-      <!-- Page Size Selector -->
       <div v-if="showPageSizeSelector" class="flex items-center space-x-2">
         <p class="text-sm font-medium">Rows per page</p>
         <Select v-model="pageSize">
@@ -70,56 +78,47 @@ const pageSize = computed({
         </Select>
       </div>
 
-      <!-- Page indicator -->
       <div v-if="showPageInfo" class="flex items-center justify-center text-sm font-medium">
-        Page {{ currentPage }} of {{ pageCount }}
+        Page {{ currentPage }} of {{ Math.max(pageCount, 1) }}
       </div>
 
-      <!-- Pagination Controls -->
       <div class="flex items-center gap-1">
-        <!-- First Page Button -->
         <Button
           variant="outline"
           size="icon"
           class="hidden h-8 w-8 lg:flex"
           :disabled="!canPreviousPage"
-          @click="table.setPageIndex(0)"
+          @click="setPageIndex(0)"
         >
           <span class="sr-only">Go to first page</span>
           <IconChevronsLeft class="h-4 w-4" />
         </Button>
-
-        <!-- Previous Page Button -->
         <Button
           variant="outline"
           size="icon"
           class="h-8 w-8"
           :disabled="!canPreviousPage"
-          @click="table.previousPage()"
+          @click="setPageIndex(pagination.pageIndex - 1)"
         >
           <span class="sr-only">Go to previous page</span>
           <IconChevronLeft class="h-4 w-4" />
         </Button>
-
-        <!-- Next Page Button -->
         <Button
           variant="outline"
           size="icon"
           class="h-8 w-8"
           :disabled="!canNextPage"
-          @click="table.nextPage()"
+          @click="setPageIndex(pagination.pageIndex + 1)"
         >
           <span class="sr-only">Go to next page</span>
           <IconChevronRight class="h-4 w-4" />
         </Button>
-
-        <!-- Last Page Button -->
         <Button
           variant="outline"
           size="icon"
           class="hidden h-8 w-8 lg:flex"
           :disabled="!canNextPage"
-          @click="table.setPageIndex(pageCount - 1)"
+          @click="setPageIndex(pageCount - 1)"
         >
           <span class="sr-only">Go to last page</span>
           <IconChevronsRight class="h-4 w-4" />

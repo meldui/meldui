@@ -21,9 +21,12 @@ export type FilterType =
   | 'daterange'
 
 /**
- * Get the default icon for a filter type
+ * Get the default icon for a filter type.
+ * Accepts plugin-registered string types and falls through to the default icon.
  */
-export function getDefaultFilterIcon(filterType: FilterType | undefined): Component {
+export function getDefaultFilterIcon(
+  filterType: FilterType | (string & {}) | undefined,
+): Component {
   switch (filterType) {
     case 'text':
       return IconLetterCase
@@ -51,7 +54,7 @@ export function getDefaultFilterIcon(filterType: FilterType | undefined): Compon
  */
 export function getFilterIcon(
   icon: Component | undefined,
-  filterType: FilterType | undefined,
+  filterType: FilterType | (string & {}) | undefined,
 ): Component {
   return icon ?? getDefaultFilterIcon(filterType)
 }

@@ -51,6 +51,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Combobox](/docs/components/combobox): An autocomplete input with a filterable dropdown list for selecting values.
 - [Command](/docs/components/command): A command palette for searching and executing actions, similar to Cmd+K interfaces.
 - [Context Menu](/docs/components/context-menu): A right-click context menu with items, groups, and sub-menus.
+- [Data Pagination](/docs/components/data-pagination): Pagination toolbar for tables, grids, and lists — first/last/prev/next buttons with a page-size selector and "Page X of Y" info.
 - [Dialog](/docs/components/dialog): A modal dialog that overlays content and requires user interaction.
 - [Dot](/docs/components/dot): A small status indicator dot with color variants and animation effects.
 - [Drawer](/docs/components/drawer): A touch-friendly drawer component that slides from the bottom of the screen.
@@ -102,10 +103,13 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Data Table: Column Pinning](/docs/data-table/pinning): Pin columns to the left or right edge for horizontal scroll tables.
 - [Data Table: Columns & Cells](/docs/data-table/columns): Type-safe column definitions with createColumnHelper, cell renderers, and aggregation helpers.
 - [Data Table: Filtering](/docs/data-table/filtering): Configure filter types, advanced mode with operators, and custom filter fields.
+- [Data Table: Recipes](/docs/data-table/recipes): Eight canonical wiring scenarios — internal, external, and mixed combinations of sorting, filtering, and pagination, with and without DataTable, with and without the controller composable.
 - [Data Table: Row Expansion](/docs/data-table/expansion): Expand rows to show detail content using the master-detail pattern.
 - [Data Table: Selection & Actions](/docs/data-table/selection): Row selection with checkboxes, bulk actions, and per-row action menus.
-- [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
+- [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the v-model emit contract.
+- [Data Table: useDataTableController](/docs/data-table/use-data-table-controller): The parent-side composable that bundles sorting / filters / pagination refs and applies the filter→page and sort→page reset rules with flush:'sync'.
 - [Date Range Picker](/docs/composites/date-range-picker): A composite date picker with presets, calendar, and support for single or range date selection.
+- [Filters](/docs/composites/filters): A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
 - [Mention](/docs/composites/mention): A rich text input that supports @-mention suggestions with customizable triggers and serialization.
 - [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
 - [Relative Time](/docs/composites/relative-time): Displays a human-readable relative timestamp that updates automatically.
@@ -1336,6 +1340,162 @@ The sub-menu panel.
 
 ---
 
+## Data Pagination
+
+Pagination toolbar for tables, grids, and lists — first/last/prev/next buttons with a page-size selector and "Page X of Y" info.
+
+## Overview
+
+`<DataPagination>` is the toolbar style of pagination used by `<DataTable>`'s
+footer. It's a focused composite for data-listy views: first / previous /
+next / last buttons, a page-size dropdown, and a "Page X of Y" indicator.
+
+Unlike [`<Pagination>`](/docs/components/pagination) — which renders a
+page-number link bar (e.g. `1 · 2 · [3] · … · 10`) — `<DataPagination>`
+favours compact controls over enumerating pages. It's the right pick when
+the dataset has a large or unknown number of pages.
+
+`<DataTable>` renders a `<DataPagination>` internally when
+`enable-pagination` is set. You can also use it standalone with any custom
+view (cards, grids, virtualized lists) by binding the same v-model shape.
+
+## V-model contract
+
+```ts
+
+
+const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
+```
+
+```vue
+<DataPagination
+  v-model:pagination="pagination"
+  :page-count="totalPages"
+  :total-rows="totalRecords"
+/>
+```
+
+`pageIndex` is 0-indexed (TanStack convention). Convert to 1-indexed when
+talking to a server that expects `?page=N`.
+
+## Props
+
+| Prop                   | Type              | Default                | Description                                          |
+| ---------------------- | ----------------- | ---------------------- | ---------------------------------------------------- |
+| `pagination`           | `PaginationState` | required               | v-model target — `{ pageIndex, pageSize }`           |
+| `pageCount`            | `number`          | required               | Total number of pages                                |
+| `totalRows`            | `number`          | —                      | Total record count. Required when `showSelectedCount` is on |
+| `pageSizeOptions`      | `number[]`        | `[10, 20, 30, 40, 50]` | Choices in the page-size dropdown                    |
+| `showPageSizeSelector` | `boolean`         | `true`                 | Toggle the page-size dropdown                        |
+| `showPageInfo`         | `boolean`         | `true`                 | Toggle the "Page X of Y" indicator                   |
+| `showSelectedCount`    | `boolean`         | `false`                | Toggle the "X of Y selected" indicator               |
+| `selectedCount`        | `number`          | `0`                    | Count to show when `showSelectedCount` is `true`     |
+
+## Emits
+
+| Event               | Payload           | Description                                   |
+| ------------------- | ----------------- | --------------------------------------------- |
+| `update:pagination` | `PaginationState` | Fires when the user changes page or page size |
+
+## Standalone recipes
+
+### Card grid
+
+A typical content grid: bind the same `v-model:pagination` shape `<DataTable>` uses, derive `pageCount` from the total record count divided by `pagination.pageSize`, and slice the current page client-side (or fetch it server-side).
+
+
+
+### Compact list
+
+Hide the page-size selector with `:show-page-size-selector="false"` when the list has a fixed cadence — ledgers, transaction tables, timelines.
+
+
+
+### Selected row count
+
+Pair `show-selected-count` with a `selectedCount` you maintain in the parent. The indicator appears on the left side of the toolbar as **`X of Y row(s) selected`** — and only renders when **all three** conditions hold: `showSelectedCount` is `true`, `selectedCount > 0`, and `totalRows` is provided. Track the selection set in the parent (not the page-local rows) so the count survives page changes.
+
+
+
+```vue
+<DataPagination
+  v-model:pagination="pagination"
+  :page-count="pageCount"
+  :total-rows="totalRows"
+  :selected-count="selectedIds.size"
+  show-selected-count
+/>
+```
+
+For tables, `<DataTable :enable-row-selection>` exposes a `selectedIds` ref (full set across all pages) via `defineExpose` — bind that count directly to `:selected-count`.
+
+## Standalone usage
+
+When you don't want a full table but still need pagination — for example a
+card grid driven by server-side data — bind the same `pagination` ref the
+table would have used.
+
+```vue
+<script setup>
+
+
+
+const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 12 })
+const items = ref<Item[]>([])
+const pageCount = ref(1)
+const totalRows = ref(0)
+
+async function fetchPage() {
+  const res = await api.list({ page: pagination.value.pageIndex + 1, perPage: pagination.value.pageSize })
+  items.value = res.data
+  pageCount.value = res.meta.total_pages
+  totalRows.value = res.meta.total
+}
+
+watch(pagination, fetchPage, { deep: true })
+fetchPage()
+</script>
+
+<template>
+  <div class="grid grid-cols-3 gap-4">
+    <Card v-for="item in items" :key="item.id">{{ item.name }}</Card>
+  </div>
+  <DataPagination v-model:pagination="pagination" :page-count="pageCount" :total-rows="totalRows" />
+</template>
+```
+
+## Inside `<DataTable>`
+
+When `<DataTable enable-pagination v-model:pagination="…">` is set, the
+table renders a `<DataPagination>` in its footer using the same v-model
+ref. To customise the footer, use the `#pagination` slot — you can replace
+it with your own layout (the composite is still available to drop in):
+
+```vue
+<DataTable enable-pagination v-model:pagination="pagination" :page-count="pageCount" …>
+  <template #pagination="{ pagination: p, pageCount: pc, totalRows: tr }">
+    <div class="flex items-center justify-between">
+      <span class="text-xs text-muted-foreground">Custom footer</span>
+      <DataPagination
+        :pagination="p"
+        :page-count="pc"
+        :total-rows="tr"
+        :show-page-size-selector="false"
+        @update:pagination="(v) => pagination = v"
+      />
+    </div>
+  </template>
+</DataTable>
+```
+
+## See also
+
+- [`Pagination`](/docs/components/pagination) — page-number link bar style. Use
+  this for search results, blog indexes, or any content pagination where
+  enumerating pages is useful.
+
+---
+
 ## Dialog
 
 A modal dialog that overlays content and requires user interaction.
@@ -2241,6 +2401,15 @@ Collapsed page indicator
 ## Simple (Previous / Next)
 
 A compact pagination with `siblingCount={0}` and no first/last buttons.
+
+
+
+## See also
+
+For paginating tabular or list data with a page-size selector, page info, and
+selected-count display, see [`DataPagination`](/docs/components/data-pagination).
+That composite mirrors what `<DataTable>` renders in its footer and can be
+used independently with grids, card lists, or any custom view.
 
 ---
 
@@ -3218,11 +3387,22 @@ A powerful, feature-rich data table with server-side operations, filtering, sort
 
 ## Overview
 
-The DataTable is MeldUI's most comprehensive component, built on [TanStack Table](https://tanstack.com/table/latest) for headless table logic with a fully styled UI layer. It's designed for **server-side operations** — every user interaction (sort, filter, paginate) triggers a callback you handle.
+The DataTable is MeldUI's most comprehensive component, built on [TanStack Table](https://tanstack.com/table/latest) for headless table logic with a fully styled UI layer. It's a **fully controlled component**: state for sorting, filtering, and pagination is owned by the parent via three `v-model` bindings, and the parent triggers a data fetch whenever that state changes.
+
+### Architecture
+
+DataTable runs TanStack in fully manual mode (`manualSorting`, `manualFiltering`, `manualPagination`). It never sorts, filters, or paginates rows itself — it just renders the page of data you give it and forwards user interactions through three independent emits:
+
+- `v-model:sorting` ↔ `update:sorting` — `SortingState`
+- `v-model:filters` ↔ `update:filters` — `DataTableFilterState`
+- `v-model:pagination` ↔ `update:pagination` — `{ pageIndex, pageSize }`
+
+The recommended path is to bundle the three refs with [`useDataTableController`](/docs/data-table/use-data-table-controller), which also encapsulates the load-bearing rule that pagination must reset to page 0 on filter or sort change (with `flush: 'sync'` to keep the parent watcher firing exactly once per user action).
 
 ### Key Features
 
-- **Server-side first** — pagination, sorting, and filtering all trigger a single callback
+- **Stateless contract** — three v-models, three update emits, no hidden internal state
+- **Server-side first** — fully manual mode; the parent owns every fetch
 - **8 filter types** — text, select, multiselect, number, range, boolean, date, daterange
 - **Advanced filter mode** — operator-based filtering (contains, equals, greaterThan, etc.)
 - **Column helpers** — type-safe column definitions with `createColumnHelper`
@@ -3245,7 +3425,7 @@ pnpm add @meldui/vue @tanstack/vue-table
 ### Quick Start
 
 ```vue
-<script setup>
+<script setup lang="ts">
 
 
 
@@ -3264,12 +3444,24 @@ const columns = [
   helper.accessor('role', { title: 'Role' }),
 ]
 
-const data = ref([])
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
+
+const data = ref<User[]>([])
 const pageCount = ref(1)
 
-function handleServerSideChange({ sorting, filters, pagination }) {
-  // Fetch data from your API
+async function fetchPage() {
+  const res = await api.get('/users', {
+    params: {
+      page: state.value.pagination.pageIndex + 1,
+      per_page: state.value.pagination.pageSize,
+    },
+  })
+  data.value = res.data
+  pageCount.value = res.meta.total_pages
 }
+
+watch(state, fetchPage, { deep: true })
+fetchPage()
 </script>
 
 <template>
@@ -3277,22 +3469,28 @@ function handleServerSideChange({ sorting, filters, pagination }) {
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleServerSideChange"
+    enable-sorting
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
   />
 </template>
 ```
 
 ### Pages in this section
 
-| Page                                              | Description                                      |
-| ------------------------------------------------- | ------------------------------------------------ |
-| [Basic Usage](/docs/data-table/basic)             | Simple table setup with sorting and pagination   |
-| [Columns & Cells](/docs/data-table/columns)       | Column helpers, cell renderers, and aggregations |
-| [Filtering](/docs/data-table/filtering)           | Filter types, advanced mode, and operators       |
-| [Selection & Actions](/docs/data-table/selection) | Row selection and bulk actions                   |
-| [Column Pinning](/docs/data-table/pinning)        | Sticky left/right columns                        |
-| [Row Expansion](/docs/data-table/expansion)       | Master-detail pattern                            |
-| [Server-Side](/docs/data-table/server-side)       | Server params, response format, and URL state    |
+| Page                                                                   | Description                                                                  |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Basic Usage](/docs/data-table/basic)                                  | Simple table setup with sorting and pagination                               |
+| [Columns & Cells](/docs/data-table/columns)                            | Column helpers, cell renderers, and aggregations                             |
+| [Filtering](/docs/data-table/filtering)                                | Filter types, advanced mode, and operators                                   |
+| [Selection & Actions](/docs/data-table/selection)                      | Row selection and bulk actions                                               |
+| [Column Pinning](/docs/data-table/pinning)                             | Sticky left/right columns                                                    |
+| [Row Expansion](/docs/data-table/expansion)                            | Master-detail pattern                                                        |
+| [Server-Side](/docs/data-table/server-side)                            | Server params, response format, and URL state                                |
+| [`useDataTableController`](/docs/data-table/use-data-table-controller) | Composable that bundles the three refs and reset rules                       |
+| [Recipes](/docs/data-table/recipes)                                    | Eight canonical wiring scenarios (internal, external, grid views, URL state) |
 
 ---
 
@@ -3302,48 +3500,62 @@ Setting up a basic data table with sorting, pagination, and search.
 
 ## Basic Table
 
-A minimal DataTable with columns, sorting, pagination, and a search input. The `onServerSideChange` callback fires whenever the user sorts, filters, or paginates — you fetch data from your API and update the reactive `data` and `pageCount`.
+A minimal DataTable with column-header sorting, a `<Filters>` row in the toolbar, and a `<DataPagination>` footer. The parent owns sorting / filters / pagination state via `v-model` and fetches data when the merged state changes.
+
+The recommended path uses `useDataTableController` to bundle the three refs and encapsulate the page-reset rule.
 
 
 
 ## Core Props
 
-| Prop                 | Type                                       | Default            | Description                                  |
-| -------------------- | ------------------------------------------ | ------------------ | -------------------------------------------- |
-| `columns`            | `ColumnDef<TData>[]`                       | required           | Column definitions from `createColumnHelper` |
-| `data`               | `TData[]`                                  | required           | The current page of data                     |
-| `pageCount`          | `number`                                   | required           | Total number of pages                        |
-| `onServerSideChange` | `(state) => void`                          | required           | Callback when sort/filter/page changes       |
-| `searchColumn`       | `string`                                   | -                  | Column ID to search on                       |
-| `searchPlaceholder`  | `string`                                   | -                  | Placeholder text for search input            |
-| `defaultPerPage`     | `number`                                   | `10`               | Default rows per page                        |
-| `pageSizeOptions`    | `number[]`                                 | `[10,20,30,40,50]` | Available page size options                  |
-| `loading`            | `boolean`                                  | `false`            | Show loading state                           |
-| `error`              | `string`                                   | -                  | Show error message                           |
-| `density`            | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'`    | Row density                                  |
-| `maxHeight`          | `string`                                   | `'600px'`          | Max height with vertical scroll              |
+| Prop               | Type                                       | Default            | Description                                                                                                                                                               |
+| ------------------ | ------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `columns`          | `ColumnDef<TData>[]`                       | required           | Column definitions from `createColumnHelper`                                                                                                                              |
+| `data`             | `TData[]`                                  | required           | The current page of data                                                                                                                                                  |
+| `pageCount`        | `number`                                   | -                  | Required when `enablePagination` is true                                                                                                                                  |
+| `totalRows`        | `number`                                   | -                  | Optional. Enables "X of Y" displays                                                                                                                                       |
+| `enableSorting`    | `boolean`                                  | `false`            | Render column-header sort dropdown. Requires `v-model:sorting`                                                                                                            |
+| `enableFilter`     | `boolean`                                  | `false`            | Render `<Filters>` row in toolbar. Requires `v-model:filters`                                                                                                             |
+| `enablePagination` | `boolean`                                  | `false`            | Render `<DataPagination>` footer. Requires `v-model:pagination` + `pageCount`                                                                                             |
+| `sorting`          | `SortingState`                             | -                  | `v-model:sorting` target                                                                                                                                                  |
+| `filters`          | `DataTableFilterState`                     | -                  | `v-model:filters` target                                                                                                                                                  |
+| `pagination`       | `PaginationState`                          | -                  | `v-model:pagination` target — `{ pageIndex, pageSize }`                                                                                                                   |
+| `getRowId`         | `(row, index) => string`                   | -                  | Stable row identifier. Strongly recommended when `enable-row-selection` is on with server-side pagination; without it, selection state follows the row index across pages |
+| `filterSearch`     | `{ id, placeholder?, debounceMs? }`        | -                  | Search input config (search travels in `filters` under `filterSearch.id`)                                                                                                 |
+| `pageSizeOptions`  | `number[]`                                 | `[10,20,30,40,50]` | Available page size options                                                                                                                                               |
+| `loading`          | `boolean`                                  | `false`            | Show loading state                                                                                                                                                        |
+| `error`            | `string \| Error`                          | -                  | Show error message with retry button                                                                                                                                      |
+| `density`          | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'`    | Row density                                                                                                                                                               |
+| `maxHeight`        | `string`                                   | `'600px'`          | Max height with vertical scroll                                                                                                                                           |
+
+## Emits
+
+| Event               | Payload                | Description                                 |
+| ------------------- | ---------------------- | ------------------------------------------- |
+| `update:sorting`    | `SortingState`         | Fires on sort change (v-model)              |
+| `update:filters`    | `DataTableFilterState` | Fires on filter change (v-model)            |
+| `update:pagination` | `PaginationState`      | Fires on page or page-size change (v-model) |
+| `retry`             | —                      | User clicked Retry in the error state       |
+| `refresh`           | —                      | User clicked the toolbar refresh button     |
+| `rowActivate`       | `Row<TData>`           | Keyboard activation (Enter/Space)           |
 
 ## Pagination Position
 
-```typescript
-// Show pagination at top, bottom, or both
+```vue
 <DataTable pagination-position="both" />
 <DataTable pagination-position="top" />
 ```
 
 ## Exposed Methods
 
-Access these via a template ref:
+Access via a template ref. Methods cover **visual concerns only** — sorting / filter / pagination are owned by the parent.
 
 ```vue
 <script setup>
 const tableRef = ref()
 
-// Reset all state
+// Reset visual state (selection, pinning, sizing, expansion, column visibility)
 tableRef.value?.resetAll()
-
-// Refresh current data
-tableRef.value?.refresh()
 </script>
 
 <template>
@@ -3351,14 +3563,79 @@ tableRef.value?.refresh()
 </template>
 ```
 
-| Method              | Description                         |
-| ------------------- | ----------------------------------- |
-| `resetFilters()`    | Clear all active filters            |
-| `resetSorting()`    | Clear sorting                       |
-| `resetSelection()`  | Deselect all rows                   |
-| `resetPagination()` | Go to page 1                        |
-| `resetAll()`        | Reset everything                    |
-| `refresh()`         | Re-trigger the server-side callback |
+| Method                | Description                    |
+| --------------------- | ------------------------------ |
+| `resetSelection()`    | Deselect all rows              |
+| `resetPinning()`      | Restore default column pinning |
+| `resetColumnSizing()` | Restore default column widths  |
+| `resetExpanded()`     | Collapse all expanded rows     |
+| `resetAll()`          | Reset all visual concerns      |
+| `pinColumn(id, side)` | Pin a column left or right     |
+| `unpinColumn(id)`     | Unpin a column                 |
+
+For sorting / filter / pagination reset, call `useDataTableController().reset()` in the parent.
+
+## Manual wiring (without the controller)
+
+The controller is sugar over three refs plus the page-reset rule. Skip it when you want full control — but you must replicate the `flush: 'sync'` watchers yourself, otherwise every filter or sort change triggers two fetches (once with the new filter and old `pageIndex`, then again after the reset).
+
+```vue
+<script setup lang="ts">
+
+
+  DataTable,
+  createColumnHelper,
+  type DataTableFilterState,
+  type PaginationState,
+  type SortingState,
+} from '@meldui/vue'
+
+const sorting = ref<SortingState>([])
+const filters = ref<DataTableFilterState>({})
+const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 20 })
+
+// Page-reset rule — flush:'sync' so the parent observes one coherent state per user action.
+watch(
+  filters,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  {
+    deep: true,
+    flush: 'sync',
+  },
+)
+watch(
+  sorting,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  {
+    deep: true,
+    flush: 'sync',
+  },
+)
+
+// Fetch when any of the three change.
+watch([sorting, filters, pagination], () => fetchPage(), { deep: true })
+</script>
+
+<template>
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    enable-sorting
+    enable-filter
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
+  />
+</template>
+```
+
+See [`useDataTableController`](/docs/data-table/use-data-table-controller) for the recommended path, and [Recipes](/docs/data-table/recipes) for both styles compared side-by-side.
 
 ---
 
@@ -3379,8 +3656,9 @@ Pin columns so they stay visible when scrolling horizontally. The `select` and `
   :columns="columns"
   :data="data"
   :page-count="pageCount"
-  :on-server-side-change="handleChange"
+  enable-pagination
   enable-column-pinning
+  v-model:pagination="pagination"
   :default-pinning="{
     left: ['select', 'name'],
     right: ['actions'],
@@ -3659,11 +3937,16 @@ Enable operator-based filtering with `advancedMode`:
   :columns="columns"
   :data="data"
   :page-count="pageCount"
-  :on-server-side-change="handleChange"
   :filter-fields="filterFields"
-  :advanced-mode="true"
+  enable-filter
+  enable-pagination
+  advanced-mode
+  v-model:filters="filters"
+  v-model:pagination="pagination"
 />
 ```
+
+See the [`<Filters>` composite](/docs/composites/filters) page for the props and types in detail, or the [Recipes](/docs/data-table/recipes) page for how filters compose with sorting and pagination in different layouts.
 
 In advanced mode, each filter gets an operator dropdown. Only base types are allowed (text, number, date, select, boolean — not multiselect, range, or daterange).
 
@@ -3688,6 +3971,98 @@ You can customize available operators per field:
   availableOperators: ['contains', 'equals', 'startsWith'],
 }
 ```
+
+---
+
+## Data Table: Recipes
+
+Eight canonical wiring scenarios — internal, external, and mixed combinations of sorting, filtering, and pagination, with and without DataTable, with and without the controller composable.
+
+## Overview
+
+Pick the recipe that matches your data view's shape. Each recipe is a working demo plus a "When to use this" note. The first four cover `<DataTable>` configurations; recipes 5–8 cover grid-style views and URL-state restoration.
+
+| #                                | Sorting  | Filter   | Pagination | Composable       |
+| -------------------------------- | -------- | -------- | ---------- | ---------------- |
+| [1](#fully-internal-recommended) | internal | internal | internal   | yes              |
+| [2](#fully-internal-manual)      | internal | internal | internal   | no               |
+| [3](#fully-external)             | external | external | external   | yes              |
+| [4](#mixed-external-filter)      | internal | external | internal   | yes              |
+| [5](#grid-view-with-controller)  | dropdown | external | external   | yes (grid)       |
+| [6](#url-state-restoration)      | internal | internal | internal   | yes (URL)        |
+| [7](#switchable-view)            | mixed    | external | external   | yes (switchable) |
+| [8](#grid-view-manual)           | dropdown | external | external   | no (grid)        |
+
+## Fully internal (recommended) \{#fully-internal-recommended\}
+
+DataTable renders all three UI surfaces (sort dropdown, filter row, pagination footer). The parent owns state via [`useDataTableController`](/docs/data-table/use-data-table-controller) and triggers fetches from a single watcher on the merged `state` computed.
+
+**When to use this:** the default — every standard table.
+
+<Recipe1FullyInternal  />
+
+## Fully internal, manual wiring \{#fully-internal-manual\}
+
+Same UI as Recipe 1, but the parent constructs the three refs directly and replicates the controller's `flush: 'sync'` watchers. Drop the controller when you need to compose it differently — for example, deriving `sorting` from a parent computed.
+
+**When to use this:** rarely. Skip the controller only when you have a concrete reason — see the [controller deep-dive](/docs/data-table/use-data-table-controller#single-fetch-guarantee) for the rationale.
+
+<Recipe2FullyInternalManual  />
+
+## Fully external \{#fully-external\}
+
+`<DataTable>` is a pure renderer (no `enable-*` flags, no v-models). `<Filters>` and `<DataPagination>` are rendered as siblings, bound to the same controller refs. Column headers render plain text — sort, if needed, comes from a sibling control (or omit it entirely).
+
+**When to use this:** dense filter/pagination toolbars that must live outside the table chrome — for example, when filters share state with a chart or summary card above the table.
+
+<Recipe3FullyExternal  />
+
+## Mixed: external filter \{#mixed-external-filter\}
+
+Filter UI lives outside `<DataTable>` (in a panel, a popover, anywhere). Sort and pagination remain internal. The same `filters` ref still drives the table because the v-model binding flows through.
+
+**When to use this:** dashboards with prominent filter chrome above the table (advanced search panels, saved-views menus).
+
+<Recipe4MixedExternalFilter  />
+
+## Grid view with the controller \{#grid-view-with-controller\}
+
+No `<DataTable>` at all. The same controller-driven state powers a card grid, a standalone `<Filters>` toolbar, a `<Select>` sort dropdown (since there's no column header), and a sibling `<DataPagination>`.
+
+**When to use this:** non-tabular layouts — product cards, image galleries, project boards — that still need familiar filter/sort/page UX.
+
+<Recipe5GridWithController  />
+
+## URL state restoration \{#url-state-restoration\}
+
+Seed the controller from URL query params at mount, and persist back on every state change. The controller doesn't clamp `pageIndex` against `pageCount` — if a bookmarked URL points at a now-non-existent page, clamp manually after the first fetch resolves.
+
+**When to use this:** shareable, bookmarkable views — search results, reports, dashboards linked from emails.
+
+<Recipe6UrlStateRestoration  />
+
+## Switchable view \{#switchable-view\}
+
+Toggle between `<DataTable>` and a card grid. Because state lives in the controller (not the rendering component), filters and pagination persist across the toggle. The grid uses a sibling `<DataPagination>`; the table uses its internal footer.
+
+**When to use this:** apps where the same data is meaningful in both layouts — e.g. people directories, file managers.
+
+<Recipe7SwitchableView  />
+
+## Grid view, manual wiring \{#grid-view-manual\}
+
+Same UI as Recipe 5 but with all state and watchers wired manually. The two `flush: 'sync'` watchers are the cost of skipping the controller; they're what guarantee a single fetch per user action.
+
+**When to use this:** when you need to compose state with refs you already own (Pinia store, parent computed). Otherwise, prefer Recipe 5.
+
+<Recipe8GridManual  />
+
+## See also
+
+- [`useDataTableController`](/docs/data-table/use-data-table-controller) — the composable powering recipes 1, 3, 4, 5, 6, 7.
+- [`<Filters>`](/docs/composites/filters) — the standalone filter toolbar used in recipes 3, 4, 5, 7, 8.
+- [`<DataPagination>`](/docs/components/data-pagination) — the toolbar pagination used in recipes 3, 5, 7, 8.
+- [Server-Side](/docs/data-table/server-side) — `tableStateToServerParams` and the canonical response shape.
 
 ---
 
@@ -3730,8 +4105,9 @@ const columns = [
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
+    enable-pagination
     enable-row-expansion
+    v-model:pagination="pagination"
     :get-row-can-expand="(row) => row.original.items.length > 0"
   >
     <template #expanded-row="{ row }">
@@ -3789,20 +4165,26 @@ When rows are selected, bulk action buttons appear in the toolbar:
 ```typescript
 
 
+// `action` receives the IDs (per `getRowId`) of every selected row across
+// all pages. Server-paginated data means full row data isn't available for
+// rows on other pages — resolve IDs against your own source when needed.
 const bulkActions: BulkActionOption<User>[] = [
   {
     label: 'Delete',
     icon: IconTrash,
     variant: 'destructive',
-    action: (selectedRows) => {
-      // selectedRows is User[]
-      deleteUsers(selectedRows.map((r) => r.id))
+    action: async (ids) => {
+      await api.delete('/users', { ids })
+      refetch()
     },
   },
   {
     label: 'Export CSV',
     icon: IconDownload,
-    action: (selectedRows) => exportToCsv(selectedRows),
+    action: async (ids) => {
+      const users = await api.fetchUsers({ ids })
+      exportToCsv(users)
+    },
   },
 ]
 ```
@@ -3857,45 +4239,39 @@ tableRef.value?.resetSelection()
 
 ## Data Table: Server-Side
 
-Server-side operation params, response format, URL state persistence, and the onServerSideChange callback.
+Server-side operation params, response format, URL state persistence, and the v-model emit contract.
 
 ## How Server-Side Works
 
-The DataTable is designed for server-side operations. Every user interaction triggers the `onServerSideChange` callback with the current table state:
+The DataTable runs in fully manual mode — TanStack never sorts, filters, or paginates. The parent owns state via three v-model bindings (`sorting`, `filters`, `pagination`) and triggers fetches whenever the merged state changes. Use `useDataTableController` to bundle the three refs and apply the page-reset rule with `flush: 'sync'`.
 
-```typescript
-function handleServerSideChange(state: {
-  sorting: SortingState
-  filters: ColumnFiltersState
-  pagination: PaginationState
-}) {
-  // Convert to your API format
-  const params = {
-    page: state.pagination.pageIndex + 1,
-    per_page: state.pagination.pageSize,
-    sort_by: state.sorting[0]?.id,
-    sort_order: state.sorting[0]?.desc ? 'desc' : 'asc',
-    filters: state.filters,
-  }
+```ts
 
+
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
+
+async function fetchPage() {
+  const params = tableStateToServerParams(state.value)
   const response = await api.get('/users', { params })
   data.value = response.data
   pageCount.value = response.meta.total_pages
+  totalRows.value = response.meta.total
 }
+
+watch(state, fetchPage, { deep: true })
+fetchPage()
 ```
 
 ## Server Params Helper
 
-Use `tableStateToServerParams` to convert TanStack state to a standard format:
+`tableStateToServerParams` converts the merged state to a standard REST shape:
 
 ```typescript
 
 
 
-function handleChange(state) {
-  const params: ServerSideTableParams = tableStateToServerParams(state)
-  // params = { page, per_page, sort_by, sort_order, filters }
-}
+const params: ServerSideTableParams = tableStateToServerParams(state.value)
+// params = { page, per_page, sort_by, sort_order, filters }
 ```
 
 ### ServerSideTableParams
@@ -3924,34 +4300,72 @@ interface ServerSideTableResponse<T> {
 }
 ```
 
+## Single-Fetch Guarantee
+
+`useDataTableController` applies `flush: 'sync'` watchers internally so that when a filter or sort change auto-resets `pageIndex`, the parent observes **one** state mutation per user action. Without `flush: 'sync'`, every filter change would trigger two fetches — once with the new filter + old pageIndex, then again after the reset.
+
+If you skip the composable, you must replicate the rule:
+
+```ts
+watch(
+  filters,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  { deep: true, flush: 'sync' },
+)
+watch(
+  sorting,
+  () => {
+    pagination.value = { ...pagination.value, pageIndex: 0 }
+  },
+  { deep: true, flush: 'sync' },
+)
+```
+
 ## URL State Persistence
 
-Restore table state from URL query params (e.g., after page refresh or shared links):
+Seed the controller from URL query params and persist back on every change:
 
-```vue
-<DataTable
-  :columns="columns"
-  :data="data"
-  :page-count="pageCount"
-  :on-server-side-change="handleChange"
-  :initial-filters="filtersFromUrl"
-  :initial-sorting="sortingFromUrl"
-  :initial-pagination="paginationFromUrl"
-/>
+```ts
+
+
+const route = useRoute()
+const router = useRouter()
+
+const { sorting, filters, pagination, state } = useDataTableController({
+  pageSize: Number(route.query.size) || 20,
+  initialSorting: parseSorting(route.query.sort),
+  initialFilters: parseFilters(route.query.f),
+  initialPagination: {
+    pageIndex: Number(route.query.page) || 0,
+    pageSize: Number(route.query.size) || 20,
+  },
+})
+
+watch(
+  state,
+  (s) => {
+    router.replace({ query: serializeState(s) })
+  },
+  { deep: true },
+)
+
+watch(state, fetchPage, { deep: true })
 ```
 
 ## Slots
 
-| Slot               | Props               | Description                       |
-| ------------------ | ------------------- | --------------------------------- |
-| `#toolbar`         | `{ table }`         | Replace entire toolbar            |
-| `#toolbar-start`   | -                   | Add content before search         |
-| `#toolbar-end`     | -                   | Add content after search          |
-| `#empty`           | -                   | Custom empty state                |
-| `#error`           | `{ error }`         | Custom error state                |
-| `#pagination`      | `{ table }`         | Custom pagination                 |
-| `#expanded-row`    | `{ row }`           | Row expansion content             |
-| `#cell-[columnId]` | `{ row, getValue }` | Custom cell for a specific column |
+| Slot               | Props                                  | Description                       |
+| ------------------ | -------------------------------------- | --------------------------------- |
+| `#toolbar`         | `{ table, loading }`                   | Replace entire toolbar            |
+| `#toolbar-start`   | `{ table }`                            | Add content before filter row     |
+| `#toolbar-end`     | `{ table }`                            | Add content after filter row      |
+| `#empty`           | `{ message, columns }`                 | Custom empty state                |
+| `#error`           | `{ error, retry }`                     | Custom error state                |
+| `#pagination`      | `{ pagination, pageCount, totalRows }` | Custom pagination footer          |
+| `#expanded-row`    | `{ row }`                              | Row expansion content             |
+| `#cell-[columnId]` | `{ cell, row, value }`                 | Custom cell for a specific column |
 
 ## Keyboard Navigation
 
@@ -3969,10 +4383,7 @@ Enable with `enableKeyboardNavigation`:
 ## Column Resizing
 
 ```vue
-<DataTable
-  enable-column-resizing
-  column-resize-mode="onChange"  <!-- or "onEnd" -->
-/>
+<DataTable enable-column-resizing column-resize-mode="onChange" />
 ```
 
 ## Column Visibility
@@ -3982,6 +4393,112 @@ Enable with `enableKeyboardNavigation`:
 ```
 
 Shows a dropdown in the toolbar to toggle column visibility.
+
+---
+
+## Data Table: useDataTableController
+
+The parent-side composable that bundles sorting / filters / pagination refs and applies the filter→page and sort→page reset rules with flush:'sync'.
+
+## Overview
+
+`useDataTableController` is the **parent-side** helper for `<DataTable>` and standalone `<Filters>` / `<DataPagination>` compositions. It owns the three v-model refs (`sorting`, `filters`, `pagination`), applies the filter→page and sort→page reset rule with `flush: 'sync'`, and exposes a single merged `state` computed for the parent's fetch watcher.
+
+It has **zero coupling** to `<DataTable>` — you can use it for grid views, card lists, virtualized layouts, or any custom render path that needs the same three pieces of state.
+
+
+
+## Why the controller exists
+
+There are three load-bearing rules that any DataTable parent needs to enforce:
+
+1. **Reset to page 0 on filter change** — otherwise a user filtering down to a tiny result set is stranded on a now-non-existent page 5.
+2. **Reset to page 0 on sort change** — matches industry behaviour (MUI DataGrid, AG Grid, PrimeVue) and avoids "page 5 of the new sort order contains arbitrary rows".
+3. **`flush: 'sync'` on those reset watchers** — otherwise the parent's `watch(state, fetchPage)` fires twice per user action: once with the new filter and the old `pageIndex`, then again after the reset lands.
+
+Skip the controller and you must replicate all three rules yourself. The controller bundles them.
+
+## Options
+
+| Option                    | Type                   | Default                      | Description                                                            |
+| ------------------------- | ---------------------- | ---------------------------- | ---------------------------------------------------------------------- |
+| `pageSize`                | `number`               | `10`                         | Initial page size when `initialPagination` isn't supplied              |
+| `initialSorting`          | `SortingState`         | `[]`                         | Seed the `sorting` ref                                                 |
+| `initialFilters`          | `DataTableFilterState` | `{}`                         | Seed the `filters` ref                                                 |
+| `initialPagination`       | `PaginationState`      | `{ pageIndex: 0, pageSize }` | Seed the `pagination` ref. Overrides `pageSize` when both are provided |
+| `resetPageOnFilterChange` | `boolean`              | `true`                       | Reset `pageIndex` to 0 whenever filters mutate                         |
+| `resetPageOnSortChange`   | `boolean`              | `true`                       | Reset `pageIndex` to 0 whenever sorting mutates                        |
+
+## Return value
+
+| Member       | Type                                            | Description                                                                                 |
+| ------------ | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `sorting`    | `Ref<SortingState>`                             | The sorting v-model — bind with `v-model:sorting`                                           |
+| `filters`    | `Ref<DataTableFilterState>`                     | The filters v-model — bind with `v-model:filters`                                           |
+| `pagination` | `Ref<PaginationState>`                          | The pagination v-model — bind with `v-model:pagination`                                     |
+| `state`      | `ComputedRef<{ sorting, filters, pagination }>` | Merged read-only state. Watch with `deep: true` to fetch data                               |
+| `reset()`    | `() => void`                                    | Reset all three refs to the initial values (or defaults if no initial values were supplied) |
+
+## Single-fetch guarantee
+
+When the user changes a filter while `pagination.pageIndex > 0`, two refs mutate: `filters` (the user's change) and `pagination` (the controller's page-reset side-effect). Without `flush: 'sync'`, Vue would schedule the reset watcher to run later, which means the parent's `watch(state, fetchPage, { deep: true })` would fire **twice** — once with the new filter and stale `pageIndex`, then again after the reset.
+
+`flush: 'sync'` lands the reset before the next microtask flushes, so the parent observes one coherent state and fires one fetch.
+
+```ts
+watch(state, fetchPage, { deep: true })
+```
+
+If you opt out of either reset (or skip the composable entirely), restore the rule yourself — see the manual snippet on [Basic Usage](/docs/data-table/basic#manual-wiring-without-the-controller).
+
+## Opting out of resets
+
+Pass `resetPageOnSortChange: false` (or `resetPageOnFilterChange: false`) to preserve `pageIndex` across that axis. Generally don't — the defaults match every major data-grid library.
+
+```ts
+const { sorting, filters, pagination, state } = useDataTableController({
+  pageSize: 20,
+  resetPageOnSortChange: false,
+})
+```
+
+## URL state restoration
+
+Seed the controller from URL query params and persist back on every change. The composable doesn't validate that a seeded `pageIndex` is within the filtered dataset's bounds — that's the parent's job. After the first fetch resolves, clamp to `pageCount - 1` if the URL was stale.
+
+
+
+```ts
+
+
+const route = useRoute()
+const router = useRouter()
+
+const { sorting, filters, pagination, state } = useDataTableController({
+  pageSize: Number(route.query.size) || 20,
+  initialSorting: parseSorting(route.query.sort),
+  initialFilters: parseFilters(route.query.f),
+  initialPagination: {
+    pageIndex: Number(route.query.page) || 0,
+    pageSize: Number(route.query.size) || 20,
+  },
+})
+
+watch(
+  state,
+  (s) => {
+    router.replace({ query: serializeState(s) })
+    fetchPage()
+  },
+  { deep: true },
+)
+```
+
+## See also
+
+- [Basic Usage](/docs/data-table/basic) — the recommended setup using the controller.
+- [Server-Side](/docs/data-table/server-side) — `tableStateToServerParams` and the response format.
+- [Recipes](/docs/data-table/recipes) — eight canonical wiring scenarios (internal, external, grid, URL state, switchable view).
 
 ---
 
@@ -4034,6 +4551,230 @@ Quick-select preset buttons
 ## Single Date Mode
 
 Use `mode="single"` for picking a single date instead of a range.
+
+---
+
+## Filters
+
+A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
+
+## Overview
+
+`<Filters>` is the chip-based filter toolbar that powers `<DataTable>`'s filter row. It's a standalone composite — use it on top of any data view (table, card grid, virtualised list) to give users the same filter language they expect from the DataTable.
+
+The component owns its own internal `useFilters` state by default. Provide a `v-model:filterValues` ref to mirror the aggregated value externally, or hand in a pre-instantiated `state` (from `useFilters()`) when you need imperative access (adding filters from outside, custom command palettes, etc.).
+
+
+
+## V-model contract
+
+`update:filterValues` fires whenever a chip's value changes or the debounced search input settles. The aggregate is a single object keyed by field id:
+
+```ts
+
+
+// Shape of update:filterValues — same as DataTable's v-model:filters
+const filterValues: Record<string, FilterInstanceValue> = {
+  name: 'jane', // text — single value
+  role: 'admin', // select — single value
+  status: ['active'], // multiselect — array
+  age: [22, 35], // number — multi-instance (multiple chips)
+}
+```
+
+The search value (when `searchField` is provided) is stored under `searchField.id` in the same object — there is no separate `searchValue` event.
+
+```vue
+<script setup lang="ts">
+
+
+
+const filters = ref({})
+
+const fields: DataTableFilterField<User>[] = [
+  { id: 'role', label: 'Role', type: 'select', options: [...] },
+  { id: 'status', label: 'Status', type: 'multiselect', options: [...] },
+]
+</script>
+
+<template>
+  <Filters
+    :fields="fields"
+    :search-field="{ id: 'name', placeholder: 'Search by name' }"
+    v-model:filterValues="filters"
+  />
+</template>
+```
+
+## Props
+
+| Prop            | Type                                  | Default  | Description                                                                                                        |
+| --------------- | ------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| `fields`        | `DataTableFilterField<TData>[]`       | required | The set of filterable fields. Each entry maps to a chip kind via `type`                                            |
+| `filterValues`  | `Record<string, FilterInstanceValue>` | —        | `v-model:filterValues` target. When the parent replaces this ref, the component reseeds its chips                  |
+| `searchField`   | `{ id, placeholder?, debounceMs? }`   | —        | Renders the search input. Search lives in `filterValues` under `searchField.id`. Default debounce is 300 ms        |
+| `advancedMode`  | `boolean`                             | `false`  | Operator-based chips (`contains`/`equals`/`greaterThan`/…). Base types only — no `multiselect`/`range`/`daterange` |
+| `plugins`       | `RegisteredFilterPlugin[]`            | `[]`     | Custom chip kinds registered via `defineFilter()`                                                                  |
+| `initialValues` | `Record<string, FilterInstanceValue>` | —        | One-shot seed for uncontrolled use. Ignored when `filterValues` is bound                                           |
+| `initialSearch` | `string`                              | —        | Initial value for the search input                                                                                 |
+| `loading`       | `boolean`                             | `false`  | Disables inputs and swaps the search icon for a spinner                                                            |
+| `state`         | `UseFiltersReturn<TData>`             | —        | Advanced wiring: pre-instantiated `useFilters()` return. Takes precedence over `filterValues`                      |
+
+## Emits
+
+| Event                 | Payload                               | Description                                                         |
+| --------------------- | ------------------------------------- | ------------------------------------------------------------------- |
+| `update:filterValues` | `Record<string, FilterInstanceValue>` | Fires on any chip change or debounced search settle                 |
+| `reset`               | —                                     | User clicked Reset; the component has already cleared its own state |
+
+## Slots
+
+| Slot     | Description                                                               |
+| -------- | ------------------------------------------------------------------------- |
+| `#start` | Rendered before the search input — use for view-mode toggles, view labels |
+| `#right` | Rendered on the right edge — use for "Add filter" extensions, refresh     |
+
+## Filter field types
+
+The eight built-in field types map directly onto chip components:
+
+| `type`        | Value shape                            | Multi-instance? | Advanced-mode? |
+| ------------- | -------------------------------------- | --------------- | -------------- |
+| `text`        | `string`                               | Yes (OR logic)  | Yes            |
+| `number`      | `number`                               | Yes             | Yes            |
+| `date`        | `DateValue`                            | Yes             | Yes            |
+| `select`      | `string`                               | No              | Yes            |
+| `boolean`     | `boolean`                              | No              | Yes            |
+| `multiselect` | `string[]`                             | No              | —              |
+| `range`       | `[number, number]`                     | No              | —              |
+| `daterange`   | `{ start: DateValue, end: DateValue }` | No              | —              |
+
+See [Data Table → Filtering](/docs/data-table/filtering) for field-configuration recipes — every field shape there applies here verbatim.
+
+## Advanced mode
+
+Each chip exposes an operator dropdown (`contains` / `equals` / `greaterThan` / `between` / …). Only base types are eligible — `multiselect`, `range`, and `daterange` already encode their own multi-value semantics and are skipped.
+
+
+
+The emitted `FilterInstanceValue` becomes an array of `{ operator, value }` entries because the same field can have multiple chips:
+
+```ts
+// advancedMode: true
+filterValues = {
+  name: [
+    { operator: 'contains', value: 'jane' },
+    { operator: 'notContains', value: 'doe' },
+  ],
+}
+```
+
+## Custom chip plugins
+
+Register a custom chip type with `defineFilter()` and pass it via `plugins`. Plugins work in both simple and advanced mode.
+
+```ts
+
+
+
+export const ratingFilterPlugin = defineFilter({
+  type: 'rating',
+  component: RatingFilter,
+  operators: ['is', 'isAtLeast', 'isAtMost'],
+})
+```
+
+```vue
+<Filters :fields="fields" :plugins="[ratingFilterPlugin]" v-model:filterValues="filters" />
+```
+
+`RatingFilter.vue` follows the same `FilterPluginComponentProps` contract as the built-in chips (`title`, `defaultOpen`, `defaultOperator`, `availableOperators`, `initialValue`, plus `value-change` / `remove` / `close` emits).
+
+## `useFilters` composable
+
+The composable that powers `<Filters>` internally. Hand its return value to `<Filters :state="...">` when you need imperative access — for instance, adding a filter from a command palette outside the toolbar.
+
+```ts
+
+
+const filterState = useFilters<User>({
+  filterFields: fields,
+  filterPlugins: [],
+  advancedMode: false,
+  initialValues: {},
+  searchField: { id: 'name', placeholder: 'Search' },
+})
+
+// Imperative: open a fresh filter chip
+filterState.addFilter('role')
+
+// Imperative: replace the entire filter state (e.g. URL restoration)
+filterState.setValues({ role: 'admin' })
+```
+
+### Options
+
+| Option          | Type                                  | Description                                                                 |
+| --------------- | ------------------------------------- | --------------------------------------------------------------------------- |
+| `filterFields`  | `DataTableFilterField<TData>[]`       | Required. Same shape as `<Filters>`'s `fields` prop                         |
+| `filterPlugins` | `RegisteredFilterPlugin[]`            | Custom chip types                                                           |
+| `advancedMode`  | `boolean`                             | Operator-based chips                                                        |
+| `initialValues` | `Record<string, FilterInstanceValue>` | Seed instances. Each entry becomes one chip (or N chips for multi-instance) |
+| `initialSearch` | `string`                              | Seed the search ref                                                         |
+| `searchField`   | `{ id, placeholder?, debounceMs? }`   | Search config — debounce defaults to 300 ms                                 |
+
+### Return value
+
+| Member                                | Type                                                 | Description                                                       |
+| ------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------- |
+| `filterInstances`                     | `Ref<FilterInstance<TData>[]>`                       | The currently visible chips (each is a `field` + an `instanceId`) |
+| `filterValues`                        | `Readonly<Ref<Record<string, FilterInstanceValue>>>` | Aggregated value — same shape as the v-model                      |
+| `searchValue`                         | `Ref<string ǀ undefined>`                            | Debounced search ref                                              |
+| `isFiltered`                          | `Readonly<Ref<boolean>>`                             | True when any chip has a value or the search input is non-empty   |
+| `addFilter(fieldId)`                  | `(fieldId: string) => void`                          | Add a new chip for a field. Auto-opens the popover                |
+| `removeInstance(instanceId)`          | `(instanceId: string) => void`                       | Remove a specific chip                                            |
+| `setInstanceValue(instanceId, value)` | `(instanceId: string, value) => void`                | Update a chip's value                                             |
+| `setValues(record)`                   | `(record) => void`                                   | Replace the entire state. Rebuilds chips from the record          |
+| `resetAll()`                          | `() => void`                                         | Clear chips and search                                            |
+| `getInstanceValue(instanceId)`        | `(instanceId: string) => FilterValue ǀ undefined`    | Read a chip's current value                                       |
+| `setSearchValue(value)`               | `(value: string ǀ number) => void`                   | Programmatically update the search ref (debounce applies)         |
+
+## With `<DataTable>`
+
+Inside `<DataTable :enable-filter>`, the component renders an internal `<Filters>` automatically. Use the standalone form when you want filters outside the table — for example, above a grid of cards driven by the same `useDataTableController` instance.
+
+```vue
+<script setup lang="ts">
+
+
+
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
+watch(state, fetchPage, { deep: true })
+</script>
+
+<template>
+  <Filters :fields="fields" :search-field="{ id: 'q' }" v-model:filterValues="filters" />
+  <!-- Filter UI is external — DataTable receives the same `filters` ref but doesn't render its own toolbar. -->
+  <DataTable
+    :columns="columns"
+    :data="data"
+    :page-count="pageCount"
+    enable-sorting
+    enable-pagination
+    v-model:sorting="sorting"
+    v-model:pagination="pagination"
+    v-model:filters="filters"
+  />
+</template>
+```
+
+See [Recipes](/docs/data-table/recipes) for the full set of internal/external/mixed wiring patterns.
+
+## See also
+
+- [Data Table → Filtering](/docs/data-table/filtering) — field-configuration recipes.
+- [`useDataTableController`](/docs/data-table/use-data-table-controller) — bundle this `filters` ref with sorting and pagination.
+- [`<DataPagination>`](/docs/components/data-pagination) — the matching toolbar for pagination.
 
 ---
 
@@ -4377,6 +5118,11 @@ A complete DataTable setup with API fetching, filters, and selection:
 <script setup>
 
 
+  DataTable,
+  cellRenderers,
+  createColumnHelper,
+  useDataTableController,
+} from '@meldui/vue'
 
 
 
@@ -4446,20 +5192,30 @@ const bulkActions: BulkActionOption<User>[] = [
     label: 'Delete',
     icon: IconTrash,
     variant: 'destructive',
-    action: (rows) => deleteUsers(rows.map(r => r.id)),
+    action: (ids) => deleteUsers(ids),
   },
 ]
+
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 20 })
 
 const data = ref<User[]>([])
 const pageCount = ref(1)
 
-async function handleChange({ sorting, filters, pagination }) {
+async function fetchPage() {
   const response = await api.get('/users', {
-    params: { page: pagination.pageIndex + 1, per_page: pagination.pageSize, sorting, filters },
+    params: {
+      page: state.value.pagination.pageIndex + 1,
+      per_page: state.value.pagination.pageSize,
+      sorting: state.value.sorting,
+      filters: state.value.filters,
+    },
   })
   data.value = response.data
   pageCount.value = response.meta.total_pages
 }
+
+watch(state, fetchPage, { deep: true })
+fetchPage()
 </script>
 
 <template>
@@ -4467,12 +5223,16 @@ async function handleChange({ sorting, filters, pagination }) {
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
     :filter-fields="filterFields"
+    :filter-search="{ id: 'name', placeholder: 'Search users...' }"
     :bulk-select-options="bulkActions"
+    enable-sorting
+    enable-filter
+    enable-pagination
     enable-row-selection
-    search-column="name"
-    search-placeholder="Search users..."
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
   />
 </template>
 ```

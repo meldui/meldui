@@ -1,27 +1,43 @@
 /**
  * DataTable Events Examples
  *
- * Examples demonstrating event handling and callbacks:
- * - Server-side change callback
- * - Sorting events
- * - Filter events
- * - Pagination events
- * - Converting state to server params
+ * Demonstrates the per-axis emit API. Each user interaction emits exactly one
+ * of `update:sorting`, `update:filters`, or `update:pagination`. Parents
+ * typically watch a merged computed (e.g., from `useDataTableController.state`)
+ * to trigger a single fetch per user action.
  */
 
-import { IconCheck, IconHash, IconMail } from '@meldui/tabler-vue'
-import { DataTable, type DataTableFilterField, tableStateToServerParams } from '@meldui/vue'
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { computed, ref } from 'vue'
 import {
-  extendedColumns,
+  IconBuilding,
+  IconCalendar,
+  IconCheck,
+  IconCoin,
+  IconHash,
+  IconMail,
+  IconMapPin,
+  IconShield,
+} from '@meldui/tabler-vue'
+import {
+  DataTable,
+  type DataTableFilterField,
+  type DataTableFilterState,
+  tableStateToServerParams,
+  useDataTableController,
+} from '@meldui/vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { PaginationState, SortingState } from '@tanstack/vue-table'
+import { computed, ref, watch } from 'vue'
+import {
   MOCK_USERS,
+  type ServerResponse,
+  type User,
+  departmentOptions,
+  extendedColumns,
+  locationOptions,
   minimalColumns,
   roleOptions,
   simulateServerSide,
   statusOptions,
-  type TableState,
-  type User,
 } from './_shared'
 
 const meta: Meta<typeof DataTable> = {
@@ -32,14 +48,17 @@ const meta: Meta<typeof DataTable> = {
     docs: {
       description: {
         component: `
-Event handling examples showing how to capture and process table state changes.
+Event handling examples for DataTable v2.
 
-The \`onServerSideChange\` callback receives:
-- \`sorting\`: Current sort state
-- \`filters\`: Current filter state
-- \`pagination\`: Current page index and size
+\`<DataTable>\` emits three v-model update events:
 
-Use \`tableStateToServerParams\` utility to convert state to API-friendly format.
+- \`update:sorting\` — payload \`SortingState\`
+- \`update:filters\` — payload \`DataTableFilterState\` (includes search value under \`filterSearch.id\`)
+- \`update:pagination\` — payload \`PaginationState\`
+
+Use \`useDataTableController\` to bundle the three refs and watch the merged
+\`state\` for data fetches. Use \`tableStateToServerParams\` to convert to a
+typical REST API shape.
         `,
       },
     },
@@ -50,67 +69,76 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 /**
- * Basic event logging.
- * Shows the raw state object received in the callback.
+ * Sort + pagination events. The simplest event-logging demo — no filters,
+ * just the two axes that work without `filter-fields`.
  */
-export const BasicEventLogging: Story = {
+export const SortAndPaginationEvents: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
       const eventLog = ref<string[]>([])
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
+      const { sorting, pagination, state } = useDataTableController({ pageSize: 10 })
+      const localData = ref<ServerResponse>(simulateServerSide(MOCK_USERS, state.value))
+      watch(
+        state,
+        (s) => {
+          localData.value = simulateServerSide(MOCK_USERS, s)
+        },
+        { deep: true },
       )
 
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        const timestamp = new Date().toLocaleTimeString()
-        const logEntry = `[${timestamp}] State changed:\n${JSON.stringify(state, null, 2)}`
-        eventLog.value = [logEntry, ...eventLog.value.slice(0, 4)]
-
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      const log = (kind: string, payload: unknown) => {
+        const ts = new Date().toLocaleTimeString()
+        eventLog.value = [
+          `[${ts}] ${kind}:\n${JSON.stringify(payload, null, 2)}`,
+          ...eventLog.value.slice(0, 9),
+        ]
       }
-
       const clearLog = () => {
         eventLog.value = []
       }
 
-      return { localData, pageCount, handleChange, columns: minimalColumns, eventLog, clearLog }
+      return {
+        sorting,
+        pagination,
+        data: computed(() => localData.value.data),
+        pageCount: computed(() => localData.value.meta.total_pages),
+        totalRows: computed(() => localData.value.meta.total),
+        columns: minimalColumns,
+        eventLog,
+        clearLog,
+        onSorting: (next: SortingState) => log('update:sorting', next),
+        onPagination: (next: PaginationState) => log('update:pagination', next),
+      }
     },
     template: `
       <div class="space-y-4">
         <p class="text-sm text-muted-foreground">
-          Sort columns, change pages, or search to see events logged below.
+          Sort or paginate to see the corresponding event log entry.
         </p>
-
         <DataTable
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-          search-placeholder="Search users..."
+          :total-rows="totalRows"
+          enable-sorting enable-pagination
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
+          @update:sorting="onSorting"
+          @update:pagination="onPagination"
         />
-
         <div class="p-4 bg-muted rounded-lg">
           <div class="flex justify-between items-center mb-2">
-            <h4 class="text-sm font-medium">Event Log (last 5):</h4>
+            <h4 class="text-sm font-medium">Event Log (last 10):</h4>
             <button
               @click="clearLog"
               class="text-xs px-2 py-1 bg-secondary rounded hover:bg-secondary/80"
-            >
-              Clear
-            </button>
+            >Clear</button>
           </div>
           <div v-if="eventLog.length" class="space-y-2">
-            <pre v-for="(log, i) in eventLog" :key="i" class="text-xs p-2 bg-background rounded overflow-auto">{{ log }}</pre>
+            <pre v-for="(entry, i) in eventLog" :key="i" class="text-xs p-2 bg-background rounded overflow-auto">{{ entry }}</pre>
           </div>
-          <p v-else class="text-xs text-muted-foreground">No events yet. Interact with the table.</p>
+          <p v-else class="text-xs text-muted-foreground">No events yet.</p>
         </div>
       </div>
     `,
@@ -118,436 +146,390 @@ export const BasicEventLogging: Story = {
 }
 
 /**
- * Sorting events.
- * Shows how sorting state changes as you click column headers.
+ * **The canonical comprehensive demo.** Every interactive surface is wired:
+ * all 8 simple-mode filter types, search, sorting on every column, and
+ * pagination. The event log on the right captures every `update:*` emit with
+ * a timestamp; counters at the top tally each event type.
+ *
+ * Use this to see exactly what payload shape each interaction produces.
  */
-export const SortingEvents: Story = {
+export const AllEvents: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const sortState = ref<string>('No sorting')
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
+      const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 10 })
+      const localData = ref<ServerResponse>(simulateServerSide(MOCK_USERS, state.value))
+      watch(
+        state,
+        (s) => {
+          localData.value = simulateServerSide(MOCK_USERS, s)
+        },
+        { deep: true },
       )
 
-      const pageCount = computed(() => localData.value.meta.total_pages)
+      // All 8 simple-mode filter types in one table.
+      const filterFields: DataTableFilterField<User>[] = [
+        { id: 'email', label: 'Email', type: 'text', icon: IconMail },
+        { id: 'age', label: 'Age', type: 'number', icon: IconHash, min: 18, max: 100 },
+        { id: 'role', label: 'Role', type: 'select', icon: IconShield, options: roleOptions },
+        {
+          id: 'status',
+          label: 'Status',
+          type: 'multiselect',
+          icon: IconCheck,
+          options: statusOptions,
+        },
+        {
+          id: 'department',
+          label: 'Department',
+          type: 'multiselect',
+          icon: IconBuilding,
+          options: departmentOptions,
+        },
+        {
+          id: 'location',
+          label: 'Location',
+          type: 'multiselect',
+          icon: IconMapPin,
+          options: locationOptions,
+        },
+        { id: 'is_verified', label: 'Verified', type: 'boolean', icon: IconCheck },
+        {
+          id: 'salary',
+          label: 'Salary',
+          type: 'range',
+          icon: IconCoin,
+          range: [30000, 150000],
+          step: 1000,
+          unit: '$',
+        },
+        { id: 'created_at', label: 'Created', type: 'date', icon: IconCalendar },
+        { id: 'last_login_at', label: 'Last login', type: 'daterange', icon: IconCalendar },
+      ]
 
-      const handleChange = (state: TableState) => {
-        if (state.sorting.length > 0) {
-          const { id, desc } = state.sorting[0]
-          sortState.value = `Column: ${id}, Direction: ${desc ? 'Descending' : 'Ascending'}`
-        } else {
-          sortState.value = 'No sorting'
-        }
+      // Search is delivered as a filter under `filterSearch.id`.
+      const filterSearch = { id: 'name', placeholder: 'Search by name...' }
 
-        localData.value = simulateServerSide(MOCK_USERS, state)
+      type EventKind = 'sorting' | 'filters' | 'pagination'
+      type EventEntry = { ts: string; kind: EventKind; payload: unknown }
+      const events = ref<EventEntry[]>([])
+      const counts = computed(() => {
+        const c: Record<EventKind, number> = { sorting: 0, filters: 0, pagination: 0 }
+        for (const e of events.value) c[e.kind]++
+        return c
+      })
+
+      const log = (kind: EventKind, payload: unknown) => {
+        events.value = [
+          { ts: new Date().toLocaleTimeString(), kind, payload },
+          ...events.value.slice(0, 19),
+        ]
+      }
+      const clear = () => {
+        events.value = []
       }
 
-      return { localData, pageCount, handleChange, columns: minimalColumns, sortState }
+      return {
+        sorting,
+        filters,
+        pagination,
+        data: computed(() => localData.value.data),
+        pageCount: computed(() => localData.value.meta.total_pages),
+        totalRows: computed(() => localData.value.meta.total),
+        columns: minimalColumns,
+        filterFields,
+        filterSearch,
+        events,
+        counts,
+        clear,
+        onSorting: (next: SortingState) => log('sorting', next),
+        onFilters: (next: DataTableFilterState) => log('filters', next),
+        onPagination: (next: PaginationState) => log('pagination', next),
+      }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Click column headers to sort. The current sort state is displayed below.
-        </p>
-
-        <div class="p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded">
-          <span class="text-sm font-medium">Current Sort:</span>
-          <span class="text-sm ml-2">{{ sortState }}</span>
+      <div class="space-y-3">
+        <div class="grid grid-cols-3 gap-2 text-sm">
+          <div class="rounded-md border p-2 flex items-center justify-between">
+            <code class="text-xs text-muted-foreground">update:sorting</code>
+            <strong class="font-mono">{{ counts.sorting }}</strong>
+          </div>
+          <div class="rounded-md border p-2 flex items-center justify-between">
+            <code class="text-xs text-muted-foreground">update:filters</code>
+            <strong class="font-mono">{{ counts.filters }}</strong>
+          </div>
+          <div class="rounded-md border p-2 flex items-center justify-between">
+            <code class="text-xs text-muted-foreground">update:pagination</code>
+            <strong class="font-mono">{{ counts.pagination }}</strong>
+          </div>
         </div>
 
         <DataTable
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :show-toolbar="false"
+          :total-rows="totalRows"
+          :filter-fields="filterFields"
+          :filter-search="filterSearch"
+          enable-sorting enable-filter enable-pagination
+          v-model:sorting="sorting"
+          v-model:filters="filters"
+          v-model:pagination="pagination"
+          @update:sorting="onSorting"
+          @update:filters="onFilters"
+          @update:pagination="onPagination"
         />
+
+        <div class="rounded-md border">
+          <div class="flex items-center justify-between border-b p-2">
+            <h4 class="text-sm font-medium">Event log (last 20)</h4>
+            <button class="text-xs underline" @click="clear">Clear</button>
+          </div>
+          <div class="max-h-72 overflow-auto p-2 space-y-2">
+            <div
+              v-for="(e, i) in events"
+              :key="i"
+              class="text-xs bg-muted/50 rounded border p-2"
+            >
+              <div class="flex justify-between mb-1">
+                <code class="font-medium">update:{{ e.kind }}</code>
+                <span class="text-muted-foreground">{{ e.ts }}</span>
+              </div>
+              <pre class="overflow-auto">{{ JSON.stringify(e.payload, null, 2) }}</pre>
+            </div>
+            <p v-if="events.length === 0" class="text-xs text-muted-foreground p-4 text-center">
+              No events yet — try sorting a column, typing in search, opening a filter, or paginating.
+            </p>
+          </div>
+        </div>
       </div>
     `,
   }),
 }
 
 /**
- * Filter events.
- * Shows how filter state changes as you apply filters.
+ * Same as `AllEvents` but in advanced filter mode, so every filter payload
+ * is wrapped in `[{ operator, value }]` form. Useful to see the difference
+ * in payload shape between simple and advanced modes side-by-side.
+ *
+ * Multi-instance filters work in advanced mode too — click "Add filter →
+ * Email" multiple times to see the array grow.
  */
-export const FilterEvents: Story = {
+export const AllEventsAdvancedMode: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      const filterState = ref<string>('No filters')
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
+      const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 10 })
+      const localData = ref<ServerResponse>(simulateServerSide(MOCK_USERS, state.value))
+      watch(
+        state,
+        (s) => {
+          localData.value = simulateServerSide(MOCK_USERS, s)
+        },
+        { deep: true },
       )
 
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
+      // Advanced mode requires base types (no multiselect/range/daterange).
+      // Each field declares its preferred default operator.
       const filterFields: DataTableFilterField<User>[] = [
         {
           id: 'email',
           label: 'Email',
           type: 'text',
           icon: IconMail,
-          placeholder: 'Filter email...',
+          defaultOperator: 'contains',
+        },
+        { id: 'age', label: 'Age', type: 'number', icon: IconHash, defaultOperator: 'greaterThan' },
+        {
+          id: 'salary',
+          label: 'Salary',
+          type: 'number',
+          icon: IconCoin,
+          defaultOperator: 'between',
         },
         {
           id: 'role',
           label: 'Role',
           type: 'select',
+          icon: IconShield,
           options: roleOptions,
-        },
-        {
-          id: 'status',
-          label: 'Status',
-          type: 'multiselect',
-          options: statusOptions,
-        },
-      ]
-
-      const handleChange = (state: TableState) => {
-        if (state.filters.length > 0) {
-          filterState.value = JSON.stringify(state.filters, null, 2)
-        } else {
-          filterState.value = 'No filters'
-        }
-
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        columns: minimalColumns,
-        filterFields,
-        filterState,
-      }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Apply filters to see the filter state structure.
-        </p>
-
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :filter-fields="filterFields"
-          search-column="name"
-          search-placeholder="Search..."
-        />
-
-        <div class="p-4 bg-muted rounded-lg">
-          <h4 class="text-sm font-medium mb-2">Filter State:</h4>
-          <pre class="text-xs overflow-auto">{{ filterState }}</pre>
-        </div>
-      </div>
-    `,
-  }),
-}
-
-/**
- * Pagination events.
- * Shows page changes as you navigate.
- */
-export const PaginationEvents: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const pageInfo = ref({ pageIndex: 0, pageSize: 10, totalPages: 10 })
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        pageInfo.value = {
-          pageIndex: state.pagination.pageIndex,
-          pageSize: state.pagination.pageSize,
-          totalPages: localData.value.meta.total_pages,
-        }
-
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns, pageInfo }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Navigate pages or change page size to see pagination state.
-        </p>
-
-        <div class="p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded flex gap-4">
-          <div>
-            <span class="text-xs text-muted-foreground">Page:</span>
-            <span class="text-sm font-medium ml-1">{{ pageInfo.pageIndex + 1 }} of {{ pageInfo.totalPages }}</span>
-          </div>
-          <div>
-            <span class="text-xs text-muted-foreground">Page Size:</span>
-            <span class="text-sm font-medium ml-1">{{ pageInfo.pageSize }}</span>
-          </div>
-        </div>
-
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          :page-size-options="[5, 10, 20, 50]"
-          :default-per-page="10"
-          :show-toolbar="false"
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Converting state to server params.
- * Uses tableStateToServerParams utility.
- */
-export const ServerParamsConversion: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const serverParams = ref<string>('Apply filters to see server params')
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const filterFields: DataTableFilterField<User>[] = [
-        {
-          id: 'email',
-          label: 'Email',
-          type: 'text',
-          icon: IconMail,
-          placeholder: 'Filter email...',
-        },
-        {
-          id: 'age',
-          label: 'Age',
-          type: 'number',
-          icon: IconHash,
-          placeholder: 'Enter age',
+          defaultOperator: 'isAnyOf',
         },
         {
           id: 'is_verified',
           label: 'Verified',
           type: 'boolean',
           icon: IconCheck,
+          defaultOperator: 'is',
+        },
+        {
+          id: 'created_at',
+          label: 'Created',
+          type: 'date',
+          icon: IconCalendar,
+          defaultOperator: 'isAfter',
         },
       ]
 
-      const handleChange = (state: TableState) => {
-        // Convert to server-friendly format
-        const params = tableStateToServerParams(state, filterFields, 'name')
-        serverParams.value = JSON.stringify(params, null, 2)
-
-        console.log('Server params:', params)
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
+      const filterSearch = { id: 'name', placeholder: 'Search by name...' }
 
       return {
-        localData,
-        pageCount,
-        handleChange,
+        sorting,
+        filters,
+        pagination,
+        data: computed(() => localData.value.data),
+        pageCount: computed(() => localData.value.meta.total_pages),
+        totalRows: computed(() => localData.value.meta.total),
+        columns: minimalColumns,
+        filterFields,
+        filterSearch,
+      }
+    },
+    template: `
+      <div class="space-y-3">
+        <p class="text-sm text-muted-foreground">
+          Advanced mode wraps every value in <code>{ operator, value }</code>. Open a filter,
+          pick an operator, and watch the <code>filters</code> ref update on the right.
+        </p>
+        <DataTable
+          :columns="columns"
+          :data="data"
+          :page-count="pageCount"
+          :total-rows="totalRows"
+          :filter-fields="filterFields"
+          :filter-search="filterSearch"
+          advanced-mode
+          enable-sorting enable-filter enable-pagination
+          v-model:sorting="sorting"
+          v-model:filters="filters"
+          v-model:pagination="pagination"
+        />
+        <div class="rounded-md border p-3 bg-muted">
+          <h4 class="text-sm font-medium mb-2">Current <code>filters</code>:</h4>
+          <pre class="text-xs overflow-auto">{{ JSON.stringify(filters, null, 2) }}</pre>
+        </div>
+      </div>
+    `,
+  }),
+}
+
+/**
+ * Converting merged state to server-side API params via `tableStateToServerParams`.
+ *
+ * Wires every interaction surface — all 8 simple-mode filter types, search,
+ * sorting, pagination — and shows the resulting REST-shaped params live as
+ * you interact. Useful when your backend expects
+ * `{ page, per_page, sort_by, sort_order, filters }`.
+ *
+ * The third arg to `tableStateToServerParams` is the search column id; it
+ * tells the helper to keep that filter's value as a plain string instead of
+ * coercing to an array.
+ */
+export const StateToServerParams: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 10 })
+      const localData = ref<ServerResponse>(simulateServerSide(MOCK_USERS, state.value))
+      watch(
+        state,
+        (s) => {
+          localData.value = simulateServerSide(MOCK_USERS, s)
+        },
+        { deep: true },
+      )
+
+      // All 8 simple-mode filter types so every per-type transformation in
+      // `tableStateToServerParams` is exercised.
+      const filterFields: DataTableFilterField<User>[] = [
+        { id: 'email', label: 'Email', type: 'text', icon: IconMail },
+        { id: 'age', label: 'Age', type: 'number', icon: IconHash, min: 18, max: 100 },
+        { id: 'role', label: 'Role', type: 'select', icon: IconShield, options: roleOptions },
+        {
+          id: 'status',
+          label: 'Status',
+          type: 'multiselect',
+          icon: IconCheck,
+          options: statusOptions,
+        },
+        {
+          id: 'department',
+          label: 'Department',
+          type: 'multiselect',
+          icon: IconBuilding,
+          options: departmentOptions,
+        },
+        {
+          id: 'location',
+          label: 'Location',
+          type: 'multiselect',
+          icon: IconMapPin,
+          options: locationOptions,
+        },
+        { id: 'is_verified', label: 'Verified', type: 'boolean', icon: IconCheck },
+        {
+          id: 'salary',
+          label: 'Salary',
+          type: 'range',
+          icon: IconCoin,
+          range: [30000, 150000],
+          step: 1000,
+          unit: '$',
+        },
+        { id: 'created_at', label: 'Created', type: 'date', icon: IconCalendar },
+        { id: 'last_login_at', label: 'Last login', type: 'daterange', icon: IconCalendar },
+      ]
+
+      // Search travels in `filters` under filterSearch.id. The helper's
+      // third argument tells it to keep that key as a plain string.
+      const filterSearch = { id: 'name', placeholder: 'Search by name...' }
+
+      const serverParams = computed(() =>
+        tableStateToServerParams(state.value, filterFields, filterSearch.id),
+      )
+
+      return {
+        sorting,
+        filters,
+        pagination,
+        serverParams,
+        data: computed(() => localData.value.data),
+        pageCount: computed(() => localData.value.meta.total_pages),
+        totalRows: computed(() => localData.value.meta.total),
         columns: extendedColumns,
         filterFields,
-        serverParams,
+        filterSearch,
       }
     },
     template: `
       <div class="space-y-4">
         <p class="text-sm text-muted-foreground">
-          The <code>tableStateToServerParams</code> utility converts table state to an API-friendly format.
-          Apply filters, sort, or change pages to see the output.
+          Sort, type in search, open each filter chip type, change pagination — and watch the
+          REST-shaped params update live below. Range tuples become <code>{start, end}</code>;
+          single text values are wrapped in arrays; etc.
         </p>
-
         <DataTable
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
+          :total-rows="totalRows"
           :filter-fields="filterFields"
-          :enable-row-selection="true"
-          search-column="name"
-          search-placeholder="Search..."
+          :filter-search="filterSearch"
+          enable-sorting enable-filter enable-pagination
+          v-model:sorting="sorting"
+          v-model:filters="filters"
+          v-model:pagination="pagination"
         />
-
-        <div class="p-4 bg-muted rounded-lg">
-          <h4 class="text-sm font-medium mb-2">Server Params (API-ready format):</h4>
-          <pre class="text-xs overflow-auto max-h-64">{{ serverParams }}</pre>
-        </div>
-      </div>
-    `,
-  }),
-}
-
-/**
- * Simulating API request.
- * Shows loading state during data fetch.
- */
-export const SimulatedAPIRequest: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const isLoading = ref(false)
-      const requestLog = ref<string[]>([])
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = async (state: TableState) => {
-        isLoading.value = true
-        const timestamp = new Date().toLocaleTimeString()
-
-        // Log the request
-        requestLog.value = [`[${timestamp}] Fetching data...`, ...requestLog.value.slice(0, 4)]
-
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 500))
-
-        localData.value = simulateServerSide(MOCK_USERS, state)
-
-        // Log completion
-        requestLog.value = [
-          `[${timestamp}] Received ${localData.value.data.length} rows (total: ${localData.value.meta.total})`,
-          ...requestLog.value.slice(0, 4),
-        ]
-
-        isLoading.value = false
-      }
-
-      return { localData, pageCount, handleChange, columns: minimalColumns, isLoading, requestLog }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Simulates API request with 500ms delay. In real apps, you'd make actual fetch calls here.
-        </p>
-
-        <div v-if="isLoading" class="p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded text-center">
-          <span class="text-sm">Loading data...</span>
-        </div>
-
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-          search-placeholder="Search users..."
-        />
-
-        <div class="p-4 bg-muted rounded-lg">
-          <h4 class="text-sm font-medium mb-2">Request Log:</h4>
-          <div class="space-y-1">
-            <p v-for="(log, i) in requestLog" :key="i" class="text-xs font-mono">{{ log }}</p>
-            <p v-if="!requestLog.length" class="text-xs text-muted-foreground">No requests yet.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="rounded-md border p-3 bg-muted">
+            <h4 class="text-sm font-medium mb-2">Raw <code>filters</code> ref</h4>
+            <pre class="text-xs overflow-auto max-h-72">{{ JSON.stringify(filters, null, 2) }}</pre>
+          </div>
+          <div class="rounded-md border p-3 bg-muted">
+            <h4 class="text-sm font-medium mb-2">Server params (<code>tableStateToServerParams</code>)</h4>
+            <pre class="text-xs overflow-auto max-h-72">{{ JSON.stringify(serverParams, null, 2) }}</pre>
           </div>
         </div>
-      </div>
-    `,
-  }),
-}
-
-/**
- * Debounced search.
- * Demonstrates how to debounce search input for better UX.
- */
-export const DebouncedSearch: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const searchCount = ref(0)
-      const lastSearch = ref('')
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      // Note: The DataTable component already handles input changes efficiently.
-      // This example shows how to track search requests.
-      const handleChange = (state: TableState) => {
-        const searchFilter = state.filters.find((f) => f.id === 'name')
-        if (searchFilter) {
-          searchCount.value++
-          lastSearch.value = String(searchFilter.value)
-        }
-
-        localData.value = simulateServerSide(MOCK_USERS, state)
-      }
-
-      return {
-        localData,
-        pageCount,
-        handleChange,
-        columns: minimalColumns,
-        searchCount,
-        lastSearch,
-      }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Type in the search box. Each keystroke triggers a state change.
-          Consider debouncing in your API handler for performance.
-        </p>
-
-        <div class="p-3 bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800 rounded flex gap-4">
-          <div>
-            <span class="text-xs text-muted-foreground">Search requests:</span>
-            <span class="text-sm font-medium ml-1">{{ searchCount }}</span>
-          </div>
-          <div>
-            <span class="text-xs text-muted-foreground">Last search:</span>
-            <span class="text-sm font-medium ml-1">"{{ lastSearch || '(empty)' }}"</span>
-          </div>
-        </div>
-
-        <DataTable
-          :columns="columns"
-          :data="localData.data"
-          :page-count="pageCount"
-          :on-server-side-change="handleChange"
-          search-column="name"
-          search-placeholder="Type to search..."
-          :show-toolbar="true"
-        />
       </div>
     `,
   }),

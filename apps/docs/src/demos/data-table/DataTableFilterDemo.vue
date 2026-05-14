@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
-import { DataTable, createColumnHelper } from '@meldui/vue'
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 import type { DataTableFilterField } from '@meldui/vue'
 
 interface User {
@@ -56,54 +56,54 @@ const allUsers: User[] = Array.from({ length: 30 }, (_, i) => ({
   is_verified: i % 3 !== 0,
 }))
 
-const data = ref(allUsers.slice(0, 10))
-const pageCount = ref(3)
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 10 })
+const filterSearch = { id: 'name', placeholder: 'Search users...' }
 
-function handleChange({ pagination }: any) {
-  const start = pagination.pageIndex * pagination.pageSize
-  data.value = allUsers.slice(start, start + pagination.pageSize)
-  pageCount.value = Math.ceil(allUsers.length / pagination.pageSize)
+const data = ref<User[]>([])
+const pageCount = computed(() => Math.max(Math.ceil(allUsers.length / pagination.value.pageSize), 1))
+const totalRows = ref(allUsers.length)
+
+function loadPage() {
+  const start = state.value.pagination.pageIndex * state.value.pagination.pageSize
+  data.value = allUsers.slice(start, start + state.value.pagination.pageSize)
 }
 
-const code = `\u003cscript setup>
-import { DataTable, createColumnHelper } from '@meldui/vue'
+loadPage()
+watch(state, loadPage, { deep: true })
+
+const code = `<script setup>
+import { DataTable, createColumnHelper, useDataTableController } from '@meldui/vue'
 import type { DataTableFilterField } from '@meldui/vue'
 
-const filterFields: DataTableFilterField\u003cUser>[] = [
+const filterFields: DataTableFilterField<User>[] = [
   { id: 'name', label: 'Name', type: 'text', placeholder: 'Filter by name...' },
   {
-    id: 'role',
-    label: 'Role',
-    type: 'select',
-    options: [
-      { label: 'Admin', value: 'admin' },
-      { label: 'User', value: 'user' },
-      { label: 'Guest', value: 'guest' },
-    ],
-  },
-  {
-    id: 'status',
-    label: 'Status',
-    type: 'select',
-    options: [
-      { label: 'Active', value: 'active' },
-      { label: 'Inactive', value: 'inactive' },
-    ],
+    id: 'role', label: 'Role', type: 'select',
+    options: [{ label: 'Admin', value: 'admin' }, { label: 'User', value: 'user' }],
   },
   { id: 'is_verified', label: 'Verified', type: 'boolean' },
 ]
-\u003c/script>
 
-\u003ctemplate>
+const { sorting, filters, pagination, state } = useDataTableController({ pageSize: 10 })
+const filterSearch = { id: 'name', placeholder: 'Search users...' }
+
+watch(state, fetchPage, { deep: true })
+<\/script>
+
+<template>
   <DataTable
     :columns="columns"
     :data="data"
     :page-count="pageCount"
-    :on-server-side-change="handleChange"
+    :total-rows="totalRows"
     :filter-fields="filterFields"
-    search-column="name"
+    :filter-search="filterSearch"
+    enable-sorting enable-filter enable-pagination
+    v-model:sorting="sorting"
+    v-model:filters="filters"
+    v-model:pagination="pagination"
   />
-\u003c/template>`
+</template>`
 </script>
 
 <template>
@@ -113,10 +113,15 @@ const filterFields: DataTableFilterField\u003cUser>[] = [
         :columns="columns"
         :data="data"
         :page-count="pageCount"
-        :on-server-side-change="handleChange"
+        :total-rows="totalRows"
         :filter-fields="filterFields"
-        search-column="name"
-        search-placeholder="Search users..."
+        :filter-search="filterSearch"
+        enable-sorting
+        enable-filter
+        enable-pagination
+        v-model:sorting="sorting"
+        v-model:filters="filters"
+        v-model:pagination="pagination"
       />
     </div>
   </DemoBlock>

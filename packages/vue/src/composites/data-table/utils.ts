@@ -1,6 +1,11 @@
 import type { DateValue } from '@internationalized/date'
-import type { ColumnDef, ColumnFiltersState, SortingState } from '@tanstack/vue-table'
-import type { ServerFilterValue, ServerSideTableParams, ServerSideTableResponse } from './types'
+import type { ColumnDef, SortingState } from '@tanstack/vue-table'
+import type {
+  DataTableFilterState,
+  ServerFilterValue,
+  ServerSideTableParams,
+  ServerSideTableResponse,
+} from './types'
 
 /**
  * Filter field type for transformation
@@ -22,17 +27,21 @@ export function createColumns<T>(columns: ColumnDef<T, unknown>[]): ColumnDef<T,
 }
 
 /**
- * Helper to transform TanStack table state to server params
- * Converts filter values to arrays for multi-filter support (except select and boolean)
+ * Helper to transform DataTable state into the server-params shape.
  *
- * @param tableState - TanStack table state containing sorting, filters, and pagination
- * @param filterFields - Filter field definitions to determine transformation rules
- * @param searchColumn - Optional search column name (will be kept as string, not transformed to array)
+ * `filters` is the record observed via `v-model:filters` (keyed by field id).
+ * This helper applies per-type transformations expected by typical REST APIs
+ * (e.g., wrapping single text values in arrays, converting range tuples to
+ * `{start, end}` objects, etc.).
+ *
+ * @param tableState - sorting, filters (record), pagination
+ * @param filterFields - filter field definitions used to determine type-based transformations
+ * @param searchColumn - optional id of the search field (kept as a plain string)
  */
 export function tableStateToServerParams(
   tableState: {
     sorting: SortingState
-    filters: ColumnFiltersState
+    filters: DataTableFilterState
     pagination: { pageIndex: number; pageSize: number }
   },
   filterFields?: FilterFieldType[],
@@ -43,56 +52,47 @@ export function tableStateToServerParams(
     per_page: tableState.pagination.pageSize,
   }
 
-  // Handle sorting
+  // Sorting
   if (tableState.sorting.length > 0) {
     const sort = tableState.sorting[0]
     params.sort_by = sort.id
     params.sort_order = sort.desc ? 'desc' : 'asc'
   }
 
-  // Handle filters with type-based transformation
-  if (tableState.filters.length > 0) {
+  // Filters
+  const entries = Object.entries(tableState.filters)
+  if (entries.length > 0) {
     params.filters = {}
 
-    tableState.filters.forEach((filter) => {
-      // Check if this is the search column filter - keep as string
-      if (searchColumn && filter.id === searchColumn) {
-        params.filters![filter.id] = filter.value as string
-        return
+    for (const [id, rawValue] of entries) {
+      // Search column → keep as string
+      if (searchColumn && id === searchColumn) {
+        params.filters[id] = rawValue as string
+        continue
       }
 
-      const fieldDef = filterFields?.find((f) => String(f.id) === filter.id)
+      const fieldDef = filterFields?.find((f) => String(f.id) === id)
       const filterType = fieldDef?.type || 'multiselect' // Default to multiselect
-      let transformedValue: ServerFilterValue = filter.value as ServerFilterValue
+      let transformedValue: ServerFilterValue = rawValue as ServerFilterValue
 
-      // Transform based on filter type
       switch (filterType) {
         case 'text':
-          // Text filters: wrap string in array
-          transformedValue = (
-            Array.isArray(filter.value) ? filter.value : [filter.value]
-          ) as string[]
+          transformedValue = (Array.isArray(rawValue) ? rawValue : [rawValue]) as string[]
           break
 
         case 'number':
-          // Number filters: wrap number in array
-          transformedValue = (
-            Array.isArray(filter.value) ? filter.value : [filter.value]
-          ) as number[]
+          transformedValue = (Array.isArray(rawValue) ? rawValue : [rawValue]) as number[]
           break
 
         case 'range': {
-          // Range filters: convert to array of {start, end} objects
-          const rangeValue = filter.value as [number, number] | [number, number][]
+          const rangeValue = rawValue as [number, number] | [number, number][]
           if (Array.isArray(rangeValue)) {
             if (Array.isArray(rangeValue[0])) {
-              // Multi-instance: [[min, max], [min2, max2]] -> [{start, end}, {start2, end2}]
               transformedValue = (rangeValue as [number, number][]).map((range) => ({
                 start: range[0],
                 end: range[1],
               }))
             } else {
-              // Single instance: [min, max] -> [{start, end}]
               transformedValue = [
                 {
                   start: (rangeValue as [number, number])[0],
@@ -105,41 +105,33 @@ export function tableStateToServerParams(
         }
 
         case 'date':
-          // Date filters: wrap DateValue in array (supports multi-instance)
-          transformedValue = (
-            Array.isArray(filter.value) ? filter.value : [filter.value]
-          ) as DateValue[]
+          transformedValue = (Array.isArray(rawValue) ? rawValue : [rawValue]) as DateValue[]
           break
 
         case 'daterange':
-          // Date range filters: wrap object in array
-          if (filter.value && typeof filter.value === 'object' && !Array.isArray(filter.value)) {
-            transformedValue = [filter.value as { start: DateValue; end: DateValue }]
+          if (rawValue && typeof rawValue === 'object' && !Array.isArray(rawValue)) {
+            transformedValue = [rawValue as { start: DateValue; end: DateValue }]
           }
           break
 
         case 'select':
-          // Select filters: keep as single value
-          transformedValue = filter.value as string
+          transformedValue = rawValue as string
           break
 
         case 'boolean':
-          // Boolean filters: keep as single value
-          transformedValue = filter.value as boolean
+          transformedValue = rawValue as boolean
           break
 
         case 'multiselect':
-          // Multiselect filters: already an array, keep as is
-          transformedValue = filter.value as string[]
+          transformedValue = rawValue as string[]
           break
 
         default:
-          // Default: keep original value
-          transformedValue = filter.value as ServerFilterValue
+          transformedValue = rawValue as ServerFilterValue
       }
 
-      params.filters![filter.id] = transformedValue
-    })
+      params.filters[id] = transformedValue
+    }
   }
 
   return params

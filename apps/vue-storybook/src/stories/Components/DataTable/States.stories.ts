@@ -1,17 +1,14 @@
 /**
  * DataTable State Examples
  *
- * Demonstrates all table states in one consolidated story:
- * - Loading skeleton state
- * - Error state with retry functionality
- * - Empty state with custom slot
- * - Custom loading and error slots
+ * Demonstrates loading, error, and empty state lifecycle.
  */
 
+import { IconAlertTriangle, IconPlus, IconReload, IconUsers } from '@meldui/tabler-vue'
 import { Button, DataTable } from '@meldui/vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { computed, ref } from 'vue'
-import { MOCK_USERS, minimalColumns, simulateServerSide, type TableState } from './_shared'
+import { computed, ref, watch } from 'vue'
+import { MOCK_USERS, minimalColumns, useStoryData } from './_shared'
 
 const meta: Meta<typeof DataTable> = {
   title: 'Components/DataTable/States',
@@ -21,13 +18,13 @@ const meta: Meta<typeof DataTable> = {
     docs: {
       description: {
         component: `
-DataTable state management examples.
+DataTable state lifecycle examples.
 
-These examples demonstrate:
-- Loading skeleton during data fetches
-- Error state with retry button
-- Empty state with customization
-- Custom slots for all states
+- **Loading**: shows skeleton rows while fetching.
+- **Error**: renders an inline alert with a retry button; supports string or Error payloads.
+- **Empty**: rendered when \`data.length === 0\`.
+
+Each state can be customised via the \`#empty\` and \`#error\` slots.
         `,
       },
     },
@@ -37,106 +34,69 @@ These examples demonstrate:
 export default meta
 type Story = StoryObj<typeof meta>
 
-// Empty handler for stories that don't need change handling
-function emptyChangeHandler() {}
-
-function handleRetryAction() {
-  console.log('Retry clicked')
-  alert('Retry action triggered! In a real app, this would refetch data.')
-}
-
-function handleAddNewAction() {
-  alert('Add new user clicked!')
-}
-
 /**
- * Loading state with skeleton animation.
- * When loading is true, the table displays skeleton rows matching the page size.
+ * Skeleton rows while loading. Headers remain visible.
  */
 export const Loading: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      return { handleChange: emptyChangeHandler, columns: minimalColumns }
+      const { sorting, pagination } = useStoryData({ pageSize: 10 })
+      return { sorting, pagination, columns: minimalColumns }
     },
     template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          The table shows skeleton rows while loading. Headers remain visible.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="[]"
-          :page-count="5"
-          :on-server-side-change="handleChange"
-          :loading="true"
-          loading-message="Fetching users from server..."
-        />
-      </div>
+      <DataTable
+        :columns="columns"
+        :data="[]"
+        :page-count="5"
+        :loading="true"
+        loading-message="Fetching users..."
+        enable-sorting enable-pagination
+        v-model:sorting="sorting"
+        v-model:pagination="pagination"
+      />
     `,
   }),
 }
 
 /**
- * Toggle loading state to see the transition between loading and data.
+ * Toggle loading state to demonstrate the transition between loading and data.
  */
 export const LoadingToggle: Story = {
   render: () => ({
     components: { DataTable, Button },
     setup() {
       const loading = ref(false)
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (state: TableState) => {
-        loading.value = true
-        // Simulate network delay
-        setTimeout(() => {
-          localData.value = simulateServerSide(MOCK_USERS, state)
-          loading.value = false
-        }, 1500)
-      }
-
-      const simulateRefresh = () => {
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      const toggle = () => {
         loading.value = true
         setTimeout(() => {
           loading.value = false
-        }, 1500)
+        }, 1200)
       }
-
       return {
-        loading,
-        localData,
+        sorting,
+        pagination,
+        data,
         pageCount,
-        handleChange,
-        simulateRefresh,
+        totalRows,
+        loading,
+        toggle,
         columns: minimalColumns,
       }
     },
     template: `
-      <div class="space-y-4">
-        <div class="flex items-center gap-4">
-          <Button @click="simulateRefresh" :disabled="loading">
-            {{ loading ? 'Loading...' : 'Simulate Refresh' }}
-          </Button>
-          <span class="text-sm text-muted-foreground">
-            Click to toggle loading state, or try changing pages/sorting
-          </span>
-        </div>
+      <div class="space-y-3">
+        <Button variant="outline" size="sm" @click="toggle">Simulate 1.2s fetch</Button>
         <DataTable
           :columns="columns"
-          :data="localData.data"
+          :data="data"
           :page-count="pageCount"
-          :on-server-side-change="handleChange"
+          :total-rows="totalRows"
           :loading="loading"
-          search-column="name"
+          enable-sorting enable-pagination
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
         />
       </div>
     `,
@@ -144,54 +104,40 @@ export const LoadingToggle: Story = {
 }
 
 /**
- * Error state with retry button.
- * Pass an error prop to display the error state.
+ * Error state with a string message. Built-in alert + retry button.
  */
-export const ErrorState: Story = {
+export const ErrorString: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      return {
-        handleChange: emptyChangeHandler,
-        handleRetry: handleRetryAction,
-        columns: minimalColumns,
-      }
-    },
-    template: `
-      <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">
-          Error state displays an alert with retry button.
-        </p>
-        <DataTable
-          :columns="columns"
-          :data="[]"
-          :page-count="0"
-          :on-server-side-change="handleChange"
-          error="Failed to fetch users. The server returned a 500 error."
-          @retry="handleRetry"
-        />
-      </div>
-    `,
-  }),
-}
-
-/**
- * Error with Error object instead of string.
- */
-export const ErrorObject: Story = {
-  render: () => ({
-    components: { DataTable },
-    setup() {
-      const error = new Error('Network request failed: ECONNREFUSED')
-
-      return { handleChange: emptyChangeHandler, error, columns: minimalColumns }
+      const onRetry = () => alert('Retry clicked — re-fetch your data here.')
+      return { onRetry, columns: minimalColumns }
     },
     template: `
       <DataTable
         :columns="columns"
         :data="[]"
-        :page-count="0"
-        :on-server-side-change="handleChange"
+        error="Connection lost. Could not load users."
+        @retry="onRetry"
+      />
+    `,
+  }),
+}
+
+/**
+ * Error state with an Error object. Message is extracted automatically.
+ */
+export const ErrorObject: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      const error = new Error('Network request failed: ECONNREFUSED localhost:8080')
+      return { error, columns: minimalColumns }
+    },
+    template: `
+      <DataTable
+        :columns="columns"
+        :data="[]"
         :error="error"
       />
     `,
@@ -199,63 +145,60 @@ export const ErrorObject: Story = {
 }
 
 /**
- * Simulated error with retry functionality.
+ * Retry resets the error ref and reloads data — typical recovery flow.
  */
-export const ErrorWithRetry: Story = {
+export const ErrorWithRecovery: Story = {
   render: () => ({
     components: { DataTable, Button },
     setup() {
-      const hasError = ref(true)
-      const loading = ref(false)
-      const localData = ref({ data: [] as typeof MOCK_USERS, meta: { total_pages: 0 } })
+      const { sorting, pagination, state } = useStoryData({ pageSize: 10 })
+      const error = ref<string | null>('Server returned 500')
+      const data = ref<typeof MOCK_USERS>([])
+      const pageCount = ref(0)
+      const totalRows = ref(0)
 
-      const handleChange = (state: TableState) => {
-        if (!hasError.value) {
-          localData.value = simulateServerSide(MOCK_USERS, state)
-        }
+      function fetchPage() {
+        const next = MOCK_USERS.slice(0, state.value.pagination.pageSize)
+        data.value = next
+        pageCount.value = Math.ceil(MOCK_USERS.length / state.value.pagination.pageSize)
+        totalRows.value = MOCK_USERS.length
       }
 
-      const handleRetry = () => {
-        loading.value = true
-        setTimeout(() => {
-          hasError.value = false
-          loading.value = false
-          localData.value = simulateServerSide(MOCK_USERS, {
-            sorting: [],
-            filters: [],
-            pagination: { pageIndex: 0, pageSize: 10 },
-          })
-        }, 1000)
+      const onRetry = () => {
+        error.value = null
+        fetchPage()
+      }
+      const breakIt = () => {
+        error.value = 'Something went wrong again'
+        data.value = []
       }
 
-      const simulateError = () => {
-        hasError.value = true
-        localData.value = { data: [], meta: { total_pages: 0 } }
-      }
-
+      watch(state, fetchPage, { deep: true })
       return {
-        hasError,
-        loading,
-        localData,
-        handleChange,
-        handleRetry,
-        simulateError,
+        sorting,
+        pagination,
+        data,
+        pageCount,
+        totalRows,
+        error,
+        onRetry,
+        breakIt,
         columns: minimalColumns,
       }
     },
     template: `
-      <div class="space-y-4">
-        <Button v-if="!hasError" variant="outline" @click="simulateError">
-          Simulate Error
-        </Button>
+      <div class="space-y-3">
+        <Button variant="outline" size="sm" @click="breakIt" :disabled="!!error">Break the API</Button>
         <DataTable
           :columns="columns"
-          :data="localData.data"
-          :page-count="localData.meta.total_pages"
-          :on-server-side-change="handleChange"
-          :error="hasError ? 'Connection failed. Please check your network.' : undefined"
-          :loading="loading"
-          @retry="handleRetry"
+          :data="data"
+          :page-count="pageCount"
+          :total-rows="totalRows"
+          :error="error ?? undefined"
+          enable-sorting enable-pagination
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
+          @retry="onRetry"
         />
       </div>
     `,
@@ -263,59 +206,40 @@ export const ErrorWithRetry: Story = {
 }
 
 /**
- * Empty state with default message.
+ * Empty state with the default empty message.
  */
 export const Empty: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      return { handleChange: emptyChangeHandler, columns: minimalColumns }
+      return { columns: minimalColumns }
     },
     template: `
-      <DataTable
-        :columns="columns"
-        :data="[]"
-        :page-count="0"
-        :on-server-side-change="handleChange"
-        empty-message="No users found."
-      />
+      <DataTable :columns="columns" :data="[]" empty-message="No users found." />
     `,
   }),
 }
 
 /**
- * Custom empty state using the #empty slot.
+ * Custom empty slot with icon, headline, description, and CTA.
  */
 export const CustomEmptySlot: Story = {
   render: () => ({
-    components: { DataTable, Button },
+    components: { DataTable, Button, IconUsers, IconPlus },
     setup() {
-      return {
-        handleChange: emptyChangeHandler,
-        handleAddNew: handleAddNewAction,
-        columns: minimalColumns,
-      }
+      return { columns: minimalColumns }
     },
     template: `
-      <DataTable
-        :columns="columns"
-        :data="[]"
-        :page-count="0"
-        :on-server-side-change="handleChange"
-      >
-        <template #empty="{ message, columns }">
-          <div class="flex flex-col items-center justify-center py-12 text-center">
-            <div class="rounded-full bg-muted p-4 mb-4">
-              <svg class="h-8 w-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-              </svg>
+      <DataTable :columns="columns" :data="[]">
+        <template #empty>
+          <div class="flex flex-col items-center justify-center gap-3 py-12 text-center">
+            <IconUsers class="h-12 w-12 text-muted-foreground" />
+            <div>
+              <h4 class="text-base font-medium">No users yet</h4>
+              <p class="text-sm text-muted-foreground">Get started by inviting your first user.</p>
             </div>
-            <h3 class="text-lg font-semibold mb-2">No users yet</h3>
-            <p class="text-sm text-muted-foreground mb-4 max-w-sm">
-              Get started by adding your first user to the system.
-            </p>
-            <Button @click="handleAddNew">
-              Add Your First User
+            <Button size="sm">
+              <IconPlus class="mr-1 h-4 w-4" /> Invite User
             </Button>
           </div>
         </template>
@@ -325,40 +249,28 @@ export const CustomEmptySlot: Story = {
 }
 
 /**
- * Custom error slot for completely custom error rendering.
+ * Custom error slot with retry + refresh-page actions.
  */
 export const CustomErrorSlot: Story = {
   render: () => ({
-    components: { DataTable, Button },
+    components: { DataTable, Button, IconAlertTriangle, IconReload },
     setup() {
-      return { handleChange: emptyChangeHandler, columns: minimalColumns }
+      return { columns: minimalColumns }
     },
     template: `
-      <DataTable
-        :columns="columns"
-        :data="[]"
-        :page-count="0"
-        :on-server-side-change="handleChange"
-        error="Custom error message"
-      >
+      <DataTable :columns="columns" :data="[]" error="API timeout">
         <template #error="{ error, retry }">
-          <div class="flex flex-col items-center justify-center py-12 text-center">
-            <div class="rounded-full bg-destructive/10 p-4 mb-4">
-              <svg class="h-8 w-8 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+          <div class="flex flex-col items-center justify-center gap-3 py-12 text-center">
+            <IconAlertTriangle class="h-12 w-12 text-destructive" />
+            <div>
+              <h4 class="text-base font-medium">Could not load data</h4>
+              <p class="text-sm text-muted-foreground">{{ typeof error === 'string' ? error : error.message }}</p>
             </div>
-            <h3 class="text-lg font-semibold mb-2 text-destructive">Oops! Something went wrong</h3>
-            <p class="text-sm text-muted-foreground mb-4 max-w-sm">
-              We couldn't load the data. This might be a temporary issue.
-            </p>
             <div class="flex gap-2">
-              <Button variant="outline" @click="retry">
-                Try Again
+              <Button size="sm" variant="outline" @click="retry">
+                <IconReload class="mr-1 h-4 w-4" /> Retry
               </Button>
-              <Button variant="ghost" @click="() => window.location.reload()">
-                Refresh Page
-              </Button>
+              <Button size="sm" variant="outline" @click="() => location.reload()">Refresh Page</Button>
             </div>
           </div>
         </template>
@@ -368,95 +280,47 @@ export const CustomErrorSlot: Story = {
 }
 
 /**
- * All states controllable - toggle between loading, error, and empty.
+ * Toggleable cycle through data → loading → error → empty.
  */
 export const AllStates: Story = {
   render: () => ({
     components: { DataTable, Button },
     setup() {
-      const state = ref<'data' | 'loading' | 'error' | 'empty'>('data')
-      const localData = ref(
-        simulateServerSide(MOCK_USERS, {
-          sorting: [],
-          filters: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        }),
-      )
-
-      const pageCount = computed(() => localData.value.meta.total_pages)
-
-      const handleChange = (tableState: TableState) => {
-        if (state.value === 'data') {
-          localData.value = simulateServerSide(MOCK_USERS, tableState)
-        }
-      }
-
-      const handleRetry = () => {
-        state.value = 'loading'
-        setTimeout(() => {
-          state.value = 'data'
-        }, 1000)
-      }
-
-      const isLoading = computed(() => state.value === 'loading')
-      const errorMessage = computed(() =>
-        state.value === 'error' ? 'Simulated error for demo' : undefined,
-      )
-      const displayData = computed(() => (state.value === 'empty' ? [] : localData.value.data))
-      const displayPageCount = computed(() => (state.value === 'empty' ? 0 : pageCount.value))
-
+      const view = ref<'data' | 'loading' | 'error' | 'empty'>('data')
+      const { sorting, pagination, data, pageCount, totalRows } = useStoryData({ pageSize: 10 })
+      const displayData = computed(() => (view.value === 'data' ? data.value : []))
+      const error = computed(() => (view.value === 'error' ? 'Demo error message' : undefined))
+      const loading = computed(() => view.value === 'loading')
       return {
-        state,
-        isLoading,
-        errorMessage,
-        displayData,
-        displayPageCount,
-        handleChange,
-        handleRetry,
+        view,
+        sorting,
+        pagination,
+        data: displayData,
+        pageCount,
+        totalRows,
+        error,
+        loading,
         columns: minimalColumns,
       }
     },
     template: `
-      <div class="space-y-4">
-        <div class="flex flex-wrap gap-2">
-          <Button
-            :variant="state === 'data' ? 'default' : 'outline'"
-            size="sm"
-            @click="state = 'data'"
-          >
-            Show Data
-          </Button>
-          <Button
-            :variant="state === 'loading' ? 'default' : 'outline'"
-            size="sm"
-            @click="state = 'loading'"
-          >
-            Show Loading
-          </Button>
-          <Button
-            :variant="state === 'error' ? 'default' : 'outline'"
-            size="sm"
-            @click="state = 'error'"
-          >
-            Show Error
-          </Button>
-          <Button
-            :variant="state === 'empty' ? 'default' : 'outline'"
-            size="sm"
-            @click="state = 'empty'"
-          >
-            Show Empty
-          </Button>
+      <div class="space-y-3">
+        <div class="flex gap-2">
+          <Button :variant="view === 'data' ? 'default' : 'outline'" size="sm" @click="view = 'data'">Data</Button>
+          <Button :variant="view === 'loading' ? 'default' : 'outline'" size="sm" @click="view = 'loading'">Loading</Button>
+          <Button :variant="view === 'error' ? 'default' : 'outline'" size="sm" @click="view = 'error'">Error</Button>
+          <Button :variant="view === 'empty' ? 'default' : 'outline'" size="sm" @click="view = 'empty'">Empty</Button>
         </div>
         <DataTable
           :columns="columns"
-          :data="displayData"
-          :page-count="displayPageCount"
-          :on-server-side-change="handleChange"
-          :loading="isLoading"
-          :error="errorMessage"
-          search-column="name"
-          @retry="handleRetry"
+          :data="data"
+          :page-count="pageCount"
+          :total-rows="totalRows"
+          :loading="loading"
+          :error="error"
+          enable-sorting enable-pagination
+          v-model:sorting="sorting"
+          v-model:pagination="pagination"
         />
       </div>
     `,
