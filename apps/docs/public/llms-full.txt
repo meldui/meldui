@@ -1380,16 +1380,16 @@ talking to a server that expects `?page=N`.
 
 ## Props
 
-| Prop                   | Type              | Default                | Description                                          |
-| ---------------------- | ----------------- | ---------------------- | ---------------------------------------------------- |
-| `pagination`           | `PaginationState` | required               | v-model target — `{ pageIndex, pageSize }`           |
-| `pageCount`            | `number`          | required               | Total number of pages                                |
+| Prop                   | Type              | Default                | Description                                                 |
+| ---------------------- | ----------------- | ---------------------- | ----------------------------------------------------------- |
+| `pagination`           | `PaginationState` | required               | v-model target — `{ pageIndex, pageSize }`                  |
+| `pageCount`            | `number`          | required               | Total number of pages                                       |
 | `totalRows`            | `number`          | —                      | Total record count. Required when `showSelectedCount` is on |
-| `pageSizeOptions`      | `number[]`        | `[10, 20, 30, 40, 50]` | Choices in the page-size dropdown                    |
-| `showPageSizeSelector` | `boolean`         | `true`                 | Toggle the page-size dropdown                        |
-| `showPageInfo`         | `boolean`         | `true`                 | Toggle the "Page X of Y" indicator                   |
-| `showSelectedCount`    | `boolean`         | `false`                | Toggle the "X of Y selected" indicator               |
-| `selectedCount`        | `number`          | `0`                    | Count to show when `showSelectedCount` is `true`     |
+| `pageSizeOptions`      | `number[]`        | `[10, 20, 30, 40, 50]` | Choices in the page-size dropdown                           |
+| `showPageSizeSelector` | `boolean`         | `true`                 | Toggle the page-size dropdown                               |
+| `showPageInfo`         | `boolean`         | `true`                 | Toggle the "Page X of Y" indicator                          |
+| `showSelectedCount`    | `boolean`         | `false`                | Toggle the "X of Y selected" indicator                      |
+| `selectedCount`        | `number`          | `0`                    | Count to show when `showSelectedCount` is `true`            |
 
 ## Emits
 
