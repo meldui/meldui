@@ -54,6 +54,9 @@ export default defineConfig({
         /^@vee-validate\//, // Exclude vee-validate
         /^zod/, // Exclude zod
         /^reka-ui/, // Exclude reka-ui
+        /^@embedpdf\//, // Exclude all EmbedPDF packages (peer/optional)
+        /^@incremark\//, // Exclude incremark markdown renderer
+        '@incremark/theme/styles.css',
       ],
       output: [
         {

@@ -38,10 +38,10 @@
       "default": "./dist/themes/default.css"
     },
     "./styles": {
-      "style": "./dist/esm/styles/index.css",
-      "import": "./dist/esm/styles/index.css",
-      "require": "./dist/esm/styles/index.css",
-      "default": "./dist/esm/styles/index.css"
+      "style": "./dist/esm/vue.css",
+      "import": "./dist/esm/vue.css",
+      "require": "./dist/esm/vue.css",
+      "default": "./dist/esm/vue.css"
     }
   },
   "publishConfig": {
@@ -55,6 +55,8 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
+    "@incremark/theme": "^0.3.10",
+    "@incremark/vue": "^0.3.10",
     "@internationalized/date": "^3.10.0",
     "@tanstack/vue-table": "^8.21.3",
     "@unovis/ts": "^1.6.2",
@@ -81,6 +83,33 @@
     "vue-sonner": "^2.0.9"
   },
   "devDependencies": {
+    "@embedpdf/core": "^2.14.2",
+    "@embedpdf/engines": "^2.14.2",
+    "@embedpdf/models": "^2.14.2",
+    "@embedpdf/pdfium": "^2.14.2",
+    "@embedpdf/plugin-annotation": "^2.14.2",
+    "@embedpdf/plugin-attachment": "^2.14.2",
+    "@embedpdf/plugin-bookmark": "^2.14.2",
+    "@embedpdf/plugin-document-manager": "^2.14.2",
+    "@embedpdf/plugin-export": "^2.14.2",
+    "@embedpdf/plugin-form": "^2.14.2",
+    "@embedpdf/plugin-fullscreen": "^2.14.2",
+    "@embedpdf/plugin-history": "^2.14.2",
+    "@embedpdf/plugin-interaction-manager": "^2.14.2",
+    "@embedpdf/plugin-pan": "^2.14.2",
+    "@embedpdf/plugin-redaction": "^2.14.2",
+    "@embedpdf/plugin-render": "^2.14.2",
+    "@embedpdf/plugin-rotate": "^2.14.2",
+    "@embedpdf/plugin-scroll": "^2.14.2",
+    "@embedpdf/plugin-search": "^2.14.2",
+    "@embedpdf/plugin-selection": "^2.14.2",
+    "@embedpdf/plugin-signature": "^2.14.2",
+    "@embedpdf/plugin-spread": "^2.14.2",
+    "@embedpdf/plugin-stamp": "^2.14.2",
+    "@embedpdf/plugin-thumbnail": "^2.14.2",
+    "@embedpdf/plugin-tiling": "^2.14.2",
+    "@embedpdf/plugin-viewport": "^2.14.2",
+    "@embedpdf/plugin-zoom": "^2.14.2",
     "@tailwindcss/vite": "^4.1.17",
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/tsconfig": "^0.5.0",
@@ -93,7 +122,125 @@
     "vue-tsc": "^2.0.0"
   },
   "peerDependencies": {
+    "@embedpdf/core": "^2.14.0",
+    "@embedpdf/engines": "^2.14.0",
+    "@embedpdf/models": "^2.14.0",
+    "@embedpdf/pdfium": "^2.14.0",
+    "@embedpdf/plugin-annotation": "^2.14.0",
+    "@embedpdf/plugin-attachment": "^2.14.0",
+    "@embedpdf/plugin-bookmark": "^2.14.0",
+    "@embedpdf/plugin-commands": "^2.14.0",
+    "@embedpdf/plugin-document-manager": "^2.14.0",
+    "@embedpdf/plugin-export": "^2.14.0",
+    "@embedpdf/plugin-form": "^2.14.0",
+    "@embedpdf/plugin-fullscreen": "^2.14.0",
+    "@embedpdf/plugin-history": "^2.14.0",
+    "@embedpdf/plugin-interaction-manager": "^2.14.0",
+    "@embedpdf/plugin-pan": "^2.14.0",
+    "@embedpdf/plugin-print": "^2.14.0",
+    "@embedpdf/plugin-redaction": "^2.14.0",
+    "@embedpdf/plugin-render": "^2.14.0",
+    "@embedpdf/plugin-rotate": "^2.14.0",
+    "@embedpdf/plugin-scroll": "^2.14.0",
+    "@embedpdf/plugin-search": "^2.14.0",
+    "@embedpdf/plugin-selection": "^2.14.0",
+    "@embedpdf/plugin-signature": "^2.14.0",
+    "@embedpdf/plugin-spread": "^2.14.0",
+    "@embedpdf/plugin-stamp": "^2.14.0",
+    "@embedpdf/plugin-thumbnail": "^2.14.0",
+    "@embedpdf/plugin-tiling": "^2.14.0",
+    "@embedpdf/plugin-viewport": "^2.14.0",
+    "@embedpdf/plugin-zoom": "^2.14.0",
     "@meldui/tabler-vue": "workspace:*",
     "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@embedpdf/core": {
+      "optional": true
+    },
+    "@embedpdf/engines": {
+      "optional": true
+    },
+    "@embedpdf/models": {
+      "optional": true
+    },
+    "@embedpdf/pdfium": {
+      "optional": true
+    },
+    "@embedpdf/plugin-annotation": {
+      "optional": true
+    },
+    "@embedpdf/plugin-attachment": {
+      "optional": true
+    },
+    "@embedpdf/plugin-bookmark": {
+      "optional": true
+    },
+    "@embedpdf/plugin-commands": {
+      "optional": true
+    },
+    "@embedpdf/plugin-document-manager": {
+      "optional": true
+    },
+    "@embedpdf/plugin-export": {
+      "optional": true
+    },
+    "@embedpdf/plugin-form": {
+      "optional": true
+    },
+    "@embedpdf/plugin-fullscreen": {
+      "optional": true
+    },
+    "@embedpdf/plugin-history": {
+      "optional": true
+    },
+    "@embedpdf/plugin-interaction-manager": {
+      "optional": true
+    },
+    "@embedpdf/plugin-pan": {
+      "optional": true
+    },
+    "@embedpdf/plugin-print": {
+      "optional": true
+    },
+    "@embedpdf/plugin-redaction": {
+      "optional": true
+    },
+    "@embedpdf/plugin-render": {
+      "optional": true
+    },
+    "@embedpdf/plugin-rotate": {
+      "optional": true
+    },
+    "@embedpdf/plugin-scroll": {
+      "optional": true
+    },
+    "@embedpdf/plugin-search": {
+      "optional": true
+    },
+    "@embedpdf/plugin-selection": {
+      "optional": true
+    },
+    "@embedpdf/plugin-signature": {
+      "optional": true
+    },
+    "@embedpdf/plugin-spread": {
+      "optional": true
+    },
+    "@embedpdf/plugin-stamp": {
+      "optional": true
+    },
+    "@embedpdf/plugin-thumbnail": {
+      "optional": true
+    },
+    "@embedpdf/plugin-tiling": {
+      "optional": true
+    },
+    "@embedpdf/plugin-viewport": {
+      "optional": true
+    },
+    "@embedpdf/plugin-zoom": {
+      "optional": true
+    }
   }
 }
