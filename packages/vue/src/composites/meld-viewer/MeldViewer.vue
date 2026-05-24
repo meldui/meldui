@@ -517,18 +517,42 @@ function handleRendererActiveToolChange(payload: { toolId: string | null }) {
   activeAnnotationTool.value = payload.toolId
 }
 /**
- * "Add comment" pressed inside a highlight's floating tooltip. Open the
- * annotations side panel and remember which annotation should focus its
- * reply form (the panel reads `focusedAnnotationId` and auto-expands +
- * scrolls to that row).
+ * Inline reply submitted from the highlight's floating tooltip
+ * (`MeldHighlightTooltip` add-reply event). Posts to the same thread store
+ * the side panel reads, then deselects the annotation so the tooltip closes.
+ *
+ * The side panel does **not** auto-open here — the inline tooltip is the
+ * primary surface for adding a highlight comment now. Users open the side
+ * panel from the toolbar Annotations button when they want the broader
+ * thread view.
  */
-function handleHighlightAddComment(payload: { annotationId: string; pageIndex: number }) {
-  void payload.pageIndex
+function handleHighlightReplyAdded(payload: { annotationId: string; content: string }) {
+  const user = props.currentUser
+  threads.addReply({
+    annotationId: payload.annotationId,
+    authorUserId: user?.id ?? 'anonymous',
+    authorName: user?.name,
+    authorAvatarUrl: user?.avatarUrl,
+    content: payload.content,
+  })
+  pdfRendererRef.value?.deselectAll()
+}
+/**
+ * View-thread icon clicked on a highlight's floating tooltip. Open the
+ * annotations side panel (if closed), set `focusedAnnotationId` so the
+ * matching row scrolls into view and expands, then deselect the
+ * highlight so the tooltip unmounts and focus moves to the panel. This
+ * mirrors the sticky-note auto-open in `handleRendererAnnotationSelected`
+ * but is triggered explicitly by the user rather than by selection.
+ */
+function handleHighlightThreadOpened(payload: { annotationId: string }) {
+  if (!resolvedFeatures.value.commentThreads) return
   focusedAnnotationId.value = payload.annotationId
   if (!isCommentsOpen.value) {
     isCommentsOpen.value = true
     emit('panel-toggle', { panel: 'comments', open: true })
   }
+  pdfRendererRef.value?.deselectAll()
 }
 /** Renderer captured a click while the comment tool is active. */
 function handleCommentPositionPicked(payload: {
@@ -910,7 +934,8 @@ defineExpose<MeldViewerInstance>({
           @annotation-deleted="handleRendererAnnotationDeleted"
           @annotation-selected="handleRendererAnnotationSelected"
           @active-annotation-tool-change="handleRendererActiveToolChange"
-          @highlight-add-comment-requested="handleHighlightAddComment"
+          @highlight-reply-added="handleHighlightReplyAdded"
+          @highlight-thread-opened="handleHighlightThreadOpened"
           @comment-position-picked="handleCommentPositionPicked"
           @comment-submit="handleCommentFormSubmit"
           @comment-cancel="cancelPendingComment"

@@ -221,9 +221,7 @@ watch(
       if (!scrollScope) return
       scrollScope.scrollToPage({
         pageNumber: result.pageIndex + 1,
-        pageCoordinates: firstRect
-          ? { x: firstRect.origin.x, y: firstRect.origin.y }
-          : undefined,
+        pageCoordinates: firstRect ? { x: firstRect.origin.x, y: firstRect.origin.y } : undefined,
         // Center the match vertically when possible — feels less jarring
         // than top-aligning when a single keystroke skips many pages.
         alignY: 30,
@@ -548,7 +546,10 @@ async function printDocument(): Promise<void> {
   const scope = print.provides.value
   if (!scope) return
   return new Promise((resolve, reject) => {
-    scope.print().wait(() => resolve(), (err) => reject(err))
+    scope.print().wait(
+      () => resolve(),
+      (err) => reject(err),
+    )
   })
 }
 
@@ -709,11 +710,7 @@ function canRedo(): boolean {
 const registeredCommandIds: string[] = []
 
 watch(
-  [
-    commandsCap.provides,
-    () => props.commandCallbacks,
-    () => props.keyboardShortcutsEnabled,
-  ],
+  [commandsCap.provides, () => props.commandCallbacks, () => props.keyboardShortcutsEnabled],
   ([cap, callbacks, enabled]) => {
     if (!cap) return
     // Re-register cleanly whenever a dep changes

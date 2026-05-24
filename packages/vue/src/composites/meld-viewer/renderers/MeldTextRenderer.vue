@@ -31,17 +31,14 @@ let abortController: AbortController | null = null
 
 const search = useMeldTextSearch(contentRef)
 
-watch(
-  [search.totalMatches, search.currentMatchIndex, search.matchCase, search.wholeWord],
-  () => {
-    emit('search-state-change', {
-      total: search.totalMatches.value,
-      activeResultIndex: search.currentMatchIndex.value - 1,
-      matchCase: search.matchCase.value,
-      wholeWord: search.wholeWord.value,
-    })
-  },
-)
+watch([search.totalMatches, search.currentMatchIndex, search.matchCase, search.wholeWord], () => {
+  emit('search-state-change', {
+    total: search.totalMatches.value,
+    activeResultIndex: search.currentMatchIndex.value - 1,
+    matchCase: search.matchCase.value,
+    wholeWord: search.wholeWord.value,
+  })
+})
 
 defineExpose({
   searchKeyword: search.searchKeyword,

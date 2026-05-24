@@ -127,14 +127,18 @@ const emit = defineEmits<{
   (e: 'close-outline'): void
   (e: 'close-thumbnails'): void
   /**
-   * "Add comment" pressed on a highlight's floating tooltip. MeldViewer
-   * listens and opens the annotations panel scrolled to / focused on that
-   * annotation's reply form.
+   * Inline reply submitted from a highlight's floating tooltip. MeldViewer
+   * forwards `content` (plus the current user's identity) to the threads
+   * composable so the reply appears in the annotation's thread, then
+   * deselects the annotation so the tooltip closes.
    */
-  (
-    e: 'highlight-add-comment-requested',
-    payload: { annotationId: string; pageIndex: number },
-  ): void
+  (e: 'highlight-reply-added', payload: { annotationId: string; content: string }): void
+  /**
+   * User clicked the view-thread icon in a highlight's floating tooltip.
+   * MeldViewer opens the annotations side panel and focuses the row for
+   * `annotationId`, then deselects the annotation so the tooltip closes.
+   */
+  (e: 'highlight-thread-opened', payload: { annotationId: string }): void
   /**
    * Fired when `pendingCommentMode` is true and the user clicks on a page.
    * Coords are in page-local CSS pixels (origin = page wrapper top-left)
@@ -168,8 +172,12 @@ function handleHighlightDelete(_pageIndex: number, id: string) {
   controllerRef.value?.deleteAnnotation(id)
 }
 
-function handleHighlightAddComment(pageIndex: number, annotationId: string) {
-  emit('highlight-add-comment-requested', { annotationId, pageIndex })
+function handleHighlightReplyAdded(annotationId: string, content: string) {
+  emit('highlight-reply-added', { annotationId, content })
+}
+
+function handleHighlightThreadOpened(annotationId: string) {
+  emit('highlight-thread-opened', { annotationId })
 }
 
 /**
@@ -316,8 +324,7 @@ defineExpose({
   downloadDocument: () => controllerRef.value?.downloadDocument(),
   saveAsCopy: (): Promise<ArrayBuffer> =>
     controllerRef.value?.saveAsCopy() ?? Promise.resolve(new ArrayBuffer(0)),
-  printDocument: (): Promise<void> =>
-    controllerRef.value?.printDocument() ?? Promise.resolve(),
+  printDocument: (): Promise<void> => controllerRef.value?.printDocument() ?? Promise.resolve(),
   // Annotations
   setActiveTool: (toolId: string | null) => controllerRef.value?.setActiveTool(toolId),
   createAnnotation: (input: CreateAnnotationInput): MeldAnnotation => {
@@ -467,7 +474,9 @@ defineExpose({
                             v-if="pendingCommentMode"
                             class="meld-comment-overlay absolute inset-0 z-20 cursor-crosshair"
                             :data-page-index="page.pageIndex"
-                            @pointerdown.capture="(e) => handleCommentOverlayDown(e, page.pageIndex)"
+                            @pointerdown.capture="
+                              (e) => handleCommentOverlayDown(e, page.pageIndex)
+                            "
                           />
                           <!--
                             Single-modal comment form, anchored to the latest
@@ -529,12 +538,7 @@ defineExpose({
                                   default selection outline only.
                                 -->
                                 <template
-                                  #selection-menu="{
-                                    selected,
-                                    context,
-                                    menuWrapperProps,
-                                    rect,
-                                  }"
+                                  #selection-menu="{ selected, context, menuWrapperProps, rect }"
                                 >
                                   <!--
                                     `menuWrapperProps` give an absolutely-positioned
@@ -559,9 +563,7 @@ defineExpose({
                                     -->
                                     <SelectionSignal
                                       :annotation-id="context.annotation.object.id"
-                                      :annotation-subtype="
-                                        context.annotation.object.type
-                                      "
+                                      :annotation-subtype="context.annotation.object.type"
                                       @select="
                                         (payload) =>
                                           handleSlotSelection(
@@ -569,15 +571,10 @@ defineExpose({
                                             payload.annotationSubtype,
                                           )
                                       "
-                                      @deselect="
-                                        (id) => handleSlotDeselection(id)
-                                      "
+                                      @deselect="(id) => handleSlotDeselection(id)"
                                     />
                                     <div
-                                      v-if="
-                                        context.annotation.object.type ===
-                                        HIGHLIGHT_SUBTYPE
-                                      "
+                                      v-if="context.annotation.object.type === HIGHLIGHT_SUBTYPE"
                                       :style="{
                                         position: 'absolute',
                                         top: `${rect.size.height + 8}px`,
@@ -588,6 +585,7 @@ defineExpose({
                                       @mousedown.stop
                                     >
                                       <MeldHighlightTooltip
+                                        :annotation-id="context.annotation.object.id"
                                         :current-color="
                                           (context.annotation.object as any).color ?? ''
                                         "
@@ -599,9 +597,15 @@ defineExpose({
                                               color,
                                             )
                                         "
-                                        @add-comment="
-                                          handleHighlightAddComment(
-                                            context.pageIndex,
+                                        @add-reply="
+                                          (content) =>
+                                            handleHighlightReplyAdded(
+                                              context.annotation.object.id,
+                                              content,
+                                            )
+                                        "
+                                        @view-thread="
+                                          handleHighlightThreadOpened(
                                             context.annotation.object.id,
                                           )
                                         "
@@ -646,4 +650,3 @@ defineExpose({
     </EmbedPDF>
   </div>
 </template>
-

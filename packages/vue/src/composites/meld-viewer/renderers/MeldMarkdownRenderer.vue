@@ -42,17 +42,14 @@ async function printDocument(): Promise<void> {
 
 const search = useMeldTextSearch(contentRef)
 
-watch(
-  [search.totalMatches, search.currentMatchIndex, search.matchCase, search.wholeWord],
-  () => {
-    emit('search-state-change', {
-      total: search.totalMatches.value,
-      activeResultIndex: search.currentMatchIndex.value - 1,
-      matchCase: search.matchCase.value,
-      wholeWord: search.wholeWord.value,
-    })
-  },
-)
+watch([search.totalMatches, search.currentMatchIndex, search.matchCase, search.wholeWord], () => {
+  emit('search-state-change', {
+    total: search.totalMatches.value,
+    activeResultIndex: search.currentMatchIndex.value - 1,
+    matchCase: search.matchCase.value,
+    wholeWord: search.wholeWord.value,
+  })
+})
 
 defineExpose({
   printDocument,
@@ -73,9 +70,7 @@ function syncDarkMode() {
   isDarkMode.value = document.documentElement.classList.contains('dark')
 }
 
-const incremarkTheme = computed<'default' | 'dark'>(() =>
-  isDarkMode.value ? 'dark' : 'default',
-)
+const incremarkTheme = computed<'default' | 'dark'>(() => (isDarkMode.value ? 'dark' : 'default'))
 const fontSize = computed(() => `${props.scale}rem`)
 
 async function loadContent(source: DocumentSource) {
@@ -126,7 +121,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="meld-markdown-renderer h-full w-full overflow-auto bg-muted/30 flex items-start justify-center p-4">
+  <div
+    class="meld-markdown-renderer h-full w-full overflow-auto bg-muted/30 flex items-start justify-center p-4"
+  >
     <div v-if="isLoading" class="flex items-center justify-center p-8">
       <div class="flex flex-col items-center gap-2">
         <div

@@ -81,7 +81,9 @@ const items = computed(() => {
  * the underlying list first.
  */
 const groupedByPage = computed(() => {
-  const sorted = [...items.value].sort((a, b) => a.annotation.pageIndex - b.annotation.pageIndex)
+  const sorted = [...items.value].toSorted(
+    (a, b) => a.annotation.pageIndex - b.annotation.pageIndex,
+  )
   const groups = new Map<number, typeof sorted>()
   for (const pair of sorted) {
     const list = groups.get(pair.annotation.pageIndex) ?? []

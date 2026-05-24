@@ -33,9 +33,7 @@ export interface UseMeldTextSearchReturn {
   clearSearch: () => void
 }
 
-export function useMeldTextSearch(
-  contentRef: Ref<HTMLElement | null>,
-): UseMeldTextSearchReturn {
+export function useMeldTextSearch(contentRef: Ref<HTMLElement | null>): UseMeldTextSearchReturn {
   const query = ref('')
   const matchCase = ref(false)
   const wholeWord = ref(false)

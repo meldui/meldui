@@ -415,9 +415,7 @@ export const SEEDED_ANNOTATIONS: MeldAnnotation[] = [
     type: 'highlight',
     pageIndex: 0,
     rect: { origin: { x: 54.14, y: 351.93 }, size: { width: 142, height: 9 } },
-    segmentRects: [
-      { origin: { x: 54.14, y: 351.93 }, size: { width: 142, height: 9 } },
-    ],
+    segmentRects: [{ origin: { x: 54.14, y: 351.93 }, size: { width: 142, height: 9 } }],
     color: HIGHLIGHT_COLORS[0].value,
     opacity: 1,
     selectedText: 'Dynamic languages such as JavaScript',

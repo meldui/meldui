@@ -20,7 +20,12 @@
 import { computed, inject, type Ref } from 'vue'
 import type { PdfTextAnnoObject } from '@embedpdf/models'
 import { IconMessageCircle2Filled } from '@meldui/tabler-vue'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../../../components/ui/tooltip'
 import type { AnnotationRendererProps } from '@embedpdf/plugin-annotation/vue'
 import type { MeldThread } from '../types'
 import { MELD_THREADS_INJECT_KEY } from '../injectionKeys'
