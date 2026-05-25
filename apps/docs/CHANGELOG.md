@@ -1,5 +1,17 @@
 # docs
 
+## 0.1.0
+
+### Minor Changes
+
+- 00b972c: added document-viewer
+
+### Patch Changes
+
+- Updated dependencies [00b972c]
+  - @meldui/vue@0.3.0
+  - @meldui/charts-vue@1.0.0
+
 ## 0.0.3
 
 ### Patch Changes
