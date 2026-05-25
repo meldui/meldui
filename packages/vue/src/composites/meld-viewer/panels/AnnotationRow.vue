@@ -79,7 +79,7 @@ const draft = ref('')
 const articleRef = ref<HTMLElement | null>(null)
 
 const isEditable = computed(
-  () => props.annotation.type === 'sticky-note' || props.annotation.type === 'free-text',
+  () => props.annotation.type === 'comment' || props.annotation.type === 'free-text',
 )
 const hasReplies = computed(() => props.thread.replies.length > 0)
 const repliesLabel = computed(() =>
@@ -87,7 +87,7 @@ const repliesLabel = computed(() =>
 )
 const commentText = computed(() => {
   if (props.annotation.type === 'highlight') return props.annotation.selectedText ?? ''
-  if (props.annotation.type === 'sticky-note') return props.annotation.contents
+  if (props.annotation.type === 'comment') return props.annotation.contents
   if (props.annotation.type === 'free-text') return props.annotation.contents
   return ''
 })
@@ -307,7 +307,9 @@ watch(
             <div class="flex min-w-0 items-center gap-2">
               <Avatar class="h-6 w-6 shrink-0">
                 <AvatarImage v-if="reply.authorAvatarUrl" :src="reply.authorAvatarUrl" />
-                <AvatarFallback class="text-[10px]">{{ initials(reply.authorName) }}</AvatarFallback>
+                <AvatarFallback class="text-[10px]">{{
+                  initials(reply.authorName)
+                }}</AvatarFallback>
               </Avatar>
               <span class="truncate text-xs font-medium text-foreground">
                 {{ reply.authorName ?? 'Anonymous' }}

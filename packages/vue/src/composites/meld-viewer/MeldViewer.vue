@@ -519,7 +519,7 @@ function handleRendererAnnotationSelected(payload: { annotation: MeldAnnotation 
   // Comment-pin click on the page = "open this thread". Surface that as a
   // top-level event so external panels can react even when the built-in
   // panel is disabled.
-  if (payload.annotation?.type === 'sticky-note') {
+  if (payload.annotation?.type === 'comment') {
     emit('thread-open-requested', {
       annotationId: payload.annotation.id,
       source: 'comment-marker',
@@ -612,7 +612,7 @@ async function handleCommentFormSubmit(content: string) {
   // generalise to non-100% creation.
   if (isPdf.value && pdfRendererRef.value) {
     await pdfRendererRef.value.createAnnotation({
-      type: 'sticky-note',
+      type: 'comment',
       pageIndex: pos.pageIndex,
       rect: { origin: { x: pos.x, y: pos.y }, size: { width: 24, height: 24 } },
       contents: content,

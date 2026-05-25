@@ -124,9 +124,22 @@ export const ProgrammaticAnnotation: Story = {
       async function exportAll() {
         const v = viewer.value
         if (!v) return
-        const exported = await v.exportAnnotations()
-        console.log('[storybook] exported annotations:', exported)
-        alert(`Exported ${exported.length} annotations — see console.`)
+        // `exportAnnotations()` is the EmbedPDF-native API — returns
+        // annotation geometry/metadata only. Thread data (replies +
+        // resolved state) lives in MeldUI's parallel `useAnnotationThreads`
+        // store. We bundle both halves here for backend persistence; the
+        // consumer would typically POST { annotations, threads } as one
+        // record per annotation, keyed by annotationId.
+        const items = await v.exportAnnotations()
+        const annotationList = items.map((i) => i.annotation)
+        const threadList = annotationList
+          .map((a) => v.getThread(a.id))
+          .filter((t) => t !== null)
+        const bundle = { annotations: annotationList, threads: threadList }
+        console.log('[storybook] exported bundle:', bundle)
+        alert(
+          `Exported ${bundle.annotations.length} annotation(s) + ${bundle.threads.length} thread(s) — see console.`,
+        )
       }
 
       async function saveAsCopy() {
@@ -225,7 +238,9 @@ export const ExternalPanel: Story = {
         if (!annotations.value.some((a) => a.id === payload.annotation.id)) {
           annotations.value = [...annotations.value, payload.annotation]
         }
-        logEvent(`annotation-created · ${payload.annotation.type} · ${payload.annotation.id.slice(0, 8)}`)
+        logEvent(
+          `annotation-created · ${payload.annotation.type} · ${payload.annotation.id.slice(0, 8)}`,
+        )
       }
       function onUpdated(payload: { annotation: MeldAnnotation }) {
         annotations.value = annotations.value.map((a) =>
@@ -239,7 +254,9 @@ export const ExternalPanel: Story = {
         logEvent(`annotation-deleted · ${payload.annotationId.slice(0, 8)}`)
       }
       function onThreadUpdate(payload: { thread: MeldThread; action: string }) {
-        const existing = threads.value.findIndex((t) => t.annotationId === payload.thread.annotationId)
+        const existing = threads.value.findIndex(
+          (t) => t.annotationId === payload.thread.annotationId,
+        )
         if (existing >= 0) {
           threads.value = threads.value.map((t, i) => (i === existing ? payload.thread : t))
         } else {
@@ -249,7 +266,9 @@ export const ExternalPanel: Story = {
       }
       function onThreadOpen(payload: { annotationId: string; source: string }) {
         focusedId.value = payload.annotationId
-        logEvent(`thread-open-requested · source=${payload.source} · ${payload.annotationId.slice(0, 8)}`)
+        logEvent(
+          `thread-open-requested · source=${payload.source} · ${payload.annotationId.slice(0, 8)}`,
+        )
       }
 
       // ─── External-panel actions — call back into the viewer ───────────────
@@ -275,7 +294,9 @@ export const ExternalPanel: Story = {
 
       const panelItems = computed(() =>
         annotations.value
-          .filter((a) => a.type === 'highlight' || a.type === 'sticky-note' || a.type === 'free-text')
+          .filter(
+            (a) => a.type === 'highlight' || a.type === 'comment' || a.type === 'free-text',
+          )
           .map((a) => ({
             annotation: a,
             thread:
@@ -442,12 +463,24 @@ export const ImportExportRoundTrip: Story = {
       const annotations = ref(SEEDED_ANNOTATIONS)
       const initialThreads = ref(SEEDED_THREADS)
 
+      // The bundle shape: annotations + threads in one JSON object. This is
+      // the canonical "round-trip everything" payload for a backend that
+      // persists both halves of MeldUI's data model.
+      //
+      // `exportAnnotations()` is the EmbedPDF-native API — it returns only
+      // annotation geometry/metadata. Thread data (replies + resolved state)
+      // lives in MeldUI's parallel `useAnnotationThreads` store. Consumers
+      // assemble the bundle by calling `getThread(id)` per annotation.
       async function dumpJson() {
         const v = viewer.value
         if (!v) return
         const items = await v.exportAnnotations()
+        const annotationList = items.map((i) => i.annotation)
+        const threadList = annotationList
+          .map((a) => v.getThread(a.id))
+          .filter((t): t is MeldThread => t !== null)
         exported.value = JSON.stringify(
-          items.map((i) => i.annotation),
+          { annotations: annotationList, threads: threadList },
           null,
           2,
         )
@@ -456,13 +489,22 @@ export const ImportExportRoundTrip: Story = {
       function importFromJson() {
         try {
           const parsed = JSON.parse(exported.value)
-          if (!Array.isArray(parsed)) {
-            alert('Invalid JSON: expected an array of annotations.')
+          // Three shapes accepted:
+          //   1. `{ annotations: [], threads: [] }` — full bundle (this story's dumpJson)
+          //   2. flat `MeldAnnotation[]`            — legacy / hand-edited payload
+          //   3. `AnnotationTransferItem[]`         — viewer.exportAnnotations() shape
+          if (parsed && !Array.isArray(parsed) && Array.isArray(parsed.annotations)) {
+            annotations.value = parsed.annotations as MeldAnnotation[]
+            initialThreads.value = Array.isArray(parsed.threads)
+              ? (parsed.threads as MeldThread[])
+              : []
+            remountKey.value++
             return
           }
-          // Accept both shapes the package's export methods can produce:
-          //   - flat MeldAnnotation[]                       (this story's `dumpJson`)
-          //   - AnnotationTransferItem[]  ([{annotation, ctx?}, …])  (viewer.exportAnnotations())
+          if (!Array.isArray(parsed)) {
+            alert('Invalid JSON: expected an array, or { annotations, threads } object.')
+            return
+          }
           const first = parsed[0]
           const isWrapped =
             first &&
@@ -472,6 +514,7 @@ export const ImportExportRoundTrip: Story = {
           annotations.value = isWrapped
             ? (parsed as Array<{ annotation: MeldAnnotation }>).map((i) => i.annotation)
             : (parsed as MeldAnnotation[])
+          // No threads in flat/wrapped shape — leave the seed in place
           remountKey.value++
         } catch (e) {
           alert(`Invalid JSON: ${(e as Error).message}`)

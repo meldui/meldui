@@ -58,7 +58,7 @@ const emit = defineEmits<{
 // see their selected text in the panel.
 const items = computed(() => {
   const threadMap = new Map<string, MeldThread>(props.threads.map((t) => [t.annotationId, t]))
-  const COMMENTABLE = new Set<MeldAnnotation['type']>(['highlight', 'sticky-note', 'free-text'])
+  const COMMENTABLE = new Set<MeldAnnotation['type']>(['highlight', 'comment', 'free-text'])
 
   const pairs = props.annotations
     .filter((a) => COMMENTABLE.has(a.type))

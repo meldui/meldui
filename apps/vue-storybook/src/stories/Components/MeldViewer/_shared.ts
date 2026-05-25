@@ -424,7 +424,7 @@ export const SEEDED_ANNOTATIONS: MeldAnnotation[] = [
   },
   {
     id: 'demo-sticky-1',
-    type: 'sticky-note',
+    type: 'comment',
     pageIndex: 0,
     rect: { origin: { x: 420, y: 560 }, size: { width: 24, height: 24 } },
     contents:

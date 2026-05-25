@@ -263,7 +263,11 @@ watch(
     unsubscribeTextRetrieved = cap.onTextRetrieved((event) => {
       const pages = event?.text
       lastSelectedText = Array.isArray(pages)
-        ? pages.map((p) => (p ?? '').trim()).filter(Boolean).join(' ').trim()
+        ? pages
+            .map((p) => (p ?? '').trim())
+            .filter(Boolean)
+            .join(' ')
+            .trim()
         : ''
     })
   },
@@ -332,7 +336,7 @@ let lastSelectedUid: string | null = null
  */
 function subtypeToMeldType(subtype: number | undefined): MeldAnnotation['type'] | null {
   if (subtype === PdfAnnotationSubtype.HIGHLIGHT) return 'highlight'
-  if (subtype === PdfAnnotationSubtype.TEXT) return 'sticky-note'
+  if (subtype === PdfAnnotationSubtype.TEXT) return 'comment'
   if (subtype === PdfAnnotationSubtype.FREETEXT) return 'free-text'
   if (subtype === PdfAnnotationSubtype.INK) return 'ink'
   return null

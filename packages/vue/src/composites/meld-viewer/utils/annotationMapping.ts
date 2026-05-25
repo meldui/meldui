@@ -26,7 +26,7 @@ function toPdfSubtype(type: MeldAnnotationType): PdfAnnotationSubtype {
       return PdfAnnotationSubtype.FREETEXT
     case 'ink':
       return PdfAnnotationSubtype.INK
-    case 'sticky-note':
+    case 'comment':
       return PdfAnnotationSubtype.TEXT
     case 'stamp':
       return PdfAnnotationSubtype.STAMP
@@ -62,7 +62,7 @@ function fromPdfSubtype(subtype: PdfAnnotationSubtype): MeldAnnotationType | nul
     case PdfAnnotationSubtype.INK:
       return 'ink'
     case PdfAnnotationSubtype.TEXT:
-      return 'sticky-note'
+      return 'comment'
     case PdfAnnotationSubtype.STAMP:
       return 'stamp'
     case PdfAnnotationSubtype.REDACT:
@@ -128,7 +128,7 @@ export function meldToPdf(meld: MeldAnnotation): PdfAnnotationObject {
         contents: meld.selectedText,
       } as PdfAnnotationObject
 
-    case 'sticky-note':
+    case 'comment':
       return {
         ...base,
         type: PdfAnnotationSubtype.TEXT,
@@ -214,10 +214,10 @@ export function pdfToMeld(pdf: PdfAnnotationObject): MeldAnnotation | null {
         selectedText: anyPdf.contents as string | undefined,
       }
 
-    case 'sticky-note':
+    case 'comment':
       return {
         ...base,
-        type: 'sticky-note',
+        type: 'comment',
         contents: (anyPdf.contents as string) ?? '',
         color: anyPdf.strokeColor as string | undefined,
       }
