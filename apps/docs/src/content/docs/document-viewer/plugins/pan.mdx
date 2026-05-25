@@ -1,0 +1,54 @@
+---
+title: 'Plugin: Pan'
+description: Hand-tool interaction mode for drag-to-pan when zoomed in.
+category: composites
+order: 109
+package: '@meldui/vue'
+---
+
+The **Pan** plugin adds a hand-tool toggle that switches the viewport between text-select mode (default) and pan mode (drag the page around).
+
+## Enabling flag
+
+`features.pan: true`
+
+When enabled, `interaction-manager` is auto-registered if not already on.
+
+## What it does
+
+- Toolbar toggle: switch between hand (pan) and text (select) interaction modes
+- In pan mode, dragging on a page moves the viewport
+- Coexists with `features.selection` — the toggle decides which mode is active
+
+## Composable
+
+`usePan(documentId)` from `@embedpdf/plugin-pan/vue`. Returns:
+
+```ts
+{
+  isPanning: Ref<boolean>,
+  setPanMode(enabled: boolean),
+}
+```
+
+## Events
+
+- `interaction-mode-change` — emits `{ mode: 'hand' | 'text' }` (surfaces as `@interaction-mode-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+- interaction-manager (auto-added)
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+For PDFs that are mostly images (scans, plans), default to pan mode for a smoother experience.
+
+## See also
+
+- [Plugin: interaction-manager](/docs/document-viewer/plugins/interaction-manager)
+- [Plugin: selection](/docs/document-viewer/plugins/selection)

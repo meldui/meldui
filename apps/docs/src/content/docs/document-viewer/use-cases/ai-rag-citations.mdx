@@ -1,0 +1,96 @@
+---
+title: 'Use Case: AI / RAG Citations'
+description: Programmatically create ephemeral highlights anchored to AI / RAG response citations.
+category: composites
+order: 202
+package: '@meldui/vue'
+---
+
+import RagCitationDemo from '../../../../demos/document-viewer/RagCitationDemo.vue'
+
+When an AI assistant answers a question with citations into a document, highlighting the cited passages in the viewer is a powerful UX. `DocumentViewer` supports this directly via `createAnnotation` + the `metadata.is_ephemeral` convention.
+
+<RagCitationDemo client:only="vue" />
+
+## Pattern
+
+```ts
+async function showCitation(citation: { pageIndex: number; rect: PdfRect; id: string }) {
+  // Clear any previous ephemeral citation
+  if (currentEphemeralId.value) {
+    await viewer.value?.deleteAnnotation(currentEphemeralId.value)
+  }
+
+  const created = await viewer.value?.createAnnotation({
+    type: 'highlight',
+    pageIndex: citation.pageIndex,
+    rect: citation.rect,
+    segmentRects: [citation.rect],
+    color: '#92E89E',     // green to distinguish from user highlights
+    opacity: 0.5,
+    metadata: {
+      is_ephemeral: true,
+      citation_id: citation.id,
+    },
+  })
+
+  currentEphemeralId.value = created?.id ?? null
+  if (created) viewer.value?.navigateToAnnotation(created.id)
+}
+```
+
+## Why `metadata.is_ephemeral`?
+
+The metadata is free-form, but the `is_ephemeral` convention lets your annotation events handler **skip persisting these to your backend**:
+
+```ts
+function onCreate({ annotation }: { annotation: Annotation }) {
+  if (annotation.metadata?.is_ephemeral) return   // don't save AI citations
+  fetch('/api/annotations', { method: 'POST', body: JSON.stringify(annotation) })
+}
+```
+
+Otherwise every AI response would litter your database with ephemeral highlights.
+
+## Differentiating from user highlights
+
+A common pattern is to use a different colour for AI citations than for user highlights, so users can visually distinguish "my notes" from "AI cited this":
+
+| Origin | Colour |
+| --- | --- |
+| User-created highlight | Yellow `#FFCD45` (default) |
+| AI citation | Green `#92E89E` or Cyan `#A0E7E5` |
+
+Combine with `metadata.is_ephemeral: true` and your event handler can filter both ways.
+
+## Generating citation coordinates
+
+The hard part is getting `pageIndex` + `rect` from your AI / RAG pipeline. A typical pipeline:
+
+1. **Extract text per page** with PDFium server-side (or any PDF-text library) and record per-character bounding boxes.
+2. **Index those chunks** in your vector store. Each chunk has `{ text, pageIndex, rect }`.
+3. **When the LLM cites a chunk**, send the `pageIndex` + `rect` back to the client.
+4. **Call `createAnnotation`** with that pageIndex + rect (and a segmentRect equal to the full rect).
+
+For longer citations spanning multiple lines, pass multiple `segmentRects` (one per line).
+
+## Auto-clearing on response change
+
+When the user asks a new question, clear the prior citation:
+
+```ts
+watch(currentResponse, async (newResp) => {
+  if (currentEphemeralId.value) {
+    await viewer.value?.deleteAnnotation(currentEphemeralId.value)
+    currentEphemeralId.value = null
+  }
+  if (newResp?.citation) {
+    await showCitation(newResp.citation)
+  }
+})
+```
+
+## See also
+
+- [Annotations → Creating programmatically](/docs/document-viewer/annotations#programmatically)
+- [Programmatic API → navigateToAnnotation](/docs/document-viewer/programmatic-api#navigatetoannotationid-string-void)

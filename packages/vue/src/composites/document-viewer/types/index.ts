@@ -259,7 +259,16 @@ export interface ToolbarConfig {
 /* Annotations                                                                */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-/** PDF user-space rectangle (origin at bottom-left, points). */
+/**
+ * Rectangle in PDF page coordinates (1/72-inch points).
+ *
+ * `origin` is the **top-left** corner of the rect measured from the **top-left
+ * of the page** (EmbedPDF / DOM convention — NOT the PDF spec's bottom-left
+ * origin). `size.width` and `size.height` extend right and down respectively.
+ *
+ * For a Letter-sized page (612×792 pt), `origin.y = 0` is the top of the page
+ * and `origin.y = 792` is the bottom.
+ */
 export interface PdfRect {
   origin: { x: number; y: number }
   size: { width: number; height: number }

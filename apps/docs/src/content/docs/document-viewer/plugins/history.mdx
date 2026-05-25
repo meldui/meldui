@@ -1,0 +1,55 @@
+---
+title: 'Plugin: History'
+description: Undo / redo stack for annotation operations.
+category: composites
+order: 119
+package: '@meldui/vue'
+---
+
+The **History** plugin tracks annotation mutations (create, update, delete) on a stack and powers undo / redo.
+
+## Enabling flag
+
+`features.undoRedo: true` — auto-enabled when `features.annotations` is on.
+
+## What it does
+
+- Pushes a history entry for every annotation create / update / delete
+- Undo / Redo toolbar buttons
+- `Ctrl/Cmd + Z` / `Ctrl/Cmd + Shift + Z` keyboard shortcuts (when `features.keyboardShortcuts` is on)
+- Stack is per-document and cleared when `source` changes
+
+## Composable
+
+`useHistoryCapability()` from `@embedpdf/plugin-history/vue`. `DocumentViewer` re-exposes `undo`, `redo`, `canUndo`, `canRedo` on its instance.
+
+## Events
+
+None surfaced externally — toolbar state observes `canUndo` / `canRedo` reactively.
+
+## Dependencies
+
+- annotation (the source of historical operations)
+
+## Configuration
+
+No `featureConfig`.
+
+## Scope
+
+Phase 1 history covers annotation mutations only. Document-level operations (zoom changes, page navigation) are not undoable. Phase 2 may extend to redaction-apply and signature-place operations.
+
+## When you'd touch it directly
+
+To clear the history (e.g. after loading saved annotations so the load isn't undoable):
+
+```ts
+import { useHistoryCapability } from '@embedpdf/plugin-history/vue'
+
+const hist = useHistoryCapability()
+hist.provides.value?.clear()
+```
+
+## See also
+
+- [Programmatic API → undo / redo](/docs/document-viewer/programmatic-api#history)

@@ -1,0 +1,317 @@
+---
+title: 'Document Viewer: Annotations'
+description: The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
+category: composites
+order: 5
+package: '@meldui/vue'
+---
+
+import ThreadedCommentsDemo from '../../../demos/document-viewer/ThreadedCommentsDemo.vue'
+
+`DocumentViewer` ships with a full annotation system on top of EmbedPDF's annotation plugin. Two flavours of annotation are first-class in Phase 1:
+
+- **Highlights** — covers one or more text segments on a page, with a 5-colour palette in a floating tooltip after creation.
+- **Comments** — pin-style sticky notes anchored to a point on the page, surfaced both in-page (`CommentMarker`) and in the annotations side panel.
+
+Both are native PDF annotation types (highlight = HIGHLIGHT subtype, comment = TEXT subtype), so they round-trip through `saveAsCopy()` and survive when the PDF is opened in any other PDF reader.
+
+Higher-fidelity annotation types (free-text, ink, stamps, signatures, redaction) are supported on the data model side; the editing UI for stamps / signatures / redaction lands in Phase 2.
+
+<ThreadedCommentsDemo client:only="vue" />
+
+## Data model
+
+### `Annotation` — discriminated union
+
+Every annotation extends `AnnotationBase`:
+
+```ts
+interface AnnotationBase {
+  id: string                    // UUID v4
+  type: AnnotationType
+  pageIndex: number             // 0-based
+  rect: PdfRect                 // bounding box in PDF points
+  author?: string
+  createdAt?: string            // ISO-8601
+  modifiedAt?: string
+  metadata?: Record<string, unknown>  // free-form (e.g. is_ephemeral, citation_id)
+}
+```
+
+The `Annotation` union discriminates on `type`:
+
+```ts
+type Annotation =
+  | HighlightAnnotation       // type: 'highlight'
+  | CommentAnnotation         // type: 'comment'
+  | FreeTextAnnotation        // type: 'free-text'
+  | InkAnnotation             // type: 'ink'
+  | StampAnnotation           // type: 'stamp'
+  | SignatureAnnotation       // type: 'signature'
+  | RedactionAnnotation       // type: 'redaction'
+```
+
+### `HighlightAnnotation`
+
+```ts
+interface HighlightAnnotation extends AnnotationBase {
+  type: 'highlight'
+  segmentRects: PdfRect[]     // one rect per highlighted text segment
+  color: string               // hex, e.g. '#FFCD45'
+  opacity: number             // 0–1; default 0.4
+  selectedText?: string       // text covered, captured at creation
+}
+```
+
+`selectedText` is opportunistically captured from the user's selection at creation time; it's useful for thread previews and AI-citation extraction.
+
+### `CommentAnnotation`
+
+```ts
+interface CommentAnnotation extends AnnotationBase {
+  type: 'comment'
+  contents: string
+  color?: string              // marker tint
+}
+```
+
+The on-page pin (`CommentMarker`) lives at `rect.origin`. Reply data is **not** stored on the annotation — it lives in the separate threads overlay (see below).
+
+### `FreeTextAnnotation`
+
+```ts
+interface FreeTextAnnotation extends AnnotationBase {
+  type: 'free-text'
+  contents: string
+  fontSize: number
+  fontColor: string
+  fontFamily?: string
+  backgroundColor?: string
+  opacity: number
+}
+```
+
+### `InkAnnotation`
+
+```ts
+interface InkAnnotation extends AnnotationBase {
+  type: 'ink'
+  inkList: { points: { x: number; y: number }[] }[]   // one entry per stroke
+  strokeWidth: number
+  color: string
+  opacity: number
+}
+```
+
+### `StampAnnotation`, `SignatureAnnotation`, `RedactionAnnotation`
+
+```ts
+interface StampAnnotation extends AnnotationBase {
+  type: 'stamp'
+  name?: string
+  subject?: string
+}
+
+interface SignatureAnnotation extends AnnotationBase {
+  type: 'signature'
+  imageDataUrl?: string       // base64 PNG/SVG
+}
+
+interface RedactionAnnotation extends AnnotationBase {
+  type: 'redaction'
+  pending: boolean            // true = visible in panel, false = burned in
+  fillColor?: string
+}
+```
+
+The data shapes are stable; the editing UI for these arrives in Phase 2 plugins (`stamps`, `signature`, `redaction` flags).
+
+## Creating annotations
+
+### From the toolbar
+
+With `features.annotations` enabled, the toolbar gains two tools:
+
+- **Highlight** — drag-to-select text, then pick a colour from the floating tooltip
+- **Comment** — click a point on the page, then type into the inline comment form
+
+The 5 default highlight colours are exported as `HIGHLIGHT_COLORS`:
+
+```ts
+import { HIGHLIGHT_COLORS } from '@meldui/vue'
+// Yellow #FFCD45, Green #92E89E, Blue #8FCFEF, Pink #FFA0BD, Purple #C8A5DD
+```
+
+Override the palette via `featureConfig.annotations.defaultTools`.
+
+### Programmatically
+
+Via the `DocumentViewerInstance`:
+
+```ts
+import type { DocumentViewerInstance } from '@meldui/vue'
+
+await viewer.value?.createAnnotation({
+  type: 'highlight',
+  pageIndex: 0,
+  rect: { origin: { x: 100, y: 200 }, size: { width: 300, height: 20 } },
+  segmentRects: [{ origin: { x: 100, y: 200 }, size: { width: 300, height: 20 } }],
+  color: '#FFCD45',
+  opacity: 0.4,
+  selectedText: 'Important sentence.',
+})
+```
+
+## Seeding saved annotations on mount
+
+For document review workflows, load saved annotations from your backend before the user interacts:
+
+```vue
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { DocumentViewer, type DocumentViewerInstance, type Annotation } from '@meldui/vue'
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+
+onMounted(async () => {
+  const saved: Annotation[] = await fetch('/api/annotations?docId=42').then(r => r.json())
+  await viewer.value?.loadAnnotations(saved)
+})
+</script>
+
+<template>
+  <DocumentViewer
+    ref="viewer"
+    source="/doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :features="{ annotations: true }"
+  />
+</template>
+```
+
+`loadAnnotations` waits internally for the `loaded` event from the engine — safe to call before `document-loaded` fires. See [Use case: load saved annotations](/docs/document-viewer/use-cases/load-saved-annotations).
+
+## Persisting changes
+
+Subscribe to annotation events and POST to your backend:
+
+```vue
+<DocumentViewer
+  ref="viewer"
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ annotations: true }"
+  @annotation-created="onCreate"
+  @annotation-updated="onUpdate"
+  @annotation-deleted="onDelete"
+/>
+```
+
+```ts
+function onCreate({ annotation }: { annotation: Annotation }) {
+  fetch('/api/annotations', { method: 'POST', body: JSON.stringify(annotation) })
+}
+function onUpdate({ annotation, patch }: AnnotationUpdatePayload) {
+  fetch(`/api/annotations/${annotation.id}`, { method: 'PATCH', body: JSON.stringify(patch) })
+}
+function onDelete({ annotationId }: { annotationId: string }) {
+  fetch(`/api/annotations/${annotationId}`, { method: 'DELETE' })
+}
+```
+
+For bulk import / export use `importAnnotations` / `exportAnnotations` — they return the round-trippable `AnnotationTransferItem` shape including any binary side-data (used for stamps and signatures).
+
+## Threaded comments overlay
+
+The threaded-comments overlay (`features.commentThreads`) is a layer on top of annotations. Threads are **not stored inside the PDF** — they live in a parallel data model keyed by annotation id, so:
+
+- A highlight has a thread → users can reply to the highlight
+- A comment annotation has a thread → users can reply to the comment
+- Threads can be marked resolved without deleting the annotation
+
+```ts
+interface CommentThread {
+  annotationId: string
+  replies: CommentReply[]
+  resolved: boolean
+  resolvedAt?: string
+  resolvedByUserId?: string
+}
+
+interface CommentReply {
+  id: string
+  annotationId: string
+  authorUserId: string
+  authorDisplayName: string
+  content: string
+  createdAt: string
+}
+```
+
+### Seed threads on mount
+
+```ts
+const annotations: Annotation[] = await fetchAnnotations()
+const threads: CommentThread[] = await fetchThreads()
+await viewer.value?.loadAnnotations(annotations)
+viewer.value?.loadThreads(threads)
+```
+
+Order matters: annotations first, threads second (threads reference annotation ids).
+
+### Reply / resolve / delete
+
+```ts
+const reply = await viewer.value?.addReply(annotationId, 'Looks good to me')
+await viewer.value?.resolveAnnotation(annotationId, true)
+await viewer.value?.deleteReply(annotationId, reply.id)
+```
+
+All three emit `thread-update` with `{ thread, action }` so you can persist:
+
+```vue
+<DocumentViewer
+  @thread-update="({ thread, action }) => persistThread(thread, action)"
+/>
+```
+
+### Author identity
+
+Set `currentUser` so replies are attributed correctly:
+
+```vue
+<DocumentViewer
+  :current-user="{ id: 'u-42', displayName: 'Alex Chen', avatarUrl: '/me.png' }"
+  ...
+/>
+```
+
+`currentUser.displayName` also flows to `featureConfig.annotations.author` as a default, so newly-created annotations carry an author string.
+
+## Round-tripping with `saveAsCopy`
+
+`saveAsCopy()` returns a fresh PDF with annotations baked in:
+
+```ts
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+saveAs(blob, 'reviewed-doc.pdf')
+```
+
+Note that **threads are not embedded in the PDF binary** — they live only in the overlay. If you need to deliver a baked PDF + the thread data, export both:
+
+```ts
+const [buffer, threads] = await Promise.all([
+  viewer.value!.saveAsCopy(),
+  Promise.resolve(allThreads()),
+])
+await uploadBoth(buffer, threads)
+```
+
+## See also
+
+- [Programmatic API](/docs/document-viewer/programmatic-api) — every annotation CRUD method
+- [Use case: load saved annotations](/docs/document-viewer/use-cases/load-saved-annotations)
+- [Use case: AI / RAG citations](/docs/document-viewer/use-cases/ai-rag-citations) — programmatic highlights with `metadata.is_ephemeral`
+- [Use case: threaded comments](/docs/document-viewer/use-cases/threaded-comments)
+- [Use case: import/export round-trip](/docs/document-viewer/use-cases/import-export-annotations)

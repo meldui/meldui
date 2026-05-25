@@ -1,0 +1,113 @@
+---
+title: 'Use Case: Dark Mode Integration'
+description: Dropping DocumentViewer inside a dark-themed app — and what to do about the PDF page background.
+category: composites
+order: 210
+package: '@meldui/vue'
+---
+
+import DarkModeDemo from '../../../../demos/document-viewer/DarkModeDemo.vue'
+
+`DocumentViewer`'s chrome (toolbar, side panels, popovers, overlays) inherits Tailwind's dark mode automatically. The PDF page itself is rendered by PDFium with the document's authored background — typically white — and stays white regardless of the surrounding theme. This page covers the options.
+
+<DarkModeDemo client:only="vue" />
+
+## Enabling dark mode
+
+Toggle the `dark` class on an ancestor (or `<html>`) and every chrome element flips:
+
+```vue
+<template>
+  <div :class="darkMode ? 'dark' : ''">
+    <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+  </div>
+</template>
+```
+
+No prop on `DocumentViewer` is required — the chrome uses `bg-background` / `text-foreground` / `border-border` from Tailwind v4's theme, which respond to the `.dark` class.
+
+## Themed parts
+
+✅ **Themed**:
+- Toolbar background, buttons, icons, dividers
+- Side panel headers, rows, scrollbars
+- Search popover
+- Highlight tooltip
+- Comment form / reply form
+- Annotations panel rows + reply form
+- Empty states
+
+❌ **Not themed**:
+- The PDF page contents (text, images) — PDFium renders the document as-authored
+- Image-format documents (`image/*` source) — rendered as-is
+- Highlight colours on the PDF — the colour is the colour the highlight was saved with; doesn't adapt
+
+## Options for the PDF page background
+
+Three patterns, in order of preference:
+
+### 1. Leave it alone (recommended for most apps)
+
+For professional documents (contracts, reports, scans), preserving the page background is the correct default. The chrome around the page goes dark; the page stays white; the eye adjusts.
+
+Add a soft surround colour to reduce the harsh white edge:
+
+```css
+.dark .document-viewer {
+  background-color: theme(colors.muted / 60%);
+}
+```
+
+### 2. Aggressive invert (for casual reading)
+
+If the documents are predominantly text and the user is in a "reading at night" context, a CSS filter inversion gives a true dark-mode appearance:
+
+```css
+.dark .document-viewer .pdf-page canvas,
+.dark .document-viewer .pdf-page img {
+  filter: invert(1) hue-rotate(180deg);
+}
+```
+
+The `hue-rotate(180deg)` after `invert(1)` keeps colour images approximately correct (blues stay bluish, reds stay reddish) — but the result is lossy and not suitable for documents where colour fidelity matters (e.g. brand assets, photographs).
+
+### 3. User opt-in
+
+Give users the choice:
+
+```vue
+<script setup lang="ts">
+const invertPages = ref(false)
+</script>
+
+<template>
+  <div class="dark">
+    <label><input type="checkbox" v-model="invertPages" /> Invert PDF pages</label>
+    <div :class="invertPages ? 'invert-pages' : ''">
+      <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+    </div>
+  </div>
+</template>
+
+<style>
+.invert-pages .pdf-page canvas,
+.invert-pages .pdf-page img {
+  filter: invert(1) hue-rotate(180deg);
+}
+</style>
+```
+
+## Highlights in dark mode
+
+The 5 default highlight colours (yellow, green, blue, pink, purple) were picked at ~70–75% HSL lightness so they read on both light and dark page backgrounds. They use PDFium's `blendMode: Multiply` which preserves the underlying page contrast.
+
+If you override `featureConfig.annotations.defaultTools` with darker colours, test in both light and dark mode — very dark highlights become hard to distinguish from the text in dark-mode-inverted pages.
+
+## Storybook reference
+
+The Storybook stories at `Components/DocumentViewer/*` toggle dark mode via Storybook's theming addon. Open Storybook to see the chrome in both modes side-by-side.
+
+## See also
+
+- [Theming](/docs/document-viewer/theming) — full theming reference including the page-background discussion
+- [Global theming guide](/docs/getting-started/theming) — how MeldUI uses Tailwind v4 themes

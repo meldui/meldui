@@ -1,0 +1,143 @@
+---
+title: 'Use Case: Toolbar Customization'
+description: Reorder groups, hide buttons, add a custom action.
+category: composites
+order: 211
+package: '@meldui/vue'
+---
+
+import ToolbarCustomDemo from '../../../../demos/document-viewer/ToolbarCustomDemo.vue'
+
+The default toolbar covers most needs, but the `toolbar` prop lets you reorder groups, hide individual buttons, and add custom actions without forking the component.
+
+<ToolbarCustomDemo client:only="vue" />
+
+## Pattern
+
+```vue
+<script setup lang="ts">
+import { DocumentViewer } from '@meldui/vue'
+import type { ToolbarConfig } from '@meldui/vue'
+
+const toolbar: ToolbarConfig = {
+  groups: ['nav', 'zoom', 'panels'],     // restrict + reorder
+  hide: ['rotate-cw', 'rotate-ccw'],     // hide individual buttons
+  customButtons: [
+    {
+      id: 'share',
+      label: 'Share',
+      icon: 'IconShare',
+      position: 'panels',
+      onClick: () => openShareDialog(),
+    },
+  ],
+}
+</script>
+
+<template>
+  <DocumentViewer
+    source="/doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :toolbar="toolbar"
+    :features="{ zoom: true, outline: true, thumbnails: true }"
+  />
+</template>
+```
+
+## `groups`
+
+The default group order is:
+
+```ts
+['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+```
+
+Pass a subset to hide the rest entirely. Pass a reordered array to change visual order:
+
+```ts
+// Tools-first layout
+const toolbar: ToolbarConfig = {
+  groups: ['tools', 'nav', 'zoom', 'view', 'panels', 'search', 'export'],
+}
+```
+
+## `hide`
+
+Hide individual buttons by id. The standard ids:
+
+- Nav: `page-prev`, `page-next`
+- Zoom: `zoom-in`, `zoom-out`, `fit-page`, `fit-width`, `actual-size`
+- View: `rotate-cw`, `rotate-ccw`, `spread`, `pan`, `fullscreen`
+- Tools: `highlight`, `comment`, `undo`, `redo`
+- Panels: `outline-toggle`, `thumbnails-toggle`, `annotations-toggle`
+- Search: `search-toggle`
+- Export: `print`, `download`
+
+```ts
+const toolbar: ToolbarConfig = {
+  hide: ['spread', 'pan', 'fullscreen', 'rotate-cw', 'rotate-ccw'],
+}
+```
+
+## `customButtons`
+
+Each entry needs:
+
+- `id` — unique
+- `label` — shown in overflow menu and as `aria-label`
+- `icon` — name of a `@meldui/tabler-vue` icon component (e.g. `IconShare`, `IconCircleCheck`)
+- `position` — which group to attach to
+- `onClick` — handler
+
+```ts
+const toolbar: ToolbarConfig = {
+  customButtons: [
+    {
+      id: 'approve',
+      label: 'Approve',
+      icon: 'IconCircleCheck',
+      position: 'tools',
+      onClick: () => approveDocument(),
+    },
+    {
+      id: 'request-changes',
+      label: 'Request changes',
+      icon: 'IconMessageCircle',
+      position: 'tools',
+      onClick: () => openRequestChangesDialog(),
+    },
+  ],
+}
+```
+
+The icon name maps directly to the export name in `@meldui/tabler-vue` — see the [Icons guide](/docs/getting-started/icons) for the full set.
+
+## Hiding the toolbar entirely
+
+For chrome-free embeds, pass an empty groups array:
+
+```ts
+const toolbar: ToolbarConfig = { groups: [] }
+```
+
+Users still get keyboard shortcuts (if `features.keyboardShortcuts` is on) and touch gestures (`features.touchGestures`).
+
+## Per-user toolbars
+
+Conditionally configure based on the current user:
+
+```ts
+const toolbar = computed<ToolbarConfig>(() => ({
+  groups: isReviewer.value
+    ? ['nav', 'zoom', 'tools', 'panels']
+    : ['nav', 'zoom', 'export'],
+  hide: isReviewer.value ? [] : ['print', 'download'],
+}))
+```
+
+This combines with `permissions` for finer access control — see [Share-link viewer](/docs/document-viewer/use-cases/share-link-viewer).
+
+## See also
+
+- [Customization](/docs/document-viewer/customization) — slot reference + side panel customization
+- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer)

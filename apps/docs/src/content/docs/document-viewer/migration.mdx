@@ -1,0 +1,159 @@
+---
+title: 'Document Viewer: Migration'
+description: Migration guides from @tato30/vue-pdf, vue-pdf-embed, raw pdfjs-dist, and PDFTron Web Viewer.
+category: composites
+order: 10
+package: '@meldui/vue'
+---
+
+This page maps the API surface of common Vue PDF libraries to `DocumentViewer`'s API so you can port an existing integration with minimal rework.
+
+## From `@tato30/vue-pdf`
+
+`@tato30/vue-pdf` wraps pdf.js and exposes a `<VuePDF>` component per page.
+
+### Prop mapping
+
+| `@tato30/vue-pdf` | `DocumentViewer` |
+| --- | --- |
+| `pdf` | `source` (same `URL \| File \| ArrayBuffer`) |
+| `page` | `initial-page` (1-based, same) |
+| `scale` | `initial-scale` (`'fit-page' \| 'fit-width' \| 'actual' \| number`) |
+| `rotation` | Not a prop — use `features.rotate` + `initialScale`, or call `goToPage` after mount |
+| `text-layer` | Always on when `features.search` or `features.selection` is enabled |
+| `annotation-layer` | `features.annotations` |
+| `fit-parent` | Default (the viewer fills its container) |
+| `width`/`height` | Set on the parent element; viewer fills it |
+
+### Behaviour differences
+
+- `@tato30/vue-pdf` renders **one page per `<VuePDF>` instance**. `DocumentViewer` renders the entire document as a continuous scroll (or paged, with `features.spread`).
+- pdf.js's text layer is a transparent DOM layer. PDFium's selection is the canonical engine selection; `getSelection()` from the page works.
+
+### Minimal port
+
+```diff
+- import { VuePDF, usePDF } from '@tato30/vue-pdf'
++ import { DocumentViewer } from '@meldui/vue'
+
+- const { pdf } = usePDF('/doc.pdf')
+- <VuePDF :pdf="pdf" :page="1" />
++ <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :initial-page="1" />
+```
+
+## From `vue-pdf-embed`
+
+`vue-pdf-embed` is a simpler pdf.js wrapper without text-layer support.
+
+### Prop mapping
+
+| `vue-pdf-embed` | `DocumentViewer` |
+| --- | --- |
+| `source` | `source` (same) |
+| `page` | `initial-page` |
+| `text-layer` | Always on with `features.search` / `features.selection` |
+| `annotation-layer` | `features.annotations` |
+| `rotation` | Use `features.rotate` |
+| `disable-stream` | n/a — DocumentViewer always streams |
+
+### Behaviour differences
+
+- `vue-pdf-embed` is purely a renderer — no built-in toolbar, search, or annotations. You'd typically pair it with custom UI.
+- `DocumentViewer` ships with toolbar + panels + annotations out of the box. Disable them with empty `features` to mimic `vue-pdf-embed`'s minimal surface:
+
+```vue
+<DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :features="{}" />
+```
+
+## From raw `pdfjs-dist`
+
+If you're using `pdfjs-dist` directly with custom rendering canvases, the migration is more of a rewrite than a port — `DocumentViewer` owns the viewport, scroll, and page rendering.
+
+### What you keep
+
+- Your source URL / Blob / ArrayBuffer — pass it as `source`.
+- Your initial-page / initial-zoom logic — map to `initialPage` / `initialScale`.
+- Your search UI — replace with `features.search`, or hide the default UI and wire to the `getDocument().findController` equivalent inside EmbedPDF.
+
+### What you replace
+
+- `getDocument()` calls — handled internally.
+- Canvas rendering loop — handled by tiling + render plugins.
+- Text layer DIV stitching — handled by the selection plugin.
+- Outline tree fetching — handled by the bookmark plugin.
+- Thumbnail rendering — handled by the thumbnail plugin.
+
+The PDF.js viewer (`pdf.js/web/viewer.html`) corresponds **directly** to `DocumentViewer` with the kitchen-sink feature set:
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true, rotate: true, spread: true, pan: true, fullscreen: true,
+    search: true, selection: true,
+    outline: true, thumbnails: true,
+    print: true, download: true,
+    annotations: true, undoRedo: true,
+    keyboardShortcuts: true, touchGestures: true,
+  }"
+/>
+```
+
+## From PDFTron Web Viewer (Apryse)
+
+PDFTron is the most direct comparison — both are commercial-grade PDF SDKs with annotation systems. Migration is mostly straightforward but the API shapes differ.
+
+### Property mapping
+
+| PDFTron `WebViewer` | `DocumentViewer` |
+| --- | --- |
+| `initialDoc` | `source` |
+| `licenseKey` | n/a (internal package, no license) |
+| `path` (location of viewer assets) | `wasm-url` (just the WASM file) |
+| `enableAnnotations` | `features.annotations` |
+| `disabledElements` | `toolbar.hide: [...]` |
+| `customElements` | `toolbar.customButtons` |
+| `documentXFDFRetriever` | `loadAnnotations` (call after `document-loaded`) |
+| `extractAnnotations()` | `exportAnnotations()` |
+| `printDocument()` | Trigger `print` button or call `window.print()` |
+| `downloadPdf()` | Trigger `download` button |
+| Annotation Manager events | `@annotation-created` / `@annotation-updated` / `@annotation-deleted` |
+
+### Annotation format
+
+PDFTron uses XFDF (XML); `DocumentViewer` uses a typed JSON shape (`AnnotationTransferItem[]`).
+
+To round-trip from PDFTron's XFDF to `DocumentViewer`'s format, parse XFDF on import and serialize on export. The library doesn't ship an XFDF parser — write a small adapter, or `saveAsCopy()` to bake annotations into the PDF binary itself (interoperable with any PDF reader).
+
+### Threaded comments
+
+PDFTron stores reply chains inside annotation `Reply` records. `DocumentViewer` stores threads in a **parallel overlay** (`CommentThread[]`) keyed by annotation id. To migrate:
+
+1. Pull replies out of the PDFTron XFDF
+2. Build a `CommentThread[]` keyed by parent-annotation id
+3. Call `loadAnnotations(annotations)` then `loadThreads(threads)`
+
+See [Annotations → Threaded comments](/docs/document-viewer/annotations#threaded-comments-overlay).
+
+## Breaking changes vs. previous internal viewers (doqo `DocumentViewer`)
+
+For teams migrating from the internal doqo viewer:
+
+- The import moved from `frontend/src/components/viewer/DocumentViewer.vue` to `@meldui/vue`.
+- The toolbar / side panel / renderer components were renamed to drop the `Document` prefix: `ViewerToolbar`, `ViewerSidePanel`, `PdfViewer`, `ImageViewer`, etc. These are also exported from `@meldui/vue`.
+- The annotation format is identical to doqo's `MeldAnnotation` (renamed to `Annotation` here). Existing stored annotations load without transformation.
+- Threaded-comment storage matches doqo's `MeldThread` (renamed to `CommentThread`). Existing thread JSON loads via `loadThreads()` without transformation.
+- The 5-colour highlight palette uses the same hex values, so existing screenshots and saved-state UIs match.
+
+## Common gotchas in any migration
+
+1. **PDF-points vs. screen-pixels** — both `@tato30/vue-pdf` and PDFTron expose mixed coordinate systems. `DocumentViewer`'s `rect` and `segmentRects` are in PDF points (1/72 inch) measured from the **top-left of the page** (DOM convention — not the PDF spec's bottom-left origin). If your prior code used screen pixels, you'll need to convert via the current scale + rotation. If your prior code used PDF-spec bottom-up coordinates, flip the y axis (`y_top_down = pageHeight - y_bottom_up - height`).
+2. **0-based vs. 1-based pages** — `pageIndex` is 0-based; `initialPage` / `goToPage` are 1-based. Consistent within `DocumentViewer` but the convention may differ from your prior code.
+3. **Persistence is yours** — PDFTron has built-in collaboration sync. `DocumentViewer` does not — you wire `@annotation-*` events to your backend yourself.
+
+## See also
+
+- [Getting Started](/docs/document-viewer/getting-started)
+- [Annotations](/docs/document-viewer/annotations)
+- [Programmatic API](/docs/document-viewer/programmatic-api)

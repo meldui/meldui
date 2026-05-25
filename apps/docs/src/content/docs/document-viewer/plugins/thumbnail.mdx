@@ -1,0 +1,48 @@
+---
+title: 'Plugin: Thumbnail'
+description: Lazy thumbnail grid for visual page navigation.
+category: composites
+order: 115
+package: '@meldui/vue'
+---
+
+The **Thumbnail** plugin renders a small bitmap of each page in a side-panel grid. Click any thumbnail to jump to that page.
+
+## Enabling flag
+
+`features.thumbnails: true`
+
+## What it does
+
+- Generates low-resolution previews of each page on demand
+- Lazy-loads — thumbnails render as they scroll into view, not all at once
+- Click navigation — clicking a thumbnail scrolls the main viewport to that page
+- The current page is highlighted in the grid
+- `T` keyboard shortcut to toggle the panel (when `features.keyboardShortcuts` is on)
+
+## Composable
+
+`useThumbnail(documentId)` from `@embedpdf/plugin-thumbnail/vue`. Provides per-page thumbnail render hooks.
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- document-manager
+- render (to generate the bitmaps)
+- scroll (for click navigation)
+
+## Configuration
+
+No `featureConfig`.
+
+## Performance note
+
+Thumbnail generation is on a separate render path from the main viewport — generating thumbnails for a 500-page document is bounded by the lazy-load pattern (only visible thumbs are rendered). For 1000+ page documents, consider hiding the panel by default and only opening it on demand.
+
+## See also
+
+- [Plugin: bookmark](/docs/document-viewer/plugins/bookmark) — the other navigation panel
+- [Use case: large documents](/docs/document-viewer/use-cases/large-documents)

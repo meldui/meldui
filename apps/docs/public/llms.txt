@@ -109,11 +109,53 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the v-model emit contract.
 - [Data Table: useDataTableController](/docs/data-table/use-data-table-controller): The parent-side composable that bundles sorting / filters / pagination refs and applies the filter→page and sort→page reset rules with flush:'sync'.
 - [Date Range Picker](/docs/composites/date-range-picker): A composite date picker with presets, calendar, and support for single or range date selection.
+- [Document Viewer](/docs/document-viewer): A reusable Vue composite for viewing and annotating PDF, image, plain-text, and markdown documents — built on EmbedPDF (PDFium WASM) with a single feature opt-in surface.
+- [Document Viewer: Annotations](/docs/document-viewer/annotations): The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
+- [Document Viewer: Bundle & Performance](/docs/document-viewer/bundle-and-perf): Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
+- [Document Viewer: Customization](/docs/document-viewer/customization): Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
+- [Document Viewer: Features](/docs/document-viewer/features): Every capability flag on the features prop, plus per-feature configuration shapes.
+- [Document Viewer: Getting Started](/docs/document-viewer/getting-started): Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
+- [Document Viewer: Migration](/docs/document-viewer/migration): Migration guides from @tato30/vue-pdf, vue-pdf-embed, raw pdfjs-dist, and PDFTron Web Viewer.
+- [Document Viewer: Plugin Reference](/docs/document-viewer/plugins): One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
+- [Document Viewer: Programmatic API](/docs/document-viewer/programmatic-api): Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
+- [Document Viewer: Theming](/docs/document-viewer/theming): Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
+- [Document Viewer: Troubleshooting](/docs/document-viewer/troubleshooting): Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
+- [Document Viewer: Use Cases](/docs/document-viewer/use-cases): Runnable demos for the common patterns — load saved annotations, AI citations, import / export, save-as-copy, threaded reviews, and more.
 - [Filters](/docs/composites/filters): A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
 - [Mention](/docs/composites/mention): A rich text input that supports @-mention suggestions with customizable triggers and serialization.
 - [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
+- [Plugin: Annotation](/docs/document-viewer/plugins/annotation): Native PDF annotations — highlights, sticky-note comments, and the full programmatic CRUD API.
+- [Plugin: Bookmark (Outline)](/docs/document-viewer/plugins/bookmark): Extracts the document outline and renders it as a side-panel tree.
+- [Plugin: Document Manager](/docs/document-viewer/plugins/document-manager): Orchestrates document lifecycle — load, switch, and unload PDFs.
+- [Plugin: Export](/docs/document-viewer/plugins/export): Print, download, and saveAsCopy — every PDF output path.
+- [Plugin: Fullscreen](/docs/document-viewer/plugins/fullscreen): Fullscreen toggle for an immersive viewing experience.
+- [Plugin: History](/docs/document-viewer/plugins/history): Undo / redo stack for annotation operations.
+- [Plugin: Hotkeys](/docs/document-viewer/plugins/hotkeys): Keyboard shortcuts for navigation, zoom, panels, and search.
+- [Plugin: Interaction Manager](/docs/document-viewer/plugins/interaction-manager): Coordinates which interaction mode owns pointer events at any given time.
+- [Plugin: Pan](/docs/document-viewer/plugins/pan): Hand-tool interaction mode for drag-to-pan when zoomed in.
+- [Plugin: Render](/docs/document-viewer/plugins/render): Paints PDF pages to canvas via PDFium.
+- [Plugin: Rotate](/docs/document-viewer/plugins/rotate): Rotate the document clockwise or counter-clockwise in 90° increments.
+- [Plugin: Scroll](/docs/document-viewer/plugins/scroll): Page-aware virtual scrolling for continuous, paged, and spread modes.
+- [Plugin: Search](/docs/document-viewer/plugins/search): Full-text search with case / whole-word toggles, prev / next, and match counter.
+- [Plugin: Selection](/docs/document-viewer/plugins/selection): Text selection on the page and copy-to-clipboard.
+- [Plugin: Spread](/docs/document-viewer/plugins/spread): Two-page spread view mode for book-style reading.
+- [Plugin: Thumbnail](/docs/document-viewer/plugins/thumbnail): Lazy thumbnail grid for visual page navigation.
+- [Plugin: Tiling](/docs/document-viewer/plugins/tiling): Memory-efficient virtualization that splits large pages into render tiles.
+- [Plugin: Viewport](/docs/document-viewer/plugins/viewport): Owns the scrollable container DOM that hosts the rendered pages.
+- [Plugin: Zoom](/docs/document-viewer/plugins/zoom): Zoom in / out, fit presets, and pinch-to-zoom.
 - [Relative Time](/docs/composites/relative-time): Displays a human-readable relative timestamp that updates automatically.
 - [Timeline](/docs/composites/timeline): A vertical or horizontal timeline for displaying chronological events.
+- [Use Case: AI / RAG Citations](/docs/document-viewer/use-cases/ai-rag-citations): Programmatically create ephemeral highlights anchored to AI / RAG response citations.
+- [Use Case: Dark Mode Integration](/docs/document-viewer/use-cases/dark-mode-integration): Dropping DocumentViewer inside a dark-themed app — and what to do about the PDF page background.
+- [Use Case: Import / Export Annotations](/docs/document-viewer/use-cases/import-export-annotations): Round-trip annotations as JSON for backup, transfer between environments, or sharing with another system.
+- [Use Case: Keyboard and Touch](/docs/document-viewer/use-cases/keyboard-and-touch): Accessibility patterns and touch-device patterns for DocumentViewer.
+- [Use Case: Large Documents](/docs/document-viewer/use-cases/large-documents): Patterns for rendering 500+ page PDFs with bounded memory and responsive navigation.
+- [Use Case: Load Saved Annotations](/docs/document-viewer/use-cases/load-saved-annotations): Seed annotations on mount from your backend so users see prior review state immediately.
+- [Use Case: Multi-Format Rendering](/docs/document-viewer/use-cases/multi-format-rendering): Render PDF, image, plain-text, and markdown documents in a single component with shared toolbar and panel chrome.
+- [Use Case: Save-as-Copy Burn-in](/docs/document-viewer/use-cases/save-as-copy-burnin): Generate a baked PDF with annotations burned into the page contents — interoperable with any PDF reader.
+- [Use Case: Share-Link Viewer](/docs/document-viewer/use-cases/share-link-viewer): Permission-gated read-only viewer for anonymous visitors (share-link / public-link patterns).
+- [Use Case: Threaded Comments](/docs/document-viewer/use-cases/threaded-comments): Reply / resolve workflow for document review, with backend sync via thread-update events.
+- [Use Case: Toolbar Customization](/docs/document-viewer/use-cases/toolbar-customization): Reorder groups, hide buttons, add a custom action.
 - [Common Patterns](/docs/examples): Real-world usage patterns and composition examples for building applications with MeldUI.
 - [Dark Mode](/docs/getting-started/dark-mode): How to enable and configure dark mode in your MeldUI application.
 - [Icons](/docs/getting-started/icons): MeldUI uses Tabler Icons with custom defaults for size and stroke, provided via the @meldui/tabler-vue package.

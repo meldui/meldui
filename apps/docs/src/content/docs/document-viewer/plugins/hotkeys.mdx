@@ -1,0 +1,62 @@
+---
+title: 'Plugin: Hotkeys'
+description: Keyboard shortcuts for navigation, zoom, panels, and search.
+category: composites
+order: 117
+package: '@meldui/vue'
+---
+
+The **Hotkeys** plugin wires keyboard shortcuts that mirror desktop PDF reader conventions.
+
+## Enabling flag
+
+`features.keyboardShortcuts: true`
+
+## Bindings
+
+| Shortcut | Action |
+| --- | --- |
+| `←` / `→` / `PageUp` / `PageDown` | Previous / next page |
+| `Home` / `End` | First / last page |
+| `+` / `-` | Zoom in / out |
+| `0` | Fit page |
+| `R` | Rotate CW |
+| `Shift + R` | Rotate CCW |
+| `Ctrl/Cmd + F` | Open search popover |
+| `Esc` | Close search / panel / popover |
+| `F11` | Toggle fullscreen |
+| `Ctrl/Cmd + Z` | Undo (requires `features.undoRedo`) |
+| `Ctrl/Cmd + Shift + Z` / `Ctrl + Y` | Redo |
+| `C` | Toggle annotations panel |
+| `O` | Toggle outline panel |
+| `T` | Toggle thumbnails panel |
+| `P` | Print |
+| `D` | Download |
+
+Bindings only fire when the focus is inside the viewer (so they don't fight with the host app's shortcuts).
+
+## Composable
+
+`useCommandsCapability()` from `@embedpdf/plugin-commands/vue` plus `useHotkeysCapability()` from `@embedpdf/plugin-hotkeys/vue`. The viewer wires both internally.
+
+## Events
+
+None surfaced externally — bindings invoke the same imperative methods as the toolbar.
+
+## Dependencies
+
+- viewport (focus tracking)
+
+## Configuration
+
+No `featureConfig`. To override bindings or add your own, register additional shortcuts via `useHotkeysCapability()`:
+
+```ts
+const hot = useHotkeysCapability()
+hot.provides.value?.register('Ctrl+S', () => saveToBackend())
+```
+
+## See also
+
+- [Features → keyboardShortcuts](/docs/document-viewer/features#interaction)
+- [Use case: keyboard and touch](/docs/document-viewer/use-cases/keyboard-and-touch)

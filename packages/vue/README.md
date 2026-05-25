@@ -92,6 +92,21 @@ All shadcn-vue components are available, including:
 
 See the [shadcn-vue documentation](https://www.shadcn-vue.com/) for details on all components.
 
+### Composite Components
+
+In addition to the base UI components, MeldUI ships several composite components for higher-level use cases:
+
+- **AvatarGroup** — Stacked avatars with overflow count → see [docs](../../apps/docs/src/content/docs/composites/avatar-group.mdx)
+- **ClipboardCopy** — Copy-to-clipboard with feedback → see [docs](../../apps/docs/src/content/docs/composites/clipboard-copy.mdx)
+- **DataTable** — Server-side table with sorting, filtering, pagination, selection → see [docs](../../apps/docs/src/content/docs/data-table/index.mdx)
+- **DateRangePicker** — Range calendar with presets → see [docs](../../apps/docs/src/content/docs/composites/date-range-picker.mdx)
+- **DocumentViewer** — PDF / image / text / markdown viewer with annotations, threaded comments, and programmatic API → see [docs](../../apps/docs/src/content/docs/document-viewer/index.mdx)
+- **Filters** — Query-builder filters for tables → see [docs](../../apps/docs/src/content/docs/composites/filters.mdx)
+- **Mention** — @-mention input with autocomplete → see [docs](../../apps/docs/src/content/docs/composites/mention.mdx)
+- **MultiSelect** — Searchable multi-select with creatable options → see [docs](../../apps/docs/src/content/docs/composites/multi-select.mdx)
+- **RelativeTime** — Auto-updating relative timestamps → see [docs](../../apps/docs/src/content/docs/composites/relative-time.mdx)
+- **Timeline** — Vertical event timeline → see [docs](../../apps/docs/src/content/docs/composites/timeline.mdx)
+
 ### Utilities
 
 - `cn()` - Class name merge utility

@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "tsx scripts/generate-llms.ts && astro build && pagefind --site dist",
+    "dev": "pnpm prepare-assets && astro dev",
+    "build": "pnpm prepare-assets && tsx scripts/generate-llms.ts && astro build && pagefind --site dist",
     "generate-llms": "tsx scripts/generate-llms.ts",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "prepare-assets": "node -e \"import('node:fs/promises').then(async fs => { await fs.mkdir('public', { recursive: true }); await fs.copyFile('./node_modules/@embedpdf/pdfium/dist/pdfium.wasm', 'public/pdfium.wasm') }).catch(e => { console.warn('[docs] could not copy pdfium.wasm:', e.message); process.exit(0) })\""
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",

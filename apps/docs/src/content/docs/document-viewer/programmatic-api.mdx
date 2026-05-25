@@ -1,0 +1,238 @@
+---
+title: 'Document Viewer: Programmatic API'
+description: Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
+category: composites
+order: 4
+package: '@meldui/vue'
+---
+
+import ProgrammaticAnnotationDemo from '../../../demos/document-viewer/ProgrammaticAnnotationDemo.vue'
+
+`DocumentViewer` exposes its full imperative surface via `defineExpose`. Capture it through a template ref typed as `DocumentViewerInstance`:
+
+```ts
+import { ref } from 'vue'
+import { DocumentViewer, type DocumentViewerInstance } from '@meldui/vue'
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+```
+
+```vue
+<DocumentViewer ref="viewer" source="/doc.pdf" wasm-url="/pdfium.wasm" />
+```
+
+All methods are safe to call before the document has loaded — they queue or no-op gracefully. Methods that depend on a loaded document (`loadAnnotations`, `createAnnotation`, `getDocumentInfo`, etc.) wait on the `document-loaded` event internally.
+
+<ProgrammaticAnnotationDemo client:only="vue" />
+
+## Document
+
+### `getDocumentInfo(): DocumentInfo | null`
+
+Returns metadata for the currently-loaded document, or `null` if still loading.
+
+```ts
+const info = viewer.value?.getDocumentInfo()
+// { pageCount: 14, title: 'TraceMonkey' }
+```
+
+### `getCurrentPage(): number`
+
+Returns the 1-based page index of the page currently centered in the viewport.
+
+### `goToPage(page: number): void`
+
+Scrolls the viewer to the given 1-based page index. Out-of-range values are clamped.
+
+## Annotation read
+
+### `getAnnotations(filter?): Annotation[]`
+
+Returns all annotations currently in the document. Filter is optional:
+
+```ts
+const all = viewer.value?.getAnnotations()
+const page1 = viewer.value?.getAnnotations({ pageIndex: 0 })
+const onlyHighlights = viewer.value?.getAnnotations({ types: ['highlight'] })
+const byAuthor = viewer.value?.getAnnotations({ authorId: 'alex@example.com' })
+```
+
+### `getThread(annotationId: string): CommentThread | null`
+
+Returns the comment thread anchored to the given annotation, or `null` if none exists.
+
+## Annotation CRUD
+
+### `loadAnnotations(annotations: Annotation[]): Promise<void>`
+
+Bulk-load annotations on mount or after document switch. Waits for the engine's `loaded` event internally so it's safe to call before `document-loaded` fires.
+
+```ts
+await viewer.value?.loadAnnotations([
+  {
+    id: '0190f4...',
+    type: 'highlight',
+    pageIndex: 0,
+    rect: { origin: { x: 100, y: 200 }, size: { width: 200, height: 20 } },
+    segmentRects: [{ origin: { x: 100, y: 200 }, size: { width: 200, height: 20 } }],
+    color: '#FFCD45',
+    opacity: 0.4,
+  },
+])
+```
+
+### `createAnnotation(input: CreateAnnotationInput): Promise<Annotation>`
+
+Creates a new annotation. `id`, `createdAt`, `modifiedAt` are auto-assigned if omitted. Returns the created annotation with its assigned id.
+
+```ts
+const created = await viewer.value?.createAnnotation({
+  type: 'comment',
+  pageIndex: 2,
+  rect: { origin: { x: 150, y: 300 }, size: { width: 24, height: 24 } },
+  contents: 'Question about this paragraph',
+})
+```
+
+### `updateAnnotation(id: string, patch: Partial<Annotation>): Promise<void>`
+
+Patches an existing annotation. Only the fields in `patch` are changed.
+
+```ts
+await viewer.value?.updateAnnotation(id, { color: '#8FCFEF' })
+```
+
+### `deleteAnnotation(id: string): Promise<void>`
+
+Removes an annotation. Also deletes its thread (if any).
+
+### `selectAnnotation(id: string): void`
+
+Selects the annotation programmatically, mirroring a user click. Emits `annotation-selected`.
+
+### `navigateToAnnotation(id: string): void`
+
+Scrolls the annotation into view (and selects it).
+
+## Bulk import / export
+
+### `importAnnotations(items: AnnotationTransferItem[]): Promise<void>`
+
+Bulk-import a set of annotations + optional binary context (used for stamps and signatures). Equivalent to `loadAnnotations` but with side-data for raster-backed annotation types.
+
+### `exportAnnotations(filter?): Promise<AnnotationTransferItem[]>`
+
+Returns the document's annotations as `AnnotationTransferItem[]` — the round-trippable shape suitable for storing on your backend.
+
+```ts
+const items = await viewer.value?.exportAnnotations()
+await fetch('/api/save-annotations', { method: 'POST', body: JSON.stringify(items) })
+```
+
+## History
+
+### `undo(): void` / `redo(): void`
+
+Walks the EmbedPDF history stack one step. Requires `features.undoRedo`.
+
+### `canUndo(): boolean` / `canRedo(): boolean`
+
+Returns whether there's a step to walk in that direction.
+
+## PDF binary
+
+### `saveAsCopy(options?: SaveAsCopyOptions): Promise<ArrayBuffer>`
+
+Returns a fresh PDF buffer with the current annotations baked in. Useful for:
+- Generating a permanent record of a reviewed document
+- Burning in redactions for compliance
+- Downloading the annotated copy
+
+```ts
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+const url = URL.createObjectURL(blob)
+// trigger a download or hand off to your backend
+```
+
+## Threads
+
+### `loadThreads(threads: CommentThread[]): void`
+
+Seeds the threaded-comments overlay. Each thread is anchored to an annotation id, so call `loadAnnotations` first.
+
+### `addReply(annotationId, content): Promise<CommentReply>`
+
+Appends a reply to the annotation's thread (creating the thread if it doesn't exist). Emits `thread-update` with `action: 'reply-added'`.
+
+### `resolveAnnotation(annotationId, resolved): Promise<void>`
+
+Sets the resolved state of the annotation's thread. Emits `thread-update` with `action: 'resolved'` / `'unresolved'`.
+
+### `deleteReply(annotationId, replyId): Promise<void>`
+
+Removes a reply. Emits `thread-update` with `action: 'reply-deleted'`.
+
+## Events
+
+`DocumentViewer` emits these events. All fire only for **committed** state — in-flight drag / resize / typing states are debounced.
+
+| Event | Payload | When |
+| --- | --- | --- |
+| `document-loaded` | `DocumentInfo` | First load completes |
+| `document-error` | `{ error: string }` | Load fails (404, decode error, etc.) |
+| `page-change` | `{ page: number }` | Viewport-centered page changes |
+| `annotation-created` | `{ annotation: Annotation }` | New annotation committed (user-drawn or programmatic) |
+| `annotation-updated` | `{ annotation, patch }` | Existing annotation patched |
+| `annotation-deleted` | `{ annotationId: string }` | Annotation removed |
+| `annotation-selected` | `{ annotation: Annotation \| null }` | Selection changed |
+| `thread-update` | `{ thread, action }` | Reply added/deleted, or thread resolved/unresolved |
+
+```vue
+<DocumentViewer
+  ref="viewer"
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  @document-loaded="onLoaded"
+  @annotation-created="onCreate"
+  @thread-update="onThreadUpdate"
+/>
+```
+
+## Type imports
+
+All public types are re-exported from `@meldui/vue`:
+
+```ts
+import type {
+  DocumentViewerProps,
+  DocumentViewerInstance,
+  DocumentViewerEmits,
+  DocumentInfo,
+  ViewerFeatures,
+  FeatureConfig,
+  ToolbarConfig,
+  ViewerPermissions,
+  Annotation,
+  HighlightAnnotation,
+  CommentAnnotation,
+  FreeTextAnnotation,
+  InkAnnotation,
+  StampAnnotation,
+  SignatureAnnotation,
+  RedactionAnnotation,
+  AnnotationType,
+  AnnotationFilter,
+  AnnotationTransferItem,
+  CreateAnnotationInput,
+  CommentThread,
+  CommentReply,
+  CommentAuthor,
+  SaveAsCopyOptions,
+} from '@meldui/vue'
+```
+
+## See also
+
+- [Annotations](/docs/document-viewer/annotations) — the annotation data model in depth
+- [Use cases](/docs/document-viewer/use-cases) — runnable demos for every method above

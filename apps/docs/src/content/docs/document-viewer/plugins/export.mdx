@@ -1,0 +1,71 @@
+---
+title: 'Plugin: Export'
+description: Print, download, and saveAsCopy — every PDF output path.
+category: composites
+order: 116
+package: '@meldui/vue'
+---
+
+The **Export** plugin handles every "get the PDF out of the viewer" operation: print to the browser's print dialog, download the original (or a re-encoded copy), and `saveAsCopy()` which returns an `ArrayBuffer` with current annotations baked in.
+
+## Enabling flag
+
+`features.print: true` — registers the print plugin and adds the Print toolbar button
+`features.download: true` — registers the export plugin and adds the Download toolbar button
+
+Either flag triggers registration of the export plugin (it serves both).
+
+## What it does
+
+- Toolbar buttons: Print, Download
+- `saveAsCopy()` programmatic method that returns a baked PDF buffer
+- Optional `downloadUrl` prop on `DocumentViewer` — if set, the Download button serves that URL instead of the live source (useful for re-encoded archival copies)
+
+## Composables
+
+- `useExportCapability()` from `@embedpdf/plugin-export/vue`
+- `usePrint(documentId)` from `@embedpdf/plugin-print/vue`
+
+Both are wired into the toolbar internally.
+
+## `saveAsCopy(options?)`
+
+```ts
+interface SaveAsCopyOptions {
+  applyRedactions?: boolean  // burn in pending redactions before saving (Phase 2)
+  flatten?: boolean          // flatten annotations into page contents (loses editability)
+}
+
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+```
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- document-manager
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To wire your own "save to backend" button:
+
+```ts
+import { useExportCapability } from '@embedpdf/plugin-export/vue'
+
+async function saveToBackend() {
+  const buffer = await viewer.value?.saveAsCopy()
+  await fetch('/api/docs', { method: 'POST', body: buffer })
+}
+```
+
+## See also
+
+- [Use case: save-as-copy burn-in](/docs/document-viewer/use-cases/save-as-copy-burnin)
+- [Programmatic API → saveAsCopy](/docs/document-viewer/programmatic-api#saveascopyoptions-promisearraybuffer)

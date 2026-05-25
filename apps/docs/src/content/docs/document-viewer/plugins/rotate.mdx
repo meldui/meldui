@@ -1,0 +1,53 @@
+---
+title: 'Plugin: Rotate'
+description: Rotate the document clockwise or counter-clockwise in 90° increments.
+category: composites
+order: 107
+package: '@meldui/vue'
+---
+
+The **Rotate** plugin adds CW / CCW rotation. Every page is re-rendered at the new orientation; the rotation is purely a viewport transform, not a modification to the PDF itself.
+
+## Enabling flag
+
+`features.rotate: true`
+
+## What it does
+
+- Toolbar buttons: Rotate CW, Rotate CCW
+- `R` keyboard shortcut (when `features.keyboardShortcuts` is on)
+- Rotates all pages together (no per-page rotation in Phase 1)
+- Coordinates with annotations: highlight rects are transformed to match the rotation
+
+## Composable
+
+`useRotate(documentId)` from `@embedpdf/plugin-rotate/vue`. Returns:
+
+```ts
+{
+  rotation: Ref<number>,   // 0 | 1 | 2 | 3 (×90°)
+  rotateCW(),
+  rotateCCW(),
+  setRotation(r: number),
+}
+```
+
+## Events
+
+- `rotation-change` — emits the new rotation in degrees (surfaces as `@rotation-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To pre-set a rotation for documents you know are landscape-stored-as-portrait, call `setRotation(1)` after `document-loaded`.
+
+## See also
+
+- [Features → rotate](/docs/document-viewer/features#navigation--view-controls)

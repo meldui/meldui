@@ -1,0 +1,113 @@
+---
+title: 'Use Case: Share-Link Viewer'
+description: Permission-gated read-only viewer for anonymous visitors (share-link / public-link patterns).
+category: composites
+order: 205
+package: '@meldui/vue'
+---
+
+import BasicPdfDemo from '../../../../demos/document-viewer/BasicPdfDemo.vue'
+
+When a document is shared via a public link, you typically want the recipient to be able to **read** but not **edit** — no annotation, no thread replies, no download. The `permissions` prop combined with the `features` flags lets you build this without forking the component.
+
+## Pattern
+
+```vue
+<script setup lang="ts">
+import { DocumentViewer } from '@meldui/vue'
+import type { ViewerPermissions } from '@meldui/vue'
+
+const isAnonymousVisitor = !currentUser
+const permissions: ViewerPermissions = {
+  canAnnotate: !isAnonymousVisitor,
+  canResolveThreads: !isAnonymousVisitor,
+  canDownload: false,
+  canPrint: false,
+  canSaveAsCopy: false,
+}
+</script>
+
+<template>
+  <DocumentViewer
+    source="/shared-doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :features="{
+      zoom: true, search: true, outline: true, thumbnails: true,
+      annotations: true, commentThreads: true,
+    }"
+    :permissions="permissions"
+  />
+</template>
+```
+
+## `features` vs. `permissions`
+
+- `features` decides whether the plugin is **registered** (bundle impact). Disabled features are tree-shaken.
+- `permissions` decides whether the **UI for an already-registered feature** is visible to the current user (no bundle impact, runtime-only).
+
+For a share-link viewer, you typically want all the features registered (so a logged-in user clicking the same link gets full functionality) but the UI gated by `permissions` for anonymous visitors.
+
+## Pre-seeded read-only review
+
+A common share-link pattern: an editor publishes a reviewed document and shares a link. The recipient sees the highlights and threaded comments but can't add their own.
+
+```vue
+<script setup lang="ts">
+import { onMounted } from 'vue'
+
+onMounted(async () => {
+  const { annotations, threads } = await fetch(`/shared/${shareToken}`).then(r => r.json())
+  await viewer.value?.loadAnnotations(annotations)
+  viewer.value?.loadThreads(threads)
+})
+</script>
+
+<template>
+  <DocumentViewer
+    ref="viewer"
+    :source="docUrl"
+    wasm-url="/pdfium.wasm"
+    :features="{ annotations: true, commentThreads: true, zoom: true }"
+    :permissions="{ canAnnotate: false, canResolveThreads: false }"
+  />
+</template>
+```
+
+## Embedding in another page
+
+For embedding the viewer in a 3rd-party page (iframe, embedded widget), set a fixed size and disable everything except viewing:
+
+```vue
+<DocumentViewer
+  :source="docUrl"
+  wasm-url="/pdfium.wasm"
+  :features="{ zoom: true, search: true }"
+  :permissions="{
+    canAnnotate: false,
+    canResolveThreads: false,
+    canDownload: false,
+    canPrint: false,
+    canSaveAsCopy: false,
+  }"
+  class="h-[600px] w-full"
+/>
+```
+
+## Hiding the toolbar entirely
+
+For a fully chrome-free embed, pass an empty `groups` array via `toolbar`:
+
+```ts
+const toolbar: ToolbarConfig = {
+  groups: [],
+}
+```
+
+The viewport renders without any toolbar. Users still get keyboard shortcuts if `features.keyboardShortcuts` is on.
+
+<BasicPdfDemo client:only="vue" />
+
+## See also
+
+- [Customization → Permissions](/docs/document-viewer/customization#permissions)
+- [Features](/docs/document-viewer/features) — flag table

@@ -1,0 +1,66 @@
+---
+title: Document Viewer
+description: A reusable Vue composite for viewing and annotating PDF, image, plain-text, and markdown documents — built on EmbedPDF (PDFium WASM) with a single feature opt-in surface.
+category: composites
+order: 1
+package: '@meldui/vue'
+componentName: DocumentViewer
+---
+
+import BasicPdfDemo from '../../../demos/document-viewer/BasicPdfDemo.vue'
+
+`DocumentViewer` renders PDFs and other document formats (images, plain text, markdown) inside a Vue app, with built-in zoom, search, outline, thumbnails, and a full annotation system. The PDF path is powered by [EmbedPDF](https://www.embedpdf.com/) (PDFium compiled to WebAssembly); the other formats are native Vue renderers that share the same toolbar and side-panel chrome.
+
+It is built as a single composite with a `features` prop. Every capability is opt-in — disabled features do not register their EmbedPDF plugin, so the plugin packages are tree-shaken out of your bundle.
+
+<BasicPdfDemo client:only="vue" />
+
+## When to use
+
+- You need to display PDFs inside your app, not in a browser tab.
+- You want the **same chrome** (toolbar, panels, comment overlay) regardless of whether the user opens a PDF, an image, plain text, or markdown.
+- You need to **read or write annotations programmatically** (e.g. seed highlights from an AI/RAG response, export annotations to your backend, render shared review comments).
+- You need a **headless, customizable** viewer — `DocumentViewer` ships with sane defaults but every panel, button group, and renderer can be swapped or hidden.
+
+## When not to use
+
+- You only need to embed a PDF for download — a native `<iframe src="...pdf">` is simpler.
+- You need to **author** PDFs (draw shapes, edit text, fill complex forms). Phase 1 covers annotations + threaded comments; Phase 2 adds stamps, signatures, redaction, and forms.
+- You need OCR or text extraction without rendering — use a server-side library.
+
+## What's in the box
+
+| Capability | Plugin / Feature | Phase |
+| --- | --- | --- |
+| Continuous-scroll PDF rendering with virtualization | Viewport + Scroll + Render + Tiling (always on) | 1 |
+| Zoom, rotate, two-page spread, hand tool, fullscreen | Toggle via `features` | 1 |
+| Full-text search with case/whole-word | `features.search` | 1 |
+| Outline & thumbnail side panels | `features.outline`, `features.thumbnails` | 1 |
+| Print + Download + `saveAsCopy()` | `features.print`, `features.download` | 1 |
+| Highlights, sticky-note comments | `features.annotations` | 1 |
+| Threaded comments overlay (replies + resolved) | `features.commentThreads` | 1 |
+| Undo / Redo | `features.undoRedo` | 1 |
+| Keyboard shortcuts, touch gestures | `features.keyboardShortcuts`, `features.touchGestures` | 1 |
+| Image / text / markdown rendering | Auto-detected from `source` / `mimeType` | 1 |
+| Stamps, signatures, redaction, forms, attachments | `features.stamps` / `signature` / `redaction` / `forms` / `attachments` | 2 |
+
+## Comparison with other Vue PDF libraries
+
+| | DocumentViewer | `@tato30/vue-pdf` | `vue-pdf-embed` | PDFTron Web Viewer |
+| --- | --- | --- | --- | --- |
+| Engine | PDFium (WASM) | pdf.js (canvas) | pdf.js (canvas) | PDFNet (WASM) |
+| Multi-format (image / text / md) | ✅ | ❌ | ❌ | ❌ |
+| Native annotations | ✅ | ❌ | ❌ | ✅ |
+| Threaded comments overlay | ✅ | ❌ | ❌ | ❌ |
+| Programmatic API | ✅ | partial | ❌ | ✅ |
+| Tree-shaken plugins | ✅ | n/a | n/a | ❌ |
+| License | Internal (MeldUI) | MIT | MIT | Commercial |
+
+## Next steps
+
+- **[Getting started](/docs/document-viewer/getting-started)** — install, copy `pdfium.wasm`, render your first PDF.
+- **[Features](/docs/document-viewer/features)** — the `features` prop reference with every flag.
+- **[Programmatic API](/docs/document-viewer/programmatic-api)** — every method on `DocumentViewerInstance`.
+- **[Annotations](/docs/document-viewer/annotations)** — annotation data model, creating highlights, threaded comments.
+- **[Plugin reference](/docs/document-viewer/plugins)** — one page per EmbedPDF plugin in scope.
+- **[Use cases](/docs/document-viewer/use-cases)** — runnable demos for the common patterns.

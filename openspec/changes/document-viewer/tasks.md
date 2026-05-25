@@ -111,82 +111,82 @@
 
 The DocumentViewer docs site lives at `apps/docs/src/content/docs/document-viewer/` (top-level, mirroring the depth of `data-table/`). All pages use the existing Astro + MDX conventions with frontmatter (`title`, `description`, `category`, `order`, `package`, `componentName`) and embedded Vue demos via `client:only="vue"`.
 
-- [ ] 14.1 Create `document-viewer/index.mdx` — overview, when to use, when not to use, comparison vs other Vue PDF libs
-- [ ] 14.2 Create `document-viewer/getting-started.mdx` — install peer deps, copy `pdfium.wasm`, render first PDF / image / text / markdown
-- [ ] 14.3 Create `document-viewer/features.mdx` — `features` and `featureConfig` prop reference, full flag table, defaults
-- [ ] 14.4 Create `document-viewer/programmatic-api.mdx` — `defineExpose` method reference with example invocations
-- [ ] 14.5 Create `document-viewer/annotations.mdx` — annotation data model, threaded comments overlay, persistence patterns
-- [ ] 14.6 Create `document-viewer/customization.mdx` — toolbar groups/hide/customButtons, side panels, slot reference
-- [ ] 14.7 Create `document-viewer/theming.mdx` — Tailwind dark mode, MeldUI primitives used, override hooks
-- [ ] 14.8 Create `document-viewer/bundle-and-perf.mdx` — headless rationale, lazy loading, WASM hosting, expected sizes per `features` profile
-- [ ] 14.9 Create `document-viewer/troubleshooting.mdx` — common issues (WASM 404, CORS, mixed content, large PDFs, browser support matrix)
-- [ ] 14.10 Create `document-viewer/migration.mdx` — migration guides from `@tato30/vue-pdf`, `vue-pdf-embed`, raw `pdfjs-dist`, PDFTron Web Viewer (prop mapping tables, breaking-change notes)
+- [x] 14.1 Create `document-viewer/index.mdx` — overview, when to use, when not to use, comparison vs other Vue PDF libs
+- [x] 14.2 Create `document-viewer/getting-started.mdx` — install peer deps, copy `pdfium.wasm`, render first PDF / image / text / markdown
+- [x] 14.3 Create `document-viewer/features.mdx` — `features` and `featureConfig` prop reference, full flag table, defaults
+- [x] 14.4 Create `document-viewer/programmatic-api.mdx` — `defineExpose` method reference with example invocations
+- [x] 14.5 Create `document-viewer/annotations.mdx` — annotation data model, threaded comments overlay, persistence patterns
+- [x] 14.6 Create `document-viewer/customization.mdx` — toolbar groups/hide/customButtons, side panels, slot reference
+- [x] 14.7 Create `document-viewer/theming.mdx` — Tailwind dark mode, MeldUI primitives used, override hooks
+- [x] 14.8 Create `document-viewer/bundle-and-perf.mdx` — headless rationale, lazy loading, WASM hosting, expected sizes per `features` profile
+- [x] 14.9 Create `document-viewer/troubleshooting.mdx` — common issues (WASM 404, CORS, mixed content, large PDFs, browser support matrix)
+- [x] 14.10 Create `document-viewer/migration.mdx` — migration guides from `@tato30/vue-pdf`, `vue-pdf-embed`, raw `pdfjs-dist`, PDFTron Web Viewer (prop mapping tables, breaking-change notes)
 
 ## 15. Documentation — Per-Plugin Reference Pages (Phase 1 plugins)
 
 Each plugin gets its own MDX page in `apps/docs/src/content/docs/document-viewer/plugins/<slug>.mdx`. Each page documents: what the plugin does, which `features` flag enables it, its `featureConfig` options, the composable it exposes, key events, dependencies on other plugins, and a minimum example.
 
-- [ ] 15.1 `plugins/document-manager.mdx` — DocumentManagerPluginPackage
-- [ ] 15.2 `plugins/viewport.mdx` — ViewportPluginPackage
-- [ ] 15.3 `plugins/scroll.mdx` — ScrollPluginPackage (continuous + page mode)
-- [ ] 15.4 `plugins/render.mdx` — RenderPluginPackage
-- [ ] 15.5 `plugins/tiling.mdx` — TilingPluginPackage (virtualization)
-- [ ] 15.6 `plugins/zoom.mdx` — ZoomPluginPackage (incl. fit modes, pinch)
-- [ ] 15.7 `plugins/rotate.mdx` — RotatePluginPackage
-- [ ] 15.8 `plugins/spread.mdx` — SpreadPluginPackage (two-page spread)
-- [ ] 15.9 `plugins/pan.mdx` — PanPluginPackage (hand tool)
-- [ ] 15.10 `plugins/fullscreen.mdx` — FullscreenPluginPackage
-- [ ] 15.11 `plugins/interaction-manager.mdx` — InteractionManagerPluginPackage
-- [ ] 15.12 `plugins/selection.mdx` — SelectionPluginPackage (text select + copy)
-- [ ] 15.13 `plugins/search.mdx` — SearchPluginPackage
-- [ ] 15.14 `plugins/bookmark.mdx` — BookmarkPluginPackage (outline)
-- [ ] 15.15 `plugins/thumbnail.mdx` — ThumbnailPluginPackage
-- [ ] 15.16 `plugins/export.mdx` — ExportPluginPackage (print + download + saveAsCopy)
-- [ ] 15.17 `plugins/hotkeys.mdx` — HotkeysPluginPackage + custom binds
-- [ ] 15.18 `plugins/annotation.mdx` — AnnotationPluginPackage (Phase 1 core annotation API)
-- [ ] 15.19 `plugins/history.mdx` — HistoryPluginPackage (undo/redo)
+- [x] 15.1 `plugins/document-manager.mdx` — DocumentManagerPluginPackage
+- [x] 15.2 `plugins/viewport.mdx` — ViewportPluginPackage
+- [x] 15.3 `plugins/scroll.mdx` — ScrollPluginPackage (continuous + page mode)
+- [x] 15.4 `plugins/render.mdx` — RenderPluginPackage
+- [x] 15.5 `plugins/tiling.mdx` — TilingPluginPackage (virtualization)
+- [x] 15.6 `plugins/zoom.mdx` — ZoomPluginPackage (incl. fit modes, pinch)
+- [x] 15.7 `plugins/rotate.mdx` — RotatePluginPackage
+- [x] 15.8 `plugins/spread.mdx` — SpreadPluginPackage (two-page spread)
+- [x] 15.9 `plugins/pan.mdx` — PanPluginPackage (hand tool)
+- [x] 15.10 `plugins/fullscreen.mdx` — FullscreenPluginPackage
+- [x] 15.11 `plugins/interaction-manager.mdx` — InteractionManagerPluginPackage
+- [x] 15.12 `plugins/selection.mdx` — SelectionPluginPackage (text select + copy)
+- [x] 15.13 `plugins/search.mdx` — SearchPluginPackage
+- [x] 15.14 `plugins/bookmark.mdx` — BookmarkPluginPackage (outline)
+- [x] 15.15 `plugins/thumbnail.mdx` — ThumbnailPluginPackage
+- [x] 15.16 `plugins/export.mdx` — ExportPluginPackage (print + download + saveAsCopy)
+- [x] 15.17 `plugins/hotkeys.mdx` — HotkeysPluginPackage + custom binds
+- [x] 15.18 `plugins/annotation.mdx` — AnnotationPluginPackage (Phase 1 core annotation API)
+- [x] 15.19 `plugins/history.mdx` — HistoryPluginPackage (undo/redo)
 
 ## 16. Documentation — Use-Case Guides
 
 Each use case gets its own MDX page in `apps/docs/src/content/docs/document-viewer/use-cases/<slug>.mdx` with an embedded runnable demo from `apps/docs/src/demos/document-viewer/`.
 
-- [ ] 16.1 `use-cases/index.mdx` — index page linking all use cases
-- [ ] 16.2 `use-cases/load-saved-annotations.mdx` — load-on-open with backend persistence pattern
-- [ ] 16.3 `use-cases/ai-rag-citations.mdx` — programmatic highlights from AI/RAG responses, ephemeral citation pattern
-- [ ] 16.4 `use-cases/import-export-annotations.mdx` — round-tripping annotations between systems
-- [ ] 16.5 `use-cases/save-as-copy-burnin.mdx` — generating a baked-in PDF copy with `saveAsCopy()`
-- [ ] 16.6 `use-cases/share-link-viewer.mdx` — permission-gated read-only viewer (no auth, anonymous visitor)
-- [ ] 16.7 `use-cases/multi-format-rendering.mdx` — image / text / markdown rendering
-- [ ] 16.8 `use-cases/threaded-comments.mdx` — replies + resolved state with backend sync
-- [ ] 16.9 `use-cases/keyboard-and-touch.mdx` — accessibility + touch device patterns
-- [ ] 16.10 `use-cases/large-documents.mdx` — virtualization and 1000+ page documents
-- [ ] 16.11 `use-cases/dark-mode-integration.mdx` — theming inside a dark-mode app
-- [ ] 16.12 `use-cases/toolbar-customization.mdx` — custom buttons, hidden groups, reordering
+- [x] 16.1 `use-cases/index.mdx` — index page linking all use cases
+- [x] 16.2 `use-cases/load-saved-annotations.mdx` — load-on-open with backend persistence pattern
+- [x] 16.3 `use-cases/ai-rag-citations.mdx` — programmatic highlights from AI/RAG responses, ephemeral citation pattern
+- [x] 16.4 `use-cases/import-export-annotations.mdx` — round-tripping annotations between systems
+- [x] 16.5 `use-cases/save-as-copy-burnin.mdx` — generating a baked-in PDF copy with `saveAsCopy()`
+- [x] 16.6 `use-cases/share-link-viewer.mdx` — permission-gated read-only viewer (no auth, anonymous visitor)
+- [x] 16.7 `use-cases/multi-format-rendering.mdx` — image / text / markdown rendering
+- [x] 16.8 `use-cases/threaded-comments.mdx` — replies + resolved state with backend sync
+- [x] 16.9 `use-cases/keyboard-and-touch.mdx` — accessibility + touch device patterns
+- [x] 16.10 `use-cases/large-documents.mdx` — virtualization and 1000+ page documents
+- [x] 16.11 `use-cases/dark-mode-integration.mdx` — theming inside a dark-mode app
+- [x] 16.12 `use-cases/toolbar-customization.mdx` — custom buttons, hidden groups, reordering
 
 ## 17. Documentation — Demos (Vue SFCs)
 
 Each MDX page that needs an interactive demo gets a Vue SFC in `apps/docs/src/demos/document-viewer/`.
 
-- [ ] 17.1 `BasicPdfDemo.vue` — minimal PDF viewer
-- [ ] 17.2 `MultiFormatDemo.vue` — PDF / image / text / markdown switcher
-- [ ] 17.3 `FeaturesProfileDemo.vue` — interactive `features` flag toggles showing toolbar adapt
-- [ ] 17.4 `ProgrammaticAnnotationDemo.vue` — buttons that call `createAnnotation` / `updateAnnotation` / `deleteAnnotation`
-- [ ] 17.5 `LoadSavedAnnotationsDemo.vue` — pre-seeded annotations on mount
-- [ ] 17.6 `RagCitationDemo.vue` — simulates an AI citation creating an ephemeral highlight
-- [ ] 17.7 `ImportExportDemo.vue` — round-trip with downloadable JSON
-- [ ] 17.8 `SaveAsCopyDemo.vue` — downloads a baked PDF
-- [ ] 17.9 `ThreadedCommentsDemo.vue` — replies + resolve
-- [ ] 17.10 `ToolbarCustomDemo.vue` — reordered groups, hidden buttons, custom action
-- [ ] 17.11 `LargeDocumentDemo.vue` — 500+ page PDF for virtualization showcase
-- [ ] 17.12 `DarkModeDemo.vue` — toggle dark class on the root
+- [x] 17.1 `BasicPdfDemo.vue` — minimal PDF viewer
+- [x] 17.2 `MultiFormatDemo.vue` — PDF / image / text / markdown switcher
+- [x] 17.3 `FeaturesProfileDemo.vue` — interactive `features` flag toggles showing toolbar adapt
+- [x] 17.4 `ProgrammaticAnnotationDemo.vue` — buttons that call `createAnnotation` / `updateAnnotation` / `deleteAnnotation`
+- [x] 17.5 `LoadSavedAnnotationsDemo.vue` — pre-seeded annotations on mount
+- [x] 17.6 `RagCitationDemo.vue` — simulates an AI citation creating an ephemeral highlight
+- [x] 17.7 `ImportExportDemo.vue` — round-trip with downloadable JSON
+- [x] 17.8 `SaveAsCopyDemo.vue` — downloads a baked PDF
+- [x] 17.9 `ThreadedCommentsDemo.vue` — replies + resolve
+- [x] 17.10 `ToolbarCustomDemo.vue` — reordered groups, hidden buttons, custom action
+- [x] 17.11 `LargeDocumentDemo.vue` — 500+ page PDF for virtualization showcase
+- [x] 17.12 `DarkModeDemo.vue` — toggle dark class on the root
 
 ## 18. Documentation — In-Package & Pagefind
 
-- [ ] 18.1 Create `packages/vue/src/composites/document-viewer/README.md` as a short "see the docs site" pointer plus minimum quick start
+- [x] 18.1 Create `packages/vue/src/composites/document-viewer/README.md` as a short "see the docs site" pointer plus minimum quick start
 - [ ] 18.2 Add inline TSDoc comments on every public type (`DocumentViewerProps`, `ViewerFeatures`, `FeatureConfig`, `DocumentViewerInstance`, `Annotation`, `CommentReply`, `Thread`, etc.)
-- [ ] 18.3 Add DocumentViewer entry to `packages/vue/README.md` component index linking to docs site
-- [ ] 18.4 Verify Pagefind indexes all new MDX pages (run `pnpm build` in `apps/docs/`; check `dist/pagefind/`)
-- [ ] 18.5 Verify `generate-llms.ts` script picks up DocumentViewer pages so the LLM-friendly text export is complete
+- [x] 18.3 Add DocumentViewer entry to `packages/vue/README.md` component index linking to docs site
+- [x] 18.4 Verify Pagefind indexes all new MDX pages (run `pnpm build` in `apps/docs/`; check `dist/pagefind/`)
+- [x] 18.5 Verify `generate-llms.ts` script picks up DocumentViewer pages so the LLM-friendly text export is complete
 - [ ] 18.6 Smoke-test the docs site nav: every demo loads, every internal link resolves, DocumentViewer appears in sidebar grouping
 
 ## 19. Storybook

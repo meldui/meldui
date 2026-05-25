@@ -1,0 +1,51 @@
+---
+title: 'Plugin: Bookmark (Outline)'
+description: Extracts the document outline and renders it as a side-panel tree.
+category: composites
+order: 114
+package: '@meldui/vue'
+---
+
+The **Bookmark** plugin reads the PDF's outline (table of contents) and exposes it for side-panel rendering. `DocumentViewer` ships an `OutlinePanel.vue` that renders the tree with keyboard navigation.
+
+## Enabling flag
+
+`features.outline: true`
+
+## What it does
+
+- Extracts the PDF outline / bookmarks tree on document load
+- Renders a hierarchical tree in the side panel
+- Click any node to navigate to the target page
+- Keyboard nav: arrow keys to walk, Enter to navigate
+- `O` keyboard shortcut to toggle the panel (when `features.keyboardShortcuts` is on)
+
+## Composable
+
+`useBookmark(documentId)` from `@embedpdf/plugin-bookmark/vue`. Returns the outline tree as a reactive array of `BookmarkNode`s.
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- document-manager
+- scroll (for `goToPage` on click)
+
+## Configuration
+
+No `featureConfig`.
+
+## Empty state
+
+If the PDF has no outline (most short documents don't), the panel renders an empty state message. Many PDFs only carry an outline if explicitly added during authoring.
+
+## When you'd touch it directly
+
+To render the outline in a sidebar outside the viewer chrome — `useBookmark` returns the tree directly.
+
+## See also
+
+- [Plugin: thumbnail](/docs/document-viewer/plugins/thumbnail) — the other navigation panel
+- [Features → outline](/docs/document-viewer/features#side-panels)

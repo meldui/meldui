@@ -1,0 +1,129 @@
+---
+title: 'Document Viewer: Theming'
+description: Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
+category: composites
+order: 7
+package: '@meldui/vue'
+---
+
+import DarkModeDemo from '../../../demos/document-viewer/DarkModeDemo.vue'
+
+`DocumentViewer` is built entirely from MeldUI primitives, so it inherits your app's Tailwind v4 theme automatically. No additional theme configuration is required.
+
+## Dark mode
+
+The viewer chrome adapts to dark mode via `dark:` Tailwind classes on every internal element. Add `class="dark"` to a parent (or `<html>`) and the entire toolbar, panels, popovers, and overlay surfaces flip.
+
+```vue
+<template>
+  <div :class="darkMode ? 'dark' : ''">
+    <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+  </div>
+</template>
+```
+
+<DarkModeDemo client:only="vue" />
+
+### What's themed vs. what isn't
+
+| Element | Themed |
+| --- | --- |
+| Toolbar background, buttons, icons, dividers | ✅ via `bg-background` / `text-foreground` |
+| Side panel chrome (header, close button, list rows) | ✅ |
+| Search popover, highlight tooltip, comment form, comment marker | ✅ |
+| Annotations panel rows + reply form | ✅ |
+| **The PDF page itself** | ❌ The page is rendered by PDFium with the document's original page colour (typically white) — EmbedPDF does not invert page colours. For a dark-aware reader, add a wrapper with `bg-muted/30` to soften the contrast with the rest of the app |
+
+## MeldUI primitives in use
+
+Every UI element inside `DocumentViewer` is composed from MeldUI primitives so styling overrides naturally inherit. The internals use:
+
+| Primitive | Used by |
+| --- | --- |
+| `Button` | Every toolbar button, comment form actions, reply submit |
+| `Popover` | Search popover, panel toggles on mobile |
+| `Tooltip` | Highlight tooltip wrapper, button hover labels |
+| `Textarea` | Comment form, reply form |
+| `Toggle` | Search case / whole-word toggles |
+
+Override the variants via your Tailwind theme — see [Theming guide (Getting Started)](/docs/getting-started/theming).
+
+## CSS class override points
+
+The viewer's root carries `class="document-viewer"` and `data-document-viewer`. Internal parts use unprefixed semantic classes; you can target them in your global CSS without prefix gymnastics.
+
+```css
+/* Larger toolbar buttons just for the viewer */
+.document-viewer .viewer-toolbar button {
+  padding: 0.5rem 0.75rem;
+}
+
+/* Custom border around the annotated PDF page */
+.document-viewer .pdf-page {
+  box-shadow: 0 0 0 1px theme(colors.border), 0 4px 12px theme(colors.shadow / 0.1);
+}
+
+/* Brand-coloured highlight tooltip */
+.document-viewer .highlight-tooltip {
+  --background: theme(colors.brand.50);
+}
+```
+
+The full list of internal classes is documented in [Customization → CSS class overrides](/docs/document-viewer/customization).
+
+## Per-instance `class` prop
+
+For one-off styling, pass `class` directly:
+
+```vue
+<DocumentViewer
+  class="rounded-xl border shadow-lg"
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+/>
+```
+
+The prop merges onto the root via `cn()`, so Tailwind utility conflicts resolve in your favour.
+
+## Custom highlight palette
+
+The 5 default highlight colours live in `HIGHLIGHT_COLORS`. Override them via `featureConfig.annotations.defaultTools` to match your brand:
+
+```ts
+const featureConfig = {
+  annotations: {
+    defaultTools: [
+      { id: 'brand-1', label: 'Brand Primary',   color: '#0066FF', opacity: 0.35 },
+      { id: 'brand-2', label: 'Brand Secondary', color: '#FF6B35', opacity: 0.35 },
+      { id: 'brand-3', label: 'Brand Accent',    color: '#A0E7E5', opacity: 0.35 },
+    ],
+  },
+}
+```
+
+The floating tooltip renders one swatch per tool; the first becomes the active default.
+
+## Dark-mode caveat: PDF page background
+
+PDFium renders pages with the page's authored background (typically white). The viewer chrome around the page goes dark, but the page itself stays white. For a fully dark-themed reader you have a few options:
+
+1. **Filter the page** — apply `filter: invert(1) hue-rotate(180deg)` to `.pdf-page` for a quick (but lossy) inversion.
+2. **Reduce contrast** — add `bg-muted/30 dark:bg-muted/60` around the renderer to soften the white edge.
+3. **Accept it** — for most professional documents (contracts, reports), preserving the original page colour is the correct default.
+
+```css
+/* Option 1: aggressive invert for dark mode */
+.dark .document-viewer .pdf-page {
+  filter: invert(1) hue-rotate(180deg);
+}
+.dark .document-viewer .pdf-page img,
+.dark .document-viewer .pdf-page canvas {
+  filter: invert(1) hue-rotate(180deg);
+}
+```
+
+## See also
+
+- [Customization](/docs/document-viewer/customization) — toolbar + panel + slot customization
+- [Theming guide (global)](/docs/getting-started/theming) — how MeldUI uses Tailwind v4 themes
+- [Use case: dark-mode integration](/docs/document-viewer/use-cases/dark-mode-integration)

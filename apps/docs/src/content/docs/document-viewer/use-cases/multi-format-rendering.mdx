@@ -1,0 +1,83 @@
+---
+title: 'Use Case: Multi-Format Rendering'
+description: Render PDF, image, plain-text, and markdown documents in a single component with shared toolbar and panel chrome.
+category: composites
+order: 206
+package: '@meldui/vue'
+---
+
+import MultiFormatDemo from '../../../../demos/document-viewer/MultiFormatDemo.vue'
+
+`DocumentViewer` dispatches to a format-specific renderer based on the detected MIME type, so the same component works for PDF, image, plain text, and markdown. The toolbar and side panels are shared across formats, giving the user a consistent experience regardless of what's being viewed.
+
+<MultiFormatDemo client:only="vue" />
+
+## Auto-detection
+
+If `mime-type` is omitted, the type is detected from the `source`:
+
+- **URL string** — sniffed from the path's file extension and / or a HEAD request's `Content-Type`
+- **File / Blob** — read from the object's `.type` property
+- **ArrayBuffer** — no detection possible; pass `mime-type` explicitly
+
+```vue
+<!-- Detected as PDF from the .pdf extension -->
+<DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+
+<!-- Explicit MIME for an extension-less URL -->
+<DocumentViewer source="/api/docs/42" mime-type="application/pdf" wasm-url="/pdfium.wasm" />
+
+<!-- Image -->
+<DocumentViewer source="/diagram.png" mime-type="image/png" />
+
+<!-- Plain text -->
+<DocumentViewer source="/changelog.txt" mime-type="text/plain" />
+
+<!-- Markdown -->
+<DocumentViewer source="/README.md" mime-type="text/markdown" />
+```
+
+## Format ↔ renderer map
+
+| MIME type | Renderer | Features supported |
+| --- | --- | --- |
+| `application/pdf` | `PdfViewer.vue` (EmbedPDF + PDFium) | Full feature set (annotations, search, outline, thumbnails, etc.) |
+| `image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/svg+xml` | `ImageViewer.vue` | Zoom, fit presets, print, download |
+| `text/plain` | `TextViewer.vue` | DOM-based search, print, download |
+| `text/markdown` | `MarkdownViewer.vue` | DOM-based search, print, download |
+
+## Feature flags that apply per format
+
+- **PDF**: all features apply
+- **Image, text, markdown**: `zoom`, `print`, `download` work; annotation / outline / thumbnails are no-ops (the renderers don't have a concept of pages, bookmarks, or annotations)
+
+So a feature set like `{ zoom: true, annotations: true }` is fine for PDF and harmless for non-PDF formats (the toolbar buttons that don't apply are hidden).
+
+## Switching formats dynamically
+
+When the user switches documents, key the viewer to force a fresh mount:
+
+```vue
+<DocumentViewer
+  :key="currentDoc.id"
+  :source="currentDoc.source"
+  :mime-type="currentDoc.mimeType"
+  wasm-url="/pdfium.wasm"
+/>
+```
+
+Without `:key`, swapping `source` reuses the renderer; for cross-format swaps (PDF → image), the renderer must be remounted because the underlying engine differs.
+
+## Programmatic API differences
+
+Most `DocumentViewerInstance` methods work for all formats:
+- `getDocumentInfo()`, `getCurrentPage()` (returns 1 for non-paged formats), `goToPage()` (no-op)
+- `loadAnnotations`, `createAnnotation`, etc. — no-ops for non-PDF formats (no annotation layer)
+- `saveAsCopy()` — PDF only
+
+For non-PDF documents, focus on the rendering / search / download capabilities; the annotation API is silently inactive.
+
+## See also
+
+- [Getting Started → Render an image, text, or markdown document](/docs/document-viewer/getting-started#render-an-image-text-or-markdown-document)
+- [Plugin: search](/docs/document-viewer/plugins/search) — DOM-based search for non-PDF formats

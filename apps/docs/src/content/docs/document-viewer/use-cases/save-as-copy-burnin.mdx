@@ -1,0 +1,78 @@
+---
+title: 'Use Case: Save-as-Copy Burn-in'
+description: Generate a baked PDF with annotations burned into the page contents — interoperable with any PDF reader.
+category: composites
+order: 204
+package: '@meldui/vue'
+---
+
+import SaveAsCopyDemo from '../../../../demos/document-viewer/SaveAsCopyDemo.vue'
+
+When you need to deliver a PDF that **anyone** can open and see the annotations (not just users of `DocumentViewer`), use `saveAsCopy()`. It returns a fresh PDF binary with annotations baked into the page contents.
+
+<SaveAsCopyDemo client:only="vue" />
+
+## Pattern
+
+```ts
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+
+// Option A: trigger a download
+const url = URL.createObjectURL(blob)
+const a = document.createElement('a')
+a.href = url
+a.download = 'reviewed-doc.pdf'
+a.click()
+URL.revokeObjectURL(url)
+
+// Option B: POST to your backend for archival
+await fetch('/api/documents/reviewed', {
+  method: 'POST',
+  body: blob,
+  headers: { 'Content-Type': 'application/pdf' },
+})
+```
+
+## When to use this vs. `exportAnnotations`
+
+| Need | Use |
+| --- | --- |
+| Show the annotated doc to someone who doesn't have `DocumentViewer` | `saveAsCopy()` |
+| Backup the annotations so the user can later edit them in `DocumentViewer` | `exportAnnotations()` (preserves editability) |
+| Both (e.g. archive + future re-edit) | Do both — store the JSON for editing, ship the PDF for sharing |
+
+`saveAsCopy()` burns annotations into the PDF contents in a way that's spec-compliant for PDF 1.7 — most professional PDF readers (Adobe, Preview, Foxit) will show them. But the original "editable annotation" metadata may be lost, so subsequent rounds of editing should start from the original source + the `exportAnnotations()` JSON.
+
+## Compliance burn-in (Phase 2: redactions)
+
+When `features.redaction` ships in Phase 2, `saveAsCopy({ applyRedactions: true })` permanently removes the redacted content from the PDF (not just covers it with a black box). This is the correct compliance workflow:
+
+```ts
+// Phase 2 — once redaction lands
+const buffer = await viewer.value?.saveAsCopy({ applyRedactions: true })
+// the buffer has the redacted text completely removed from the page contents,
+// not just hidden behind a rectangle.
+```
+
+## Threads are not embedded
+
+Threads (replies + resolved state) live in the parallel `CommentThread[]` overlay, **not in the PDF binary**. If you need to ship both the baked PDF and the thread data:
+
+```ts
+const [buffer, threads] = await Promise.all([
+  viewer.value!.saveAsCopy(),
+  fetchAllThreadsFromAppState(),
+])
+
+// Bundle them in a multipart upload, or a zip, or two separate endpoints
+```
+
+## Performance
+
+`saveAsCopy()` re-encodes the PDF — for very large documents (1000+ pages with many annotations), this can take several seconds. Show a loading state during the call.
+
+## See also
+
+- [Programmatic API → saveAsCopy](/docs/document-viewer/programmatic-api#saveascopyoptions-promisearraybuffer)
+- [Use case: import / export annotations](/docs/document-viewer/use-cases/import-export-annotations) — the editable-form alternative

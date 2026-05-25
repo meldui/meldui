@@ -1,0 +1,124 @@
+---
+title: 'Use Case: Threaded Comments'
+description: Reply / resolve workflow for document review, with backend sync via thread-update events.
+category: composites
+order: 207
+package: '@meldui/vue'
+---
+
+import ThreadedCommentsDemo from '../../../../demos/document-viewer/ThreadedCommentsDemo.vue'
+
+`features.commentThreads` adds a reply layer on top of any annotation. Users can reply to highlights and sticky-note comments, mark threads resolved (without deleting the annotation), and walk through outstanding feedback in a side panel.
+
+<ThreadedCommentsDemo client:only="vue" />
+
+## Data model
+
+Threads are **not stored in the PDF** — they live in a parallel `CommentThread[]` overlay keyed by `annotationId`:
+
+```ts
+interface CommentThread {
+  annotationId: string
+  replies: CommentReply[]
+  resolved: boolean
+  resolvedAt?: string
+  resolvedByUserId?: string
+}
+
+interface CommentReply {
+  id: string
+  annotationId: string
+  authorUserId: string
+  authorDisplayName: string
+  content: string
+  createdAt: string
+}
+```
+
+Store threads in your own database and sync via the `thread-update` event.
+
+## Seeding on mount
+
+```ts
+onMounted(async () => {
+  const annotations = await fetch(`/api/docs/${docId}/annotations`).then(r => r.json())
+  const threads = await fetch(`/api/docs/${docId}/threads`).then(r => r.json())
+
+  await viewer.value?.loadAnnotations(annotations)
+  viewer.value?.loadThreads(threads)
+})
+```
+
+Order matters: load annotations first (threads reference annotation ids).
+
+## Syncing back
+
+Subscribe to `thread-update` and persist:
+
+```vue
+<DocumentViewer
+  @thread-update="onThreadUpdate"
+/>
+```
+
+```ts
+import type { ThreadUpdatePayload } from '@meldui/vue'
+
+async function onThreadUpdate({ thread, action }: ThreadUpdatePayload) {
+  switch (action) {
+    case 'reply-added':
+    case 'reply-deleted':
+    case 'resolved':
+    case 'unresolved':
+      await fetch(`/api/docs/${docId}/threads/${thread.annotationId}`, {
+        method: 'PUT',
+        body: JSON.stringify(thread),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      break
+  }
+}
+```
+
+The `action` field tells you what kind of mutation triggered the event, so you can drive different backend endpoints if desired.
+
+## Replying from the panel vs. the in-page tooltip
+
+There are two entry points to add a reply:
+
+1. **Side panel** (`AnnotationsPanel`) — lists every annotation with thread; clicking opens the reply form
+2. **Floating tooltip** (`HighlightTooltip`) — appears over a selected highlight; has an "Add reply" button
+
+Both call `addReply()` internally and fire `thread-update` with `action: 'reply-added'`.
+
+## Resolving threads
+
+Marking a thread resolved doesn't delete the annotation — it just changes the `resolved` flag and adds a `resolvedAt` / `resolvedByUserId`. The annotation still renders on the page (typically with a subtle visual difference, e.g. lower opacity). Filter resolved threads from your side panel UI if you want a "todo" view:
+
+```ts
+const unresolvedThreads = computed(() =>
+  allThreads.value.filter(t => !t.resolved),
+)
+```
+
+## Current user attribution
+
+Set `currentUser` so replies are attributed correctly:
+
+```vue
+<DocumentViewer
+  :current-user="{
+    id: 'u-42',
+    displayName: 'Alex Chen',
+    avatarUrl: '/me.png',
+  }"
+  ...
+/>
+```
+
+`currentUser.displayName` flows into new replies' `authorDisplayName` and also into `featureConfig.annotations.author` as a default.
+
+## See also
+
+- [Annotations → Threaded comments](/docs/document-viewer/annotations#threaded-comments-overlay)
+- [Programmatic API → Threads](/docs/document-viewer/programmatic-api#threads)
