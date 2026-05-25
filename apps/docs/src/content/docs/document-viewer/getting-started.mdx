@@ -1,0 +1,175 @@
+---
+title: 'Document Viewer: Getting Started'
+description: Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
+category: composites
+order: 2
+package: '@meldui/vue'
+---
+
+import BasicPdfDemo from '../../../demos/document-viewer/BasicPdfDemo.vue'
+import MultiFormatDemo from '../../../demos/document-viewer/MultiFormatDemo.vue'
+
+This guide walks through installing `DocumentViewer`, hosting the PDFium WebAssembly binary, and rendering each of the four supported formats.
+
+## Install
+
+```bash
+pnpm add @meldui/vue @meldui/tabler-vue vue
+
+# EmbedPDF peer dependencies — install only what your features prop enables.
+pnpm add @embedpdf/core @embedpdf/engines @embedpdf/models @embedpdf/pdfium \
+  @embedpdf/plugin-document-manager \
+  @embedpdf/plugin-viewport \
+  @embedpdf/plugin-scroll \
+  @embedpdf/plugin-render \
+  @embedpdf/plugin-tiling
+```
+
+The five EmbedPDF plugins above are the **minimum** set for PDF rendering. Add others as you opt into `features` flags — see the [Bundle & Perf](/docs/document-viewer/bundle-and-perf) guide for the complete plugin → feature mapping.
+
+## Host the PDFium WASM binary
+
+EmbedPDF ships PDFium as a `.wasm` file in `@embedpdf/pdfium/dist/pdfium.wasm`. Your app needs to serve it at a stable URL so `DocumentViewer` can load it on demand. Copy it into your public directory at build time:
+
+```bash
+# Add to your build script (Astro, Vite, Nuxt, Phoenix, etc.)
+cp node_modules/@embedpdf/pdfium/dist/pdfium.wasm public/pdfium.wasm
+```
+
+Then pass the URL to the component via `wasmUrl`:
+
+```vue
+<DocumentViewer source="/sample.pdf" wasm-url="/pdfium.wasm" />
+```
+
+### Why self-host?
+
+- Same origin as your app — no CDN dependency, no CORS, no third-party domain.
+- Works in air-gapped or enterprise environments.
+- Cached independently of your JS bundle.
+
+A relative `wasmUrl` like `/pdfium.wasm` works in both worker and main-thread modes. If you opt to `worker={false}`, fully-qualified URLs (`https://...`) also work.
+
+## Render a PDF
+
+The minimum viable usage:
+
+```vue
+<script setup lang="ts">
+import { DocumentViewer } from '@meldui/vue'
+</script>
+
+<template>
+  <DocumentViewer source="/sample.pdf" wasm-url="/pdfium.wasm" />
+</template>
+```
+
+`source` accepts a URL string, a `File`, a `Blob`, or an `ArrayBuffer`. The MIME type is auto-detected; you can override with `mime-type="application/pdf"` if your URL has no extension.
+
+<BasicPdfDemo client:only="vue" />
+
+## Render an image, text, or markdown document
+
+`DocumentViewer` dispatches to a format-specific renderer based on the detected MIME type. No extra setup needed — the toolbar and side-panel chrome are shared.
+
+```vue
+<!-- Image -->
+<DocumentViewer source="/diagram.png" mime-type="image/png" />
+
+<!-- Plain text -->
+<DocumentViewer source="/changelog.txt" mime-type="text/plain" />
+
+<!-- Markdown -->
+<DocumentViewer source="/README.md" mime-type="text/markdown" />
+```
+
+<MultiFormatDemo client:only="vue" />
+
+## Capture a ref for the programmatic API
+
+To call methods like `loadAnnotations`, `createAnnotation`, or `saveAsCopy`, capture a template ref typed as `DocumentViewerInstance`:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DocumentViewer, type DocumentViewerInstance } from '@meldui/vue'
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+
+async function exportAnnotations() {
+  const items = await viewer.value?.exportAnnotations()
+  console.log(items)
+}
+</script>
+
+<template>
+  <DocumentViewer ref="viewer" source="/sample.pdf" wasm-url="/pdfium.wasm" />
+  <button @click="exportAnnotations">Export</button>
+</template>
+```
+
+See the [Programmatic API](/docs/document-viewer/programmatic-api) page for the full method list.
+
+## Common `features` profiles
+
+Three common feature profiles:
+
+```vue
+<!-- Read-only preview: zoom + scroll + search only -->
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ zoom: true, search: true, download: true }"
+/>
+
+<!-- Review workflow: annotations + threaded comments -->
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true,
+    search: true,
+    outline: true,
+    thumbnails: true,
+    annotations: true,
+    commentThreads: true,
+    undoRedo: true,
+    download: true,
+    print: true,
+  }"
+/>
+
+<!-- Everything: kitchen-sink for an internal reader -->
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true,
+    rotate: true,
+    spread: true,
+    pan: true,
+    fullscreen: true,
+    search: true,
+    selection: true,
+    outline: true,
+    thumbnails: true,
+    print: true,
+    download: true,
+    annotations: true,
+    commentThreads: true,
+    undoRedo: true,
+    keyboardShortcuts: true,
+    touchGestures: true,
+  }"
+/>
+```
+
+See [Features](/docs/document-viewer/features) for the full flag table.
+
+## Next steps
+
+- [Features](/docs/document-viewer/features) — every `features` flag and its `featureConfig`.
+- [Annotations](/docs/document-viewer/annotations) — annotation data model, creating highlights, threaded comments.
+- [Programmatic API](/docs/document-viewer/programmatic-api) — full method reference.
+- [Use cases](/docs/document-viewer/use-cases) — runnable demos for the common patterns.
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf) — chunking, WASM hosting, expected sizes per feature profile.

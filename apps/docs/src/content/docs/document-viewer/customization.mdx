@@ -1,0 +1,176 @@
+---
+title: 'Document Viewer: Customization'
+description: Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
+category: composites
+order: 6
+package: '@meldui/vue'
+---
+
+import ToolbarCustomDemo from '../../../demos/document-viewer/ToolbarCustomDemo.vue'
+
+The default `DocumentViewer` chrome is configured to work out of the box, but every part of the toolbar and side-panel layout is replaceable.
+
+## Toolbar customization
+
+Pass a `toolbar` prop typed as `ToolbarConfig`:
+
+```ts
+import type { ToolbarConfig } from '@meldui/vue'
+
+const toolbar: ToolbarConfig = {
+  groups: ['nav', 'zoom', 'tools', 'panels', 'export'],
+  hide: ['rotate', 'spread'],
+  customButtons: [
+    {
+      id: 'share',
+      label: 'Share',
+      icon: 'IconShare',
+      position: 'export',
+      onClick: () => openShareDialog(),
+    },
+  ],
+}
+```
+
+```vue
+<DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :toolbar="toolbar" ... />
+```
+
+<ToolbarCustomDemo client:only="vue" />
+
+### `groups`
+
+Reorders or restricts the toolbar groups. Default order is:
+
+```ts
+;['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+```
+
+Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order.
+
+### `hide`
+
+Hides individual buttons by id. The default ids are: `zoom-in`, `zoom-out`, `fit-page`, `fit-width`, `rotate-cw`, `rotate-ccw`, `spread`, `pan`, `fullscreen`, `print`, `download`, `highlight`, `comment`, `undo`, `redo`, `search-toggle`, `outline-toggle`, `thumbnails-toggle`, `annotations-toggle`.
+
+### `customButtons`
+
+Append your own buttons. Each requires:
+
+- `id` — unique within the toolbar
+- `label` — accessible label (visible in overflow menu)
+- `icon` — name of a `@meldui/tabler-vue` icon component
+- `position` — which group to attach to (`'nav' | 'zoom' | 'view' | 'tools' | 'panels' | 'search' | 'export'`)
+- `onClick` — handler
+
+## Side panel customization
+
+The three default panels are:
+
+- **Outline** — `OutlinePanel.vue` (renders document bookmarks as a tree)
+- **Thumbnails** — `ThumbnailsPanel.vue` (lazy-loaded thumbnail grid)
+- **Annotations** — `AnnotationsPanel.vue` (list of comments + replies)
+
+Each is enabled by its corresponding `features` flag (`outline`, `thumbnails`, `commentThreads`) and toggled from the toolbar.
+
+To replace a panel, import the host (`ViewerSidePanel`) and compose your own:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DocumentViewer, ViewerSidePanel } from '@meldui/vue'
+import MyCustomOutline from './MyCustomOutline.vue'
+
+const sidePanelOpen = ref(false)
+</script>
+
+<template>
+  <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm">
+    <template #side-panel>
+      <ViewerSidePanel v-if="sidePanelOpen" title="Custom Outline" @close="sidePanelOpen = false">
+        <MyCustomOutline />
+      </ViewerSidePanel>
+    </template>
+  </DocumentViewer>
+</template>
+```
+
+`ViewerSidePanel` provides the host (header bar + close button + fixed width); your custom content fills its default slot.
+
+## Slot reference
+
+| Slot                | Purpose                                                                                            |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `default` (no slot) | None — the renderers fill the viewport                                                             |
+| `toolbar-extra`     | Append elements to the right side of the toolbar (before the overflow menu)                        |
+| `side-panel`        | Replace the side-panel host. Bypasses the built-in `outline` / `thumbnails` / `annotations` panels |
+| `empty`             | Override the empty state shown while the source is loading or null                                 |
+
+## Replacing format renderers
+
+To use a custom PDF / image / text / markdown renderer, import the renderer components directly:
+
+```ts
+import { PdfViewer, ImageViewer, TextViewer, MarkdownViewer } from '@meldui/vue'
+```
+
+You can also import the underlying composables and build a fully custom layout:
+
+```ts
+import { useTouch, useCommands, useAnnotationThreads } from '@meldui/vue'
+```
+
+## CSS class overrides
+
+The viewer's root element carries the `document-viewer` class and `data-document-viewer` attribute. Internal parts use prefixed classes (no `document-` prefix — see [Theming](/docs/document-viewer/theming)):
+
+| Class                                                      | Element                                |
+| ---------------------------------------------------------- | -------------------------------------- |
+| `document-viewer`                                          | Root container                         |
+| `viewer-toolbar`                                           | Sticky top toolbar                     |
+| `search-popover`                                           | Search popover content                 |
+| `highlight-tooltip`                                        | Floating tooltip on selected highlight |
+| `comment-form`                                             | Inline comment composer                |
+| `pdf-viewer`                                               | PDF renderer wrapper                   |
+| `pdf-page`                                                 | Each page inside the PDF renderer      |
+| `image-viewer` / `text-viewer` / `markdown-viewer`         | Non-PDF renderer wrappers              |
+| `annotations-panel` / `outline-panel` / `thumbnails-panel` | Side panel wrappers                    |
+| `annotation-row`                                           | A row inside the annotations panel     |
+| `comment-marker`                                           | On-page sticky-note pin                |
+
+Override these in your global CSS or via Tailwind utilities. The `class` prop on `<DocumentViewer>` is merged onto the root with `cn()` so per-instance overrides work cleanly.
+
+```vue
+<DocumentViewer class="rounded-xl border shadow-lg" source="/doc.pdf" wasm-url="/pdfium.wasm" />
+```
+
+## Permissions
+
+The `permissions` prop on `ViewerToolbar` (when composing your own layout) accepts a `ViewerPermissions` object that gates user-facing actions:
+
+```ts
+interface ViewerPermissions {
+  canAnnotate?: boolean
+  canResolveThreads?: boolean
+  canDownload?: boolean
+  canPrint?: boolean
+  canSaveAsCopy?: boolean
+}
+```
+
+This is **separate** from `features` — `features` decides whether a plugin is registered at all (bundle impact); `permissions` decides whether the (already-registered) UI is shown to the current user.
+
+A read-only viewer for shared links:
+
+```vue
+<DocumentViewer
+  :features="{ zoom: true, search: true, download: true, annotations: true, commentThreads: true }"
+  :permissions="{ canAnnotate: false, canResolveThreads: false, canDownload: false }"
+  ...
+/>
+```
+
+## See also
+
+- [Theming](/docs/document-viewer/theming) — Tailwind dark mode, MeldUI primitives, CSS variable overrides
+- [Use case: toolbar customization](/docs/document-viewer/use-cases/toolbar-customization)
+- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer) — read-only via `permissions`

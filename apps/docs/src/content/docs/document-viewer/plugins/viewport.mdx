@@ -1,0 +1,46 @@
+---
+title: 'Plugin: Viewport'
+description: Owns the scrollable container DOM that hosts the rendered pages.
+category: composites
+order: 102
+package: '@meldui/vue'
+---
+
+The **Viewport** plugin manages the DOM element that contains the rendered pages. It provides the scroll surface, size tracking, and coordinate system used by every other plugin.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Owns the root scrollable `<div>` inside `PdfViewer`
+- Tracks scroll position, viewport dimensions, and resize events
+- Provides the coordinate frame that `scroll`, `zoom`, `pan`, and `selection` plugins translate to/from
+- Hosts the keyboard / mouse / touch event listeners that other plugins subscribe to
+
+## Composable
+
+`useViewport()` from `@embedpdf/plugin-viewport/vue` exposes the underlying DOM ref and dimensions. `DocumentViewer` wires touch gestures (`useTouch`) into this element when `features.touchGestures` is on.
+
+## Events
+
+- `viewport-resize` — element dimensions changed
+- `scroll-position-change` — viewport scrolled
+
+## Dependencies
+
+None.
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+For custom touch / gesture handling beyond what `useTouch` provides. Most consumers don't need to.
+
+## See also
+
+- [Plugin: scroll](/docs/document-viewer/plugins/scroll)
+- [Plugin: zoom](/docs/document-viewer/plugins/zoom)

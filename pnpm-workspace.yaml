@@ -1,3 +1,15 @@
 packages:
   - 'packages/*'
   - 'apps/*'
+
+# `@embedpdf/utils@2.14.x` imports `@embedpdf/models` at runtime but does not
+# declare it as a dependency (upstream packaging bug). pnpm's strict isolation
+# therefore can't find `@embedpdf/models` from inside `@embedpdf/utils`. We
+# patch the dependency tree to declare the missing peer.
+packageExtensions:
+  '@embedpdf/utils':
+    peerDependencies:
+      '@embedpdf/models': '*'
+    peerDependenciesMeta:
+      '@embedpdf/models':
+        optional: true

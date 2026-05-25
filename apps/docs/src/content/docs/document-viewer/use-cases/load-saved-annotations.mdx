@@ -1,0 +1,96 @@
+---
+title: 'Use Case: Load Saved Annotations'
+description: Seed annotations on mount from your backend so users see prior review state immediately.
+category: composites
+order: 201
+package: '@meldui/vue'
+---
+
+import LoadSavedAnnotationsDemo from '../../../../demos/document-viewer/LoadSavedAnnotationsDemo.vue'
+
+Most review workflows store annotations on your backend, then re-hydrate them when the document is opened. `loadAnnotations()` is built for this — it waits internally for the engine's `loaded` event so it's safe to call before `document-loaded` fires.
+
+<LoadSavedAnnotationsDemo client:only="vue" />
+
+## Pattern
+
+```vue
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { DocumentViewer, type Annotation, type DocumentViewerInstance } from '@meldui/vue'
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+
+onMounted(async () => {
+  const saved: Annotation[] = await fetch(`/api/documents/${docId}/annotations`).then((r) =>
+    r.json(),
+  )
+  await viewer.value?.loadAnnotations(saved)
+})
+</script>
+
+<template>
+  <DocumentViewer
+    ref="viewer"
+    source="/doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :features="{ annotations: true, commentThreads: true }"
+  />
+</template>
+```
+
+## Loading threads too
+
+If you're using `features.commentThreads`, threads are a separate data model. Load annotations first, then threads (threads reference annotation ids):
+
+```ts
+const [annotations, threads] = await Promise.all([
+  fetch(`/api/documents/${docId}/annotations`).then((r) => r.json()),
+  fetch(`/api/documents/${docId}/threads`).then((r) => r.json()),
+])
+
+await viewer.value?.loadAnnotations(annotations)
+viewer.value?.loadThreads(threads)
+```
+
+## Avoiding race conditions
+
+If your route switches between documents quickly, key the viewer on the document id so Vue unmounts and remounts cleanly:
+
+```vue
+<DocumentViewer
+  :key="currentDoc.id"
+  ref="viewer"
+  :source="currentDoc.url"
+  wasm-url="/pdfium.wasm"
+  :features="{ annotations: true }"
+/>
+```
+
+Without `:key`, an in-flight `loadAnnotations` for the previous document could land on the new one.
+
+## Server-side shape
+
+The `Annotation` type is JSON-serializable and round-trips cleanly. A minimum highlight is:
+
+```json
+{
+  "id": "0190f4c0-...",
+  "type": "highlight",
+  "pageIndex": 0,
+  "rect": { "origin": { "x": 100, "y": 600 }, "size": { "width": 300, "height": 20 } },
+  "segmentRects": [{ "origin": { "x": 100, "y": 600 }, "size": { "width": 300, "height": 20 } }],
+  "color": "#FFCD45",
+  "opacity": 0.4,
+  "selectedText": "Important sentence",
+  "author": "alex@example.com",
+  "createdAt": "2026-05-20T14:32:00.000Z"
+}
+```
+
+Store this exact shape in your DB and you can re-hydrate with no transformation.
+
+## See also
+
+- [Annotations](/docs/document-viewer/annotations) — full data model
+- [Use case: import / export](/docs/document-viewer/use-cases/import-export-annotations) — same data model, different transport

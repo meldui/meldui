@@ -1,0 +1,54 @@
+---
+title: 'Plugin: Document Manager'
+description: Orchestrates document lifecycle — load, switch, and unload PDFs.
+category: composites
+order: 101
+package: '@meldui/vue'
+---
+
+The **DocumentManager** plugin owns the active document. It handles loading a fresh PDF, swapping to a new one when `source` changes, and unloading on unmount.
+
+## Enabling flag
+
+Always registered — required for any PDF rendering. No `features` flag needed.
+
+## What it does
+
+- Wraps the PDFium engine's document handle for use by other plugins
+- Fires the `loaded` event once the PDF is parsed and ready for rendering
+- Exposes the loaded document via `useDocumentState()` composable from `@embedpdf/core/vue`
+- Coordinates document switching when `source` prop changes
+
+## Composable
+
+`useDocumentState()` from `@embedpdf/core/vue` returns reactive state including:
+
+```ts
+{
+  document: { pageCount, title, metadata } | null,
+  loading: boolean,
+  error: string | null,
+}
+```
+
+## Events
+
+- `loaded` — first successful document load (surfaces as `@document-loaded` on `DocumentViewer`)
+- `error` — load failure (surfaces as `@document-error`)
+
+## Dependencies
+
+None — this is the foundation.
+
+## Configuration
+
+No `featureConfig` block — DocumentManager has no user-tunable options.
+
+## When you'd touch it directly
+
+You shouldn't need to. `DocumentViewer` exposes `getDocumentInfo()` and the `document-loaded` event for all consumer needs.
+
+## See also
+
+- [Programmatic API → `getDocumentInfo`](/docs/document-viewer/programmatic-api#getdocumentinfo-documentinfo--null)
+- [Plugin: viewport](/docs/document-viewer/plugins/viewport) — what comes next in the pipeline

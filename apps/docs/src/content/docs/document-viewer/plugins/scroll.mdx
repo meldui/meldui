@@ -1,0 +1,53 @@
+---
+title: 'Plugin: Scroll'
+description: Page-aware virtual scrolling for continuous, paged, and spread modes.
+category: composites
+order: 103
+package: '@meldui/vue'
+---
+
+The **Scroll** plugin tracks which pages are in view, fires `page-change` events as the user scrolls, and supports both continuous and paged modes.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Reactive `currentPage` and `totalPages` state
+- Continuous scroll by default — pages flow one after another
+- Page-mode and spread-mode supported (the latter via `features.spread`)
+- Smooth scroll to a specific page (`goToPage` programmatic call)
+
+## Composable
+
+`useScroll(documentId)` from `@embedpdf/plugin-scroll/vue`. Returns reactive state and `goToPage` / `scrollToTop` / `scrollToBottom` methods. `DocumentViewer` re-exposes `goToPage` and `getCurrentPage` on its instance.
+
+## Events
+
+- `page-change` — viewport-centered page changed (surfaces as `@page-change` on `DocumentViewer`)
+- `total-pages-change` — total page count became known (fires once shortly after `document-loaded`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig` block — scroll behaviour adapts to `features.spread` automatically.
+
+## When you'd touch it directly
+
+For custom scroll-aware UI (e.g. a sticky "Page 4 of 14" indicator outside the viewer chrome):
+
+```ts
+import { useScroll } from '@embedpdf/plugin-scroll/vue'
+
+const scroll = useScroll(() => documentId)
+console.log(scroll.state.value.currentPage)
+```
+
+## See also
+
+- [Plugin: spread](/docs/document-viewer/plugins/spread)
+- [Programmatic API → `goToPage`](/docs/document-viewer/programmatic-api#gotopagepage-number-void)

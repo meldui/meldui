@@ -109,11 +109,53 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the v-model emit contract.
 - [Data Table: useDataTableController](/docs/data-table/use-data-table-controller): The parent-side composable that bundles sorting / filters / pagination refs and applies the filter→page and sort→page reset rules with flush:'sync'.
 - [Date Range Picker](/docs/composites/date-range-picker): A composite date picker with presets, calendar, and support for single or range date selection.
+- [Document Viewer](/docs/document-viewer): A reusable Vue composite for viewing and annotating PDF, image, plain-text, and markdown documents — built on EmbedPDF (PDFium WASM) with a single feature opt-in surface.
+- [Document Viewer: Annotations](/docs/document-viewer/annotations): The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
+- [Document Viewer: Bundle & Performance](/docs/document-viewer/bundle-and-perf): Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
+- [Document Viewer: Customization](/docs/document-viewer/customization): Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
+- [Document Viewer: Features](/docs/document-viewer/features): Every capability flag on the features prop, plus per-feature configuration shapes.
+- [Document Viewer: Getting Started](/docs/document-viewer/getting-started): Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
+- [Document Viewer: Migration](/docs/document-viewer/migration): Migration guides from @tato30/vue-pdf, vue-pdf-embed, raw pdfjs-dist, and PDFTron Web Viewer.
+- [Document Viewer: Plugin Reference](/docs/document-viewer/plugins): One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
+- [Document Viewer: Programmatic API](/docs/document-viewer/programmatic-api): Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
+- [Document Viewer: Theming](/docs/document-viewer/theming): Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
+- [Document Viewer: Troubleshooting](/docs/document-viewer/troubleshooting): Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
+- [Document Viewer: Use Cases](/docs/document-viewer/use-cases): Runnable demos for the common patterns — load saved annotations, AI citations, import / export, save-as-copy, threaded reviews, and more.
 - [Filters](/docs/composites/filters): A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
 - [Mention](/docs/composites/mention): A rich text input that supports @-mention suggestions with customizable triggers and serialization.
 - [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
+- [Plugin: Annotation](/docs/document-viewer/plugins/annotation): Native PDF annotations — highlights, sticky-note comments, and the full programmatic CRUD API.
+- [Plugin: Bookmark (Outline)](/docs/document-viewer/plugins/bookmark): Extracts the document outline and renders it as a side-panel tree.
+- [Plugin: Document Manager](/docs/document-viewer/plugins/document-manager): Orchestrates document lifecycle — load, switch, and unload PDFs.
+- [Plugin: Export](/docs/document-viewer/plugins/export): Print, download, and saveAsCopy — every PDF output path.
+- [Plugin: Fullscreen](/docs/document-viewer/plugins/fullscreen): Fullscreen toggle for an immersive viewing experience.
+- [Plugin: History](/docs/document-viewer/plugins/history): Undo / redo stack for annotation operations.
+- [Plugin: Hotkeys](/docs/document-viewer/plugins/hotkeys): Keyboard shortcuts for navigation, zoom, panels, and search.
+- [Plugin: Interaction Manager](/docs/document-viewer/plugins/interaction-manager): Coordinates which interaction mode owns pointer events at any given time.
+- [Plugin: Pan](/docs/document-viewer/plugins/pan): Hand-tool interaction mode for drag-to-pan when zoomed in.
+- [Plugin: Render](/docs/document-viewer/plugins/render): Paints PDF pages to canvas via PDFium.
+- [Plugin: Rotate](/docs/document-viewer/plugins/rotate): Rotate the document clockwise or counter-clockwise in 90° increments.
+- [Plugin: Scroll](/docs/document-viewer/plugins/scroll): Page-aware virtual scrolling for continuous, paged, and spread modes.
+- [Plugin: Search](/docs/document-viewer/plugins/search): Full-text search with case / whole-word toggles, prev / next, and match counter.
+- [Plugin: Selection](/docs/document-viewer/plugins/selection): Text selection on the page and copy-to-clipboard.
+- [Plugin: Spread](/docs/document-viewer/plugins/spread): Two-page spread view mode for book-style reading.
+- [Plugin: Thumbnail](/docs/document-viewer/plugins/thumbnail): Lazy thumbnail grid for visual page navigation.
+- [Plugin: Tiling](/docs/document-viewer/plugins/tiling): Memory-efficient virtualization that splits large pages into render tiles.
+- [Plugin: Viewport](/docs/document-viewer/plugins/viewport): Owns the scrollable container DOM that hosts the rendered pages.
+- [Plugin: Zoom](/docs/document-viewer/plugins/zoom): Zoom in / out, fit presets, and pinch-to-zoom.
 - [Relative Time](/docs/composites/relative-time): Displays a human-readable relative timestamp that updates automatically.
 - [Timeline](/docs/composites/timeline): A vertical or horizontal timeline for displaying chronological events.
+- [Use Case: AI / RAG Citations](/docs/document-viewer/use-cases/ai-rag-citations): Programmatically create ephemeral highlights anchored to AI / RAG response citations.
+- [Use Case: Dark Mode Integration](/docs/document-viewer/use-cases/dark-mode-integration): Dropping DocumentViewer inside a dark-themed app — and what to do about the PDF page background.
+- [Use Case: Import / Export Annotations](/docs/document-viewer/use-cases/import-export-annotations): Round-trip annotations as JSON for backup, transfer between environments, or sharing with another system.
+- [Use Case: Keyboard and Touch](/docs/document-viewer/use-cases/keyboard-and-touch): Accessibility patterns and touch-device patterns for DocumentViewer.
+- [Use Case: Large Documents](/docs/document-viewer/use-cases/large-documents): Patterns for rendering 500+ page PDFs with bounded memory and responsive navigation.
+- [Use Case: Load Saved Annotations](/docs/document-viewer/use-cases/load-saved-annotations): Seed annotations on mount from your backend so users see prior review state immediately.
+- [Use Case: Multi-Format Rendering](/docs/document-viewer/use-cases/multi-format-rendering): Render PDF, image, plain-text, and markdown documents in a single component with shared toolbar and panel chrome.
+- [Use Case: Save-as-Copy Burn-in](/docs/document-viewer/use-cases/save-as-copy-burnin): Generate a baked PDF with annotations burned into the page contents — interoperable with any PDF reader.
+- [Use Case: Share-Link Viewer](/docs/document-viewer/use-cases/share-link-viewer): Permission-gated read-only viewer for anonymous visitors (share-link / public-link patterns).
+- [Use Case: Threaded Comments](/docs/document-viewer/use-cases/threaded-comments): Reply / resolve workflow for document review, with backend sync via thread-update events.
+- [Use Case: Toolbar Customization](/docs/document-viewer/use-cases/toolbar-customization): Reorder groups, hide buttons, add a custom action.
 - [Common Patterns](/docs/examples): Real-world usage patterns and composition examples for building applications with MeldUI.
 - [Dark Mode](/docs/getting-started/dark-mode): How to enable and configure dark mode in your MeldUI application.
 - [Icons](/docs/getting-started/icons): MeldUI uses Tabler Icons with custom defaults for size and stroke, provided via the @meldui/tabler-vue package.
@@ -4554,6 +4596,1814 @@ Use `mode="single"` for picking a single date instead of a range.
 
 ---
 
+## Document Viewer
+
+A reusable Vue composite for viewing and annotating PDF, image, plain-text, and markdown documents — built on EmbedPDF (PDFium WASM) with a single feature opt-in surface.
+
+`DocumentViewer` renders PDFs and other document formats (images, plain text, markdown) inside a Vue app, with built-in zoom, search, outline, thumbnails, and a full annotation system. The PDF path is powered by [EmbedPDF](https://www.embedpdf.com/) (PDFium compiled to WebAssembly); the other formats are native Vue renderers that share the same toolbar and side-panel chrome.
+
+It is built as a single composite with a `features` prop. Every capability is opt-in — disabled features do not register their EmbedPDF plugin, so the plugin packages are tree-shaken out of your bundle.
+
+
+
+## When to use
+
+- You need to display PDFs inside your app, not in a browser tab.
+- You want the **same chrome** (toolbar, panels, comment overlay) regardless of whether the user opens a PDF, an image, plain text, or markdown.
+- You need to **read or write annotations programmatically** (e.g. seed highlights from an AI/RAG response, export annotations to your backend, render shared review comments).
+- You need a **headless, customizable** viewer — `DocumentViewer` ships with sane defaults but every panel, button group, and renderer can be swapped or hidden.
+
+## When not to use
+
+- You only need to embed a PDF for download — a native `<iframe src="...pdf">` is simpler.
+- You need to **author** PDFs (draw shapes, edit text, fill complex forms). Phase 1 covers annotations + threaded comments; Phase 2 adds stamps, signatures, redaction, and forms.
+- You need OCR or text extraction without rendering — use a server-side library.
+
+## What's in the box
+
+| Capability | Plugin / Feature | Phase |
+| --- | --- | --- |
+| Continuous-scroll PDF rendering with virtualization | Viewport + Scroll + Render + Tiling (always on) | 1 |
+| Zoom, rotate, two-page spread, hand tool, fullscreen | Toggle via `features` | 1 |
+| Full-text search with case/whole-word | `features.search` | 1 |
+| Outline & thumbnail side panels | `features.outline`, `features.thumbnails` | 1 |
+| Print + Download + `saveAsCopy()` | `features.print`, `features.download` | 1 |
+| Highlights, sticky-note comments | `features.annotations` | 1 |
+| Threaded comments overlay (replies + resolved) | `features.commentThreads` | 1 |
+| Undo / Redo | `features.undoRedo` | 1 |
+| Keyboard shortcuts, touch gestures | `features.keyboardShortcuts`, `features.touchGestures` | 1 |
+| Image / text / markdown rendering | Auto-detected from `source` / `mimeType` | 1 |
+| Stamps, signatures, redaction, forms, attachments | `features.stamps` / `signature` / `redaction` / `forms` / `attachments` | 2 |
+
+## Comparison with other Vue PDF libraries
+
+| | DocumentViewer | `@tato30/vue-pdf` | `vue-pdf-embed` | PDFTron Web Viewer |
+| --- | --- | --- | --- | --- |
+| Engine | PDFium (WASM) | pdf.js (canvas) | pdf.js (canvas) | PDFNet (WASM) |
+| Multi-format (image / text / md) | ✅ | ❌ | ❌ | ❌ |
+| Native annotations | ✅ | ❌ | ❌ | ✅ |
+| Threaded comments overlay | ✅ | ❌ | ❌ | ❌ |
+| Programmatic API | ✅ | partial | ❌ | ✅ |
+| Tree-shaken plugins | ✅ | n/a | n/a | ❌ |
+| License | Internal (MeldUI) | MIT | MIT | Commercial |
+
+## Next steps
+
+- **[Getting started](/docs/document-viewer/getting-started)** — install, copy `pdfium.wasm`, render your first PDF.
+- **[Features](/docs/document-viewer/features)** — the `features` prop reference with every flag.
+- **[Programmatic API](/docs/document-viewer/programmatic-api)** — every method on `DocumentViewerInstance`.
+- **[Annotations](/docs/document-viewer/annotations)** — annotation data model, creating highlights, threaded comments.
+- **[Plugin reference](/docs/document-viewer/plugins)** — one page per EmbedPDF plugin in scope.
+- **[Use cases](/docs/document-viewer/use-cases)** — runnable demos for the common patterns.
+
+---
+
+## Document Viewer: Annotations
+
+The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
+
+`DocumentViewer` ships with a full annotation system on top of EmbedPDF's annotation plugin. Two flavours of annotation are first-class in Phase 1:
+
+- **Highlights** — covers one or more text segments on a page, with a 5-colour palette in a floating tooltip after creation.
+- **Comments** — pin-style sticky notes anchored to a point on the page, surfaced both in-page (`CommentMarker`) and in the annotations side panel.
+
+Both are native PDF annotation types (highlight = HIGHLIGHT subtype, comment = TEXT subtype), so they round-trip through `saveAsCopy()` and survive when the PDF is opened in any other PDF reader.
+
+Higher-fidelity annotation types (free-text, ink, stamps, signatures, redaction) are supported on the data model side; the editing UI for stamps / signatures / redaction lands in Phase 2.
+
+
+
+## Data model
+
+### `Annotation` — discriminated union
+
+Every annotation extends `AnnotationBase`:
+
+```ts
+interface AnnotationBase {
+  id: string                    // UUID v4
+  type: AnnotationType
+  pageIndex: number             // 0-based
+  rect: PdfRect                 // bounding box in PDF points
+  author?: string
+  createdAt?: string            // ISO-8601
+  modifiedAt?: string
+  metadata?: Record<string, unknown>  // free-form (e.g. is_ephemeral, citation_id)
+}
+```
+
+The `Annotation` union discriminates on `type`:
+
+```ts
+type Annotation =
+  | HighlightAnnotation       // type: 'highlight'
+  | CommentAnnotation         // type: 'comment'
+  | FreeTextAnnotation        // type: 'free-text'
+  | InkAnnotation             // type: 'ink'
+  | StampAnnotation           // type: 'stamp'
+  | SignatureAnnotation       // type: 'signature'
+  | RedactionAnnotation       // type: 'redaction'
+```
+
+### `HighlightAnnotation`
+
+```ts
+interface HighlightAnnotation extends AnnotationBase {
+  type: 'highlight'
+  segmentRects: PdfRect[]     // one rect per highlighted text segment
+  color: string               // hex, e.g. '#FFCD45'
+  opacity: number             // 0–1; default 0.4
+  selectedText?: string       // text covered, captured at creation
+}
+```
+
+`selectedText` is opportunistically captured from the user's selection at creation time; it's useful for thread previews and AI-citation extraction.
+
+### `CommentAnnotation`
+
+```ts
+interface CommentAnnotation extends AnnotationBase {
+  type: 'comment'
+  contents: string
+  color?: string              // marker tint
+}
+```
+
+The on-page pin (`CommentMarker`) lives at `rect.x, rect.y`. Reply data is **not** stored on the annotation — it lives in the separate threads overlay (see below).
+
+### `FreeTextAnnotation`
+
+```ts
+interface FreeTextAnnotation extends AnnotationBase {
+  type: 'free-text'
+  contents: string
+  fontSize: number
+  fontColor: string
+  fontFamily?: string
+  backgroundColor?: string
+  opacity: number
+}
+```
+
+### `InkAnnotation`
+
+```ts
+interface InkAnnotation extends AnnotationBase {
+  type: 'ink'
+  inkList: { points: { x: number; y: number }[] }[]   // one entry per stroke
+  strokeWidth: number
+  color: string
+  opacity: number
+}
+```
+
+### `StampAnnotation`, `SignatureAnnotation`, `RedactionAnnotation`
+
+```ts
+interface StampAnnotation extends AnnotationBase {
+  type: 'stamp'
+  name?: string
+  subject?: string
+}
+
+interface SignatureAnnotation extends AnnotationBase {
+  type: 'signature'
+  imageDataUrl?: string       // base64 PNG/SVG
+}
+
+interface RedactionAnnotation extends AnnotationBase {
+  type: 'redaction'
+  pending: boolean            // true = visible in panel, false = burned in
+  fillColor?: string
+}
+```
+
+The data shapes are stable; the editing UI for these arrives in Phase 2 plugins (`stamps`, `signature`, `redaction` flags).
+
+## Creating annotations
+
+### From the toolbar
+
+With `features.annotations` enabled, the toolbar gains two tools:
+
+- **Highlight** — drag-to-select text, then pick a colour from the floating tooltip
+- **Comment** — click a point on the page, then type into the inline comment form
+
+The 5 default highlight colours are exported as `HIGHLIGHT_COLORS`:
+
+```ts
+
+// Yellow #FFCD45, Green #92E89E, Blue #8FCFEF, Pink #FFA0BD, Purple #C8A5DD
+```
+
+Override the palette via `featureConfig.annotations.defaultTools`.
+
+### Programmatically
+
+Via the `DocumentViewerInstance`:
+
+```ts
+
+
+await viewer.value?.createAnnotation({
+  type: 'highlight',
+  pageIndex: 0,
+  rect: { x: 100, y: 200, width: 300, height: 20 },
+  segmentRects: [{ x: 100, y: 200, width: 300, height: 20 }],
+  color: '#FFCD45',
+  opacity: 0.4,
+  selectedText: 'Important sentence.',
+})
+```
+
+## Seeding saved annotations on mount
+
+For document review workflows, load saved annotations from your backend before the user interacts:
+
+```vue
+<script setup lang="ts">
+
+
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+
+onMounted(async () => {
+  const saved: Annotation[] = await fetch('/api/annotations?docId=42').then(r => r.json())
+  await viewer.value?.loadAnnotations(saved)
+})
+</script>
+
+<template>
+  <DocumentViewer
+    ref="viewer"
+    source="/doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :features="{ annotations: true }"
+  />
+</template>
+```
+
+`loadAnnotations` waits internally for the `loaded` event from the engine — safe to call before `document-loaded` fires. See [Use case: load saved annotations](/docs/document-viewer/use-cases/load-saved-annotations).
+
+## Persisting changes
+
+Subscribe to annotation events and POST to your backend:
+
+```vue
+<DocumentViewer
+  ref="viewer"
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ annotations: true }"
+  @annotation-created="onCreate"
+  @annotation-updated="onUpdate"
+  @annotation-deleted="onDelete"
+/>
+```
+
+```ts
+function onCreate({ annotation }: { annotation: Annotation }) {
+  fetch('/api/annotations', { method: 'POST', body: JSON.stringify(annotation) })
+}
+function onUpdate({ annotation, patch }: AnnotationUpdatePayload) {
+  fetch(`/api/annotations/${annotation.id}`, { method: 'PATCH', body: JSON.stringify(patch) })
+}
+function onDelete({ annotationId }: { annotationId: string }) {
+  fetch(`/api/annotations/${annotationId}`, { method: 'DELETE' })
+}
+```
+
+For bulk import / export use `importAnnotations` / `exportAnnotations` — they return the round-trippable `AnnotationTransferItem` shape including any binary side-data (used for stamps and signatures).
+
+## Threaded comments overlay
+
+The threaded-comments overlay (`features.commentThreads`) is a layer on top of annotations. Threads are **not stored inside the PDF** — they live in a parallel data model keyed by annotation id, so:
+
+- A highlight has a thread → users can reply to the highlight
+- A comment annotation has a thread → users can reply to the comment
+- Threads can be marked resolved without deleting the annotation
+
+```ts
+interface CommentThread {
+  annotationId: string
+  replies: CommentReply[]
+  resolved: boolean
+  resolvedAt?: string
+  resolvedByUserId?: string
+}
+
+interface CommentReply {
+  id: string
+  annotationId: string
+  authorUserId: string
+  authorDisplayName: string
+  content: string
+  createdAt: string
+}
+```
+
+### Seed threads on mount
+
+```ts
+const annotations: Annotation[] = await fetchAnnotations()
+const threads: CommentThread[] = await fetchThreads()
+await viewer.value?.loadAnnotations(annotations)
+viewer.value?.loadThreads(threads)
+```
+
+Order matters: annotations first, threads second (threads reference annotation ids).
+
+### Reply / resolve / delete
+
+```ts
+const reply = await viewer.value?.addReply(annotationId, 'Looks good to me')
+await viewer.value?.resolveAnnotation(annotationId, true)
+await viewer.value?.deleteReply(annotationId, reply.id)
+```
+
+All three emit `thread-update` with `{ thread, action }` so you can persist:
+
+```vue
+<DocumentViewer
+  @thread-update="({ thread, action }) => persistThread(thread, action)"
+/>
+```
+
+### Author identity
+
+Set `currentUser` so replies are attributed correctly:
+
+```vue
+<DocumentViewer
+  :current-user="{ id: 'u-42', displayName: 'Alex Chen', avatarUrl: '/me.png' }"
+  ...
+/>
+```
+
+`currentUser.displayName` also flows to `featureConfig.annotations.author` as a default, so newly-created annotations carry an author string.
+
+## Round-tripping with `saveAsCopy`
+
+`saveAsCopy()` returns a fresh PDF with annotations baked in:
+
+```ts
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+saveAs(blob, 'reviewed-doc.pdf')
+```
+
+Note that **threads are not embedded in the PDF binary** — they live only in the overlay. If you need to deliver a baked PDF + the thread data, export both:
+
+```ts
+const [buffer, threads] = await Promise.all([
+  viewer.value!.saveAsCopy(),
+  Promise.resolve(allThreads()),
+])
+await uploadBoth(buffer, threads)
+```
+
+## See also
+
+- [Programmatic API](/docs/document-viewer/programmatic-api) — every annotation CRUD method
+- [Use case: load saved annotations](/docs/document-viewer/use-cases/load-saved-annotations)
+- [Use case: AI / RAG citations](/docs/document-viewer/use-cases/ai-rag-citations) — programmatic highlights with `metadata.is_ephemeral`
+- [Use case: threaded comments](/docs/document-viewer/use-cases/threaded-comments)
+- [Use case: import/export round-trip](/docs/document-viewer/use-cases/import-export-annotations)
+
+---
+
+## Document Viewer: Bundle & Performance
+
+Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
+
+`DocumentViewer` is built on EmbedPDF's **headless** plugin architecture. This page explains what that means for your bundle size and load time, plus the patterns the composite uses to keep the PDF code path off the critical render path.
+
+## Headless rationale
+
+EmbedPDF separates concerns into two layers:
+
+1. **Plugin registry** — pure data describing which plugins are active and how they're configured (`pluginRegistry.ts`)
+2. **Vue host** — the Vue components that mount EmbedPDF inside `<Suspense>` and provide reactive bindings
+
+The advantage: enabling `features.search` doesn't import the search plugin into your bundle until the registry tells the engine to load it. Disable a feature and its plugin package is **never imported** anywhere in the bundle, so your bundler (Vite / Rollup / Rolldown) tree-shakes it out.
+
+## Per-feature plugin set
+
+The minimum required set is always registered (zero opt-in needed):
+
+```
+@embedpdf/plugin-document-manager
+@embedpdf/plugin-viewport
+@embedpdf/plugin-scroll
+@embedpdf/plugin-render
+@embedpdf/plugin-tiling
+```
+
+Each `features` flag adds exactly one plugin (with a few exceptions noted below):
+
+| Feature flag | Plugin package(s) added |
+| --- | --- |
+| `zoom` | `@embedpdf/plugin-zoom` |
+| `rotate` | `@embedpdf/plugin-rotate` |
+| `spread` | `@embedpdf/plugin-spread` |
+| `pan` | `@embedpdf/plugin-pan` (auto-adds `interaction-manager` if not already on) |
+| `fullscreen` | `@embedpdf/plugin-fullscreen` |
+| `selection` | `@embedpdf/plugin-selection` (auto-adds `interaction-manager`) |
+| `search` | `@embedpdf/plugin-search` |
+| `outline` | `@embedpdf/plugin-bookmark` |
+| `thumbnails` | `@embedpdf/plugin-thumbnail` |
+| `print` | `@embedpdf/plugin-print` |
+| `download` | `@embedpdf/plugin-export` |
+| `annotations` | `@embedpdf/plugin-annotation` (auto-adds `interaction-manager`, `selection`, `history`) |
+| `commentThreads` | — (no plugin; pure overlay, requires `annotations`) |
+| `undoRedo` | `@embedpdf/plugin-history` (auto-enabled by `annotations`) |
+| `keyboardShortcuts` | `@embedpdf/plugin-hotkeys` |
+| `touchGestures` | — (pure DOM listeners, no plugin) |
+| `stamps` (Phase 2) | `@embedpdf/plugin-stamp` |
+| `signature` (Phase 2) | `@embedpdf/plugin-signature` |
+| `redaction` (Phase 2) | `@embedpdf/plugin-redaction` |
+| `forms` (Phase 2) | `@embedpdf/plugin-form` |
+| `attachments` (Phase 2) | `@embedpdf/plugin-attachment` |
+
+Install only the plugins you actually flag on — see [Getting Started → Install](/docs/document-viewer/getting-started#install).
+
+## Expected bundle sizes
+
+Approximate **gzipped** JS contributions (excluding the WASM binary, which loads separately):
+
+| Feature profile | Approx. gzipped JS |
+| --- | --- |
+| Minimum (read-only PDF, no opt-ins) | ~110 KB |
+| Read-only + zoom + search + download | ~140 KB |
+| Review (above + outline + thumbnails + annotations + commentThreads + undoRedo) | ~200 KB |
+| Kitchen-sink (all Phase 1 flags on) | ~240 KB |
+| Kitchen-sink + all Phase 2 flags | ~310 KB |
+
+The big constants beyond the headless plugins:
+- `@embedpdf/engines` ~25 KB
+- `@embedpdf/core` ~30 KB
+- `@embedpdf/models` ~10 KB
+
+These ship regardless of which feature flags you enable.
+
+## The WASM binary
+
+`pdfium.wasm` is ~4.5 MB on disk, ~1.6 MB gzipped over the wire. It's:
+
+- **Loaded on demand** — only when `DocumentViewer.vue` actually mounts (because `PdfViewer` is wrapped in `defineAsyncComponent`)
+- **Cached aggressively** — serve it with `Cache-Control: public, max-age=31536000, immutable` and the user pays the cost once
+- **Off the critical path** — the toolbar and chrome render while the WASM is decoding; the user sees the viewer shell immediately
+
+Self-host it via your build script (see [Getting Started](/docs/document-viewer/getting-started#host-the-pdfium-wasm-binary)).
+
+## Lazy code-splitting
+
+The composite wraps the PDF renderer in `defineAsyncComponent`:
+
+```ts
+const PdfViewer = defineAsyncComponent(() => import('./renderers/PdfViewer.vue'))
+```
+
+This produces a separate Vite/Rolldown chunk for the EmbedPDF-dependent code. Apps that bundle `DocumentViewer` but only ever render images / text / markdown do not pay the PDF code path's bytes until a PDF is first opened.
+
+The image, text, and markdown renderers are tiny (each under 2 KB) and ship eagerly.
+
+## Worker vs. main thread
+
+PDFium runs inside a Web Worker by default (`worker={true}`), keeping the main thread responsive on large documents.
+
+If your app hits the worker engine's **relative-`wasmUrl` resolution issue** (the worker is built from a blob URL whose base differs from the page's), opt back to main-thread mode:
+
+```vue
+<DocumentViewer worker={false} wasm-url="https://your-cdn.com/pdfium.wasm" ... />
+```
+
+Fully-qualified URLs (`https://...`) and absolute paths (`/pdfium.wasm`) work with either mode.
+
+## Virtualization
+
+`DocumentViewer` uses EmbedPDF's tiling + viewport plugins to render only the pages currently in the viewport plus a small overscan. Documents with 1000+ pages render with constant memory.
+
+
+
+## Bundle audit
+
+Audit your bundle's plugin chunks:
+
+```bash
+pnpm --filter your-app build
+# Look at the dist for chunks named like:
+# - vendor/embedpdf-core-*.mjs
+# - vendor/embedpdf-plugin-zoom-*.mjs   ← absent if features.zoom = false
+# - vendor/embedpdf-plugin-search-*.mjs ← absent if features.search = false
+```
+
+If you see plugin chunks for features you didn't enable, you're importing the plugin somewhere outside `DocumentViewer` — check your direct imports.
+
+## See also
+
+- [Getting Started → Install](/docs/document-viewer/getting-started#install)
+- [Plugin reference](/docs/document-viewer/plugins) — each plugin's role and dependencies
+- [Use case: large documents](/docs/document-viewer/use-cases/large-documents)
+- [Troubleshooting](/docs/document-viewer/troubleshooting) — WASM 404s, worker issues, large file timeouts
+
+---
+
+## Document Viewer: Customization
+
+Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
+
+The default `DocumentViewer` chrome is configured to work out of the box, but every part of the toolbar and side-panel layout is replaceable.
+
+## Toolbar customization
+
+Pass a `toolbar` prop typed as `ToolbarConfig`:
+
+```ts
+
+
+const toolbar: ToolbarConfig = {
+  groups: ['nav', 'zoom', 'tools', 'panels', 'export'],
+  hide: ['rotate', 'spread'],
+  customButtons: [
+    {
+      id: 'share',
+      label: 'Share',
+      icon: 'IconShare',
+      position: 'export',
+      onClick: () => openShareDialog(),
+    },
+  ],
+}
+```
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :toolbar="toolbar"
+  ...
+/>
+```
+
+
+
+### `groups`
+
+Reorders or restricts the toolbar groups. Default order is:
+
+```ts
+['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+```
+
+Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order.
+
+### `hide`
+
+Hides individual buttons by id. The default ids are: `zoom-in`, `zoom-out`, `fit-page`, `fit-width`, `rotate-cw`, `rotate-ccw`, `spread`, `pan`, `fullscreen`, `print`, `download`, `highlight`, `comment`, `undo`, `redo`, `search-toggle`, `outline-toggle`, `thumbnails-toggle`, `annotations-toggle`.
+
+### `customButtons`
+
+Append your own buttons. Each requires:
+
+- `id` — unique within the toolbar
+- `label` — accessible label (visible in overflow menu)
+- `icon` — name of a `@meldui/tabler-vue` icon component
+- `position` — which group to attach to (`'nav' | 'zoom' | 'view' | 'tools' | 'panels' | 'search' | 'export'`)
+- `onClick` — handler
+
+## Side panel customization
+
+The three default panels are:
+
+- **Outline** — `OutlinePanel.vue` (renders document bookmarks as a tree)
+- **Thumbnails** — `ThumbnailsPanel.vue` (lazy-loaded thumbnail grid)
+- **Annotations** — `AnnotationsPanel.vue` (list of comments + replies)
+
+Each is enabled by its corresponding `features` flag (`outline`, `thumbnails`, `commentThreads`) and toggled from the toolbar.
+
+To replace a panel, import the host (`ViewerSidePanel`) and compose your own:
+
+```vue
+<script setup lang="ts">
+
+
+
+
+const sidePanelOpen = ref(false)
+</script>
+
+<template>
+  <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm">
+    <template #side-panel>
+      <ViewerSidePanel
+        v-if="sidePanelOpen"
+        title="Custom Outline"
+        @close="sidePanelOpen = false"
+      >
+        <MyCustomOutline />
+      </ViewerSidePanel>
+    </template>
+  </DocumentViewer>
+</template>
+```
+
+`ViewerSidePanel` provides the host (header bar + close button + fixed width); your custom content fills its default slot.
+
+## Slot reference
+
+| Slot | Purpose |
+| --- | --- |
+| `default` (no slot) | None — the renderers fill the viewport |
+| `toolbar-extra` | Append elements to the right side of the toolbar (before the overflow menu) |
+| `side-panel` | Replace the side-panel host. Bypasses the built-in `outline` / `thumbnails` / `annotations` panels |
+| `empty` | Override the empty state shown while the source is loading or null |
+
+## Replacing format renderers
+
+To use a custom PDF / image / text / markdown renderer, import the renderer components directly:
+
+```ts
+
+```
+
+You can also import the underlying composables and build a fully custom layout:
+
+```ts
+
+```
+
+## CSS class overrides
+
+The viewer's root element carries the `document-viewer` class and `data-document-viewer` attribute. Internal parts use prefixed classes (no `document-` prefix — see [Theming](/docs/document-viewer/theming)):
+
+| Class | Element |
+| --- | --- |
+| `document-viewer` | Root container |
+| `viewer-toolbar` | Sticky top toolbar |
+| `search-popover` | Search popover content |
+| `highlight-tooltip` | Floating tooltip on selected highlight |
+| `comment-form` | Inline comment composer |
+| `pdf-viewer` | PDF renderer wrapper |
+| `pdf-page` | Each page inside the PDF renderer |
+| `image-viewer` / `text-viewer` / `markdown-viewer` | Non-PDF renderer wrappers |
+| `annotations-panel` / `outline-panel` / `thumbnails-panel` | Side panel wrappers |
+| `annotation-row` | A row inside the annotations panel |
+| `comment-marker` | On-page sticky-note pin |
+
+Override these in your global CSS or via Tailwind utilities. The `class` prop on `<DocumentViewer>` is merged onto the root with `cn()` so per-instance overrides work cleanly.
+
+```vue
+<DocumentViewer
+  class="rounded-xl border shadow-lg"
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+/>
+```
+
+## Permissions
+
+The `permissions` prop on `ViewerToolbar` (when composing your own layout) accepts a `ViewerPermissions` object that gates user-facing actions:
+
+```ts
+interface ViewerPermissions {
+  canAnnotate?: boolean
+  canResolveThreads?: boolean
+  canDownload?: boolean
+  canPrint?: boolean
+  canSaveAsCopy?: boolean
+}
+```
+
+This is **separate** from `features` — `features` decides whether a plugin is registered at all (bundle impact); `permissions` decides whether the (already-registered) UI is shown to the current user.
+
+A read-only viewer for shared links:
+
+```vue
+<DocumentViewer
+  :features="{ zoom: true, search: true, download: true, annotations: true, commentThreads: true }"
+  :permissions="{ canAnnotate: false, canResolveThreads: false, canDownload: false }"
+  ...
+/>
+```
+
+## See also
+
+- [Theming](/docs/document-viewer/theming) — Tailwind dark mode, MeldUI primitives, CSS variable overrides
+- [Use case: toolbar customization](/docs/document-viewer/use-cases/toolbar-customization)
+- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer) — read-only via `permissions`
+
+---
+
+## Document Viewer: Features
+
+Every capability flag on the features prop, plus per-feature configuration shapes.
+
+The `features` prop is a flat object of opt-in flags. Disabled flags **do not register** their corresponding EmbedPDF plugin, which means the plugin package is tree-shaken from your bundle. The minimum required plugins (DocumentManager, Viewport, Scroll, Render, Tiling) are always registered.
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ zoom: true, search: true, annotations: true }"
+/>
+```
+
+
+
+## Flag reference
+
+### Navigation / view controls
+
+| Flag | Default | What it enables |
+| --- | --- | --- |
+| `zoom` | `false` | Zoom in / out buttons, fit presets (page / width / actual), pinch-to-zoom on touch |
+| `rotate` | `false` | Rotate CW / CCW per 90° |
+| `spread` | `false` | Two-page spread view mode toggle |
+| `pan` | `false` | Hand-tool (drag-to-pan) interaction mode |
+| `fullscreen` | `false` | Fullscreen toggle (`F11` if `keyboardShortcuts` is on) |
+
+### Search / selection
+
+| Flag | Default | What it enables |
+| --- | --- | --- |
+| `search` | `false` | Search popover with case / whole-word toggles, prev / next, match counter |
+| `selection` | `false` | Text selection on the page + copy-to-clipboard |
+
+### Side panels
+
+| Flag | Default | What it enables |
+| --- | --- | --- |
+| `outline` | `false` | Document outline / bookmark tree side panel |
+| `thumbnails` | `false` | Thumbnail grid side panel |
+
+### Export
+
+| Flag | Default | What it enables |
+| --- | --- | --- |
+| `print` | `false` | Print toolbar button (uses native browser print dialog) |
+| `download` | `false` | Download button. Combine with `downloadUrl` prop to serve a re-encoded copy |
+
+### Annotations (Phase 1)
+
+| Flag | Default | What it enables |
+| --- | --- | --- |
+| `annotations` | `false` | Highlight tool + sticky-note comment tool, plus full annotation CRUD via the programmatic API |
+| `commentThreads` | `false` | Threaded comments overlay (replies + resolved state). Requires `annotations` |
+| `undoRedo` | `false` | Undo / redo toolbar buttons + `Ctrl+Z` / `Ctrl+Shift+Z` |
+
+### Editing (Phase 2 — opt-in)
+
+| Flag | Default | What it enables |
+| --- | --- | --- |
+| `stamps` | `false` | Stamp tool + stamp library picker |
+| `signature` | `false` | Signature pad dialog + place-signature flow |
+| `redaction` | `false` | Text-redact + area-redact tools + `saveAsCopy` burn-in |
+| `forms` | `false` | Interactive PDF form-field rendering and `setFieldValue` API |
+| `attachments` | `false` | Attachments side panel + downloadAttachment API |
+
+### Interaction
+
+| Flag | Default | What it enables |
+| --- | --- | --- |
+| `keyboardShortcuts` | `false` | Arrow keys (page nav), `+` / `-` (zoom), `R` (rotate), `Ctrl+F` (search), `F11` (fullscreen), `Esc` (close popovers), `C` / `O` / `T` (toggle comment / outline / thumbnails panel) |
+| `touchGestures` | `false` | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`) |
+
+## Per-feature configuration: `featureConfig`
+
+`featureConfig` is keyed by feature name and lets you tune a plugin's behaviour without re-implementing it.
+
+```ts
+
+
+const featureConfig: FeatureConfig = {
+  zoom: { min: 0.25, max: 8, step: 0.1, defaultMode: 'fit-width' },
+  annotations: {
+    author: 'alex@example.com',
+    defaultTools: [
+      { id: 'h-yellow', label: 'Yellow', color: '#FFCD45', opacity: 0.4 },
+      { id: 'h-cyan',   label: 'Cyan',   color: '#A0E7E5', opacity: 0.4 },
+    ],
+  },
+}
+```
+
+### `zoom`
+
+| Option | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `min` | `number` | `0.25` | Minimum scale factor |
+| `max` | `number` | `8` | Maximum scale factor |
+| `step` | `number` | `0.1` | Increment for zoom-in / zoom-out buttons |
+| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual'` | `'fit-width'` | Initial zoom preset |
+
+### `annotations`
+
+| Option | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `author` | `string` | `currentUser?.displayName` | Attached to created annotations |
+| `useAnnotationMode` | `boolean` | `false` | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately |
+| `defaultTools` | `AnnotationToolConfig[]` | 5 highlight presets (yellow / green / blue / pink / purple at α 0.4) | Override the floating highlight tooltip's colour palette. Each tool has `{ id, label, color, opacity }`. The 5 default colours match `HIGHLIGHT_COLORS` exported from `@meldui/vue` |
+
+### `stamps` (Phase 2)
+
+| Option | Type | Notes |
+| --- | --- | --- |
+| `libraries` | `StampLibraryConfig[]` | Preload stamp libraries from URL or `ArrayBuffer` |
+| `defaultLibrary` | `{ id, name, categories? } \| false` | Set the toolbar's default library; `false` to hide the library picker |
+
+### `signature` (Phase 2)
+
+| Option | Type | Notes |
+| --- | --- | --- |
+| `mode` | `'signature-only' \| 'signature-and-initials'` | Whether the user is prompted for initials in addition to a full signature |
+| `defaultSize` | `{ width: number; height: number }` | Initial bounding box for placed signatures |
+
+### `redaction` (Phase 2)
+
+| Option | Type | Notes |
+| --- | --- | --- |
+| `useAnnotationMode` | `boolean` | If `true`, new redactions are pending (visible in panel) and applied via `applyAllRedactions()`; otherwise they burn in immediately |
+
+## Highlight colour palette
+
+`@meldui/vue` exports the 5 canonical colours as `HIGHLIGHT_COLORS` so you can render swatches matching the floating tooltip:
+
+```ts
+
+
+console.log(HIGHLIGHT_COLORS)
+// [
+//   { name: 'Yellow', value: '#FFCD45' },
+//   { name: 'Green',  value: '#92E89E' },
+//   { name: 'Blue',   value: '#8FCFEF' },
+//   { name: 'Pink',   value: '#FFA0BD' },
+//   { name: 'Purple', value: '#C8A5DD' },
+// ]
+console.log(DEFAULT_HIGHLIGHT_COLOR) // '#FFCD45'
+```
+
+Pass any of these values directly into `updateAnnotation(id, { color })`.
+
+## See also
+
+- [Plugin reference](/docs/document-viewer/plugins) — what each plugin actually does and what feature flag toggles it
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf) — bundle impact per feature profile
+- [Customization](/docs/document-viewer/customization) — for toolbar / panel layout, see `ToolbarConfig`
+
+---
+
+## Document Viewer: Getting Started
+
+Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
+
+This guide walks through installing `DocumentViewer`, hosting the PDFium WebAssembly binary, and rendering each of the four supported formats.
+
+## Install
+
+```bash
+pnpm add @meldui/vue @meldui/tabler-vue vue
+
+# EmbedPDF peer dependencies — install only what your features prop enables.
+pnpm add @embedpdf/core @embedpdf/engines @embedpdf/models @embedpdf/pdfium \
+  @embedpdf/plugin-document-manager \
+  @embedpdf/plugin-viewport \
+  @embedpdf/plugin-scroll \
+  @embedpdf/plugin-render \
+  @embedpdf/plugin-tiling
+```
+
+The five EmbedPDF plugins above are the **minimum** set for PDF rendering. Add others as you opt into `features` flags — see the [Bundle & Perf](/docs/document-viewer/bundle-and-perf) guide for the complete plugin → feature mapping.
+
+## Host the PDFium WASM binary
+
+EmbedPDF ships PDFium as a `.wasm` file in `@embedpdf/pdfium/dist/pdfium.wasm`. Your app needs to serve it at a stable URL so `DocumentViewer` can load it on demand. Copy it into your public directory at build time:
+
+```bash
+# Add to your build script (Astro, Vite, Nuxt, Phoenix, etc.)
+cp node_modules/@embedpdf/pdfium/dist/pdfium.wasm public/pdfium.wasm
+```
+
+Then pass the URL to the component via `wasmUrl`:
+
+```vue
+<DocumentViewer source="/sample.pdf" wasm-url="/pdfium.wasm" />
+```
+
+### Why self-host?
+
+- Same origin as your app — no CDN dependency, no CORS, no third-party domain.
+- Works in air-gapped or enterprise environments.
+- Cached independently of your JS bundle.
+
+A relative `wasmUrl` like `/pdfium.wasm` works in both worker and main-thread modes. If you opt to `worker={false}`, fully-qualified URLs (`https://...`) also work.
+
+## Render a PDF
+
+The minimum viable usage:
+
+```vue
+<script setup lang="ts">
+
+</script>
+
+<template>
+  <DocumentViewer source="/sample.pdf" wasm-url="/pdfium.wasm" />
+</template>
+```
+
+`source` accepts a URL string, a `File`, a `Blob`, or an `ArrayBuffer`. The MIME type is auto-detected; you can override with `mime-type="application/pdf"` if your URL has no extension.
+
+
+
+## Render an image, text, or markdown document
+
+`DocumentViewer` dispatches to a format-specific renderer based on the detected MIME type. No extra setup needed — the toolbar and side-panel chrome are shared.
+
+```vue
+<!-- Image -->
+<DocumentViewer source="/diagram.png" mime-type="image/png" />
+
+<!-- Plain text -->
+<DocumentViewer source="/changelog.txt" mime-type="text/plain" />
+
+<!-- Markdown -->
+<DocumentViewer source="/README.md" mime-type="text/markdown" />
+```
+
+
+
+## Capture a ref for the programmatic API
+
+To call methods like `loadAnnotations`, `createAnnotation`, or `saveAsCopy`, capture a template ref typed as `DocumentViewerInstance`:
+
+```vue
+<script setup lang="ts">
+
+
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+
+async function exportAnnotations() {
+  const items = await viewer.value?.exportAnnotations()
+  console.log(items)
+}
+</script>
+
+<template>
+  <DocumentViewer ref="viewer" source="/sample.pdf" wasm-url="/pdfium.wasm" />
+  <button @click="exportAnnotations">Export</button>
+</template>
+```
+
+See the [Programmatic API](/docs/document-viewer/programmatic-api) page for the full method list.
+
+## Common `features` profiles
+
+Three common feature profiles:
+
+```vue
+<!-- Read-only preview: zoom + scroll + search only -->
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ zoom: true, search: true, download: true }"
+/>
+
+<!-- Review workflow: annotations + threaded comments -->
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true,
+    search: true,
+    outline: true,
+    thumbnails: true,
+    annotations: true,
+    commentThreads: true,
+    undoRedo: true,
+    download: true,
+    print: true,
+  }"
+/>
+
+<!-- Everything: kitchen-sink for an internal reader -->
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true, rotate: true, spread: true, pan: true, fullscreen: true,
+    search: true, selection: true,
+    outline: true, thumbnails: true,
+    print: true, download: true,
+    annotations: true, commentThreads: true, undoRedo: true,
+    keyboardShortcuts: true, touchGestures: true,
+  }"
+/>
+```
+
+See [Features](/docs/document-viewer/features) for the full flag table.
+
+## Next steps
+
+- [Features](/docs/document-viewer/features) — every `features` flag and its `featureConfig`.
+- [Annotations](/docs/document-viewer/annotations) — annotation data model, creating highlights, threaded comments.
+- [Programmatic API](/docs/document-viewer/programmatic-api) — full method reference.
+- [Use cases](/docs/document-viewer/use-cases) — runnable demos for the common patterns.
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf) — chunking, WASM hosting, expected sizes per feature profile.
+
+---
+
+## Document Viewer: Migration
+
+Migration guides from @tato30/vue-pdf, vue-pdf-embed, raw pdfjs-dist, and PDFTron Web Viewer.
+
+This page maps the API surface of common Vue PDF libraries to `DocumentViewer`'s API so you can port an existing integration with minimal rework.
+
+## From `@tato30/vue-pdf`
+
+`@tato30/vue-pdf` wraps pdf.js and exposes a `<VuePDF>` component per page.
+
+### Prop mapping
+
+| `@tato30/vue-pdf` | `DocumentViewer` |
+| --- | --- |
+| `pdf` | `source` (same `URL \| File \| ArrayBuffer`) |
+| `page` | `initial-page` (1-based, same) |
+| `scale` | `initial-scale` (`'fit-page' \| 'fit-width' \| 'actual' \| number`) |
+| `rotation` | Not a prop — use `features.rotate` + `initialScale`, or call `goToPage` after mount |
+| `text-layer` | Always on when `features.search` or `features.selection` is enabled |
+| `annotation-layer` | `features.annotations` |
+| `fit-parent` | Default (the viewer fills its container) |
+| `width`/`height` | Set on the parent element; viewer fills it |
+
+### Behaviour differences
+
+- `@tato30/vue-pdf` renders **one page per `<VuePDF>` instance**. `DocumentViewer` renders the entire document as a continuous scroll (or paged, with `features.spread`).
+- pdf.js's text layer is a transparent DOM layer. PDFium's selection is the canonical engine selection; `getSelection()` from the page works.
+
+### Minimal port
+
+```diff
+- import { VuePDF, usePDF } from '@tato30/vue-pdf'
++ import { DocumentViewer } from '@meldui/vue'
+
+- const { pdf } = usePDF('/doc.pdf')
+- <VuePDF :pdf="pdf" :page="1" />
++ <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :initial-page="1" />
+```
+
+## From `vue-pdf-embed`
+
+`vue-pdf-embed` is a simpler pdf.js wrapper without text-layer support.
+
+### Prop mapping
+
+| `vue-pdf-embed` | `DocumentViewer` |
+| --- | --- |
+| `source` | `source` (same) |
+| `page` | `initial-page` |
+| `text-layer` | Always on with `features.search` / `features.selection` |
+| `annotation-layer` | `features.annotations` |
+| `rotation` | Use `features.rotate` |
+| `disable-stream` | n/a — DocumentViewer always streams |
+
+### Behaviour differences
+
+- `vue-pdf-embed` is purely a renderer — no built-in toolbar, search, or annotations. You'd typically pair it with custom UI.
+- `DocumentViewer` ships with toolbar + panels + annotations out of the box. Disable them with empty `features` to mimic `vue-pdf-embed`'s minimal surface:
+
+```vue
+<DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :features="{}" />
+```
+
+## From raw `pdfjs-dist`
+
+If you're using `pdfjs-dist` directly with custom rendering canvases, the migration is more of a rewrite than a port — `DocumentViewer` owns the viewport, scroll, and page rendering.
+
+### What you keep
+
+- Your source URL / Blob / ArrayBuffer — pass it as `source`.
+- Your initial-page / initial-zoom logic — map to `initialPage` / `initialScale`.
+- Your search UI — replace with `features.search`, or hide the default UI and wire to the `getDocument().findController` equivalent inside EmbedPDF.
+
+### What you replace
+
+- `getDocument()` calls — handled internally.
+- Canvas rendering loop — handled by tiling + render plugins.
+- Text layer DIV stitching — handled by the selection plugin.
+- Outline tree fetching — handled by the bookmark plugin.
+- Thumbnail rendering — handled by the thumbnail plugin.
+
+The PDF.js viewer (`pdf.js/web/viewer.html`) corresponds **directly** to `DocumentViewer` with the kitchen-sink feature set:
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true, rotate: true, spread: true, pan: true, fullscreen: true,
+    search: true, selection: true,
+    outline: true, thumbnails: true,
+    print: true, download: true,
+    annotations: true, undoRedo: true,
+    keyboardShortcuts: true, touchGestures: true,
+  }"
+/>
+```
+
+## From PDFTron Web Viewer (Apryse)
+
+PDFTron is the most direct comparison — both are commercial-grade PDF SDKs with annotation systems. Migration is mostly straightforward but the API shapes differ.
+
+### Property mapping
+
+| PDFTron `WebViewer` | `DocumentViewer` |
+| --- | --- |
+| `initialDoc` | `source` |
+| `licenseKey` | n/a (internal package, no license) |
+| `path` (location of viewer assets) | `wasm-url` (just the WASM file) |
+| `enableAnnotations` | `features.annotations` |
+| `disabledElements` | `toolbar.hide: [...]` |
+| `customElements` | `toolbar.customButtons` |
+| `documentXFDFRetriever` | `loadAnnotations` (call after `document-loaded`) |
+| `extractAnnotations()` | `exportAnnotations()` |
+| `printDocument()` | Trigger `print` button or call `window.print()` |
+| `downloadPdf()` | Trigger `download` button |
+| Annotation Manager events | `@annotation-created` / `@annotation-updated` / `@annotation-deleted` |
+
+### Annotation format
+
+PDFTron uses XFDF (XML); `DocumentViewer` uses a typed JSON shape (`AnnotationTransferItem[]`).
+
+To round-trip from PDFTron's XFDF to `DocumentViewer`'s format, parse XFDF on import and serialize on export. The library doesn't ship an XFDF parser — write a small adapter, or `saveAsCopy()` to bake annotations into the PDF binary itself (interoperable with any PDF reader).
+
+### Threaded comments
+
+PDFTron stores reply chains inside annotation `Reply` records. `DocumentViewer` stores threads in a **parallel overlay** (`CommentThread[]`) keyed by annotation id. To migrate:
+
+1. Pull replies out of the PDFTron XFDF
+2. Build a `CommentThread[]` keyed by parent-annotation id
+3. Call `loadAnnotations(annotations)` then `loadThreads(threads)`
+
+See [Annotations → Threaded comments](/docs/document-viewer/annotations#threaded-comments-overlay).
+
+## Breaking changes vs. previous internal viewers (doqo `DocumentViewer`)
+
+For teams migrating from the internal doqo viewer:
+
+- The import moved from `frontend/src/components/viewer/DocumentViewer.vue` to `@meldui/vue`.
+- The toolbar / side panel / renderer components were renamed to drop the `Document` prefix: `ViewerToolbar`, `ViewerSidePanel`, `PdfViewer`, `ImageViewer`, etc. These are also exported from `@meldui/vue`.
+- The annotation format is identical to doqo's `MeldAnnotation` (renamed to `Annotation` here). Existing stored annotations load without transformation.
+- Threaded-comment storage matches doqo's `MeldThread` (renamed to `CommentThread`). Existing thread JSON loads via `loadThreads()` without transformation.
+- The 5-colour highlight palette uses the same hex values, so existing screenshots and saved-state UIs match.
+
+## Common gotchas in any migration
+
+1. **PDF-points vs. screen-pixels** — both `@tato30/vue-pdf` and PDFTron expose mixed coordinate systems. `DocumentViewer`'s `rect` and `segmentRects` are always in PDF points (1/72 inch, bottom-left origin). If your prior code used screen pixels, you'll need to convert via the current scale + rotation.
+2. **0-based vs. 1-based pages** — `pageIndex` is 0-based; `initialPage` / `goToPage` are 1-based. Consistent within `DocumentViewer` but the convention may differ from your prior code.
+3. **Persistence is yours** — PDFTron has built-in collaboration sync. `DocumentViewer` does not — you wire `@annotation-*` events to your backend yourself.
+
+## See also
+
+- [Getting Started](/docs/document-viewer/getting-started)
+- [Annotations](/docs/document-viewer/annotations)
+- [Programmatic API](/docs/document-viewer/programmatic-api)
+
+---
+
+## Document Viewer: Plugin Reference
+
+One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
+
+`DocumentViewer` is built on EmbedPDF's plugin architecture. Each plugin handles one concern (zoom, search, annotations, etc.) and is registered only when its corresponding `features` flag is on. This page lists every plugin in scope and links to its reference.
+
+## Always-on (no feature flag)
+
+These five plugins constitute the **minimum** PDF rendering pipeline. They're always registered:
+
+- **[document-manager](/docs/document-viewer/plugins/document-manager)** — orchestrates document lifecycle (load, switch, unload)
+- **[viewport](/docs/document-viewer/plugins/viewport)** — owns the scrollable container DOM
+- **[scroll](/docs/document-viewer/plugins/scroll)** — page-aware virtual scrolling
+- **[render](/docs/document-viewer/plugins/render)** — paints pages to canvas
+- **[tiling](/docs/document-viewer/plugins/tiling)** — splits large pages into tiles for memory efficiency
+
+## View controls
+
+Toggle viewport behaviour and orientation. Each opt-in via a `features` flag:
+
+- **[zoom](/docs/document-viewer/plugins/zoom)** — `features.zoom`
+- **[rotate](/docs/document-viewer/plugins/rotate)** — `features.rotate`
+- **[spread](/docs/document-viewer/plugins/spread)** — `features.spread`
+- **[pan](/docs/document-viewer/plugins/pan)** — `features.pan`
+- **[fullscreen](/docs/document-viewer/plugins/fullscreen)** — `features.fullscreen`
+
+## Interaction
+
+- **[interaction-manager](/docs/document-viewer/plugins/interaction-manager)** — auto-enabled by `pan`, `selection`, or `annotations`
+- **[selection](/docs/document-viewer/plugins/selection)** — `features.selection` (also auto-enabled by `annotations`)
+
+## Discovery & navigation
+
+- **[search](/docs/document-viewer/plugins/search)** — `features.search`
+- **[bookmark](/docs/document-viewer/plugins/bookmark)** — `features.outline`
+- **[thumbnail](/docs/document-viewer/plugins/thumbnail)** — `features.thumbnails`
+
+## Output
+
+- **[export](/docs/document-viewer/plugins/export)** — `features.print`, `features.download`; powers `saveAsCopy()`
+
+## Editing (Phase 1)
+
+- **[hotkeys](/docs/document-viewer/plugins/hotkeys)** — `features.keyboardShortcuts`
+- **[annotation](/docs/document-viewer/plugins/annotation)** — `features.annotations`
+- **[history](/docs/document-viewer/plugins/history)** — `features.undoRedo`
+
+## Phase 2 plugins (forthcoming)
+
+These plugin pages will land when their feature flags ship in Phase 2:
+
+- `stamp`, `signature`, `redaction`, `form`, `attachment`
+
+## Plugin registration pattern
+
+Internally, `pluginRegistry.ts` is a pure function from `ViewerFeatures` → `PluginRegistration[]`. The order matters because some plugins depend on others (e.g. `annotation` needs `interaction-manager`). The registry handles dependency ordering automatically; you don't need to think about it when toggling `features`.
+
+```ts
+
+
+const merged = resolveFeatures(DEFAULT_FEATURES, userFeatures)
+// merged is the effective ViewerFeatures with auto-enabled dependencies
+```
+
+## See also
+
+- [Features](/docs/document-viewer/features) — the `features` prop flag table
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf) — bundle impact of each flag
+
+---
+
+## Document Viewer: Programmatic API
+
+Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
+
+`DocumentViewer` exposes its full imperative surface via `defineExpose`. Capture it through a template ref typed as `DocumentViewerInstance`:
+
+```ts
+
+
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+```
+
+```vue
+<DocumentViewer ref="viewer" source="/doc.pdf" wasm-url="/pdfium.wasm" />
+```
+
+All methods are safe to call before the document has loaded — they queue or no-op gracefully. Methods that depend on a loaded document (`loadAnnotations`, `createAnnotation`, `getDocumentInfo`, etc.) wait on the `document-loaded` event internally.
+
+
+
+## Document
+
+### `getDocumentInfo(): DocumentInfo | null`
+
+Returns metadata for the currently-loaded document, or `null` if still loading.
+
+```ts
+const info = viewer.value?.getDocumentInfo()
+// { pageCount: 14, title: 'TraceMonkey' }
+```
+
+### `getCurrentPage(): number`
+
+Returns the 1-based page index of the page currently centered in the viewport.
+
+### `goToPage(page: number): void`
+
+Scrolls the viewer to the given 1-based page index. Out-of-range values are clamped.
+
+## Annotation read
+
+### `getAnnotations(filter?): Annotation[]`
+
+Returns all annotations currently in the document. Filter is optional:
+
+```ts
+const all = viewer.value?.getAnnotations()
+const page1 = viewer.value?.getAnnotations({ pageIndex: 0 })
+const onlyHighlights = viewer.value?.getAnnotations({ types: ['highlight'] })
+const byAuthor = viewer.value?.getAnnotations({ authorId: 'alex@example.com' })
+```
+
+### `getThread(annotationId: string): CommentThread | null`
+
+Returns the comment thread anchored to the given annotation, or `null` if none exists.
+
+## Annotation CRUD
+
+### `loadAnnotations(annotations: Annotation[]): Promise<void>`
+
+Bulk-load annotations on mount or after document switch. Waits for the engine's `loaded` event internally so it's safe to call before `document-loaded` fires.
+
+```ts
+await viewer.value?.loadAnnotations([
+  {
+    id: '0190f4...',
+    type: 'highlight',
+    pageIndex: 0,
+    rect: { x: 100, y: 200, width: 200, height: 20 },
+    segmentRects: [{ x: 100, y: 200, width: 200, height: 20 }],
+    color: '#FFCD45',
+    opacity: 0.4,
+  },
+])
+```
+
+### `createAnnotation(input: CreateAnnotationInput): Promise<Annotation>`
+
+Creates a new annotation. `id`, `createdAt`, `modifiedAt` are auto-assigned if omitted. Returns the created annotation with its assigned id.
+
+```ts
+const created = await viewer.value?.createAnnotation({
+  type: 'comment',
+  pageIndex: 2,
+  rect: { x: 150, y: 300, width: 24, height: 24 },
+  contents: 'Question about this paragraph',
+})
+```
+
+### `updateAnnotation(id: string, patch: Partial<Annotation>): Promise<void>`
+
+Patches an existing annotation. Only the fields in `patch` are changed.
+
+```ts
+await viewer.value?.updateAnnotation(id, { color: '#8FCFEF' })
+```
+
+### `deleteAnnotation(id: string): Promise<void>`
+
+Removes an annotation. Also deletes its thread (if any).
+
+### `selectAnnotation(id: string): void`
+
+Selects the annotation programmatically, mirroring a user click. Emits `annotation-selected`.
+
+### `navigateToAnnotation(id: string): void`
+
+Scrolls the annotation into view (and selects it).
+
+## Bulk import / export
+
+### `importAnnotations(items: AnnotationTransferItem[]): Promise<void>`
+
+Bulk-import a set of annotations + optional binary context (used for stamps and signatures). Equivalent to `loadAnnotations` but with side-data for raster-backed annotation types.
+
+### `exportAnnotations(filter?): Promise<AnnotationTransferItem[]>`
+
+Returns the document's annotations as `AnnotationTransferItem[]` — the round-trippable shape suitable for storing on your backend.
+
+```ts
+const items = await viewer.value?.exportAnnotations()
+await fetch('/api/save-annotations', { method: 'POST', body: JSON.stringify(items) })
+```
+
+## History
+
+### `undo(): void` / `redo(): void`
+
+Walks the EmbedPDF history stack one step. Requires `features.undoRedo`.
+
+### `canUndo(): boolean` / `canRedo(): boolean`
+
+Returns whether there's a step to walk in that direction.
+
+## PDF binary
+
+### `saveAsCopy(options?: SaveAsCopyOptions): Promise<ArrayBuffer>`
+
+Returns a fresh PDF buffer with the current annotations baked in. Useful for:
+- Generating a permanent record of a reviewed document
+- Burning in redactions for compliance
+- Downloading the annotated copy
+
+```ts
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+const url = URL.createObjectURL(blob)
+// trigger a download or hand off to your backend
+```
+
+## Threads
+
+### `loadThreads(threads: CommentThread[]): void`
+
+Seeds the threaded-comments overlay. Each thread is anchored to an annotation id, so call `loadAnnotations` first.
+
+### `addReply(annotationId, content): Promise<CommentReply>`
+
+Appends a reply to the annotation's thread (creating the thread if it doesn't exist). Emits `thread-update` with `action: 'reply-added'`.
+
+### `resolveAnnotation(annotationId, resolved): Promise<void>`
+
+Sets the resolved state of the annotation's thread. Emits `thread-update` with `action: 'resolved'` / `'unresolved'`.
+
+### `deleteReply(annotationId, replyId): Promise<void>`
+
+Removes a reply. Emits `thread-update` with `action: 'reply-deleted'`.
+
+## Events
+
+`DocumentViewer` emits these events. All fire only for **committed** state — in-flight drag / resize / typing states are debounced.
+
+| Event | Payload | When |
+| --- | --- | --- |
+| `document-loaded` | `DocumentInfo` | First load completes |
+| `document-error` | `{ error: string }` | Load fails (404, decode error, etc.) |
+| `page-change` | `{ page: number }` | Viewport-centered page changes |
+| `annotation-created` | `{ annotation: Annotation }` | New annotation committed (user-drawn or programmatic) |
+| `annotation-updated` | `{ annotation, patch }` | Existing annotation patched |
+| `annotation-deleted` | `{ annotationId: string }` | Annotation removed |
+| `annotation-selected` | `{ annotation: Annotation \| null }` | Selection changed |
+| `thread-update` | `{ thread, action }` | Reply added/deleted, or thread resolved/unresolved |
+
+```vue
+<DocumentViewer
+  ref="viewer"
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  @document-loaded="onLoaded"
+  @annotation-created="onCreate"
+  @thread-update="onThreadUpdate"
+/>
+```
+
+## Type imports
+
+All public types are re-exported from `@meldui/vue`:
+
+```ts
+
+  DocumentViewerProps,
+  DocumentViewerInstance,
+  DocumentViewerEmits,
+  DocumentInfo,
+  ViewerFeatures,
+  FeatureConfig,
+  ToolbarConfig,
+  ViewerPermissions,
+  Annotation,
+  HighlightAnnotation,
+  CommentAnnotation,
+  FreeTextAnnotation,
+  InkAnnotation,
+  StampAnnotation,
+  SignatureAnnotation,
+  RedactionAnnotation,
+  AnnotationType,
+  AnnotationFilter,
+  AnnotationTransferItem,
+  CreateAnnotationInput,
+  CommentThread,
+  CommentReply,
+  CommentAuthor,
+  SaveAsCopyOptions,
+} from '@meldui/vue'
+```
+
+## See also
+
+- [Annotations](/docs/document-viewer/annotations) — the annotation data model in depth
+- [Use cases](/docs/document-viewer/use-cases) — runnable demos for every method above
+
+---
+
+## Document Viewer: Theming
+
+Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
+
+`DocumentViewer` is built entirely from MeldUI primitives, so it inherits your app's Tailwind v4 theme automatically. No additional theme configuration is required.
+
+## Dark mode
+
+The viewer chrome adapts to dark mode via `dark:` Tailwind classes on every internal element. Add `class="dark"` to a parent (or `<html>`) and the entire toolbar, panels, popovers, and overlay surfaces flip.
+
+```vue
+<template>
+  <div :class="darkMode ? 'dark' : ''">
+    <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+  </div>
+</template>
+```
+
+
+
+### What's themed vs. what isn't
+
+| Element | Themed |
+| --- | --- |
+| Toolbar background, buttons, icons, dividers | ✅ via `bg-background` / `text-foreground` |
+| Side panel chrome (header, close button, list rows) | ✅ |
+| Search popover, highlight tooltip, comment form, comment marker | ✅ |
+| Annotations panel rows + reply form | ✅ |
+| **The PDF page itself** | ❌ The page is rendered by PDFium with the document's original page colour (typically white) — EmbedPDF does not invert page colours. For a dark-aware reader, add a wrapper with `bg-muted/30` to soften the contrast with the rest of the app |
+
+## MeldUI primitives in use
+
+Every UI element inside `DocumentViewer` is composed from MeldUI primitives so styling overrides naturally inherit. The internals use:
+
+| Primitive | Used by |
+| --- | --- |
+| `Button` | Every toolbar button, comment form actions, reply submit |
+| `Popover` | Search popover, panel toggles on mobile |
+| `Tooltip` | Highlight tooltip wrapper, button hover labels |
+| `Textarea` | Comment form, reply form |
+| `Toggle` | Search case / whole-word toggles |
+
+Override the variants via your Tailwind theme — see [Theming guide (Getting Started)](/docs/getting-started/theming).
+
+## CSS class override points
+
+The viewer's root carries `class="document-viewer"` and `data-document-viewer`. Internal parts use unprefixed semantic classes; you can target them in your global CSS without prefix gymnastics.
+
+```css
+/* Larger toolbar buttons just for the viewer */
+.document-viewer .viewer-toolbar button {
+  padding: 0.5rem 0.75rem;
+}
+
+/* Custom border around the annotated PDF page */
+.document-viewer .pdf-page {
+  box-shadow: 0 0 0 1px theme(colors.border), 0 4px 12px theme(colors.shadow / 0.1);
+}
+
+/* Brand-coloured highlight tooltip */
+.document-viewer .highlight-tooltip {
+  --background: theme(colors.brand.50);
+}
+```
+
+The full list of internal classes is documented in [Customization → CSS class overrides](/docs/document-viewer/customization).
+
+## Per-instance `class` prop
+
+For one-off styling, pass `class` directly:
+
+```vue
+<DocumentViewer
+  class="rounded-xl border shadow-lg"
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+/>
+```
+
+The prop merges onto the root via `cn()`, so Tailwind utility conflicts resolve in your favour.
+
+## Custom highlight palette
+
+The 5 default highlight colours live in `HIGHLIGHT_COLORS`. Override them via `featureConfig.annotations.defaultTools` to match your brand:
+
+```ts
+const featureConfig = {
+  annotations: {
+    defaultTools: [
+      { id: 'brand-1', label: 'Brand Primary',   color: '#0066FF', opacity: 0.35 },
+      { id: 'brand-2', label: 'Brand Secondary', color: '#FF6B35', opacity: 0.35 },
+      { id: 'brand-3', label: 'Brand Accent',    color: '#A0E7E5', opacity: 0.35 },
+    ],
+  },
+}
+```
+
+The floating tooltip renders one swatch per tool; the first becomes the active default.
+
+## Dark-mode caveat: PDF page background
+
+PDFium renders pages with the page's authored background (typically white). The viewer chrome around the page goes dark, but the page itself stays white. For a fully dark-themed reader you have a few options:
+
+1. **Filter the page** — apply `filter: invert(1) hue-rotate(180deg)` to `.pdf-page` for a quick (but lossy) inversion.
+2. **Reduce contrast** — add `bg-muted/30 dark:bg-muted/60` around the renderer to soften the white edge.
+3. **Accept it** — for most professional documents (contracts, reports), preserving the original page colour is the correct default.
+
+```css
+/* Option 1: aggressive invert for dark mode */
+.dark .document-viewer .pdf-page {
+  filter: invert(1) hue-rotate(180deg);
+}
+.dark .document-viewer .pdf-page img,
+.dark .document-viewer .pdf-page canvas {
+  filter: invert(1) hue-rotate(180deg);
+}
+```
+
+## See also
+
+- [Customization](/docs/document-viewer/customization) — toolbar + panel + slot customization
+- [Theming guide (global)](/docs/getting-started/theming) — how MeldUI uses Tailwind v4 themes
+- [Use case: dark-mode integration](/docs/document-viewer/use-cases/dark-mode-integration)
+
+---
+
+## Document Viewer: Troubleshooting
+
+Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
+
+This page collects the most-asked questions about `DocumentViewer` in production.
+
+## "Failed to load pdfium.wasm" (404)
+
+You forgot to host the WASM binary. Run:
+
+```bash
+cp node_modules/@embedpdf/pdfium/dist/pdfium.wasm public/pdfium.wasm
+```
+
+Then pass the URL via `wasm-url="/pdfium.wasm"`. See [Getting Started → Host the PDFium WASM binary](/docs/document-viewer/getting-started#host-the-pdfium-wasm-binary).
+
+Verify with `curl -I https://your-app.com/pdfium.wasm` — should return 200 with `Content-Type: application/wasm`.
+
+## "Failed to instantiate WebAssembly" (wrong MIME type)
+
+Your server is serving `pdfium.wasm` with the wrong `Content-Type`. Many static hosts default to `application/octet-stream`, which works in some browsers but not all (Safari is strict).
+
+Fix it server-side:
+
+- **Nginx**: `add_header Content-Type application/wasm;` for `.wasm` files
+- **Cloudflare**: Add a transform rule mapping `.wasm` → `application/wasm`
+- **Astro / Vite static**: Already correct by default
+- **Express**: `express.static('public', { setHeaders: (res, path) => { if (path.endsWith('.wasm')) res.setHeader('Content-Type', 'application/wasm') } })`
+
+## "Failed to fetch" the PDF (CORS)
+
+If `source` points to a different origin than your app, that origin must send `Access-Control-Allow-Origin` headers. Without them, the browser refuses to share the response with PDFium.
+
+Workarounds:
+1. **Proxy through your own backend** — fetch the PDF server-side and re-serve it from your own origin.
+2. **Pass a `Blob` or `ArrayBuffer` directly** if you can fetch it yourself with appropriate credentials.
+
+```ts
+const buffer = await fetch('https://third-party.com/doc.pdf', { credentials: 'include' })
+  .then(r => r.arrayBuffer())
+```
+
+```vue
+<DocumentViewer :source="buffer" wasm-url="/pdfium.wasm" />
+```
+
+## "Mixed content blocked" (HTTPS page, HTTP source)
+
+Browsers block `http://` PDF sources from `https://` pages. Always serve PDFs over HTTPS in production, or proxy them through your own HTTPS backend.
+
+## Worker mode: relative wasm-url not found
+
+If you set `wasm-url="/pdfium.wasm"` (a relative path) and the engine runs in a Web Worker, the worker is built from a blob URL whose base differs from the page's, so the relative path resolves against the blob origin and 404s.
+
+Two fixes:
+
+1. **Use a fully-qualified URL**: `wasm-url="https://your-app.com/pdfium.wasm"`
+2. **Disable worker mode**: `:worker="false"` (PDFium runs on the main thread; OK for small/medium documents)
+
+Absolute paths starting with `/` work in **main thread** mode. Worker mode requires a fully-qualified URL.
+
+## "DOMException: The user aborted a request" on rapid page switches
+
+If you swap `source` rapidly (e.g. a thumbnail list of N PDFs), in-flight loads can abort each other. This is expected and not a bug — pin `key` on `<DocumentViewer>` to a document id and let Vue unmount/remount the component cleanly between sources:
+
+```vue
+<DocumentViewer :key="currentDoc.id" :source="currentDoc.url" wasm-url="/pdfium.wasm" />
+```
+
+## Large PDF appears blank / takes >30 s to render the first page
+
+Two checks:
+1. **Worker mode on?** Without `worker={true}` (the default), large documents block the main thread during initial decode.
+2. **Tiling enabled?** Tiling is always-on in the minimum plugin set, but a custom plugin registry that omits it will render every page at full resolution simultaneously — fatal on large docs.
+
+For 1000+ page documents, also confirm `features.thumbnails` is on (lets the user navigate via the panel instead of scrolling through every page).
+
+See [Use case: large documents](/docs/document-viewer/use-cases/large-documents) for the patterns.
+
+## Annotations are not persisting
+
+`DocumentViewer` does **not** auto-save annotations. You need to subscribe to events and POST to your backend:
+
+```vue
+<DocumentViewer
+  @annotation-created="onCreate"
+  @annotation-updated="onUpdate"
+  @annotation-deleted="onDelete"
+  @thread-update="onThreadUpdate"
+/>
+```
+
+See [Annotations → Persisting changes](/docs/document-viewer/annotations#persisting-changes).
+
+## `loadAnnotations` runs but no highlights appear
+
+Confirm:
+1. `features.annotations` is `true` — without the flag the annotation plugin isn't registered, so the data load is dropped.
+2. The `pageIndex` values are **0-based** (page 1 → `pageIndex: 0`).
+3. The `rect` coordinates are in **PDF points** (1/72 inch from the bottom-left of the page), not screen pixels.
+4. For highlights, `segmentRects` must include at least one rect — the engine renders the highlight from `segmentRects`, not from `rect`.
+
+A minimal valid highlight:
+
+```ts
+{
+  id: 'a-1',
+  type: 'highlight',
+  pageIndex: 0,
+  rect:         { x: 100, y: 600, width: 200, height: 20 },
+  segmentRects: [{ x: 100, y: 600, width: 200, height: 20 }],
+  color: '#FFCD45',
+  opacity: 0.4,
+}
+```
+
+## `saveAsCopy()` returns a corrupted file
+
+A few possibilities:
+- The buffer is consumed twice (e.g. you also passed it to `new Blob([buffer])` somewhere it was already transferred). Use `buffer.slice(0)` to clone before transferring.
+- Your backend is expecting a multipart form but you're sending raw `application/pdf`. Wrap in `FormData` if so.
+- Network compression is munging the bytes. Make sure your upload preserves binary integrity.
+
+## Browser support
+
+`DocumentViewer` requires:
+- **WebAssembly** — universal in evergreen browsers; not supported in IE11.
+- **`Worker`** (for default worker mode) — universal.
+- **`OffscreenCanvas`** (used by EmbedPDF tiling for some operations) — Safari 16.4+, Firefox 105+, Chrome 69+.
+- **CSS Grid + Flexbox** — universal.
+
+Tested in production: Chrome 110+, Safari 16+, Firefox 110+, Edge 110+. Mobile: iOS Safari 16+, Chrome Android 110+.
+
+## Performance budget exceeded warnings in dev
+
+Vite / Rolldown will warn if the EmbedPDF vendor chunk exceeds default chunk-size limits. This is expected — the EmbedPDF runtime is large by web standards. Adjust the budget:
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  build: {
+    chunkSizeWarningLimit: 1500, // KB
+  },
+})
+```
+
+## "Highlight tooltip flickers / doesn't appear on selection"
+
+The floating tooltip is anchored to the engine's selection state. If your app has CSS that sets `pointer-events: none` on a parent, or if a sibling element with higher z-index captures pointerdown, the tooltip's outside-click guard fires and immediately closes it.
+
+Check that the wrapper around `<DocumentViewer>` doesn't have:
+- `pointer-events: none` (or any parent that does)
+- A `<div>` overlay with `z-index: 9999` covering the tooltip
+- A keyboard shortcut that consumes `pointerdown` events at the document level
+
+## Where to file bugs
+
+Bugs in `DocumentViewer` itself — file at the meldui monorepo. Bugs in the rendering pipeline (PDFium decode errors, layout glitches, search false negatives) often live in EmbedPDF — file at https://github.com/embedpdf/embed-pdf-viewer/issues and we'll mirror the workaround here.
+
+## See also
+
+- [Getting Started](/docs/document-viewer/getting-started)
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf)
+- [Programmatic API](/docs/document-viewer/programmatic-api)
+
+---
+
+## Document Viewer: Use Cases
+
+Runnable demos for the common patterns — load saved annotations, AI citations, import / export, save-as-copy, threaded reviews, and more.
+
+Each page below is a runnable Vue SFC paired with a short walkthrough. Use them as starting points to copy into your own code.
+
+## Annotation patterns
+
+- **[Load saved annotations](/docs/document-viewer/use-cases/load-saved-annotations)** — seed annotations on mount from your backend
+- **[AI / RAG citations](/docs/document-viewer/use-cases/ai-rag-citations)** — programmatic ephemeral highlights anchored to AI responses
+- **[Import / export annotations](/docs/document-viewer/use-cases/import-export-annotations)** — round-trip with JSON files for backup or transfer
+- **[Save-as-copy burn-in](/docs/document-viewer/use-cases/save-as-copy-burnin)** — generate a baked PDF for archival or external sharing
+- **[Threaded comments](/docs/document-viewer/use-cases/threaded-comments)** — replies + resolved state with backend sync
+
+## Reader patterns
+
+- **[Multi-format rendering](/docs/document-viewer/use-cases/multi-format-rendering)** — PDF / image / text / markdown in one component
+- **[Share-link viewer](/docs/document-viewer/use-cases/share-link-viewer)** — permission-gated read-only mode for anonymous visitors
+- **[Large documents](/docs/document-viewer/use-cases/large-documents)** — virtualization patterns for 500+ page PDFs
+- **[Keyboard and touch](/docs/document-viewer/use-cases/keyboard-and-touch)** — accessibility + touch-device patterns
+
+## Theming & UX
+
+- **[Dark-mode integration](/docs/document-viewer/use-cases/dark-mode-integration)** — drop the viewer inside a dark-themed app
+- **[Toolbar customization](/docs/document-viewer/use-cases/toolbar-customization)** — reorder groups, hide buttons, add a custom action
+
+## See also
+
+- [Plugin reference](/docs/document-viewer/plugins) — what each EmbedPDF plugin does
+- [Programmatic API](/docs/document-viewer/programmatic-api) — `DocumentViewerInstance` method reference
+
+---
+
 ## Filters
 
 A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
@@ -4863,6 +6713,1060 @@ Use `groups` for organized options, `creatable` to allow new values, and `maxDis
 
 ---
 
+## Plugin: Annotation
+
+Native PDF annotations — highlights, sticky-note comments, and the full programmatic CRUD API.
+
+The **Annotation** plugin is the largest in the registry. It provides the native PDF annotation system: highlights, sticky-note comments, the programmatic CRUD API, and the underlying machinery that powers the threaded-comments overlay.
+
+## Enabling flag
+
+`features.annotations: true`
+
+Auto-registers `interaction-manager`, `selection`, and `history` as dependencies. Set `features.commentThreads: true` to also enable the threaded overlay.
+
+## What it does
+
+- Highlight tool — drag-select text, then pick a colour from the floating tooltip
+- Comment tool — click on the page to drop a sticky-note pin and open the inline comment composer
+- Highlights and comments are persisted as **native PDF annotation subtypes** (HIGHLIGHT and TEXT respectively), so they survive `saveAsCopy()` and are readable in any PDF reader
+- 5-colour highlight palette in the floating tooltip (configurable via `featureConfig.annotations.defaultTools`)
+- Full programmatic API exposed via `DocumentViewerInstance` — `createAnnotation`, `updateAnnotation`, `deleteAnnotation`, `getAnnotations`, `loadAnnotations`, `importAnnotations`, `exportAnnotations`, `selectAnnotation`, `navigateToAnnotation`
+- Annotation events — `annotation-created`, `annotation-updated`, `annotation-deleted`, `annotation-selected`
+
+## Composable
+
+`useAnnotation(documentId)` from `@embedpdf/plugin-annotation/vue`. Returns the annotation plugin's reactive state including `provides.value` (the capability interface), `state.value.activeToolId`, and the list of in-flight annotations.
+
+## Events
+
+- `annotation-created` — committed creation (user-drawn or programmatic)
+- `annotation-updated` — patched
+- `annotation-deleted` — removed
+- `annotation-selected` — selection changed
+- `active-annotation-tool-change` — toolbar tool flipped (e.g. user clicked the highlight tool)
+
+All surface as `@annotation-*` and `@active-annotation-tool-change` on `DocumentViewer`.
+
+## Dependencies
+
+- viewport
+- document-manager
+- interaction-manager (auto-added)
+- selection (auto-added)
+- history (auto-added when `features.undoRedo` is on — and it's on by default when annotations are)
+
+## Configuration: `featureConfig.annotations`
+
+```ts
+interface AnnotationsFeatureConfig {
+  author?: string
+  useAnnotationMode?: boolean
+  defaultTools?: AnnotationToolConfig[]
+}
+
+interface AnnotationToolConfig {
+  id: string
+  label: string
+  color: string
+  opacity: number
+}
+```
+
+- `author` — display name attached to created annotations (defaults to `currentUser.displayName`)
+- `useAnnotationMode` — when `true`, redactions (Phase 2) are stored as pending PDF REDACT annotations rather than applied immediately
+- `defaultTools` — override the floating-tooltip colour palette. The 5 defaults are exported as `HIGHLIGHT_COLORS`
+
+## Data model
+
+See [Annotations](/docs/document-viewer/annotations) for the discriminated union (`Annotation`), the `AnnotationBase`, and every subtype (`HighlightAnnotation`, `CommentAnnotation`, `FreeTextAnnotation`, `InkAnnotation`, `StampAnnotation`, `SignatureAnnotation`, `RedactionAnnotation`).
+
+## Threaded comments overlay (`features.commentThreads`)
+
+A parallel data model — `CommentThread[]` — keyed by annotation id. Stored separately from the PDF binary (in your backend), seeded via `loadThreads()`, mutated via `addReply` / `resolveAnnotation` / `deleteReply`.
+
+See [Annotations → Threaded comments](/docs/document-viewer/annotations#threaded-comments-overlay).
+
+## When you'd touch it directly
+
+For custom annotation tools (e.g. a stamp picker, a calibration ruler) that need to register with the interaction manager. Most consumers stay at the `DocumentViewer` instance API level.
+
+## See also
+
+- [Annotations](/docs/document-viewer/annotations) — full data model and persistence patterns
+- [Programmatic API](/docs/document-viewer/programmatic-api) — every method
+- [Use case: AI / RAG citations](/docs/document-viewer/use-cases/ai-rag-citations)
+- [Use case: threaded comments](/docs/document-viewer/use-cases/threaded-comments)
+
+---
+
+## Plugin: Bookmark (Outline)
+
+Extracts the document outline and renders it as a side-panel tree.
+
+The **Bookmark** plugin reads the PDF's outline (table of contents) and exposes it for side-panel rendering. `DocumentViewer` ships an `OutlinePanel.vue` that renders the tree with keyboard navigation.
+
+## Enabling flag
+
+`features.outline: true`
+
+## What it does
+
+- Extracts the PDF outline / bookmarks tree on document load
+- Renders a hierarchical tree in the side panel
+- Click any node to navigate to the target page
+- Keyboard nav: arrow keys to walk, Enter to navigate
+- `O` keyboard shortcut to toggle the panel (when `features.keyboardShortcuts` is on)
+
+## Composable
+
+`useBookmark(documentId)` from `@embedpdf/plugin-bookmark/vue`. Returns the outline tree as a reactive array of `BookmarkNode`s.
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- document-manager
+- scroll (for `goToPage` on click)
+
+## Configuration
+
+No `featureConfig`.
+
+## Empty state
+
+If the PDF has no outline (most short documents don't), the panel renders an empty state message. Many PDFs only carry an outline if explicitly added during authoring.
+
+## When you'd touch it directly
+
+To render the outline in a sidebar outside the viewer chrome — `useBookmark` returns the tree directly.
+
+## See also
+
+- [Plugin: thumbnail](/docs/document-viewer/plugins/thumbnail) — the other navigation panel
+- [Features → outline](/docs/document-viewer/features#side-panels)
+
+---
+
+## Plugin: Document Manager
+
+Orchestrates document lifecycle — load, switch, and unload PDFs.
+
+The **DocumentManager** plugin owns the active document. It handles loading a fresh PDF, swapping to a new one when `source` changes, and unloading on unmount.
+
+## Enabling flag
+
+Always registered — required for any PDF rendering. No `features` flag needed.
+
+## What it does
+
+- Wraps the PDFium engine's document handle for use by other plugins
+- Fires the `loaded` event once the PDF is parsed and ready for rendering
+- Exposes the loaded document via `useDocumentState()` composable from `@embedpdf/core/vue`
+- Coordinates document switching when `source` prop changes
+
+## Composable
+
+`useDocumentState()` from `@embedpdf/core/vue` returns reactive state including:
+
+```ts
+{
+  document: { pageCount, title, metadata } | null,
+  loading: boolean,
+  error: string | null,
+}
+```
+
+## Events
+
+- `loaded` — first successful document load (surfaces as `@document-loaded` on `DocumentViewer`)
+- `error` — load failure (surfaces as `@document-error`)
+
+## Dependencies
+
+None — this is the foundation.
+
+## Configuration
+
+No `featureConfig` block — DocumentManager has no user-tunable options.
+
+## When you'd touch it directly
+
+You shouldn't need to. `DocumentViewer` exposes `getDocumentInfo()` and the `document-loaded` event for all consumer needs.
+
+## See also
+
+- [Programmatic API → `getDocumentInfo`](/docs/document-viewer/programmatic-api#getdocumentinfo-documentinfo--null)
+- [Plugin: viewport](/docs/document-viewer/plugins/viewport) — what comes next in the pipeline
+
+---
+
+## Plugin: Export
+
+Print, download, and saveAsCopy — every PDF output path.
+
+The **Export** plugin handles every "get the PDF out of the viewer" operation: print to the browser's print dialog, download the original (or a re-encoded copy), and `saveAsCopy()` which returns an `ArrayBuffer` with current annotations baked in.
+
+## Enabling flag
+
+`features.print: true` — registers the print plugin and adds the Print toolbar button
+`features.download: true` — registers the export plugin and adds the Download toolbar button
+
+Either flag triggers registration of the export plugin (it serves both).
+
+## What it does
+
+- Toolbar buttons: Print, Download
+- `saveAsCopy()` programmatic method that returns a baked PDF buffer
+- Optional `downloadUrl` prop on `DocumentViewer` — if set, the Download button serves that URL instead of the live source (useful for re-encoded archival copies)
+
+## Composables
+
+- `useExportCapability()` from `@embedpdf/plugin-export/vue`
+- `usePrint(documentId)` from `@embedpdf/plugin-print/vue`
+
+Both are wired into the toolbar internally.
+
+## `saveAsCopy(options?)`
+
+```ts
+interface SaveAsCopyOptions {
+  applyRedactions?: boolean  // burn in pending redactions before saving (Phase 2)
+  flatten?: boolean          // flatten annotations into page contents (loses editability)
+}
+
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+```
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- document-manager
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To wire your own "save to backend" button:
+
+```ts
+
+
+async function saveToBackend() {
+  const buffer = await viewer.value?.saveAsCopy()
+  await fetch('/api/docs', { method: 'POST', body: buffer })
+}
+```
+
+## See also
+
+- [Use case: save-as-copy burn-in](/docs/document-viewer/use-cases/save-as-copy-burnin)
+- [Programmatic API → saveAsCopy](/docs/document-viewer/programmatic-api#saveascopyoptions-promisearraybuffer)
+
+---
+
+## Plugin: Fullscreen
+
+Fullscreen toggle for an immersive viewing experience.
+
+The **Fullscreen** plugin adds a toolbar button that requests fullscreen on the viewer's root element. Useful for presentation mode or focused reading.
+
+## Enabling flag
+
+`features.fullscreen: true`
+
+## What it does
+
+- Toolbar button: Enter / Exit fullscreen
+- `F11` keyboard shortcut (when `features.keyboardShortcuts` is on)
+- Uses the browser's standard fullscreen API on the viewer root
+- Emits `fullscreen-change` so consumers can hide chrome accordingly
+
+## Composable
+
+`useFullscreen()` from `@embedpdf/plugin-fullscreen/vue`. Returns:
+
+```ts
+{
+  state: Ref<{ isFullscreen: boolean }>,
+  toggle(),
+  enter(),
+  exit(),
+}
+```
+
+## Events
+
+- `fullscreen-change` — emits `{ isFullscreen: boolean }` (surfaces as `@fullscreen-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig`.
+
+## Browser support
+
+Requires the Fullscreen API. Supported in all evergreen browsers. iOS Safari requires user-gesture initiation and only fullscreens individual elements (not the page) — works fine for the viewer.
+
+## See also
+
+- [Features → fullscreen](/docs/document-viewer/features#navigation--view-controls)
+
+---
+
+## Plugin: History
+
+Undo / redo stack for annotation operations.
+
+The **History** plugin tracks annotation mutations (create, update, delete) on a stack and powers undo / redo.
+
+## Enabling flag
+
+`features.undoRedo: true` — auto-enabled when `features.annotations` is on.
+
+## What it does
+
+- Pushes a history entry for every annotation create / update / delete
+- Undo / Redo toolbar buttons
+- `Ctrl/Cmd + Z` / `Ctrl/Cmd + Shift + Z` keyboard shortcuts (when `features.keyboardShortcuts` is on)
+- Stack is per-document and cleared when `source` changes
+
+## Composable
+
+`useHistoryCapability()` from `@embedpdf/plugin-history/vue`. `DocumentViewer` re-exposes `undo`, `redo`, `canUndo`, `canRedo` on its instance.
+
+## Events
+
+None surfaced externally — toolbar state observes `canUndo` / `canRedo` reactively.
+
+## Dependencies
+
+- annotation (the source of historical operations)
+
+## Configuration
+
+No `featureConfig`.
+
+## Scope
+
+Phase 1 history covers annotation mutations only. Document-level operations (zoom changes, page navigation) are not undoable. Phase 2 may extend to redaction-apply and signature-place operations.
+
+## When you'd touch it directly
+
+To clear the history (e.g. after loading saved annotations so the load isn't undoable):
+
+```ts
+
+
+const hist = useHistoryCapability()
+hist.provides.value?.clear()
+```
+
+## See also
+
+- [Programmatic API → undo / redo](/docs/document-viewer/programmatic-api#history)
+
+---
+
+## Plugin: Hotkeys
+
+Keyboard shortcuts for navigation, zoom, panels, and search.
+
+The **Hotkeys** plugin wires keyboard shortcuts that mirror desktop PDF reader conventions.
+
+## Enabling flag
+
+`features.keyboardShortcuts: true`
+
+## Bindings
+
+| Shortcut | Action |
+| --- | --- |
+| `←` / `→` / `PageUp` / `PageDown` | Previous / next page |
+| `Home` / `End` | First / last page |
+| `+` / `-` | Zoom in / out |
+| `0` | Fit page |
+| `R` | Rotate CW |
+| `Shift + R` | Rotate CCW |
+| `Ctrl/Cmd + F` | Open search popover |
+| `Esc` | Close search / panel / popover |
+| `F11` | Toggle fullscreen |
+| `Ctrl/Cmd + Z` | Undo (requires `features.undoRedo`) |
+| `Ctrl/Cmd + Shift + Z` / `Ctrl + Y` | Redo |
+| `C` | Toggle annotations panel |
+| `O` | Toggle outline panel |
+| `T` | Toggle thumbnails panel |
+| `P` | Print |
+| `D` | Download |
+
+Bindings only fire when the focus is inside the viewer (so they don't fight with the host app's shortcuts).
+
+## Composable
+
+`useCommandsCapability()` from `@embedpdf/plugin-commands/vue` plus `useHotkeysCapability()` from `@embedpdf/plugin-hotkeys/vue`. The viewer wires both internally.
+
+## Events
+
+None surfaced externally — bindings invoke the same imperative methods as the toolbar.
+
+## Dependencies
+
+- viewport (focus tracking)
+
+## Configuration
+
+No `featureConfig`. To override bindings or add your own, register additional shortcuts via `useHotkeysCapability()`:
+
+```ts
+const hot = useHotkeysCapability()
+hot.provides.value?.register('Ctrl+S', () => saveToBackend())
+```
+
+## See also
+
+- [Features → keyboardShortcuts](/docs/document-viewer/features#interaction)
+- [Use case: keyboard and touch](/docs/document-viewer/use-cases/keyboard-and-touch)
+
+---
+
+## Plugin: Interaction Manager
+
+Coordinates which interaction mode owns pointer events at any given time.
+
+The **Interaction Manager** plugin is a coordinator: it ensures that only one "mode" (pan, select, or annotate) owns pointer events at a time. When you switch to the highlight tool, it deactivates selection; when you switch to pan, it deactivates everything else.
+
+## Enabling flag
+
+No direct flag — auto-registered when any of `pan`, `selection`, or `annotations` is on.
+
+## What it does
+
+- Maintains the current "active tool" identifier
+- Switches between text-select mode, pan mode, and the various annotation tools
+- Fires `interaction-mode-change` and `active-annotation-tool-change` events when modes flip
+
+## Composable
+
+No public composable — consumers use `usePan`, `useSelection`, or `useAnnotation` which transparently coordinate via this plugin.
+
+## Events
+
+- `active-annotation-tool-change` — emits `{ toolId: string | null }` (surfaces as `@active-annotation-tool-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig`.
+
+## See also
+
+- [Plugin: pan](/docs/document-viewer/plugins/pan)
+- [Plugin: selection](/docs/document-viewer/plugins/selection)
+- [Plugin: annotation](/docs/document-viewer/plugins/annotation)
+
+---
+
+## Plugin: Pan
+
+Hand-tool interaction mode for drag-to-pan when zoomed in.
+
+The **Pan** plugin adds a hand-tool toggle that switches the viewport between text-select mode (default) and pan mode (drag the page around).
+
+## Enabling flag
+
+`features.pan: true`
+
+When enabled, `interaction-manager` is auto-registered if not already on.
+
+## What it does
+
+- Toolbar toggle: switch between hand (pan) and text (select) interaction modes
+- In pan mode, dragging on a page moves the viewport
+- Coexists with `features.selection` — the toggle decides which mode is active
+
+## Composable
+
+`usePan(documentId)` from `@embedpdf/plugin-pan/vue`. Returns:
+
+```ts
+{
+  isPanning: Ref<boolean>,
+  setPanMode(enabled: boolean),
+}
+```
+
+## Events
+
+- `interaction-mode-change` — emits `{ mode: 'hand' | 'text' }` (surfaces as `@interaction-mode-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+- interaction-manager (auto-added)
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+For PDFs that are mostly images (scans, plans), default to pan mode for a smoother experience.
+
+## See also
+
+- [Plugin: interaction-manager](/docs/document-viewer/plugins/interaction-manager)
+- [Plugin: selection](/docs/document-viewer/plugins/selection)
+
+---
+
+## Plugin: Render
+
+Paints PDF pages to canvas via PDFium.
+
+The **Render** plugin handles the actual page rasterization. Given a page and a target scale, it invokes PDFium to paint pixels onto a canvas.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Renders each visible page to a `<canvas>` at the current scale
+- Coordinates with the `tiling` plugin to split large pages into tiles
+- Handles rotation (when `features.rotate` is on, the rotated page is re-rendered)
+- Re-renders on zoom level change
+
+## Composable
+
+No public composable — the plugin is invoked internally during page paint.
+
+## Events
+
+- `render-start` / `render-complete` — per-page render lifecycle (rarely subscribed to)
+
+## Dependencies
+
+- viewport
+- document-manager
+
+## Configuration
+
+No `featureConfig` block. Internal render quality is governed by the engine's DPI heuristic which adapts to device pixel ratio.
+
+## When you'd touch it directly
+
+You typically wouldn't. If you need raw page images (e.g. for screenshot export), use `saveAsCopy()` and rasterize server-side instead.
+
+## See also
+
+- [Plugin: tiling](/docs/document-viewer/plugins/tiling)
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf)
+
+---
+
+## Plugin: Rotate
+
+Rotate the document clockwise or counter-clockwise in 90° increments.
+
+The **Rotate** plugin adds CW / CCW rotation. Every page is re-rendered at the new orientation; the rotation is purely a viewport transform, not a modification to the PDF itself.
+
+## Enabling flag
+
+`features.rotate: true`
+
+## What it does
+
+- Toolbar buttons: Rotate CW, Rotate CCW
+- `R` keyboard shortcut (when `features.keyboardShortcuts` is on)
+- Rotates all pages together (no per-page rotation in Phase 1)
+- Coordinates with annotations: highlight rects are transformed to match the rotation
+
+## Composable
+
+`useRotate(documentId)` from `@embedpdf/plugin-rotate/vue`. Returns:
+
+```ts
+{
+  rotation: Ref<number>,   // 0 | 1 | 2 | 3 (×90°)
+  rotateCW(),
+  rotateCCW(),
+  setRotation(r: number),
+}
+```
+
+## Events
+
+- `rotation-change` — emits the new rotation in degrees (surfaces as `@rotation-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To pre-set a rotation for documents you know are landscape-stored-as-portrait, call `setRotation(1)` after `document-loaded`.
+
+## See also
+
+- [Features → rotate](/docs/document-viewer/features#navigation--view-controls)
+
+---
+
+## Plugin: Scroll
+
+Page-aware virtual scrolling for continuous, paged, and spread modes.
+
+The **Scroll** plugin tracks which pages are in view, fires `page-change` events as the user scrolls, and supports both continuous and paged modes.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Reactive `currentPage` and `totalPages` state
+- Continuous scroll by default — pages flow one after another
+- Page-mode and spread-mode supported (the latter via `features.spread`)
+- Smooth scroll to a specific page (`goToPage` programmatic call)
+
+## Composable
+
+`useScroll(documentId)` from `@embedpdf/plugin-scroll/vue`. Returns reactive state and `goToPage` / `scrollToTop` / `scrollToBottom` methods. `DocumentViewer` re-exposes `goToPage` and `getCurrentPage` on its instance.
+
+## Events
+
+- `page-change` — viewport-centered page changed (surfaces as `@page-change` on `DocumentViewer`)
+- `total-pages-change` — total page count became known (fires once shortly after `document-loaded`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig` block — scroll behaviour adapts to `features.spread` automatically.
+
+## When you'd touch it directly
+
+For custom scroll-aware UI (e.g. a sticky "Page 4 of 14" indicator outside the viewer chrome):
+
+```ts
+
+
+const scroll = useScroll(() => documentId)
+console.log(scroll.state.value.currentPage)
+```
+
+## See also
+
+- [Plugin: spread](/docs/document-viewer/plugins/spread)
+- [Programmatic API → `goToPage`](/docs/document-viewer/programmatic-api#gotopagepage-number-void)
+
+---
+
+## Plugin: Search
+
+Full-text search with case / whole-word toggles, prev / next, and match counter.
+
+The **Search** plugin powers the toolbar search popover. It indexes the document on demand, paints highlight rects for matches, and emphasizes the currently-active match.
+
+## Enabling flag
+
+`features.search: true`
+
+## What it does
+
+- Search popover in the toolbar with input, match counter (`3 / 27`), prev / next buttons, and case / whole-word toggles
+- Paints match rectangles directly on the page (yellow highlight box)
+- Emphasizes the active match with a thicker outline
+- `Ctrl/Cmd + F` keyboard shortcut (when `features.keyboardShortcuts` is on)
+- Auto-scrolls to bring the active match into view
+
+## Composable
+
+`useSearch(documentId)` from `@embedpdf/plugin-search/vue`. Returns:
+
+```ts
+{
+  state: {
+    query: string,
+    flags: MatchFlag[],
+    total: number,
+    activeResultIndex: number,
+    results: SearchResult[],
+  },
+  search(query: string, flags?: MatchFlag[]),
+  goToResult(index: number),
+  nextResult(),
+  previousResult(),
+}
+```
+
+## Events
+
+- `search-state-change` — emits `{ total, activeResultIndex, matchCase, wholeWord }` (surfaces as `@search-state-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+- scroll (for `goToResult` auto-scrolling)
+
+## Configuration
+
+No `featureConfig`. The search is plain substring + case / whole-word flags; no regex mode in Phase 1.
+
+## When you'd touch it directly
+
+To build a "global search" UI outside the viewer chrome (e.g. a command palette):
+
+```ts
+
+
+const search = useSearch(() => documentId)
+search.search('memorandum', [MatchFlag.MatchCase])
+search.nextResult()
+```
+
+## Active match styling
+
+The active match gets a thicker outline via the `mark.search-highlight-current` CSS class. Override the colour in your global CSS:
+
+```css
+.document-viewer mark.search-highlight-current {
+  outline: 2px solid theme(colors.brand.500);
+}
+```
+
+## See also
+
+- [Features → search](/docs/document-viewer/features#search--selection)
+
+---
+
+## Plugin: Selection
+
+Text selection on the page and copy-to-clipboard.
+
+The **Selection** plugin enables text selection on PDF pages and provides the underlying selection state used by the highlight tool.
+
+## Enabling flag
+
+`features.selection: true`
+
+Also auto-enabled by `features.annotations` (since highlights need to know what text was selected).
+
+## What it does
+
+- Native text selection via drag — the engine reconstructs text runs from PDFium and lets the user select across them
+- `Ctrl/Cmd + C` copies the selected text to clipboard
+- Selection state is consumed by the annotation plugin to create highlights from a drag-selected region
+- Selection persists across scroll until cleared
+
+## Composable
+
+`useSelection(documentId)` from `@embedpdf/plugin-selection/vue`. Returns reactive selection state including the selected text and bounding rectangles per page.
+
+## Events
+
+`onEndSelection` callback — fires when a selection completes. `DocumentViewer` uses this to capture `selectedText` on newly-created highlights.
+
+## Dependencies
+
+- viewport
+- interaction-manager (auto-added)
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To build a custom "copy as quote" action that includes the page number alongside the selected text:
+
+```ts
+
+
+const cap = useSelectionCapability()
+cap.provides.value?.onEndSelection((text, pageRanges) => {
+  copyToClipboard(`"${text}" — page ${pageRanges[0].pageIndex + 1}`)
+})
+```
+
+## See also
+
+- [Plugin: annotation](/docs/document-viewer/plugins/annotation)
+- [Features → selection](/docs/document-viewer/features#search--selection)
+
+---
+
+## Plugin: Spread
+
+Two-page spread view mode for book-style reading.
+
+The **Spread** plugin enables a two-page-at-a-time view mode, mirroring how a printed book opens. Useful for novels, magazines, and any document originally designed as a spread.
+
+## Enabling flag
+
+`features.spread: true`
+
+## What it does
+
+- Toolbar toggle: switch between continuous-scroll and spread modes
+- In spread mode, even pages (2, 4, 6...) appear on the right, odd pages (3, 5, 7...) on the left
+- Page 1 sits alone on the right (cover convention)
+- Re-paginates the scroll positions; bookmarks and search still target individual pages
+
+## Composable
+
+`useSpread(documentId)` from `@embedpdf/plugin-spread/vue`. Returns the current `spreadMode` and a `setSpreadMode` method.
+
+## Events
+
+- `view-mode-change` — switches between `'continuous'` and `'spread'` (surfaces as `@view-mode-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+- scroll
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To default-on spread mode for documents you know are book-formatted, call `setSpreadMode(SpreadMode.Odd)` after `document-loaded`.
+
+## See also
+
+- [Features → spread](/docs/document-viewer/features#navigation--view-controls)
+
+---
+
+## Plugin: Thumbnail
+
+Lazy thumbnail grid for visual page navigation.
+
+The **Thumbnail** plugin renders a small bitmap of each page in a side-panel grid. Click any thumbnail to jump to that page.
+
+## Enabling flag
+
+`features.thumbnails: true`
+
+## What it does
+
+- Generates low-resolution previews of each page on demand
+- Lazy-loads — thumbnails render as they scroll into view, not all at once
+- Click navigation — clicking a thumbnail scrolls the main viewport to that page
+- The current page is highlighted in the grid
+- `T` keyboard shortcut to toggle the panel (when `features.keyboardShortcuts` is on)
+
+## Composable
+
+`useThumbnail(documentId)` from `@embedpdf/plugin-thumbnail/vue`. Provides per-page thumbnail render hooks.
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- document-manager
+- render (to generate the bitmaps)
+- scroll (for click navigation)
+
+## Configuration
+
+No `featureConfig`.
+
+## Performance note
+
+Thumbnail generation is on a separate render path from the main viewport — generating thumbnails for a 500-page document is bounded by the lazy-load pattern (only visible thumbs are rendered). For 1000+ page documents, consider hiding the panel by default and only opening it on demand.
+
+## See also
+
+- [Plugin: bookmark](/docs/document-viewer/plugins/bookmark) — the other navigation panel
+- [Use case: large documents](/docs/document-viewer/use-cases/large-documents)
+
+---
+
+## Plugin: Tiling
+
+Memory-efficient virtualization that splits large pages into render tiles.
+
+The **Tiling** plugin lets the viewer handle very large pages and very long documents with bounded memory. Pages are split into tiles, and only the tiles currently in the viewport are kept in memory.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Divides each page into rectangular tiles (typically 512×512 or 1024×1024 px at the current scale)
+- Renders only tiles within the visible viewport plus a small overscan
+- Evicts off-screen tiles when memory pressure is high
+- Combines with the scroll plugin's page-aware virtualization for full-document virtualization
+
+## Composable
+
+No public composable.
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- viewport
+- render
+
+## Configuration
+
+No `featureConfig`. Tile sizing is governed by device pixel ratio and current zoom.
+
+## When you'd touch it directly
+
+Almost never. The plugin is the foundation that makes 1000-page documents practical.
+
+## See also
+
+- [Use case: large documents](/docs/document-viewer/use-cases/large-documents)
+- [Bundle & Perf → Virtualization](/docs/document-viewer/bundle-and-perf#virtualization)
+
+---
+
+## Plugin: Viewport
+
+Owns the scrollable container DOM that hosts the rendered pages.
+
+The **Viewport** plugin manages the DOM element that contains the rendered pages. It provides the scroll surface, size tracking, and coordinate system used by every other plugin.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Owns the root scrollable `<div>` inside `PdfViewer`
+- Tracks scroll position, viewport dimensions, and resize events
+- Provides the coordinate frame that `scroll`, `zoom`, `pan`, and `selection` plugins translate to/from
+- Hosts the keyboard / mouse / touch event listeners that other plugins subscribe to
+
+## Composable
+
+`useViewport()` from `@embedpdf/plugin-viewport/vue` exposes the underlying DOM ref and dimensions. `DocumentViewer` wires touch gestures (`useTouch`) into this element when `features.touchGestures` is on.
+
+## Events
+
+- `viewport-resize` — element dimensions changed
+- `scroll-position-change` — viewport scrolled
+
+## Dependencies
+
+None.
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+For custom touch / gesture handling beyond what `useTouch` provides. Most consumers don't need to.
+
+## See also
+
+- [Plugin: scroll](/docs/document-viewer/plugins/scroll)
+- [Plugin: zoom](/docs/document-viewer/plugins/zoom)
+
+---
+
+## Plugin: Zoom
+
+Zoom in / out, fit presets, and pinch-to-zoom.
+
+The **Zoom** plugin handles all zoom interactions: explicit zoom buttons, fit presets (page / width / actual), pinch gestures, and zoom-level emission.
+
+## Enabling flag
+
+`features.zoom: true`
+
+## What it does
+
+- Toolbar buttons: zoom in, zoom out, fit-page, fit-width, actual size
+- Pinch-to-zoom on touch devices (when combined with `features.touchGestures`)
+- `Ctrl/Cmd + Plus/Minus` keyboard shortcuts (when `features.keyboardShortcuts` is on)
+- Emits `zoom-change` whenever the scale changes
+
+## Composable
+
+`useZoom(documentId)` from `@embedpdf/plugin-zoom/vue`. Returns:
+
+```ts
+{
+  state: { currentZoomLevel, zoomMode },
+  zoomIn(),
+  zoomOut(),
+  setZoom(level: number),
+  setZoomMode(mode: 'fit-page' | 'fit-width' | 'actual'),
+}
+```
+
+## Events
+
+- `zoom-change` — scale or mode changed (surfaces internally)
+
+## Dependencies
+
+- viewport
+
+## Configuration: `featureConfig.zoom`
+
+```ts
+interface ZoomFeatureConfig {
+  min?: number          // default 0.25
+  max?: number          // default 8
+  step?: number         // default 0.1
+  defaultMode?: 'fit-page' | 'fit-width' | 'actual'  // default 'fit-width'
+}
+```
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ zoom: true }"
+  :feature-config="{ zoom: { min: 0.5, max: 4, defaultMode: 'fit-page' } }"
+/>
+```
+
+## When you'd touch it directly
+
+For a "Zoom 75% / 100% / 150%" dropdown in your own toolbar — import `useZoom` and call `setZoom(0.75)`.
+
+## See also
+
+- [Features → zoom](/docs/document-viewer/features#navigation--view-controls)
+
+---
+
 ## Relative Time
 
 Displays a human-readable relative timestamp that updates automatically.
@@ -4945,6 +7849,1189 @@ Timestamp display
 | `dateTime` | `string` | - | ISO 8601 date string |
 
 ## Usage
+
+---
+
+## Use Case: AI / RAG Citations
+
+Programmatically create ephemeral highlights anchored to AI / RAG response citations.
+
+When an AI assistant answers a question with citations into a document, highlighting the cited passages in the viewer is a powerful UX. `DocumentViewer` supports this directly via `createAnnotation` + the `metadata.is_ephemeral` convention.
+
+
+
+## Pattern
+
+```ts
+async function showCitation(citation: { pageIndex: number; rect: PdfRect; id: string }) {
+  // Clear any previous ephemeral citation
+  if (currentEphemeralId.value) {
+    await viewer.value?.deleteAnnotation(currentEphemeralId.value)
+  }
+
+  const created = await viewer.value?.createAnnotation({
+    type: 'highlight',
+    pageIndex: citation.pageIndex,
+    rect: citation.rect,
+    segmentRects: [citation.rect],
+    color: '#92E89E',     // green to distinguish from user highlights
+    opacity: 0.5,
+    metadata: {
+      is_ephemeral: true,
+      citation_id: citation.id,
+    },
+  })
+
+  currentEphemeralId.value = created?.id ?? null
+  if (created) viewer.value?.navigateToAnnotation(created.id)
+}
+```
+
+## Why `metadata.is_ephemeral`?
+
+The metadata is free-form, but the `is_ephemeral` convention lets your annotation events handler **skip persisting these to your backend**:
+
+```ts
+function onCreate({ annotation }: { annotation: Annotation }) {
+  if (annotation.metadata?.is_ephemeral) return   // don't save AI citations
+  fetch('/api/annotations', { method: 'POST', body: JSON.stringify(annotation) })
+}
+```
+
+Otherwise every AI response would litter your database with ephemeral highlights.
+
+## Differentiating from user highlights
+
+A common pattern is to use a different colour for AI citations than for user highlights, so users can visually distinguish "my notes" from "AI cited this":
+
+| Origin | Colour |
+| --- | --- |
+| User-created highlight | Yellow `#FFCD45` (default) |
+| AI citation | Green `#92E89E` or Cyan `#A0E7E5` |
+
+Combine with `metadata.is_ephemeral: true` and your event handler can filter both ways.
+
+## Generating citation coordinates
+
+The hard part is getting `pageIndex` + `rect` from your AI / RAG pipeline. A typical pipeline:
+
+1. **Extract text per page** with PDFium server-side (or any PDF-text library) and record per-character bounding boxes.
+2. **Index those chunks** in your vector store. Each chunk has `{ text, pageIndex, rect }`.
+3. **When the LLM cites a chunk**, send the `pageIndex` + `rect` back to the client.
+4. **Call `createAnnotation`** with that pageIndex + rect (and a segmentRect equal to the full rect).
+
+For longer citations spanning multiple lines, pass multiple `segmentRects` (one per line).
+
+## Auto-clearing on response change
+
+When the user asks a new question, clear the prior citation:
+
+```ts
+watch(currentResponse, async (newResp) => {
+  if (currentEphemeralId.value) {
+    await viewer.value?.deleteAnnotation(currentEphemeralId.value)
+    currentEphemeralId.value = null
+  }
+  if (newResp?.citation) {
+    await showCitation(newResp.citation)
+  }
+})
+```
+
+## See also
+
+- [Annotations → Creating programmatically](/docs/document-viewer/annotations#programmatically)
+- [Programmatic API → navigateToAnnotation](/docs/document-viewer/programmatic-api#navigatetoannotationid-string-void)
+
+---
+
+## Use Case: Dark Mode Integration
+
+Dropping DocumentViewer inside a dark-themed app — and what to do about the PDF page background.
+
+`DocumentViewer`'s chrome (toolbar, side panels, popovers, overlays) inherits Tailwind's dark mode automatically. The PDF page itself is rendered by PDFium with the document's authored background — typically white — and stays white regardless of the surrounding theme. This page covers the options.
+
+
+
+## Enabling dark mode
+
+Toggle the `dark` class on an ancestor (or `<html>`) and every chrome element flips:
+
+```vue
+<template>
+  <div :class="darkMode ? 'dark' : ''">
+    <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+  </div>
+</template>
+```
+
+No prop on `DocumentViewer` is required — the chrome uses `bg-background` / `text-foreground` / `border-border` from Tailwind v4's theme, which respond to the `.dark` class.
+
+## Themed parts
+
+✅ **Themed**:
+- Toolbar background, buttons, icons, dividers
+- Side panel headers, rows, scrollbars
+- Search popover
+- Highlight tooltip
+- Comment form / reply form
+- Annotations panel rows + reply form
+- Empty states
+
+❌ **Not themed**:
+- The PDF page contents (text, images) — PDFium renders the document as-authored
+- Image-format documents (`image/*` source) — rendered as-is
+- Highlight colours on the PDF — the colour is the colour the highlight was saved with; doesn't adapt
+
+## Options for the PDF page background
+
+Three patterns, in order of preference:
+
+### 1. Leave it alone (recommended for most apps)
+
+For professional documents (contracts, reports, scans), preserving the page background is the correct default. The chrome around the page goes dark; the page stays white; the eye adjusts.
+
+Add a soft surround colour to reduce the harsh white edge:
+
+```css
+.dark .document-viewer {
+  background-color: theme(colors.muted / 60%);
+}
+```
+
+### 2. Aggressive invert (for casual reading)
+
+If the documents are predominantly text and the user is in a "reading at night" context, a CSS filter inversion gives a true dark-mode appearance:
+
+```css
+.dark .document-viewer .pdf-page canvas,
+.dark .document-viewer .pdf-page img {
+  filter: invert(1) hue-rotate(180deg);
+}
+```
+
+The `hue-rotate(180deg)` after `invert(1)` keeps colour images approximately correct (blues stay bluish, reds stay reddish) — but the result is lossy and not suitable for documents where colour fidelity matters (e.g. brand assets, photographs).
+
+### 3. User opt-in
+
+Give users the choice:
+
+```vue
+<script setup lang="ts">
+const invertPages = ref(false)
+</script>
+
+<template>
+  <div class="dark">
+    <label><input type="checkbox" v-model="invertPages" /> Invert PDF pages</label>
+    <div :class="invertPages ? 'invert-pages' : ''">
+      <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+    </div>
+  </div>
+</template>
+
+<style>
+.invert-pages .pdf-page canvas,
+.invert-pages .pdf-page img {
+  filter: invert(1) hue-rotate(180deg);
+}
+</style>
+```
+
+## Highlights in dark mode
+
+The 5 default highlight colours (yellow, green, blue, pink, purple) were picked at ~70–75% HSL lightness so they read on both light and dark page backgrounds. They use PDFium's `blendMode: Multiply` which preserves the underlying page contrast.
+
+If you override `featureConfig.annotations.defaultTools` with darker colours, test in both light and dark mode — very dark highlights become hard to distinguish from the text in dark-mode-inverted pages.
+
+## Storybook reference
+
+The Storybook stories at `Components/DocumentViewer/*` toggle dark mode via Storybook's theming addon. Open Storybook to see the chrome in both modes side-by-side.
+
+## See also
+
+- [Theming](/docs/document-viewer/theming) — full theming reference including the page-background discussion
+- [Global theming guide](/docs/getting-started/theming) — how MeldUI uses Tailwind v4 themes
+
+---
+
+## Use Case: Import / Export Annotations
+
+Round-trip annotations as JSON for backup, transfer between environments, or sharing with another system.
+
+`importAnnotations(items)` and `exportAnnotations(filter?)` round-trip the **full** annotation set as an `AnnotationTransferItem[]` — the shape suitable for cross-system transfer. This is different from `loadAnnotations` (which takes plain `Annotation[]`) in two ways:
+
+1. `AnnotationTransferItem` includes optional binary `ctx` for stamps and signatures
+2. `exportAnnotations` produces a snapshot ready to JSON-serialize without further transformation
+
+
+
+## Export
+
+```ts
+async function downloadAnnotationsFile() {
+  const items = await viewer.value?.exportAnnotations()
+  if (!items) return
+
+  const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'annotations.json'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+```
+
+Filter the export by page or type if you only want a subset:
+
+```ts
+const onlyHighlights = await viewer.value?.exportAnnotations({ types: ['highlight'] })
+const onlyPage1 = await viewer.value?.exportAnnotations({ pageIndex: 0 })
+```
+
+## Import
+
+```ts
+async function uploadAnnotationsFile(file: File) {
+  const text = await file.text()
+  const items: AnnotationTransferItem[] = JSON.parse(text)
+  await viewer.value?.importAnnotations(items)
+}
+```
+
+## Bulk transfer to another system
+
+A common pattern: a user reviews on system A, exports their annotations, then someone on system B imports them.
+
+```ts
+// System A: export and POST to a transfer endpoint
+const items = await viewerA.value?.exportAnnotations()
+await fetch('/api/transfers', { method: 'POST', body: JSON.stringify({ docId, items }) })
+
+// System B: GET the transfer and import
+const { items } = await fetch(`/api/transfers/${transferId}`).then(r => r.json())
+await viewerB.value?.importAnnotations(items)
+```
+
+## Persistence shape
+
+`AnnotationTransferItem` is:
+
+```ts
+interface AnnotationTransferItem {
+  annotation: Annotation
+  ctx?: { data: ArrayBuffer; mimeType?: string }
+}
+```
+
+The `ctx` carries binary side-data for stamps and signatures (the rasterized stamp or signature image). For highlight / comment / free-text annotations, `ctx` is undefined and the array round-trips through JSON cleanly.
+
+For stamps and signatures (Phase 2), you'll need to serialize the `ArrayBuffer` to base64 manually:
+
+```ts
+const serialized = items.map(item => ({
+  annotation: item.annotation,
+  ctx: item.ctx
+    ? { mimeType: item.ctx.mimeType, base64: arrayBufferToBase64(item.ctx.data) }
+    : undefined,
+}))
+```
+
+## Versioning
+
+If you change the `Annotation` shape over time (adding fields, changing defaults), include a version field in your stored export:
+
+```ts
+const payload = {
+  schemaVersion: 1,
+  exportedAt: new Date().toISOString(),
+  items: await viewer.value?.exportAnnotations(),
+}
+```
+
+`DocumentViewer`'s `Annotation` type is forward-compatible — unknown fields are preserved on round-trip. But putting a `schemaVersion` on your envelope lets you write migration code later if needed.
+
+## See also
+
+- [Annotations → Round-tripping with saveAsCopy](/docs/document-viewer/annotations#round-tripping-with-saveascopy)
+- [Use case: save-as-copy burn-in](/docs/document-viewer/use-cases/save-as-copy-burnin) — the PDF-binary alternative
+
+---
+
+## Use Case: Keyboard and Touch
+
+Accessibility patterns and touch-device patterns for DocumentViewer.
+
+`DocumentViewer` supports two opt-in input modalities beyond mouse + keyboard: full keyboard shortcuts and touch gestures.
+
+
+
+## Enabling
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    keyboardShortcuts: true,
+    touchGestures: true,
+    /* ...other features... */
+  }"
+/>
+```
+
+## Keyboard shortcuts
+
+Mirrors desktop PDF reader conventions. The full binding table:
+
+| Shortcut | Action |
+| --- | --- |
+| `←` `→` `PageUp` `PageDown` | Prev / next page |
+| `Home` / `End` | First / last page |
+| `+` `-` | Zoom in / out |
+| `0` | Fit page |
+| `R` / `Shift+R` | Rotate CW / CCW |
+| `Ctrl/Cmd+F` | Open search popover |
+| `Esc` | Close search / panel / popover |
+| `F11` | Toggle fullscreen |
+| `Ctrl/Cmd+Z` / `Ctrl+Shift+Z` | Undo / redo (requires `features.undoRedo`) |
+| `C` / `O` / `T` | Toggle annotations / outline / thumbnails panel |
+| `P` / `D` | Print / download |
+
+Bindings only fire when focus is **inside** the viewer (the viewport, toolbar, or panels), so they don't fight with host-app shortcuts.
+
+### Adding custom shortcuts
+
+Use EmbedPDF's hotkeys capability directly:
+
+```ts
+
+
+const hot = useHotkeysCapability()
+onMounted(() => {
+  hot.provides.value?.register('Ctrl+S', () => saveToBackend())
+  hot.provides.value?.register('Ctrl+Shift+P', () => openCommandPalette())
+})
+```
+
+## Touch gestures
+
+When `features.touchGestures` is on:
+
+| Gesture | Action |
+| --- | --- |
+| Swipe left / right | Previous / next page |
+| Pinch | Zoom (requires `features.zoom`) |
+| Double-tap | Cycle through zoom presets |
+
+Single-tap and drag are reserved for selection and panning, respectively.
+
+### Disabling gestures selectively
+
+The touch composable (`useTouch`) is internal to `DocumentViewer`; the public surface is the single feature flag. If you need finer control (e.g. enable pinch but not swipe), file a feature request — the underlying composable supports it.
+
+## Accessibility
+
+- **Focus management**: the viewport is keyboard-focusable; tabbing in starts at the toolbar's first button.
+- **ARIA**: toolbar buttons have `aria-label`; popovers and panels announce open / close to screen readers.
+- **Reduced motion**: respects `prefers-reduced-motion` for the active-search-match scroll animation.
+- **Colour contrast**: all chrome elements meet WCAG AA contrast in both light and dark mode (the PDF page contents themselves are the document's responsibility).
+
+For screen-reader users, native PDF reading (e.g. through OS accessibility services on a downloaded PDF) is often a better experience than browser-based viewer reading. Surface the **Download** button (`features.download: true`) prominently for accessibility.
+
+## Touch device defaults
+
+For tablets / phones, a reasonable starter feature profile:
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true,
+    touchGestures: true,
+    search: true,
+    thumbnails: true,
+    download: true,
+    annotations: true,
+    commentThreads: true,
+  }"
+/>
+```
+
+Skip `keyboardShortcuts` on touch-only devices to save the bundle byte; the toolbar still works.
+
+## See also
+
+- [Plugin: hotkeys](/docs/document-viewer/plugins/hotkeys) — binding table and customization
+- [Features → keyboardShortcuts / touchGestures](/docs/document-viewer/features#interaction)
+
+---
+
+## Use Case: Large Documents
+
+Patterns for rendering 500+ page PDFs with bounded memory and responsive navigation.
+
+`DocumentViewer` uses EmbedPDF's tiling + viewport virtualization, so rendering a 1000-page PDF takes the same memory as rendering a 10-page PDF — only the pages currently in view are kept in memory.
+
+
+
+## What's already optimized
+
+These behaviours are **on by default** with no configuration needed:
+
+- **Page virtualization** — only pages in the visible viewport (plus a small overscan) are rendered to canvas
+- **Tile virtualization** — within each page, only tiles in the viewport are rendered; the rest are placeholder regions
+- **Thumbnail lazy-loading** — even with `features.thumbnails` on, thumbnails are generated as they scroll into view, not all at once
+- **Worker mode** — heavy operations (decode, search, render) run on a separate worker thread by default
+
+## Best practices
+
+### 1. Use thumbnails for navigation
+
+For 500+ page documents, scrolling end-to-end is slow even with virtualization. The thumbnail panel makes random-access navigation practical:
+
+```vue
+<DocumentViewer
+  :features="{
+    zoom: true,
+    search: true,
+    outline: true,
+    thumbnails: true,
+    download: true,
+  }"
+  ...
+/>
+```
+
+### 2. Default to fit-width
+
+`fit-page` for a 1000-page document means tiny pages. `fit-width` is usually better:
+
+```vue
+<DocumentViewer
+  :feature-config="{ zoom: { defaultMode: 'fit-width' } }"
+  ...
+/>
+```
+
+### 3. Keep `worker: true`
+
+The default `worker={true}` keeps the main thread responsive. Only opt out for the relative-`wasmUrl` issue (see [Troubleshooting](/docs/document-viewer/troubleshooting#worker-mode-relative-wasm-url-not-found)).
+
+### 4. Surface a "loading" indicator
+
+For PDFs larger than ~10 MB, the WASM decode + initial page render can take 1–3 seconds. Show a loading state while `document-loaded` hasn't fired:
+
+```vue
+<script setup lang="ts">
+
+
+
+const loading = ref(true)
+</script>
+
+<template>
+  <div class="relative h-[600px]">
+    <div v-if="loading" class="absolute inset-0 z-10 flex items-center justify-center bg-background/80">
+      <Spinner />
+    </div>
+    <DocumentViewer
+      source="/very-large.pdf"
+      wasm-url="/pdfium.wasm"
+      @document-loaded="loading = false"
+      @document-error="loading = false"
+    />
+  </div>
+</template>
+```
+
+### 5. Page-jump UI in your own toolbar
+
+For documents where users routinely navigate to specific page numbers (legal contracts, statutes), add a "Go to page" input:
+
+```vue
+<script setup lang="ts">
+const target = ref(1)
+function go() {
+  viewer.value?.goToPage(target.value)
+}
+</script>
+
+<template>
+  <DocumentViewer ref="viewer" ... />
+  <input type="number" v-model.number="target" min="1" />
+  <button @click="go">Go</button>
+</template>
+```
+
+## Memory expectations
+
+Approximate steady-state memory for a typical PDF (8.5 × 11 inch, mixed text + images):
+
+| Pages | Memory (Chrome, fit-width) |
+| --- | --- |
+| 10 | ~50 MB |
+| 100 | ~80 MB |
+| 1000 | ~120 MB |
+| 5000 | ~180 MB |
+
+The constant ~50 MB is the WASM runtime + DOM. The growth is dominated by the document's parsed structure (independent of how much you've scrolled).
+
+## Initial page
+
+If a user lands on a deep-link to a specific page, set `initial-page` to avoid them scrolling there manually:
+
+```vue
+<DocumentViewer
+  source="/long-doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :initial-page="page"
+  ...
+/>
+```
+
+## Documents with many annotations
+
+If you're loading 1000+ saved annotations on mount, `loadAnnotations` does the work in a single batch — no need to chunk.
+
+For very high counts (10,000+ annotations across many pages), consider lazy-loading per page:
+
+```vue
+<DocumentViewer @page-change="onPageChange" />
+```
+
+```ts
+async function onPageChange({ page }: { page: number }) {
+  const range = [page - 1, page, page + 1] // page ± 1
+  const annotations = await fetch(`/api/annotations?pages=${range.join(',')}`).then(r => r.json())
+  await viewer.value?.loadAnnotations(annotations)
+}
+```
+
+## See also
+
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf) — virtualization internals
+- [Plugin: tiling](/docs/document-viewer/plugins/tiling)
+- [Plugin: thumbnail](/docs/document-viewer/plugins/thumbnail)
+
+---
+
+## Use Case: Load Saved Annotations
+
+Seed annotations on mount from your backend so users see prior review state immediately.
+
+Most review workflows store annotations on your backend, then re-hydrate them when the document is opened. `loadAnnotations()` is built for this — it waits internally for the engine's `loaded` event so it's safe to call before `document-loaded` fires.
+
+
+
+## Pattern
+
+```vue
+<script setup lang="ts">
+
+
+
+const viewer = ref<DocumentViewerInstance | null>(null)
+
+onMounted(async () => {
+  const saved: Annotation[] = await fetch(`/api/documents/${docId}/annotations`).then(r => r.json())
+  await viewer.value?.loadAnnotations(saved)
+})
+</script>
+
+<template>
+  <DocumentViewer
+    ref="viewer"
+    source="/doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :features="{ annotations: true, commentThreads: true }"
+  />
+</template>
+```
+
+## Loading threads too
+
+If you're using `features.commentThreads`, threads are a separate data model. Load annotations first, then threads (threads reference annotation ids):
+
+```ts
+const [annotations, threads] = await Promise.all([
+  fetch(`/api/documents/${docId}/annotations`).then(r => r.json()),
+  fetch(`/api/documents/${docId}/threads`).then(r => r.json()),
+])
+
+await viewer.value?.loadAnnotations(annotations)
+viewer.value?.loadThreads(threads)
+```
+
+## Avoiding race conditions
+
+If your route switches between documents quickly, key the viewer on the document id so Vue unmounts and remounts cleanly:
+
+```vue
+<DocumentViewer
+  :key="currentDoc.id"
+  ref="viewer"
+  :source="currentDoc.url"
+  wasm-url="/pdfium.wasm"
+  :features="{ annotations: true }"
+/>
+```
+
+Without `:key`, an in-flight `loadAnnotations` for the previous document could land on the new one.
+
+## Server-side shape
+
+The `Annotation` type is JSON-serializable and round-trips cleanly. A minimum highlight is:
+
+```json
+{
+  "id": "0190f4c0-...",
+  "type": "highlight",
+  "pageIndex": 0,
+  "rect": { "x": 100, "y": 600, "width": 300, "height": 20 },
+  "segmentRects": [{ "x": 100, "y": 600, "width": 300, "height": 20 }],
+  "color": "#FFCD45",
+  "opacity": 0.4,
+  "selectedText": "Important sentence",
+  "author": "alex@example.com",
+  "createdAt": "2026-05-20T14:32:00.000Z"
+}
+```
+
+Store this exact shape in your DB and you can re-hydrate with no transformation.
+
+## See also
+
+- [Annotations](/docs/document-viewer/annotations) — full data model
+- [Use case: import / export](/docs/document-viewer/use-cases/import-export-annotations) — same data model, different transport
+
+---
+
+## Use Case: Multi-Format Rendering
+
+Render PDF, image, plain-text, and markdown documents in a single component with shared toolbar and panel chrome.
+
+`DocumentViewer` dispatches to a format-specific renderer based on the detected MIME type, so the same component works for PDF, image, plain text, and markdown. The toolbar and side panels are shared across formats, giving the user a consistent experience regardless of what's being viewed.
+
+
+
+## Auto-detection
+
+If `mime-type` is omitted, the type is detected from the `source`:
+
+- **URL string** — sniffed from the path's file extension and / or a HEAD request's `Content-Type`
+- **File / Blob** — read from the object's `.type` property
+- **ArrayBuffer** — no detection possible; pass `mime-type` explicitly
+
+```vue
+<!-- Detected as PDF from the .pdf extension -->
+<DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" />
+
+<!-- Explicit MIME for an extension-less URL -->
+<DocumentViewer source="/api/docs/42" mime-type="application/pdf" wasm-url="/pdfium.wasm" />
+
+<!-- Image -->
+<DocumentViewer source="/diagram.png" mime-type="image/png" />
+
+<!-- Plain text -->
+<DocumentViewer source="/changelog.txt" mime-type="text/plain" />
+
+<!-- Markdown -->
+<DocumentViewer source="/README.md" mime-type="text/markdown" />
+```
+
+## Format ↔ renderer map
+
+| MIME type | Renderer | Features supported |
+| --- | --- | --- |
+| `application/pdf` | `PdfViewer.vue` (EmbedPDF + PDFium) | Full feature set (annotations, search, outline, thumbnails, etc.) |
+| `image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/svg+xml` | `ImageViewer.vue` | Zoom, fit presets, print, download |
+| `text/plain` | `TextViewer.vue` | DOM-based search, print, download |
+| `text/markdown` | `MarkdownViewer.vue` | DOM-based search, print, download |
+
+## Feature flags that apply per format
+
+- **PDF**: all features apply
+- **Image, text, markdown**: `zoom`, `print`, `download` work; annotation / outline / thumbnails are no-ops (the renderers don't have a concept of pages, bookmarks, or annotations)
+
+So a feature set like `{ zoom: true, annotations: true }` is fine for PDF and harmless for non-PDF formats (the toolbar buttons that don't apply are hidden).
+
+## Switching formats dynamically
+
+When the user switches documents, key the viewer to force a fresh mount:
+
+```vue
+<DocumentViewer
+  :key="currentDoc.id"
+  :source="currentDoc.source"
+  :mime-type="currentDoc.mimeType"
+  wasm-url="/pdfium.wasm"
+/>
+```
+
+Without `:key`, swapping `source` reuses the renderer; for cross-format swaps (PDF → image), the renderer must be remounted because the underlying engine differs.
+
+## Programmatic API differences
+
+Most `DocumentViewerInstance` methods work for all formats:
+- `getDocumentInfo()`, `getCurrentPage()` (returns 1 for non-paged formats), `goToPage()` (no-op)
+- `loadAnnotations`, `createAnnotation`, etc. — no-ops for non-PDF formats (no annotation layer)
+- `saveAsCopy()` — PDF only
+
+For non-PDF documents, focus on the rendering / search / download capabilities; the annotation API is silently inactive.
+
+## See also
+
+- [Getting Started → Render an image, text, or markdown document](/docs/document-viewer/getting-started#render-an-image-text-or-markdown-document)
+- [Plugin: search](/docs/document-viewer/plugins/search) — DOM-based search for non-PDF formats
+
+---
+
+## Use Case: Save-as-Copy Burn-in
+
+Generate a baked PDF with annotations burned into the page contents — interoperable with any PDF reader.
+
+When you need to deliver a PDF that **anyone** can open and see the annotations (not just users of `DocumentViewer`), use `saveAsCopy()`. It returns a fresh PDF binary with annotations baked into the page contents.
+
+
+
+## Pattern
+
+```ts
+const buffer = await viewer.value?.saveAsCopy()
+const blob = new Blob([buffer], { type: 'application/pdf' })
+
+// Option A: trigger a download
+const url = URL.createObjectURL(blob)
+const a = document.createElement('a')
+a.href = url
+a.download = 'reviewed-doc.pdf'
+a.click()
+URL.revokeObjectURL(url)
+
+// Option B: POST to your backend for archival
+await fetch('/api/documents/reviewed', {
+  method: 'POST',
+  body: blob,
+  headers: { 'Content-Type': 'application/pdf' },
+})
+```
+
+## When to use this vs. `exportAnnotations`
+
+| Need | Use |
+| --- | --- |
+| Show the annotated doc to someone who doesn't have `DocumentViewer` | `saveAsCopy()` |
+| Backup the annotations so the user can later edit them in `DocumentViewer` | `exportAnnotations()` (preserves editability) |
+| Both (e.g. archive + future re-edit) | Do both — store the JSON for editing, ship the PDF for sharing |
+
+`saveAsCopy()` burns annotations into the PDF contents in a way that's spec-compliant for PDF 1.7 — most professional PDF readers (Adobe, Preview, Foxit) will show them. But the original "editable annotation" metadata may be lost, so subsequent rounds of editing should start from the original source + the `exportAnnotations()` JSON.
+
+## Compliance burn-in (Phase 2: redactions)
+
+When `features.redaction` ships in Phase 2, `saveAsCopy({ applyRedactions: true })` permanently removes the redacted content from the PDF (not just covers it with a black box). This is the correct compliance workflow:
+
+```ts
+// Phase 2 — once redaction lands
+const buffer = await viewer.value?.saveAsCopy({ applyRedactions: true })
+// the buffer has the redacted text completely removed from the page contents,
+// not just hidden behind a rectangle.
+```
+
+## Threads are not embedded
+
+Threads (replies + resolved state) live in the parallel `CommentThread[]` overlay, **not in the PDF binary**. If you need to ship both the baked PDF and the thread data:
+
+```ts
+const [buffer, threads] = await Promise.all([
+  viewer.value!.saveAsCopy(),
+  fetchAllThreadsFromAppState(),
+])
+
+// Bundle them in a multipart upload, or a zip, or two separate endpoints
+```
+
+## Performance
+
+`saveAsCopy()` re-encodes the PDF — for very large documents (1000+ pages with many annotations), this can take several seconds. Show a loading state during the call.
+
+## See also
+
+- [Programmatic API → saveAsCopy](/docs/document-viewer/programmatic-api#saveascopyoptions-promisearraybuffer)
+- [Use case: import / export annotations](/docs/document-viewer/use-cases/import-export-annotations) — the editable-form alternative
+
+---
+
+## Use Case: Share-Link Viewer
+
+Permission-gated read-only viewer for anonymous visitors (share-link / public-link patterns).
+
+When a document is shared via a public link, you typically want the recipient to be able to **read** but not **edit** — no annotation, no thread replies, no download. The `permissions` prop combined with the `features` flags lets you build this without forking the component.
+
+## Pattern
+
+```vue
+<script setup lang="ts">
+
+
+
+const isAnonymousVisitor = !currentUser
+const permissions: ViewerPermissions = {
+  canAnnotate: !isAnonymousVisitor,
+  canResolveThreads: !isAnonymousVisitor,
+  canDownload: false,
+  canPrint: false,
+  canSaveAsCopy: false,
+}
+</script>
+
+<template>
+  <DocumentViewer
+    source="/shared-doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :features="{
+      zoom: true, search: true, outline: true, thumbnails: true,
+      annotations: true, commentThreads: true,
+    }"
+    :permissions="permissions"
+  />
+</template>
+```
+
+## `features` vs. `permissions`
+
+- `features` decides whether the plugin is **registered** (bundle impact). Disabled features are tree-shaken.
+- `permissions` decides whether the **UI for an already-registered feature** is visible to the current user (no bundle impact, runtime-only).
+
+For a share-link viewer, you typically want all the features registered (so a logged-in user clicking the same link gets full functionality) but the UI gated by `permissions` for anonymous visitors.
+
+## Pre-seeded read-only review
+
+A common share-link pattern: an editor publishes a reviewed document and shares a link. The recipient sees the highlights and threaded comments but can't add their own.
+
+```vue
+<script setup lang="ts">
+
+
+onMounted(async () => {
+  const { annotations, threads } = await fetch(`/shared/${shareToken}`).then(r => r.json())
+  await viewer.value?.loadAnnotations(annotations)
+  viewer.value?.loadThreads(threads)
+})
+</script>
+
+<template>
+  <DocumentViewer
+    ref="viewer"
+    :source="docUrl"
+    wasm-url="/pdfium.wasm"
+    :features="{ annotations: true, commentThreads: true, zoom: true }"
+    :permissions="{ canAnnotate: false, canResolveThreads: false }"
+  />
+</template>
+```
+
+## Embedding in another page
+
+For embedding the viewer in a 3rd-party page (iframe, embedded widget), set a fixed size and disable everything except viewing:
+
+```vue
+<DocumentViewer
+  :source="docUrl"
+  wasm-url="/pdfium.wasm"
+  :features="{ zoom: true, search: true }"
+  :permissions="{
+    canAnnotate: false,
+    canResolveThreads: false,
+    canDownload: false,
+    canPrint: false,
+    canSaveAsCopy: false,
+  }"
+  class="h-[600px] w-full"
+/>
+```
+
+## Hiding the toolbar entirely
+
+For a fully chrome-free embed, pass an empty `groups` array via `toolbar`:
+
+```ts
+const toolbar: ToolbarConfig = {
+  groups: [],
+}
+```
+
+The viewport renders without any toolbar. Users still get keyboard shortcuts if `features.keyboardShortcuts` is on.
+
+
+
+## See also
+
+- [Customization → Permissions](/docs/document-viewer/customization#permissions)
+- [Features](/docs/document-viewer/features) — flag table
+
+---
+
+## Use Case: Threaded Comments
+
+Reply / resolve workflow for document review, with backend sync via thread-update events.
+
+`features.commentThreads` adds a reply layer on top of any annotation. Users can reply to highlights and sticky-note comments, mark threads resolved (without deleting the annotation), and walk through outstanding feedback in a side panel.
+
+
+
+## Data model
+
+Threads are **not stored in the PDF** — they live in a parallel `CommentThread[]` overlay keyed by `annotationId`:
+
+```ts
+interface CommentThread {
+  annotationId: string
+  replies: CommentReply[]
+  resolved: boolean
+  resolvedAt?: string
+  resolvedByUserId?: string
+}
+
+interface CommentReply {
+  id: string
+  annotationId: string
+  authorUserId: string
+  authorDisplayName: string
+  content: string
+  createdAt: string
+}
+```
+
+Store threads in your own database and sync via the `thread-update` event.
+
+## Seeding on mount
+
+```ts
+onMounted(async () => {
+  const annotations = await fetch(`/api/docs/${docId}/annotations`).then(r => r.json())
+  const threads = await fetch(`/api/docs/${docId}/threads`).then(r => r.json())
+
+  await viewer.value?.loadAnnotations(annotations)
+  viewer.value?.loadThreads(threads)
+})
+```
+
+Order matters: load annotations first (threads reference annotation ids).
+
+## Syncing back
+
+Subscribe to `thread-update` and persist:
+
+```vue
+<DocumentViewer
+  @thread-update="onThreadUpdate"
+/>
+```
+
+```ts
+
+
+async function onThreadUpdate({ thread, action }: ThreadUpdatePayload) {
+  switch (action) {
+    case 'reply-added':
+    case 'reply-deleted':
+    case 'resolved':
+    case 'unresolved':
+      await fetch(`/api/docs/${docId}/threads/${thread.annotationId}`, {
+        method: 'PUT',
+        body: JSON.stringify(thread),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      break
+  }
+}
+```
+
+The `action` field tells you what kind of mutation triggered the event, so you can drive different backend endpoints if desired.
+
+## Replying from the panel vs. the in-page tooltip
+
+There are two entry points to add a reply:
+
+1. **Side panel** (`AnnotationsPanel`) — lists every annotation with thread; clicking opens the reply form
+2. **Floating tooltip** (`HighlightTooltip`) — appears over a selected highlight; has an "Add reply" button
+
+Both call `addReply()` internally and fire `thread-update` with `action: 'reply-added'`.
+
+## Resolving threads
+
+Marking a thread resolved doesn't delete the annotation — it just changes the `resolved` flag and adds a `resolvedAt` / `resolvedByUserId`. The annotation still renders on the page (typically with a subtle visual difference, e.g. lower opacity). Filter resolved threads from your side panel UI if you want a "todo" view:
+
+```ts
+const unresolvedThreads = computed(() =>
+  allThreads.value.filter(t => !t.resolved),
+)
+```
+
+## Current user attribution
+
+Set `currentUser` so replies are attributed correctly:
+
+```vue
+<DocumentViewer
+  :current-user="{
+    id: 'u-42',
+    displayName: 'Alex Chen',
+    avatarUrl: '/me.png',
+  }"
+  ...
+/>
+```
+
+`currentUser.displayName` flows into new replies' `authorDisplayName` and also into `featureConfig.annotations.author` as a default.
+
+## See also
+
+- [Annotations → Threaded comments](/docs/document-viewer/annotations#threaded-comments-overlay)
+- [Programmatic API → Threads](/docs/document-viewer/programmatic-api#threads)
+
+---
+
+## Use Case: Toolbar Customization
+
+Reorder groups, hide buttons, add a custom action.
+
+The default toolbar covers most needs, but the `toolbar` prop lets you reorder groups, hide individual buttons, and add custom actions without forking the component.
+
+
+
+## Pattern
+
+```vue
+<script setup lang="ts">
+
+
+
+const toolbar: ToolbarConfig = {
+  groups: ['nav', 'zoom', 'panels'],     // restrict + reorder
+  hide: ['rotate-cw', 'rotate-ccw'],     // hide individual buttons
+  customButtons: [
+    {
+      id: 'share',
+      label: 'Share',
+      icon: 'IconShare',
+      position: 'panels',
+      onClick: () => openShareDialog(),
+    },
+  ],
+}
+</script>
+
+<template>
+  <DocumentViewer
+    source="/doc.pdf"
+    wasm-url="/pdfium.wasm"
+    :toolbar="toolbar"
+    :features="{ zoom: true, outline: true, thumbnails: true }"
+  />
+</template>
+```
+
+## `groups`
+
+The default group order is:
+
+```ts
+['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+```
+
+Pass a subset to hide the rest entirely. Pass a reordered array to change visual order:
+
+```ts
+// Tools-first layout
+const toolbar: ToolbarConfig = {
+  groups: ['tools', 'nav', 'zoom', 'view', 'panels', 'search', 'export'],
+}
+```
+
+## `hide`
+
+Hide individual buttons by id. The standard ids:
+
+- Nav: `page-prev`, `page-next`
+- Zoom: `zoom-in`, `zoom-out`, `fit-page`, `fit-width`, `actual-size`
+- View: `rotate-cw`, `rotate-ccw`, `spread`, `pan`, `fullscreen`
+- Tools: `highlight`, `comment`, `undo`, `redo`
+- Panels: `outline-toggle`, `thumbnails-toggle`, `annotations-toggle`
+- Search: `search-toggle`
+- Export: `print`, `download`
+
+```ts
+const toolbar: ToolbarConfig = {
+  hide: ['spread', 'pan', 'fullscreen', 'rotate-cw', 'rotate-ccw'],
+}
+```
+
+## `customButtons`
+
+Each entry needs:
+
+- `id` — unique
+- `label` — shown in overflow menu and as `aria-label`
+- `icon` — name of a `@meldui/tabler-vue` icon component (e.g. `IconShare`, `IconCircleCheck`)
+- `position` — which group to attach to
+- `onClick` — handler
+
+```ts
+const toolbar: ToolbarConfig = {
+  customButtons: [
+    {
+      id: 'approve',
+      label: 'Approve',
+      icon: 'IconCircleCheck',
+      position: 'tools',
+      onClick: () => approveDocument(),
+    },
+    {
+      id: 'request-changes',
+      label: 'Request changes',
+      icon: 'IconMessageCircle',
+      position: 'tools',
+      onClick: () => openRequestChangesDialog(),
+    },
+  ],
+}
+```
+
+The icon name maps directly to the export name in `@meldui/tabler-vue` — see the [Icons guide](/docs/getting-started/icons) for the full set.
+
+## Hiding the toolbar entirely
+
+For chrome-free embeds, pass an empty groups array:
+
+```ts
+const toolbar: ToolbarConfig = { groups: [] }
+```
+
+Users still get keyboard shortcuts (if `features.keyboardShortcuts` is on) and touch gestures (`features.touchGestures`).
+
+## Per-user toolbars
+
+Conditionally configure based on the current user:
+
+```ts
+const toolbar = computed<ToolbarConfig>(() => ({
+  groups: isReviewer.value
+    ? ['nav', 'zoom', 'tools', 'panels']
+    : ['nav', 'zoom', 'export'],
+  hide: isReviewer.value ? [] : ['print', 'download'],
+}))
+```
+
+This combines with `permissions` for finer access control — see [Share-link viewer](/docs/document-viewer/use-cases/share-link-viewer).
+
+## See also
+
+- [Customization](/docs/document-viewer/customization) — slot reference + side panel customization
+- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer)
 
 ---
 

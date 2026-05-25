@@ -1,0 +1,113 @@
+---
+title: 'Use Case: Keyboard and Touch'
+description: Accessibility patterns and touch-device patterns for DocumentViewer.
+category: composites
+order: 208
+package: '@meldui/vue'
+---
+
+import BasicPdfDemo from '../../../../demos/document-viewer/BasicPdfDemo.vue'
+
+`DocumentViewer` supports two opt-in input modalities beyond mouse + keyboard: full keyboard shortcuts and touch gestures.
+
+<BasicPdfDemo client:only="vue" />
+
+## Enabling
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    keyboardShortcuts: true,
+    touchGestures: true,
+    /* ...other features... */
+  }"
+/>
+```
+
+## Keyboard shortcuts
+
+Mirrors desktop PDF reader conventions. The full binding table:
+
+| Shortcut                      | Action                                          |
+| ----------------------------- | ----------------------------------------------- |
+| `←` `→` `PageUp` `PageDown`   | Prev / next page                                |
+| `Home` / `End`                | First / last page                               |
+| `+` `-`                       | Zoom in / out                                   |
+| `0`                           | Fit page                                        |
+| `R` / `Shift+R`               | Rotate CW / CCW                                 |
+| `Ctrl/Cmd+F`                  | Open search popover                             |
+| `Esc`                         | Close search / panel / popover                  |
+| `F11`                         | Toggle fullscreen                               |
+| `Ctrl/Cmd+Z` / `Ctrl+Shift+Z` | Undo / redo (requires `features.undoRedo`)      |
+| `C` / `O` / `T`               | Toggle annotations / outline / thumbnails panel |
+| `P` / `D`                     | Print / download                                |
+
+Bindings only fire when focus is **inside** the viewer (the viewport, toolbar, or panels), so they don't fight with host-app shortcuts.
+
+### Adding custom shortcuts
+
+Use EmbedPDF's hotkeys capability directly:
+
+```ts
+import { useHotkeysCapability } from '@embedpdf/plugin-hotkeys/vue'
+
+const hot = useHotkeysCapability()
+onMounted(() => {
+  hot.provides.value?.register('Ctrl+S', () => saveToBackend())
+  hot.provides.value?.register('Ctrl+Shift+P', () => openCommandPalette())
+})
+```
+
+## Touch gestures
+
+When `features.touchGestures` is on:
+
+| Gesture            | Action                          |
+| ------------------ | ------------------------------- |
+| Swipe left / right | Previous / next page            |
+| Pinch              | Zoom (requires `features.zoom`) |
+| Double-tap         | Cycle through zoom presets      |
+
+Single-tap and drag are reserved for selection and panning, respectively.
+
+### Disabling gestures selectively
+
+The touch composable (`useTouch`) is internal to `DocumentViewer`; the public surface is the single feature flag. If you need finer control (e.g. enable pinch but not swipe), file a feature request — the underlying composable supports it.
+
+## Accessibility
+
+- **Focus management**: the viewport is keyboard-focusable; tabbing in starts at the toolbar's first button.
+- **ARIA**: toolbar buttons have `aria-label`; popovers and panels announce open / close to screen readers.
+- **Reduced motion**: respects `prefers-reduced-motion` for the active-search-match scroll animation.
+- **Colour contrast**: all chrome elements meet WCAG AA contrast in both light and dark mode (the PDF page contents themselves are the document's responsibility).
+
+For screen-reader users, native PDF reading (e.g. through OS accessibility services on a downloaded PDF) is often a better experience than browser-based viewer reading. Surface the **Download** button (`features.download: true`) prominently for accessibility.
+
+## Touch device defaults
+
+For tablets / phones, a reasonable starter feature profile:
+
+```vue
+<DocumentViewer
+  source="/doc.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    zoom: true,
+    touchGestures: true,
+    search: true,
+    thumbnails: true,
+    download: true,
+    annotations: true,
+    commentThreads: true,
+  }"
+/>
+```
+
+Skip `keyboardShortcuts` on touch-only devices to save the bundle byte; the toolbar still works.
+
+## See also
+
+- [Plugin: hotkeys](/docs/document-viewer/plugins/hotkeys) — binding table and customization
+- [Features → keyboardShortcuts / touchGestures](/docs/document-viewer/features#interaction)

@@ -1,0 +1,80 @@
+---
+title: 'Plugin: Search'
+description: Full-text search with case / whole-word toggles, prev / next, and match counter.
+category: composites
+order: 113
+package: '@meldui/vue'
+---
+
+The **Search** plugin powers the toolbar search popover. It indexes the document on demand, paints highlight rects for matches, and emphasizes the currently-active match.
+
+## Enabling flag
+
+`features.search: true`
+
+## What it does
+
+- Search popover in the toolbar with input, match counter (`3 / 27`), prev / next buttons, and case / whole-word toggles
+- Paints match rectangles directly on the page (yellow highlight box)
+- Emphasizes the active match with a thicker outline
+- `Ctrl/Cmd + F` keyboard shortcut (when `features.keyboardShortcuts` is on)
+- Auto-scrolls to bring the active match into view
+
+## Composable
+
+`useSearch(documentId)` from `@embedpdf/plugin-search/vue`. Returns:
+
+```ts
+{
+  state: {
+    query: string,
+    flags: MatchFlag[],
+    total: number,
+    activeResultIndex: number,
+    results: SearchResult[],
+  },
+  search(query: string, flags?: MatchFlag[]),
+  goToResult(index: number),
+  nextResult(),
+  previousResult(),
+}
+```
+
+## Events
+
+- `search-state-change` — emits `{ total, activeResultIndex, matchCase, wholeWord }` (surfaces as `@search-state-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+- scroll (for `goToResult` auto-scrolling)
+
+## Configuration
+
+No `featureConfig`. The search is plain substring + case / whole-word flags; no regex mode in Phase 1.
+
+## When you'd touch it directly
+
+To build a "global search" UI outside the viewer chrome (e.g. a command palette):
+
+```ts
+import { useSearch } from '@embedpdf/plugin-search/vue'
+
+const search = useSearch(() => documentId)
+search.search('memorandum', [MatchFlag.MatchCase])
+search.nextResult()
+```
+
+## Active match styling
+
+The active match gets a thicker outline via the `mark.search-highlight-current` CSS class. Override the colour in your global CSS:
+
+```css
+.document-viewer mark.search-highlight-current {
+  outline: 2px solid theme(colors.brand.500);
+}
+```
+
+## See also
+
+- [Features → search](/docs/document-viewer/features#search--selection)

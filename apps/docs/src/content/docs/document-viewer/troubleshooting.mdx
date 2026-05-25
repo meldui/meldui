@@ -1,0 +1,175 @@
+---
+title: 'Document Viewer: Troubleshooting'
+description: Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
+category: composites
+order: 9
+package: '@meldui/vue'
+---
+
+This page collects the most-asked questions about `DocumentViewer` in production.
+
+## "Failed to load pdfium.wasm" (404)
+
+You forgot to host the WASM binary. Run:
+
+```bash
+cp node_modules/@embedpdf/pdfium/dist/pdfium.wasm public/pdfium.wasm
+```
+
+Then pass the URL via `wasm-url="/pdfium.wasm"`. See [Getting Started → Host the PDFium WASM binary](/docs/document-viewer/getting-started#host-the-pdfium-wasm-binary).
+
+Verify with `curl -I https://your-app.com/pdfium.wasm` — should return 200 with `Content-Type: application/wasm`.
+
+## "Failed to instantiate WebAssembly" (wrong MIME type)
+
+Your server is serving `pdfium.wasm` with the wrong `Content-Type`. Many static hosts default to `application/octet-stream`, which works in some browsers but not all (Safari is strict).
+
+Fix it server-side:
+
+- **Nginx**: `add_header Content-Type application/wasm;` for `.wasm` files
+- **Cloudflare**: Add a transform rule mapping `.wasm` → `application/wasm`
+- **Astro / Vite static**: Already correct by default
+- **Express**: `express.static('public', { setHeaders: (res, path) => { if (path.endsWith('.wasm')) res.setHeader('Content-Type', 'application/wasm') } })`
+
+## "Failed to fetch" the PDF (CORS)
+
+If `source` points to a different origin than your app, that origin must send `Access-Control-Allow-Origin` headers. Without them, the browser refuses to share the response with PDFium.
+
+Workarounds:
+
+1. **Proxy through your own backend** — fetch the PDF server-side and re-serve it from your own origin.
+2. **Pass a `Blob` or `ArrayBuffer` directly** if you can fetch it yourself with appropriate credentials.
+
+```ts
+const buffer = await fetch('https://third-party.com/doc.pdf', { credentials: 'include' }).then(
+  (r) => r.arrayBuffer(),
+)
+```
+
+```vue
+<DocumentViewer :source="buffer" wasm-url="/pdfium.wasm" />
+```
+
+## "Mixed content blocked" (HTTPS page, HTTP source)
+
+Browsers block `http://` PDF sources from `https://` pages. Always serve PDFs over HTTPS in production, or proxy them through your own HTTPS backend.
+
+## Worker mode: relative wasm-url not found
+
+If you set `wasm-url="/pdfium.wasm"` (a relative path) and the engine runs in a Web Worker, the worker is built from a blob URL whose base differs from the page's, so the relative path resolves against the blob origin and 404s.
+
+Two fixes:
+
+1. **Use a fully-qualified URL**: `wasm-url="https://your-app.com/pdfium.wasm"`
+2. **Disable worker mode**: `:worker="false"` (PDFium runs on the main thread; OK for small/medium documents)
+
+Absolute paths starting with `/` work in **main thread** mode. Worker mode requires a fully-qualified URL.
+
+## "DOMException: The user aborted a request" on rapid page switches
+
+If you swap `source` rapidly (e.g. a thumbnail list of N PDFs), in-flight loads can abort each other. This is expected and not a bug — pin `key` on `<DocumentViewer>` to a document id and let Vue unmount/remount the component cleanly between sources:
+
+```vue
+<DocumentViewer :key="currentDoc.id" :source="currentDoc.url" wasm-url="/pdfium.wasm" />
+```
+
+## Large PDF appears blank / takes >30 s to render the first page
+
+Two checks:
+
+1. **Worker mode on?** Without `worker={true}` (the default), large documents block the main thread during initial decode.
+2. **Tiling enabled?** Tiling is always-on in the minimum plugin set, but a custom plugin registry that omits it will render every page at full resolution simultaneously — fatal on large docs.
+
+For 1000+ page documents, also confirm `features.thumbnails` is on (lets the user navigate via the panel instead of scrolling through every page).
+
+See [Use case: large documents](/docs/document-viewer/use-cases/large-documents) for the patterns.
+
+## Annotations are not persisting
+
+`DocumentViewer` does **not** auto-save annotations. You need to subscribe to events and POST to your backend:
+
+```vue
+<DocumentViewer
+  @annotation-created="onCreate"
+  @annotation-updated="onUpdate"
+  @annotation-deleted="onDelete"
+  @thread-update="onThreadUpdate"
+/>
+```
+
+See [Annotations → Persisting changes](/docs/document-viewer/annotations#persisting-changes).
+
+## `loadAnnotations` runs but no highlights appear
+
+Confirm:
+
+1. `features.annotations` is `true` — without the flag the annotation plugin isn't registered, so the data load is dropped.
+2. The `pageIndex` values are **0-based** (page 1 → `pageIndex: 0`).
+3. The `rect` coordinates are in **PDF points** (1/72 inch) measured from the **top-left** of the page (DOM convention, not the PDF spec's bottom-up). For a Letter page, `origin.y = 0` is the top and `origin.y = 792` is the bottom.
+4. For highlights, `segmentRects` must include at least one rect — the engine renders the highlight from `segmentRects`, not from `rect`.
+
+A minimal valid highlight:
+
+```ts
+{
+  id: 'a-1',
+  type: 'highlight',
+  pageIndex: 0,
+  rect:         { origin: { x: 100, y: 600 }, size: { width: 200, height: 20 } },
+  segmentRects: [{ origin: { x: 100, y: 600 }, size: { width: 200, height: 20 } }],
+  color: '#FFCD45',
+  opacity: 0.4,
+}
+```
+
+## `saveAsCopy()` returns a corrupted file
+
+A few possibilities:
+
+- The buffer is consumed twice (e.g. you also passed it to `new Blob([buffer])` somewhere it was already transferred). Use `buffer.slice(0)` to clone before transferring.
+- Your backend is expecting a multipart form but you're sending raw `application/pdf`. Wrap in `FormData` if so.
+- Network compression is munging the bytes. Make sure your upload preserves binary integrity.
+
+## Browser support
+
+`DocumentViewer` requires:
+
+- **WebAssembly** — universal in evergreen browsers; not supported in IE11.
+- **`Worker`** (for default worker mode) — universal.
+- **`OffscreenCanvas`** (used by EmbedPDF tiling for some operations) — Safari 16.4+, Firefox 105+, Chrome 69+.
+- **CSS Grid + Flexbox** — universal.
+
+Tested in production: Chrome 110+, Safari 16+, Firefox 110+, Edge 110+. Mobile: iOS Safari 16+, Chrome Android 110+.
+
+## Performance budget exceeded warnings in dev
+
+Vite / Rolldown will warn if the EmbedPDF vendor chunk exceeds default chunk-size limits. This is expected — the EmbedPDF runtime is large by web standards. Adjust the budget:
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  build: {
+    chunkSizeWarningLimit: 1500, // KB
+  },
+})
+```
+
+## "Highlight tooltip flickers / doesn't appear on selection"
+
+The floating tooltip is anchored to the engine's selection state. If your app has CSS that sets `pointer-events: none` on a parent, or if a sibling element with higher z-index captures pointerdown, the tooltip's outside-click guard fires and immediately closes it.
+
+Check that the wrapper around `<DocumentViewer>` doesn't have:
+
+- `pointer-events: none` (or any parent that does)
+- A `<div>` overlay with `z-index: 9999` covering the tooltip
+- A keyboard shortcut that consumes `pointerdown` events at the document level
+
+## Where to file bugs
+
+Bugs in `DocumentViewer` itself — file at the meldui monorepo. Bugs in the rendering pipeline (PDFium decode errors, layout glitches, search false negatives) often live in EmbedPDF — file at https://github.com/embedpdf/embed-pdf-viewer/issues and we'll mirror the workaround here.
+
+## See also
+
+- [Getting Started](/docs/document-viewer/getting-started)
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf)
+- [Programmatic API](/docs/document-viewer/programmatic-api)

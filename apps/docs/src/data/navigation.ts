@@ -135,6 +135,23 @@ export const navigation: NavItem[] = [
     ],
   },
   {
+    title: 'Document Viewer',
+    items: [
+      { title: 'Overview', href: '/docs/document-viewer' },
+      { title: 'Getting Started', href: '/docs/document-viewer/getting-started' },
+      { title: 'Features', href: '/docs/document-viewer/features' },
+      { title: 'Programmatic API', href: '/docs/document-viewer/programmatic-api' },
+      { title: 'Annotations', href: '/docs/document-viewer/annotations' },
+      { title: 'Customization', href: '/docs/document-viewer/customization' },
+      { title: 'Theming', href: '/docs/document-viewer/theming' },
+      { title: 'Bundle & Perf', href: '/docs/document-viewer/bundle-and-perf' },
+      { title: 'Troubleshooting', href: '/docs/document-viewer/troubleshooting' },
+      { title: 'Migration', href: '/docs/document-viewer/migration' },
+      { title: 'Use Cases', href: '/docs/document-viewer/use-cases' },
+      { title: 'Plugin Reference', href: '/docs/document-viewer/plugins' },
+    ],
+  },
+  {
     title: 'Composites',
     label: '8',
     items: [

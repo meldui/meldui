@@ -1,0 +1,46 @@
+---
+title: 'Plugin: Render'
+description: Paints PDF pages to canvas via PDFium.
+category: composites
+order: 104
+package: '@meldui/vue'
+---
+
+The **Render** plugin handles the actual page rasterization. Given a page and a target scale, it invokes PDFium to paint pixels onto a canvas.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Renders each visible page to a `<canvas>` at the current scale
+- Coordinates with the `tiling` plugin to split large pages into tiles
+- Handles rotation (when `features.rotate` is on, the rotated page is re-rendered)
+- Re-renders on zoom level change
+
+## Composable
+
+No public composable — the plugin is invoked internally during page paint.
+
+## Events
+
+- `render-start` / `render-complete` — per-page render lifecycle (rarely subscribed to)
+
+## Dependencies
+
+- viewport
+- document-manager
+
+## Configuration
+
+No `featureConfig` block. Internal render quality is governed by the engine's DPI heuristic which adapts to device pixel ratio.
+
+## When you'd touch it directly
+
+You typically wouldn't. If you need raw page images (e.g. for screenshot export), use `saveAsCopy()` and rasterize server-side instead.
+
+## See also
+
+- [Plugin: tiling](/docs/document-viewer/plugins/tiling)
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf)

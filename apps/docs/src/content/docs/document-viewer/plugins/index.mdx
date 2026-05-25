@@ -1,0 +1,72 @@
+---
+title: 'Document Viewer: Plugin Reference'
+description: One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
+category: composites
+order: 100
+package: '@meldui/vue'
+---
+
+`DocumentViewer` is built on EmbedPDF's plugin architecture. Each plugin handles one concern (zoom, search, annotations, etc.) and is registered only when its corresponding `features` flag is on. This page lists every plugin in scope and links to its reference.
+
+## Always-on (no feature flag)
+
+These five plugins constitute the **minimum** PDF rendering pipeline. They're always registered:
+
+- **[document-manager](/docs/document-viewer/plugins/document-manager)** — orchestrates document lifecycle (load, switch, unload)
+- **[viewport](/docs/document-viewer/plugins/viewport)** — owns the scrollable container DOM
+- **[scroll](/docs/document-viewer/plugins/scroll)** — page-aware virtual scrolling
+- **[render](/docs/document-viewer/plugins/render)** — paints pages to canvas
+- **[tiling](/docs/document-viewer/plugins/tiling)** — splits large pages into tiles for memory efficiency
+
+## View controls
+
+Toggle viewport behaviour and orientation. Each opt-in via a `features` flag:
+
+- **[zoom](/docs/document-viewer/plugins/zoom)** — `features.zoom`
+- **[rotate](/docs/document-viewer/plugins/rotate)** — `features.rotate`
+- **[spread](/docs/document-viewer/plugins/spread)** — `features.spread`
+- **[pan](/docs/document-viewer/plugins/pan)** — `features.pan`
+- **[fullscreen](/docs/document-viewer/plugins/fullscreen)** — `features.fullscreen`
+
+## Interaction
+
+- **[interaction-manager](/docs/document-viewer/plugins/interaction-manager)** — auto-enabled by `pan`, `selection`, or `annotations`
+- **[selection](/docs/document-viewer/plugins/selection)** — `features.selection` (also auto-enabled by `annotations`)
+
+## Discovery & navigation
+
+- **[search](/docs/document-viewer/plugins/search)** — `features.search`
+- **[bookmark](/docs/document-viewer/plugins/bookmark)** — `features.outline`
+- **[thumbnail](/docs/document-viewer/plugins/thumbnail)** — `features.thumbnails`
+
+## Output
+
+- **[export](/docs/document-viewer/plugins/export)** — `features.print`, `features.download`; powers `saveAsCopy()`
+
+## Editing (Phase 1)
+
+- **[hotkeys](/docs/document-viewer/plugins/hotkeys)** — `features.keyboardShortcuts`
+- **[annotation](/docs/document-viewer/plugins/annotation)** — `features.annotations`
+- **[history](/docs/document-viewer/plugins/history)** — `features.undoRedo`
+
+## Phase 2 plugins (forthcoming)
+
+These plugin pages will land when their feature flags ship in Phase 2:
+
+- `stamp`, `signature`, `redaction`, `form`, `attachment`
+
+## Plugin registration pattern
+
+Internally, `pluginRegistry.ts` is a pure function from `ViewerFeatures` → `PluginRegistration[]`. The order matters because some plugins depend on others (e.g. `annotation` needs `interaction-manager`). The registry handles dependency ordering automatically; you don't need to think about it when toggling `features`.
+
+```ts
+import { resolveFeatures, DEFAULT_FEATURES } from '@meldui/vue'
+
+const merged = resolveFeatures(DEFAULT_FEATURES, userFeatures)
+// merged is the effective ViewerFeatures with auto-enabled dependencies
+```
+
+## See also
+
+- [Features](/docs/document-viewer/features) — the `features` prop flag table
+- [Bundle & Perf](/docs/document-viewer/bundle-and-perf) — bundle impact of each flag

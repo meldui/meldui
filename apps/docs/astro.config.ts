@@ -24,6 +24,10 @@ export default defineConfig({
       optimizeDeps: {
         include: ['@meldui/vue', '@meldui/tabler-vue', 'vue-sonner'],
       },
+      // EmbedPDF runs only client-side (PDFium WASM). The docs SSR build
+      // does not need to bundle these — leave them as runtime imports.
+      noExternal: [],
+      external: [/^@embedpdf\//],
     },
     build: {
       rollupOptions: {

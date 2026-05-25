@@ -1,0 +1,107 @@
+---
+title: 'Use Case: Import / Export Annotations'
+description: Round-trip annotations as JSON for backup, transfer between environments, or sharing with another system.
+category: composites
+order: 203
+package: '@meldui/vue'
+---
+
+import ImportExportDemo from '../../../../demos/document-viewer/ImportExportDemo.vue'
+
+`importAnnotations(items)` and `exportAnnotations(filter?)` round-trip the **full** annotation set as an `AnnotationTransferItem[]` — the shape suitable for cross-system transfer. This is different from `loadAnnotations` (which takes plain `Annotation[]`) in two ways:
+
+1. `AnnotationTransferItem` includes optional binary `ctx` for stamps and signatures
+2. `exportAnnotations` produces a snapshot ready to JSON-serialize without further transformation
+
+<ImportExportDemo client:only="vue" />
+
+## Export
+
+```ts
+async function downloadAnnotationsFile() {
+  const items = await viewer.value?.exportAnnotations()
+  if (!items) return
+
+  const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'annotations.json'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+```
+
+Filter the export by page or type if you only want a subset:
+
+```ts
+const onlyHighlights = await viewer.value?.exportAnnotations({ types: ['highlight'] })
+const onlyPage1 = await viewer.value?.exportAnnotations({ pageIndex: 0 })
+```
+
+## Import
+
+```ts
+async function uploadAnnotationsFile(file: File) {
+  const text = await file.text()
+  const items: AnnotationTransferItem[] = JSON.parse(text)
+  await viewer.value?.importAnnotations(items)
+}
+```
+
+## Bulk transfer to another system
+
+A common pattern: a user reviews on system A, exports their annotations, then someone on system B imports them.
+
+```ts
+// System A: export and POST to a transfer endpoint
+const items = await viewerA.value?.exportAnnotations()
+await fetch('/api/transfers', { method: 'POST', body: JSON.stringify({ docId, items }) })
+
+// System B: GET the transfer and import
+const { items } = await fetch(`/api/transfers/${transferId}`).then((r) => r.json())
+await viewerB.value?.importAnnotations(items)
+```
+
+## Persistence shape
+
+`AnnotationTransferItem` is:
+
+```ts
+interface AnnotationTransferItem {
+  annotation: Annotation
+  ctx?: { data: ArrayBuffer; mimeType?: string }
+}
+```
+
+The `ctx` carries binary side-data for stamps and signatures (the rasterized stamp or signature image). For highlight / comment / free-text annotations, `ctx` is undefined and the array round-trips through JSON cleanly.
+
+For stamps and signatures (Phase 2), you'll need to serialize the `ArrayBuffer` to base64 manually:
+
+```ts
+const serialized = items.map((item) => ({
+  annotation: item.annotation,
+  ctx: item.ctx
+    ? { mimeType: item.ctx.mimeType, base64: arrayBufferToBase64(item.ctx.data) }
+    : undefined,
+}))
+```
+
+## Versioning
+
+If you change the `Annotation` shape over time (adding fields, changing defaults), include a version field in your stored export:
+
+```ts
+const payload = {
+  schemaVersion: 1,
+  exportedAt: new Date().toISOString(),
+  items: await viewer.value?.exportAnnotations(),
+}
+```
+
+`DocumentViewer`'s `Annotation` type is forward-compatible — unknown fields are preserved on round-trip. But putting a `schemaVersion` on your envelope lets you write migration code later if needed.
+
+## See also
+
+- [Annotations → Round-tripping with saveAsCopy](/docs/document-viewer/annotations#round-tripping-with-saveascopy)
+- [Use case: save-as-copy burn-in](/docs/document-viewer/use-cases/save-as-copy-burnin) — the PDF-binary alternative

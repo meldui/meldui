@@ -1,0 +1,45 @@
+---
+title: 'Plugin: Spread'
+description: Two-page spread view mode for book-style reading.
+category: composites
+order: 108
+package: '@meldui/vue'
+---
+
+The **Spread** plugin enables a two-page-at-a-time view mode, mirroring how a printed book opens. Useful for novels, magazines, and any document originally designed as a spread.
+
+## Enabling flag
+
+`features.spread: true`
+
+## What it does
+
+- Toolbar toggle: switch between continuous-scroll and spread modes
+- In spread mode, even pages (2, 4, 6...) appear on the right, odd pages (3, 5, 7...) on the left
+- Page 1 sits alone on the right (cover convention)
+- Re-paginates the scroll positions; bookmarks and search still target individual pages
+
+## Composable
+
+`useSpread(documentId)` from `@embedpdf/plugin-spread/vue`. Returns the current `spreadMode` and a `setSpreadMode` method.
+
+## Events
+
+- `view-mode-change` — switches between `'continuous'` and `'spread'` (surfaces as `@view-mode-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+- scroll
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To default-on spread mode for documents you know are book-formatted, call `setSpreadMode(SpreadMode.Odd)` after `document-loaded`.
+
+## See also
+
+- [Features → spread](/docs/document-viewer/features#navigation--view-controls)

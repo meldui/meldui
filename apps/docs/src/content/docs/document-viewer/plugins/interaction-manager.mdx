@@ -1,0 +1,41 @@
+---
+title: 'Plugin: Interaction Manager'
+description: Coordinates which interaction mode owns pointer events at any given time.
+category: composites
+order: 111
+package: '@meldui/vue'
+---
+
+The **Interaction Manager** plugin is a coordinator: it ensures that only one "mode" (pan, select, or annotate) owns pointer events at a time. When you switch to the highlight tool, it deactivates selection; when you switch to pan, it deactivates everything else.
+
+## Enabling flag
+
+No direct flag — auto-registered when any of `pan`, `selection`, or `annotations` is on.
+
+## What it does
+
+- Maintains the current "active tool" identifier
+- Switches between text-select mode, pan mode, and the various annotation tools
+- Fires `interaction-mode-change` and `active-annotation-tool-change` events when modes flip
+
+## Composable
+
+No public composable — consumers use `usePan`, `useSelection`, or `useAnnotation` which transparently coordinate via this plugin.
+
+## Events
+
+- `active-annotation-tool-change` — emits `{ toolId: string | null }` (surfaces as `@active-annotation-tool-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig`.
+
+## See also
+
+- [Plugin: pan](/docs/document-viewer/plugins/pan)
+- [Plugin: selection](/docs/document-viewer/plugins/selection)
+- [Plugin: annotation](/docs/document-viewer/plugins/annotation)

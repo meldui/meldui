@@ -1,6 +1,7 @@
 import { Toaster } from '@meldui/vue'
 import type { Preview } from '@storybook/vue3-vite'
 import '../src/styles/tailwind.css' // Import Tailwind CSS
+import '@meldui/vue/styles' // Scoped component styles bundled by @meldui/vue
 import 'vue-sonner/style.css' // Import Sonner styles
 
 const preview: Preview = {

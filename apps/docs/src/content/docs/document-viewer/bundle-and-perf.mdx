@@ -1,0 +1,141 @@
+---
+title: 'Document Viewer: Bundle & Performance'
+description: Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
+category: composites
+order: 8
+package: '@meldui/vue'
+---
+
+import LargeDocumentDemo from '../../../demos/document-viewer/LargeDocumentDemo.vue'
+
+`DocumentViewer` is built on EmbedPDF's **headless** plugin architecture. This page explains what that means for your bundle size and load time, plus the patterns the composite uses to keep the PDF code path off the critical render path.
+
+## Headless rationale
+
+EmbedPDF separates concerns into two layers:
+
+1. **Plugin registry** — pure data describing which plugins are active and how they're configured (`pluginRegistry.ts`)
+2. **Vue host** — the Vue components that mount EmbedPDF inside `<Suspense>` and provide reactive bindings
+
+The advantage: enabling `features.search` doesn't import the search plugin into your bundle until the registry tells the engine to load it. Disable a feature and its plugin package is **never imported** anywhere in the bundle, so your bundler (Vite / Rollup / Rolldown) tree-shakes it out.
+
+## Per-feature plugin set
+
+The minimum required set is always registered (zero opt-in needed):
+
+```
+@embedpdf/plugin-document-manager
+@embedpdf/plugin-viewport
+@embedpdf/plugin-scroll
+@embedpdf/plugin-render
+@embedpdf/plugin-tiling
+```
+
+Each `features` flag adds exactly one plugin (with a few exceptions noted below):
+
+| Feature flag            | Plugin package(s) added                                                                 |
+| ----------------------- | --------------------------------------------------------------------------------------- |
+| `zoom`                  | `@embedpdf/plugin-zoom`                                                                 |
+| `rotate`                | `@embedpdf/plugin-rotate`                                                               |
+| `spread`                | `@embedpdf/plugin-spread`                                                               |
+| `pan`                   | `@embedpdf/plugin-pan` (auto-adds `interaction-manager` if not already on)              |
+| `fullscreen`            | `@embedpdf/plugin-fullscreen`                                                           |
+| `selection`             | `@embedpdf/plugin-selection` (auto-adds `interaction-manager`)                          |
+| `search`                | `@embedpdf/plugin-search`                                                               |
+| `outline`               | `@embedpdf/plugin-bookmark`                                                             |
+| `thumbnails`            | `@embedpdf/plugin-thumbnail`                                                            |
+| `print`                 | `@embedpdf/plugin-print`                                                                |
+| `download`              | `@embedpdf/plugin-export`                                                               |
+| `annotations`           | `@embedpdf/plugin-annotation` (auto-adds `interaction-manager`, `selection`, `history`) |
+| `commentThreads`        | — (no plugin; pure overlay, requires `annotations`)                                     |
+| `undoRedo`              | `@embedpdf/plugin-history` (auto-enabled by `annotations`)                              |
+| `keyboardShortcuts`     | `@embedpdf/plugin-hotkeys`                                                              |
+| `touchGestures`         | — (pure DOM listeners, no plugin)                                                       |
+| `stamps` (Phase 2)      | `@embedpdf/plugin-stamp`                                                                |
+| `signature` (Phase 2)   | `@embedpdf/plugin-signature`                                                            |
+| `redaction` (Phase 2)   | `@embedpdf/plugin-redaction`                                                            |
+| `forms` (Phase 2)       | `@embedpdf/plugin-form`                                                                 |
+| `attachments` (Phase 2) | `@embedpdf/plugin-attachment`                                                           |
+
+Install only the plugins you actually flag on — see [Getting Started → Install](/docs/document-viewer/getting-started#install).
+
+## Expected bundle sizes
+
+Approximate **gzipped** JS contributions (excluding the WASM binary, which loads separately):
+
+| Feature profile                                                                 | Approx. gzipped JS |
+| ------------------------------------------------------------------------------- | ------------------ |
+| Minimum (read-only PDF, no opt-ins)                                             | ~110 KB            |
+| Read-only + zoom + search + download                                            | ~140 KB            |
+| Review (above + outline + thumbnails + annotations + commentThreads + undoRedo) | ~200 KB            |
+| Kitchen-sink (all Phase 1 flags on)                                             | ~240 KB            |
+| Kitchen-sink + all Phase 2 flags                                                | ~310 KB            |
+
+The big constants beyond the headless plugins:
+
+- `@embedpdf/engines` ~25 KB
+- `@embedpdf/core` ~30 KB
+- `@embedpdf/models` ~10 KB
+
+These ship regardless of which feature flags you enable.
+
+## The WASM binary
+
+`pdfium.wasm` is ~4.5 MB on disk, ~1.6 MB gzipped over the wire. It's:
+
+- **Loaded on demand** — only when `DocumentViewer.vue` actually mounts (because `PdfViewer` is wrapped in `defineAsyncComponent`)
+- **Cached aggressively** — serve it with `Cache-Control: public, max-age=31536000, immutable` and the user pays the cost once
+- **Off the critical path** — the toolbar and chrome render while the WASM is decoding; the user sees the viewer shell immediately
+
+Self-host it via your build script (see [Getting Started](/docs/document-viewer/getting-started#host-the-pdfium-wasm-binary)).
+
+## Lazy code-splitting
+
+The composite wraps the PDF renderer in `defineAsyncComponent`:
+
+```ts
+const PdfViewer = defineAsyncComponent(() => import('./renderers/PdfViewer.vue'))
+```
+
+This produces a separate Vite/Rolldown chunk for the EmbedPDF-dependent code. Apps that bundle `DocumentViewer` but only ever render images / text / markdown do not pay the PDF code path's bytes until a PDF is first opened.
+
+The image, text, and markdown renderers are tiny (each under 2 KB) and ship eagerly.
+
+## Worker vs. main thread
+
+PDFium runs inside a Web Worker by default (`worker={true}`), keeping the main thread responsive on large documents.
+
+If your app hits the worker engine's **relative-`wasmUrl` resolution issue** (the worker is built from a blob URL whose base differs from the page's), opt back to main-thread mode:
+
+```vue
+<DocumentViewer worker="{false}" wasm-url="https://your-cdn.com/pdfium.wasm" ... />
+```
+
+Fully-qualified URLs (`https://...`) and absolute paths (`/pdfium.wasm`) work with either mode.
+
+## Virtualization
+
+`DocumentViewer` uses EmbedPDF's tiling + viewport plugins to render only the pages currently in the viewport plus a small overscan. Documents with 1000+ pages render with constant memory.
+
+<LargeDocumentDemo client:only="vue" />
+
+## Bundle audit
+
+Audit your bundle's plugin chunks:
+
+```bash
+pnpm --filter your-app build
+# Look at the dist for chunks named like:
+# - vendor/embedpdf-core-*.mjs
+# - vendor/embedpdf-plugin-zoom-*.mjs   ← absent if features.zoom = false
+# - vendor/embedpdf-plugin-search-*.mjs ← absent if features.search = false
+```
+
+If you see plugin chunks for features you didn't enable, you're importing the plugin somewhere outside `DocumentViewer` — check your direct imports.
+
+## See also
+
+- [Getting Started → Install](/docs/document-viewer/getting-started#install)
+- [Plugin reference](/docs/document-viewer/plugins) — each plugin's role and dependencies
+- [Use case: large documents](/docs/document-viewer/use-cases/large-documents)
+- [Troubleshooting](/docs/document-viewer/troubleshooting) — WASM 404s, worker issues, large file timeouts

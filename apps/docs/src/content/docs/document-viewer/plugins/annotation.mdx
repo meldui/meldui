@@ -1,0 +1,88 @@
+---
+title: 'Plugin: Annotation'
+description: Native PDF annotations — highlights, sticky-note comments, and the full programmatic CRUD API.
+category: composites
+order: 118
+package: '@meldui/vue'
+---
+
+The **Annotation** plugin is the largest in the registry. It provides the native PDF annotation system: highlights, sticky-note comments, the programmatic CRUD API, and the underlying machinery that powers the threaded-comments overlay.
+
+## Enabling flag
+
+`features.annotations: true`
+
+Auto-registers `interaction-manager`, `selection`, and `history` as dependencies. Set `features.commentThreads: true` to also enable the threaded overlay.
+
+## What it does
+
+- Highlight tool — drag-select text, then pick a colour from the floating tooltip
+- Comment tool — click on the page to drop a sticky-note pin and open the inline comment composer
+- Highlights and comments are persisted as **native PDF annotation subtypes** (HIGHLIGHT and TEXT respectively), so they survive `saveAsCopy()` and are readable in any PDF reader
+- 5-colour highlight palette in the floating tooltip (configurable via `featureConfig.annotations.defaultTools`)
+- Full programmatic API exposed via `DocumentViewerInstance` — `createAnnotation`, `updateAnnotation`, `deleteAnnotation`, `getAnnotations`, `loadAnnotations`, `importAnnotations`, `exportAnnotations`, `selectAnnotation`, `navigateToAnnotation`
+- Annotation events — `annotation-created`, `annotation-updated`, `annotation-deleted`, `annotation-selected`
+
+## Composable
+
+`useAnnotation(documentId)` from `@embedpdf/plugin-annotation/vue`. Returns the annotation plugin's reactive state including `provides.value` (the capability interface), `state.value.activeToolId`, and the list of in-flight annotations.
+
+## Events
+
+- `annotation-created` — committed creation (user-drawn or programmatic)
+- `annotation-updated` — patched
+- `annotation-deleted` — removed
+- `annotation-selected` — selection changed
+- `active-annotation-tool-change` — toolbar tool flipped (e.g. user clicked the highlight tool)
+
+All surface as `@annotation-*` and `@active-annotation-tool-change` on `DocumentViewer`.
+
+## Dependencies
+
+- viewport
+- document-manager
+- interaction-manager (auto-added)
+- selection (auto-added)
+- history (auto-added when `features.undoRedo` is on — and it's on by default when annotations are)
+
+## Configuration: `featureConfig.annotations`
+
+```ts
+interface AnnotationsFeatureConfig {
+  author?: string
+  useAnnotationMode?: boolean
+  defaultTools?: AnnotationToolConfig[]
+}
+
+interface AnnotationToolConfig {
+  id: string
+  label: string
+  color: string
+  opacity: number
+}
+```
+
+- `author` — display name attached to created annotations (defaults to `currentUser.displayName`)
+- `useAnnotationMode` — when `true`, redactions (Phase 2) are stored as pending PDF REDACT annotations rather than applied immediately
+- `defaultTools` — override the floating-tooltip colour palette. The 5 defaults are exported as `HIGHLIGHT_COLORS`
+
+## Data model
+
+See [Annotations](/docs/document-viewer/annotations) for the discriminated union (`Annotation`), the `AnnotationBase`, and every subtype (`HighlightAnnotation`, `CommentAnnotation`, `FreeTextAnnotation`, `InkAnnotation`, `StampAnnotation`, `SignatureAnnotation`, `RedactionAnnotation`).
+
+## Threaded comments overlay (`features.commentThreads`)
+
+A parallel data model — `CommentThread[]` — keyed by annotation id. Stored separately from the PDF binary (in your backend), seeded via `loadThreads()`, mutated via `addReply` / `resolveAnnotation` / `deleteReply`.
+
+See [Annotations → Threaded comments](/docs/document-viewer/annotations#threaded-comments-overlay).
+
+## When you'd touch it directly
+
+For custom annotation tools (e.g. a stamp picker, a calibration ruler) that need to register with the interaction manager. Most consumers stay at the `DocumentViewer` instance API level.
+
+## See also
+
+- [Annotations](/docs/document-viewer/annotations) — full data model and persistence patterns
+- [Programmatic API](/docs/document-viewer/programmatic-api) — every method
+- [Use case: AI / RAG citations](/docs/document-viewer/use-cases/ai-rag-citations)
+- [Use case: threaded comments](/docs/document-viewer/use-cases/threaded-comments)

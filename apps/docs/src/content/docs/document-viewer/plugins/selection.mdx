@@ -1,0 +1,57 @@
+---
+title: 'Plugin: Selection'
+description: Text selection on the page and copy-to-clipboard.
+category: composites
+order: 112
+package: '@meldui/vue'
+---
+
+The **Selection** plugin enables text selection on PDF pages and provides the underlying selection state used by the highlight tool.
+
+## Enabling flag
+
+`features.selection: true`
+
+Also auto-enabled by `features.annotations` (since highlights need to know what text was selected).
+
+## What it does
+
+- Native text selection via drag — the engine reconstructs text runs from PDFium and lets the user select across them
+- `Ctrl/Cmd + C` copies the selected text to clipboard
+- Selection state is consumed by the annotation plugin to create highlights from a drag-selected region
+- Selection persists across scroll until cleared
+
+## Composable
+
+`useSelection(documentId)` from `@embedpdf/plugin-selection/vue`. Returns reactive selection state including the selected text and bounding rectangles per page.
+
+## Events
+
+`onEndSelection` callback — fires when a selection completes. `DocumentViewer` uses this to capture `selectedText` on newly-created highlights.
+
+## Dependencies
+
+- viewport
+- interaction-manager (auto-added)
+
+## Configuration
+
+No `featureConfig`.
+
+## When you'd touch it directly
+
+To build a custom "copy as quote" action that includes the page number alongside the selected text:
+
+```ts
+import { useSelectionCapability } from '@embedpdf/plugin-selection/vue'
+
+const cap = useSelectionCapability()
+cap.provides.value?.onEndSelection((text, pageRanges) => {
+  copyToClipboard(`"${text}" — page ${pageRanges[0].pageIndex + 1}`)
+})
+```
+
+## See also
+
+- [Plugin: annotation](/docs/document-viewer/plugins/annotation)
+- [Features → selection](/docs/document-viewer/features#search--selection)

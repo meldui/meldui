@@ -1,0 +1,53 @@
+---
+title: 'Plugin: Fullscreen'
+description: Fullscreen toggle for an immersive viewing experience.
+category: composites
+order: 110
+package: '@meldui/vue'
+---
+
+The **Fullscreen** plugin adds a toolbar button that requests fullscreen on the viewer's root element. Useful for presentation mode or focused reading.
+
+## Enabling flag
+
+`features.fullscreen: true`
+
+## What it does
+
+- Toolbar button: Enter / Exit fullscreen
+- `F11` keyboard shortcut (when `features.keyboardShortcuts` is on)
+- Uses the browser's standard fullscreen API on the viewer root
+- Emits `fullscreen-change` so consumers can hide chrome accordingly
+
+## Composable
+
+`useFullscreen()` from `@embedpdf/plugin-fullscreen/vue`. Returns:
+
+```ts
+{
+  state: Ref<{ isFullscreen: boolean }>,
+  toggle(),
+  enter(),
+  exit(),
+}
+```
+
+## Events
+
+- `fullscreen-change` — emits `{ isFullscreen: boolean }` (surfaces as `@fullscreen-change` on `DocumentViewer`)
+
+## Dependencies
+
+- viewport
+
+## Configuration
+
+No `featureConfig`.
+
+## Browser support
+
+Requires the Fullscreen API. Supported in all evergreen browsers. iOS Safari requires user-gesture initiation and only fullscreens individual elements (not the page) — works fine for the viewer.
+
+## See also
+
+- [Features → fullscreen](/docs/document-viewer/features#navigation--view-controls)

@@ -1,0 +1,46 @@
+---
+title: 'Plugin: Tiling'
+description: Memory-efficient virtualization that splits large pages into render tiles.
+category: composites
+order: 105
+package: '@meldui/vue'
+---
+
+The **Tiling** plugin lets the viewer handle very large pages and very long documents with bounded memory. Pages are split into tiles, and only the tiles currently in the viewport are kept in memory.
+
+## Enabling flag
+
+Always registered. No `features` flag.
+
+## What it does
+
+- Divides each page into rectangular tiles (typically 512×512 or 1024×1024 px at the current scale)
+- Renders only tiles within the visible viewport plus a small overscan
+- Evicts off-screen tiles when memory pressure is high
+- Combines with the scroll plugin's page-aware virtualization for full-document virtualization
+
+## Composable
+
+No public composable.
+
+## Events
+
+None surfaced externally.
+
+## Dependencies
+
+- viewport
+- render
+
+## Configuration
+
+No `featureConfig`. Tile sizing is governed by device pixel ratio and current zoom.
+
+## When you'd touch it directly
+
+Almost never. The plugin is the foundation that makes 1000-page documents practical.
+
+## See also
+
+- [Use case: large documents](/docs/document-viewer/use-cases/large-documents)
+- [Bundle & Perf → Virtualization](/docs/document-viewer/bundle-and-perf#virtualization)
