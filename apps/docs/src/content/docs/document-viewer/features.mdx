@@ -24,59 +24,59 @@ The `features` prop is a flat object of opt-in flags. Disabled flags **do not re
 
 ### Navigation / view controls
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `zoom` | `false` | Zoom in / out buttons, fit presets (page / width / actual), pinch-to-zoom on touch |
-| `rotate` | `false` | Rotate CW / CCW per 90° |
-| `spread` | `false` | Two-page spread view mode toggle |
-| `pan` | `false` | Hand-tool (drag-to-pan) interaction mode |
-| `fullscreen` | `false` | Fullscreen toggle (`F11` if `keyboardShortcuts` is on) |
+| Flag         | Default | What it enables                                                                    |
+| ------------ | ------- | ---------------------------------------------------------------------------------- |
+| `zoom`       | `false` | Zoom in / out buttons, fit presets (page / width / actual), pinch-to-zoom on touch |
+| `rotate`     | `false` | Rotate CW / CCW per 90°                                                            |
+| `spread`     | `false` | Two-page spread view mode toggle                                                   |
+| `pan`        | `false` | Hand-tool (drag-to-pan) interaction mode                                           |
+| `fullscreen` | `false` | Fullscreen toggle (`F11` if `keyboardShortcuts` is on)                             |
 
 ### Search / selection
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `search` | `false` | Search popover with case / whole-word toggles, prev / next, match counter |
-| `selection` | `false` | Text selection on the page + copy-to-clipboard |
+| Flag        | Default | What it enables                                                           |
+| ----------- | ------- | ------------------------------------------------------------------------- |
+| `search`    | `false` | Search popover with case / whole-word toggles, prev / next, match counter |
+| `selection` | `false` | Text selection on the page + copy-to-clipboard                            |
 
 ### Side panels
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `outline` | `false` | Document outline / bookmark tree side panel |
-| `thumbnails` | `false` | Thumbnail grid side panel |
+| Flag         | Default | What it enables                             |
+| ------------ | ------- | ------------------------------------------- |
+| `outline`    | `false` | Document outline / bookmark tree side panel |
+| `thumbnails` | `false` | Thumbnail grid side panel                   |
 
 ### Export
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `print` | `false` | Print toolbar button (uses native browser print dialog) |
+| Flag       | Default | What it enables                                                             |
+| ---------- | ------- | --------------------------------------------------------------------------- |
+| `print`    | `false` | Print toolbar button (uses native browser print dialog)                     |
 | `download` | `false` | Download button. Combine with `downloadUrl` prop to serve a re-encoded copy |
 
 ### Annotations (Phase 1)
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `annotations` | `false` | Highlight tool + sticky-note comment tool, plus full annotation CRUD via the programmatic API |
-| `commentThreads` | `false` | Threaded comments overlay (replies + resolved state). Requires `annotations` |
-| `undoRedo` | `false` | Undo / redo toolbar buttons + `Ctrl+Z` / `Ctrl+Shift+Z` |
+| Flag             | Default | What it enables                                                                               |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------- |
+| `annotations`    | `false` | Highlight tool + sticky-note comment tool, plus full annotation CRUD via the programmatic API |
+| `commentThreads` | `false` | Threaded comments overlay (replies + resolved state). Requires `annotations`                  |
+| `undoRedo`       | `false` | Undo / redo toolbar buttons + `Ctrl+Z` / `Ctrl+Shift+Z`                                       |
 
 ### Editing (Phase 2 — opt-in)
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `stamps` | `false` | Stamp tool + stamp library picker |
-| `signature` | `false` | Signature pad dialog + place-signature flow |
-| `redaction` | `false` | Text-redact + area-redact tools + `saveAsCopy` burn-in |
-| `forms` | `false` | Interactive PDF form-field rendering and `setFieldValue` API |
-| `attachments` | `false` | Attachments side panel + downloadAttachment API |
+| Flag          | Default | What it enables                                              |
+| ------------- | ------- | ------------------------------------------------------------ |
+| `stamps`      | `false` | Stamp tool + stamp library picker                            |
+| `signature`   | `false` | Signature pad dialog + place-signature flow                  |
+| `redaction`   | `false` | Text-redact + area-redact tools + `saveAsCopy` burn-in       |
+| `forms`       | `false` | Interactive PDF form-field rendering and `setFieldValue` API |
+| `attachments` | `false` | Attachments side panel + downloadAttachment API              |
 
 ### Interaction
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
+| Flag                | Default | What it enables                                                                                                                                                                     |
+| ------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `keyboardShortcuts` | `false` | Arrow keys (page nav), `+` / `-` (zoom), `R` (rotate), `Ctrl+F` (search), `F11` (fullscreen), `Esc` (close popovers), `C` / `O` / `T` (toggle comment / outline / thumbnails panel) |
-| `touchGestures` | `false` | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`) |
+| `touchGestures`     | `false` | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`)                                                                                                         |
 
 ## Per-feature configuration: `featureConfig`
 
@@ -91,7 +91,7 @@ const featureConfig: FeatureConfig = {
     author: 'alex@example.com',
     defaultTools: [
       { id: 'h-yellow', label: 'Yellow', color: '#FFCD45', opacity: 0.4 },
-      { id: 'h-cyan',   label: 'Cyan',   color: '#A0E7E5', opacity: 0.4 },
+      { id: 'h-cyan', label: 'Cyan', color: '#A0E7E5', opacity: 0.4 },
     ],
   },
 }
@@ -99,39 +99,39 @@ const featureConfig: FeatureConfig = {
 
 ### `zoom`
 
-| Option | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `min` | `number` | `0.25` | Minimum scale factor |
-| `max` | `number` | `8` | Maximum scale factor |
-| `step` | `number` | `0.1` | Increment for zoom-in / zoom-out buttons |
-| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual'` | `'fit-width'` | Initial zoom preset |
+| Option        | Type                                    | Default       | Notes                                    |
+| ------------- | --------------------------------------- | ------------- | ---------------------------------------- |
+| `min`         | `number`                                | `0.25`        | Minimum scale factor                     |
+| `max`         | `number`                                | `8`           | Maximum scale factor                     |
+| `step`        | `number`                                | `0.1`         | Increment for zoom-in / zoom-out buttons |
+| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual'` | `'fit-width'` | Initial zoom preset                      |
 
 ### `annotations`
 
-| Option | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `author` | `string` | `currentUser?.displayName` | Attached to created annotations |
-| `useAnnotationMode` | `boolean` | `false` | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately |
-| `defaultTools` | `AnnotationToolConfig[]` | 5 highlight presets (yellow / green / blue / pink / purple at α 0.4) | Override the floating highlight tooltip's colour palette. Each tool has `{ id, label, color, opacity }`. The 5 default colours match `HIGHLIGHT_COLORS` exported from `@meldui/vue` |
+| Option              | Type                     | Default                                                              | Notes                                                                                                                                                                               |
+| ------------------- | ------------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `author`            | `string`                 | `currentUser?.displayName`                                           | Attached to created annotations                                                                                                                                                     |
+| `useAnnotationMode` | `boolean`                | `false`                                                              | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately                                                                             |
+| `defaultTools`      | `AnnotationToolConfig[]` | 5 highlight presets (yellow / green / blue / pink / purple at α 0.4) | Override the floating highlight tooltip's colour palette. Each tool has `{ id, label, color, opacity }`. The 5 default colours match `HIGHLIGHT_COLORS` exported from `@meldui/vue` |
 
 ### `stamps` (Phase 2)
 
-| Option | Type | Notes |
-| --- | --- | --- |
-| `libraries` | `StampLibraryConfig[]` | Preload stamp libraries from URL or `ArrayBuffer` |
+| Option           | Type                                 | Notes                                                                 |
+| ---------------- | ------------------------------------ | --------------------------------------------------------------------- |
+| `libraries`      | `StampLibraryConfig[]`               | Preload stamp libraries from URL or `ArrayBuffer`                     |
 | `defaultLibrary` | `{ id, name, categories? } \| false` | Set the toolbar's default library; `false` to hide the library picker |
 
 ### `signature` (Phase 2)
 
-| Option | Type | Notes |
-| --- | --- | --- |
-| `mode` | `'signature-only' \| 'signature-and-initials'` | Whether the user is prompted for initials in addition to a full signature |
-| `defaultSize` | `{ width: number; height: number }` | Initial bounding box for placed signatures |
+| Option        | Type                                           | Notes                                                                     |
+| ------------- | ---------------------------------------------- | ------------------------------------------------------------------------- |
+| `mode`        | `'signature-only' \| 'signature-and-initials'` | Whether the user is prompted for initials in addition to a full signature |
+| `defaultSize` | `{ width: number; height: number }`            | Initial bounding box for placed signatures                                |
 
 ### `redaction` (Phase 2)
 
-| Option | Type | Notes |
-| --- | --- | --- |
+| Option              | Type      | Notes                                                                                                                               |
+| ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `useAnnotationMode` | `boolean` | If `true`, new redactions are pending (visible in panel) and applied via `applyAllRedactions()`; otherwise they burn in immediately |
 
 ## Highlight colour palette

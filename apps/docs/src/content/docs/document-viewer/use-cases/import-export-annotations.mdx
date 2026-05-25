@@ -59,7 +59,7 @@ const items = await viewerA.value?.exportAnnotations()
 await fetch('/api/transfers', { method: 'POST', body: JSON.stringify({ docId, items }) })
 
 // System B: GET the transfer and import
-const { items } = await fetch(`/api/transfers/${transferId}`).then(r => r.json())
+const { items } = await fetch(`/api/transfers/${transferId}`).then((r) => r.json())
 await viewerB.value?.importAnnotations(items)
 ```
 
@@ -79,7 +79,7 @@ The `ctx` carries binary side-data for stamps and signatures (the rasterized sta
 For stamps and signatures (Phase 2), you'll need to serialize the `ArrayBuffer` to base64 manually:
 
 ```ts
-const serialized = items.map(item => ({
+const serialized = items.map((item) => ({
   annotation: item.annotation,
   ctx: item.ctx
     ? { mimeType: item.ctx.mimeType, base64: arrayBufferToBase64(item.ctx.data) }

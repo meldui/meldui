@@ -32,8 +32,12 @@ const permissions: ViewerPermissions = {
     source="/shared-doc.pdf"
     wasm-url="/pdfium.wasm"
     :features="{
-      zoom: true, search: true, outline: true, thumbnails: true,
-      annotations: true, commentThreads: true,
+      zoom: true,
+      search: true,
+      outline: true,
+      thumbnails: true,
+      annotations: true,
+      commentThreads: true,
     }"
     :permissions="permissions"
   />
@@ -56,7 +60,7 @@ A common share-link pattern: an editor publishes a reviewed document and shares 
 import { onMounted } from 'vue'
 
 onMounted(async () => {
-  const { annotations, threads } = await fetch(`/shared/${shareToken}`).then(r => r.json())
+  const { annotations, threads } = await fetch(`/shared/${shareToken}`).then((r) => r.json())
   await viewer.value?.loadAnnotations(annotations)
   viewer.value?.loadThreads(threads)
 })

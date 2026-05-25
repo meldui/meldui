@@ -36,11 +36,11 @@ await fetch('/api/documents/reviewed', {
 
 ## When to use this vs. `exportAnnotations`
 
-| Need | Use |
-| --- | --- |
-| Show the annotated doc to someone who doesn't have `DocumentViewer` | `saveAsCopy()` |
-| Backup the annotations so the user can later edit them in `DocumentViewer` | `exportAnnotations()` (preserves editability) |
-| Both (e.g. archive + future re-edit) | Do both — store the JSON for editing, ship the PDF for sharing |
+| Need                                                                       | Use                                                            |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Show the annotated doc to someone who doesn't have `DocumentViewer`        | `saveAsCopy()`                                                 |
+| Backup the annotations so the user can later edit them in `DocumentViewer` | `exportAnnotations()` (preserves editability)                  |
+| Both (e.g. archive + future re-edit)                                       | Do both — store the JSON for editing, ship the PDF for sharing |
 
 `saveAsCopy()` burns annotations into the PDF contents in a way that's spec-compliant for PDF 1.7 — most professional PDF readers (Adobe, Preview, Foxit) will show them. But the original "editable annotation" metadata may be lost, so subsequent rounds of editing should start from the original source + the `exportAnnotations()` JSON.
 

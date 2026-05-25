@@ -144,6 +144,7 @@ Returns whether there's a step to walk in that direction.
 ### `saveAsCopy(options?: SaveAsCopyOptions): Promise<ArrayBuffer>`
 
 Returns a fresh PDF buffer with the current annotations baked in. Useful for:
+
 - Generating a permanent record of a reviewed document
 - Burning in redactions for compliance
 - Downloading the annotated copy
@@ -177,16 +178,16 @@ Removes a reply. Emits `thread-update` with `action: 'reply-deleted'`.
 
 `DocumentViewer` emits these events. All fire only for **committed** state — in-flight drag / resize / typing states are debounced.
 
-| Event | Payload | When |
-| --- | --- | --- |
-| `document-loaded` | `DocumentInfo` | First load completes |
-| `document-error` | `{ error: string }` | Load fails (404, decode error, etc.) |
-| `page-change` | `{ page: number }` | Viewport-centered page changes |
-| `annotation-created` | `{ annotation: Annotation }` | New annotation committed (user-drawn or programmatic) |
-| `annotation-updated` | `{ annotation, patch }` | Existing annotation patched |
-| `annotation-deleted` | `{ annotationId: string }` | Annotation removed |
-| `annotation-selected` | `{ annotation: Annotation \| null }` | Selection changed |
-| `thread-update` | `{ thread, action }` | Reply added/deleted, or thread resolved/unresolved |
+| Event                 | Payload                              | When                                                  |
+| --------------------- | ------------------------------------ | ----------------------------------------------------- |
+| `document-loaded`     | `DocumentInfo`                       | First load completes                                  |
+| `document-error`      | `{ error: string }`                  | Load fails (404, decode error, etc.)                  |
+| `page-change`         | `{ page: number }`                   | Viewport-centered page changes                        |
+| `annotation-created`  | `{ annotation: Annotation }`         | New annotation committed (user-drawn or programmatic) |
+| `annotation-updated`  | `{ annotation, patch }`              | Existing annotation patched                           |
+| `annotation-deleted`  | `{ annotationId: string }`           | Annotation removed                                    |
+| `annotation-selected` | `{ annotation: Annotation \| null }` | Selection changed                                     |
+| `thread-update`       | `{ thread, action }`                 | Reply added/deleted, or thread resolved/unresolved    |
 
 ```vue
 <DocumentViewer

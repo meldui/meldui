@@ -36,12 +36,14 @@ Fix it server-side:
 If `source` points to a different origin than your app, that origin must send `Access-Control-Allow-Origin` headers. Without them, the browser refuses to share the response with PDFium.
 
 Workarounds:
+
 1. **Proxy through your own backend** — fetch the PDF server-side and re-serve it from your own origin.
 2. **Pass a `Blob` or `ArrayBuffer` directly** if you can fetch it yourself with appropriate credentials.
 
 ```ts
-const buffer = await fetch('https://third-party.com/doc.pdf', { credentials: 'include' })
-  .then(r => r.arrayBuffer())
+const buffer = await fetch('https://third-party.com/doc.pdf', { credentials: 'include' }).then(
+  (r) => r.arrayBuffer(),
+)
 ```
 
 ```vue
@@ -74,6 +76,7 @@ If you swap `source` rapidly (e.g. a thumbnail list of N PDFs), in-flight loads 
 ## Large PDF appears blank / takes >30 s to render the first page
 
 Two checks:
+
 1. **Worker mode on?** Without `worker={true}` (the default), large documents block the main thread during initial decode.
 2. **Tiling enabled?** Tiling is always-on in the minimum plugin set, but a custom plugin registry that omits it will render every page at full resolution simultaneously — fatal on large docs.
 
@@ -99,6 +102,7 @@ See [Annotations → Persisting changes](/docs/document-viewer/annotations#persi
 ## `loadAnnotations` runs but no highlights appear
 
 Confirm:
+
 1. `features.annotations` is `true` — without the flag the annotation plugin isn't registered, so the data load is dropped.
 2. The `pageIndex` values are **0-based** (page 1 → `pageIndex: 0`).
 3. The `rect` coordinates are in **PDF points** (1/72 inch) measured from the **top-left** of the page (DOM convention, not the PDF spec's bottom-up). For a Letter page, `origin.y = 0` is the top and `origin.y = 792` is the bottom.
@@ -121,6 +125,7 @@ A minimal valid highlight:
 ## `saveAsCopy()` returns a corrupted file
 
 A few possibilities:
+
 - The buffer is consumed twice (e.g. you also passed it to `new Blob([buffer])` somewhere it was already transferred). Use `buffer.slice(0)` to clone before transferring.
 - Your backend is expecting a multipart form but you're sending raw `application/pdf`. Wrap in `FormData` if so.
 - Network compression is munging the bytes. Make sure your upload preserves binary integrity.
@@ -128,6 +133,7 @@ A few possibilities:
 ## Browser support
 
 `DocumentViewer` requires:
+
 - **WebAssembly** — universal in evergreen browsers; not supported in IE11.
 - **`Worker`** (for default worker mode) — universal.
 - **`OffscreenCanvas`** (used by EmbedPDF tiling for some operations) — Safari 16.4+, Firefox 105+, Chrome 69+.
@@ -153,6 +159,7 @@ export default defineConfig({
 The floating tooltip is anchored to the engine's selection state. If your app has CSS that sets `pointer-events: none` on a parent, or if a sibling element with higher z-index captures pointerdown, the tooltip's outside-click guard fires and immediately closes it.
 
 Check that the wrapper around `<DocumentViewer>` doesn't have:
+
 - `pointer-events: none` (or any parent that does)
 - A `<div>` overlay with `z-index: 9999` covering the tooltip
 - A keyboard shortcut that consumes `pointerdown` events at the document level

@@ -33,29 +33,29 @@ The minimum required set is always registered (zero opt-in needed):
 
 Each `features` flag adds exactly one plugin (with a few exceptions noted below):
 
-| Feature flag | Plugin package(s) added |
-| --- | --- |
-| `zoom` | `@embedpdf/plugin-zoom` |
-| `rotate` | `@embedpdf/plugin-rotate` |
-| `spread` | `@embedpdf/plugin-spread` |
-| `pan` | `@embedpdf/plugin-pan` (auto-adds `interaction-manager` if not already on) |
-| `fullscreen` | `@embedpdf/plugin-fullscreen` |
-| `selection` | `@embedpdf/plugin-selection` (auto-adds `interaction-manager`) |
-| `search` | `@embedpdf/plugin-search` |
-| `outline` | `@embedpdf/plugin-bookmark` |
-| `thumbnails` | `@embedpdf/plugin-thumbnail` |
-| `print` | `@embedpdf/plugin-print` |
-| `download` | `@embedpdf/plugin-export` |
-| `annotations` | `@embedpdf/plugin-annotation` (auto-adds `interaction-manager`, `selection`, `history`) |
-| `commentThreads` | — (no plugin; pure overlay, requires `annotations`) |
-| `undoRedo` | `@embedpdf/plugin-history` (auto-enabled by `annotations`) |
-| `keyboardShortcuts` | `@embedpdf/plugin-hotkeys` |
-| `touchGestures` | — (pure DOM listeners, no plugin) |
-| `stamps` (Phase 2) | `@embedpdf/plugin-stamp` |
-| `signature` (Phase 2) | `@embedpdf/plugin-signature` |
-| `redaction` (Phase 2) | `@embedpdf/plugin-redaction` |
-| `forms` (Phase 2) | `@embedpdf/plugin-form` |
-| `attachments` (Phase 2) | `@embedpdf/plugin-attachment` |
+| Feature flag            | Plugin package(s) added                                                                 |
+| ----------------------- | --------------------------------------------------------------------------------------- |
+| `zoom`                  | `@embedpdf/plugin-zoom`                                                                 |
+| `rotate`                | `@embedpdf/plugin-rotate`                                                               |
+| `spread`                | `@embedpdf/plugin-spread`                                                               |
+| `pan`                   | `@embedpdf/plugin-pan` (auto-adds `interaction-manager` if not already on)              |
+| `fullscreen`            | `@embedpdf/plugin-fullscreen`                                                           |
+| `selection`             | `@embedpdf/plugin-selection` (auto-adds `interaction-manager`)                          |
+| `search`                | `@embedpdf/plugin-search`                                                               |
+| `outline`               | `@embedpdf/plugin-bookmark`                                                             |
+| `thumbnails`            | `@embedpdf/plugin-thumbnail`                                                            |
+| `print`                 | `@embedpdf/plugin-print`                                                                |
+| `download`              | `@embedpdf/plugin-export`                                                               |
+| `annotations`           | `@embedpdf/plugin-annotation` (auto-adds `interaction-manager`, `selection`, `history`) |
+| `commentThreads`        | — (no plugin; pure overlay, requires `annotations`)                                     |
+| `undoRedo`              | `@embedpdf/plugin-history` (auto-enabled by `annotations`)                              |
+| `keyboardShortcuts`     | `@embedpdf/plugin-hotkeys`                                                              |
+| `touchGestures`         | — (pure DOM listeners, no plugin)                                                       |
+| `stamps` (Phase 2)      | `@embedpdf/plugin-stamp`                                                                |
+| `signature` (Phase 2)   | `@embedpdf/plugin-signature`                                                            |
+| `redaction` (Phase 2)   | `@embedpdf/plugin-redaction`                                                            |
+| `forms` (Phase 2)       | `@embedpdf/plugin-form`                                                                 |
+| `attachments` (Phase 2) | `@embedpdf/plugin-attachment`                                                           |
 
 Install only the plugins you actually flag on — see [Getting Started → Install](/docs/document-viewer/getting-started#install).
 
@@ -63,15 +63,16 @@ Install only the plugins you actually flag on — see [Getting Started → Insta
 
 Approximate **gzipped** JS contributions (excluding the WASM binary, which loads separately):
 
-| Feature profile | Approx. gzipped JS |
-| --- | --- |
-| Minimum (read-only PDF, no opt-ins) | ~110 KB |
-| Read-only + zoom + search + download | ~140 KB |
-| Review (above + outline + thumbnails + annotations + commentThreads + undoRedo) | ~200 KB |
-| Kitchen-sink (all Phase 1 flags on) | ~240 KB |
-| Kitchen-sink + all Phase 2 flags | ~310 KB |
+| Feature profile                                                                 | Approx. gzipped JS |
+| ------------------------------------------------------------------------------- | ------------------ |
+| Minimum (read-only PDF, no opt-ins)                                             | ~110 KB            |
+| Read-only + zoom + search + download                                            | ~140 KB            |
+| Review (above + outline + thumbnails + annotations + commentThreads + undoRedo) | ~200 KB            |
+| Kitchen-sink (all Phase 1 flags on)                                             | ~240 KB            |
+| Kitchen-sink + all Phase 2 flags                                                | ~310 KB            |
 
 The big constants beyond the headless plugins:
+
 - `@embedpdf/engines` ~25 KB
 - `@embedpdf/core` ~30 KB
 - `@embedpdf/models` ~10 KB
@@ -107,7 +108,7 @@ PDFium runs inside a Web Worker by default (`worker={true}`), keeping the main t
 If your app hits the worker engine's **relative-`wasmUrl` resolution issue** (the worker is built from a blob URL whose base differs from the page's), opt back to main-thread mode:
 
 ```vue
-<DocumentViewer worker={false} wasm-url="https://your-cdn.com/pdfium.wasm" ... />
+<DocumentViewer worker="{false}" wasm-url="https://your-cdn.com/pdfium.wasm" ... />
 ```
 
 Fully-qualified URLs (`https://...`) and absolute paths (`/pdfium.wasm`) work with either mode.

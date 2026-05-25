@@ -30,19 +30,19 @@ import BasicPdfDemo from '../../../../demos/document-viewer/BasicPdfDemo.vue'
 
 Mirrors desktop PDF reader conventions. The full binding table:
 
-| Shortcut | Action |
-| --- | --- |
-| `←` `→` `PageUp` `PageDown` | Prev / next page |
-| `Home` / `End` | First / last page |
-| `+` `-` | Zoom in / out |
-| `0` | Fit page |
-| `R` / `Shift+R` | Rotate CW / CCW |
-| `Ctrl/Cmd+F` | Open search popover |
-| `Esc` | Close search / panel / popover |
-| `F11` | Toggle fullscreen |
-| `Ctrl/Cmd+Z` / `Ctrl+Shift+Z` | Undo / redo (requires `features.undoRedo`) |
-| `C` / `O` / `T` | Toggle annotations / outline / thumbnails panel |
-| `P` / `D` | Print / download |
+| Shortcut                      | Action                                          |
+| ----------------------------- | ----------------------------------------------- |
+| `←` `→` `PageUp` `PageDown`   | Prev / next page                                |
+| `Home` / `End`                | First / last page                               |
+| `+` `-`                       | Zoom in / out                                   |
+| `0`                           | Fit page                                        |
+| `R` / `Shift+R`               | Rotate CW / CCW                                 |
+| `Ctrl/Cmd+F`                  | Open search popover                             |
+| `Esc`                         | Close search / panel / popover                  |
+| `F11`                         | Toggle fullscreen                               |
+| `Ctrl/Cmd+Z` / `Ctrl+Shift+Z` | Undo / redo (requires `features.undoRedo`)      |
+| `C` / `O` / `T`               | Toggle annotations / outline / thumbnails panel |
+| `P` / `D`                     | Print / download                                |
 
 Bindings only fire when focus is **inside** the viewer (the viewport, toolbar, or panels), so they don't fight with host-app shortcuts.
 
@@ -64,11 +64,11 @@ onMounted(() => {
 
 When `features.touchGestures` is on:
 
-| Gesture | Action |
-| --- | --- |
-| Swipe left / right | Previous / next page |
-| Pinch | Zoom (requires `features.zoom`) |
-| Double-tap | Cycle through zoom presets |
+| Gesture            | Action                          |
+| ------------------ | ------------------------------- |
+| Swipe left / right | Previous / next page            |
+| Pinch              | Zoom (requires `features.zoom`) |
+| Double-tap         | Cycle through zoom presets      |
 
 Single-tap and drag are reserved for selection and panning, respectively.
 

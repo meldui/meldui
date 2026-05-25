@@ -30,31 +30,31 @@ It is built as a single composite with a `features` prop. Every capability is op
 
 ## What's in the box
 
-| Capability | Plugin / Feature | Phase |
-| --- | --- | --- |
-| Continuous-scroll PDF rendering with virtualization | Viewport + Scroll + Render + Tiling (always on) | 1 |
-| Zoom, rotate, two-page spread, hand tool, fullscreen | Toggle via `features` | 1 |
-| Full-text search with case/whole-word | `features.search` | 1 |
-| Outline & thumbnail side panels | `features.outline`, `features.thumbnails` | 1 |
-| Print + Download + `saveAsCopy()` | `features.print`, `features.download` | 1 |
-| Highlights, sticky-note comments | `features.annotations` | 1 |
-| Threaded comments overlay (replies + resolved) | `features.commentThreads` | 1 |
-| Undo / Redo | `features.undoRedo` | 1 |
-| Keyboard shortcuts, touch gestures | `features.keyboardShortcuts`, `features.touchGestures` | 1 |
-| Image / text / markdown rendering | Auto-detected from `source` / `mimeType` | 1 |
-| Stamps, signatures, redaction, forms, attachments | `features.stamps` / `signature` / `redaction` / `forms` / `attachments` | 2 |
+| Capability                                           | Plugin / Feature                                                        | Phase |
+| ---------------------------------------------------- | ----------------------------------------------------------------------- | ----- |
+| Continuous-scroll PDF rendering with virtualization  | Viewport + Scroll + Render + Tiling (always on)                         | 1     |
+| Zoom, rotate, two-page spread, hand tool, fullscreen | Toggle via `features`                                                   | 1     |
+| Full-text search with case/whole-word                | `features.search`                                                       | 1     |
+| Outline & thumbnail side panels                      | `features.outline`, `features.thumbnails`                               | 1     |
+| Print + Download + `saveAsCopy()`                    | `features.print`, `features.download`                                   | 1     |
+| Highlights, sticky-note comments                     | `features.annotations`                                                  | 1     |
+| Threaded comments overlay (replies + resolved)       | `features.commentThreads`                                               | 1     |
+| Undo / Redo                                          | `features.undoRedo`                                                     | 1     |
+| Keyboard shortcuts, touch gestures                   | `features.keyboardShortcuts`, `features.touchGestures`                  | 1     |
+| Image / text / markdown rendering                    | Auto-detected from `source` / `mimeType`                                | 1     |
+| Stamps, signatures, redaction, forms, attachments    | `features.stamps` / `signature` / `redaction` / `forms` / `attachments` | 2     |
 
 ## Comparison with other Vue PDF libraries
 
-| | DocumentViewer | `@tato30/vue-pdf` | `vue-pdf-embed` | PDFTron Web Viewer |
-| --- | --- | --- | --- | --- |
-| Engine | PDFium (WASM) | pdf.js (canvas) | pdf.js (canvas) | PDFNet (WASM) |
-| Multi-format (image / text / md) | ✅ | ❌ | ❌ | ❌ |
-| Native annotations | ✅ | ❌ | ❌ | ✅ |
-| Threaded comments overlay | ✅ | ❌ | ❌ | ❌ |
-| Programmatic API | ✅ | partial | ❌ | ✅ |
-| Tree-shaken plugins | ✅ | n/a | n/a | ❌ |
-| License | Internal (MeldUI) | MIT | MIT | Commercial |
+|                                  | DocumentViewer    | `@tato30/vue-pdf` | `vue-pdf-embed` | PDFTron Web Viewer |
+| -------------------------------- | ----------------- | ----------------- | --------------- | ------------------ |
+| Engine                           | PDFium (WASM)     | pdf.js (canvas)   | pdf.js (canvas) | PDFNet (WASM)      |
+| Multi-format (image / text / md) | ✅                | ❌                | ❌              | ❌                 |
+| Native annotations               | ✅                | ❌                | ❌              | ✅                 |
+| Threaded comments overlay        | ✅                | ❌                | ❌              | ❌                 |
+| Programmatic API                 | ✅                | partial           | ❌              | ✅                 |
+| Tree-shaken plugins              | ✅                | n/a               | n/a             | ❌                 |
+| License                          | Internal (MeldUI) | MIT               | MIT             | Commercial         |
 
 ## Next steps
 

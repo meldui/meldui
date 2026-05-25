@@ -20,8 +20,8 @@ import { DocumentViewer } from '@meldui/vue'
 import type { ToolbarConfig } from '@meldui/vue'
 
 const toolbar: ToolbarConfig = {
-  groups: ['nav', 'zoom', 'panels'],     // restrict + reorder
-  hide: ['rotate-cw', 'rotate-ccw'],     // hide individual buttons
+  groups: ['nav', 'zoom', 'panels'], // restrict + reorder
+  hide: ['rotate-cw', 'rotate-ccw'], // hide individual buttons
   customButtons: [
     {
       id: 'share',
@@ -49,7 +49,7 @@ const toolbar: ToolbarConfig = {
 The default group order is:
 
 ```ts
-['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+;['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
 ```
 
 Pass a subset to hide the rest entirely. Pass a reordered array to change visual order:
@@ -128,9 +128,7 @@ Conditionally configure based on the current user:
 
 ```ts
 const toolbar = computed<ToolbarConfig>(() => ({
-  groups: isReviewer.value
-    ? ['nav', 'zoom', 'tools', 'panels']
-    : ['nav', 'zoom', 'export'],
+  groups: isReviewer.value ? ['nav', 'zoom', 'tools', 'panels'] : ['nav', 'zoom', 'export'],
   hide: isReviewer.value ? [] : ['print', 'download'],
 }))
 ```

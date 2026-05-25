@@ -39,12 +39,12 @@ If `mime-type` is omitted, the type is detected from the `source`:
 
 ## Format ↔ renderer map
 
-| MIME type | Renderer | Features supported |
-| --- | --- | --- |
-| `application/pdf` | `PdfViewer.vue` (EmbedPDF + PDFium) | Full feature set (annotations, search, outline, thumbnails, etc.) |
-| `image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/svg+xml` | `ImageViewer.vue` | Zoom, fit presets, print, download |
-| `text/plain` | `TextViewer.vue` | DOM-based search, print, download |
-| `text/markdown` | `MarkdownViewer.vue` | DOM-based search, print, download |
+| MIME type                                                             | Renderer                            | Features supported                                                |
+| --------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------- |
+| `application/pdf`                                                     | `PdfViewer.vue` (EmbedPDF + PDFium) | Full feature set (annotations, search, outline, thumbnails, etc.) |
+| `image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/svg+xml` | `ImageViewer.vue`                   | Zoom, fit presets, print, download                                |
+| `text/plain`                                                          | `TextViewer.vue`                    | DOM-based search, print, download                                 |
+| `text/markdown`                                                       | `MarkdownViewer.vue`                | DOM-based search, print, download                                 |
 
 ## Feature flags that apply per format
 
@@ -71,6 +71,7 @@ Without `:key`, swapping `source` reuses the renderer; for cross-format swaps (P
 ## Programmatic API differences
 
 Most `DocumentViewerInstance` methods work for all formats:
+
 - `getDocumentInfo()`, `getCurrentPage()` (returns 1 for non-paged formats), `goToPage()` (no-op)
 - `loadAnnotations`, `createAnnotation`, etc. — no-ops for non-PDF formats (no annotation layer)
 - `saveAsCopy()` — PDF only

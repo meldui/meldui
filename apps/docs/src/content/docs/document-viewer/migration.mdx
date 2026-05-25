@@ -14,16 +14,16 @@ This page maps the API surface of common Vue PDF libraries to `DocumentViewer`'s
 
 ### Prop mapping
 
-| `@tato30/vue-pdf` | `DocumentViewer` |
-| --- | --- |
-| `pdf` | `source` (same `URL \| File \| ArrayBuffer`) |
-| `page` | `initial-page` (1-based, same) |
-| `scale` | `initial-scale` (`'fit-page' \| 'fit-width' \| 'actual' \| number`) |
-| `rotation` | Not a prop — use `features.rotate` + `initialScale`, or call `goToPage` after mount |
-| `text-layer` | Always on when `features.search` or `features.selection` is enabled |
-| `annotation-layer` | `features.annotations` |
-| `fit-parent` | Default (the viewer fills its container) |
-| `width`/`height` | Set on the parent element; viewer fills it |
+| `@tato30/vue-pdf`  | `DocumentViewer`                                                                    |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| `pdf`              | `source` (same `URL \| File \| ArrayBuffer`)                                        |
+| `page`             | `initial-page` (1-based, same)                                                      |
+| `scale`            | `initial-scale` (`'fit-page' \| 'fit-width' \| 'actual' \| number`)                 |
+| `rotation`         | Not a prop — use `features.rotate` + `initialScale`, or call `goToPage` after mount |
+| `text-layer`       | Always on when `features.search` or `features.selection` is enabled                 |
+| `annotation-layer` | `features.annotations`                                                              |
+| `fit-parent`       | Default (the viewer fills its container)                                            |
+| `width`/`height`   | Set on the parent element; viewer fills it                                          |
 
 ### Behaviour differences
 
@@ -47,14 +47,14 @@ This page maps the API surface of common Vue PDF libraries to `DocumentViewer`'s
 
 ### Prop mapping
 
-| `vue-pdf-embed` | `DocumentViewer` |
-| --- | --- |
-| `source` | `source` (same) |
-| `page` | `initial-page` |
-| `text-layer` | Always on with `features.search` / `features.selection` |
-| `annotation-layer` | `features.annotations` |
-| `rotation` | Use `features.rotate` |
-| `disable-stream` | n/a — DocumentViewer always streams |
+| `vue-pdf-embed`    | `DocumentViewer`                                        |
+| ------------------ | ------------------------------------------------------- |
+| `source`           | `source` (same)                                         |
+| `page`             | `initial-page`                                          |
+| `text-layer`       | Always on with `features.search` / `features.selection` |
+| `annotation-layer` | `features.annotations`                                  |
+| `rotation`         | Use `features.rotate`                                   |
+| `disable-stream`   | n/a — DocumentViewer always streams                     |
 
 ### Behaviour differences
 
@@ -90,12 +90,21 @@ The PDF.js viewer (`pdf.js/web/viewer.html`) corresponds **directly** to `Docume
   source="/doc.pdf"
   wasm-url="/pdfium.wasm"
   :features="{
-    zoom: true, rotate: true, spread: true, pan: true, fullscreen: true,
-    search: true, selection: true,
-    outline: true, thumbnails: true,
-    print: true, download: true,
-    annotations: true, undoRedo: true,
-    keyboardShortcuts: true, touchGestures: true,
+    zoom: true,
+    rotate: true,
+    spread: true,
+    pan: true,
+    fullscreen: true,
+    search: true,
+    selection: true,
+    outline: true,
+    thumbnails: true,
+    print: true,
+    download: true,
+    annotations: true,
+    undoRedo: true,
+    keyboardShortcuts: true,
+    touchGestures: true,
   }"
 />
 ```
@@ -106,19 +115,19 @@ PDFTron is the most direct comparison — both are commercial-grade PDF SDKs wit
 
 ### Property mapping
 
-| PDFTron `WebViewer` | `DocumentViewer` |
-| --- | --- |
-| `initialDoc` | `source` |
-| `licenseKey` | n/a (internal package, no license) |
-| `path` (location of viewer assets) | `wasm-url` (just the WASM file) |
-| `enableAnnotations` | `features.annotations` |
-| `disabledElements` | `toolbar.hide: [...]` |
-| `customElements` | `toolbar.customButtons` |
-| `documentXFDFRetriever` | `loadAnnotations` (call after `document-loaded`) |
-| `extractAnnotations()` | `exportAnnotations()` |
-| `printDocument()` | Trigger `print` button or call `window.print()` |
-| `downloadPdf()` | Trigger `download` button |
-| Annotation Manager events | `@annotation-created` / `@annotation-updated` / `@annotation-deleted` |
+| PDFTron `WebViewer`                | `DocumentViewer`                                                      |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| `initialDoc`                       | `source`                                                              |
+| `licenseKey`                       | n/a (internal package, no license)                                    |
+| `path` (location of viewer assets) | `wasm-url` (just the WASM file)                                       |
+| `enableAnnotations`                | `features.annotations`                                                |
+| `disabledElements`                 | `toolbar.hide: [...]`                                                 |
+| `customElements`                   | `toolbar.customButtons`                                               |
+| `documentXFDFRetriever`            | `loadAnnotations` (call after `document-loaded`)                      |
+| `extractAnnotations()`             | `exportAnnotations()`                                                 |
+| `printDocument()`                  | Trigger `print` button or call `window.print()`                       |
+| `downloadPdf()`                    | Trigger `download` button                                             |
+| Annotation Manager events          | `@annotation-created` / `@annotation-updated` / `@annotation-deleted` |
 
 ### Annotation format
 

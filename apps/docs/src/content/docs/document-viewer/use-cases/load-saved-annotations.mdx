@@ -22,7 +22,9 @@ import { DocumentViewer, type Annotation, type DocumentViewerInstance } from '@m
 const viewer = ref<DocumentViewerInstance | null>(null)
 
 onMounted(async () => {
-  const saved: Annotation[] = await fetch(`/api/documents/${docId}/annotations`).then(r => r.json())
+  const saved: Annotation[] = await fetch(`/api/documents/${docId}/annotations`).then((r) =>
+    r.json(),
+  )
   await viewer.value?.loadAnnotations(saved)
 })
 </script>
@@ -43,8 +45,8 @@ If you're using `features.commentThreads`, threads are a separate data model. Lo
 
 ```ts
 const [annotations, threads] = await Promise.all([
-  fetch(`/api/documents/${docId}/annotations`).then(r => r.json()),
-  fetch(`/api/documents/${docId}/threads`).then(r => r.json()),
+  fetch(`/api/documents/${docId}/annotations`).then((r) => r.json()),
+  fetch(`/api/documents/${docId}/threads`).then((r) => r.json()),
 ])
 
 await viewer.value?.loadAnnotations(annotations)

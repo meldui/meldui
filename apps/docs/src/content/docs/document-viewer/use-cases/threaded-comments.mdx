@@ -41,8 +41,8 @@ Store threads in your own database and sync via the `thread-update` event.
 
 ```ts
 onMounted(async () => {
-  const annotations = await fetch(`/api/docs/${docId}/annotations`).then(r => r.json())
-  const threads = await fetch(`/api/docs/${docId}/threads`).then(r => r.json())
+  const annotations = await fetch(`/api/docs/${docId}/annotations`).then((r) => r.json())
+  const threads = await fetch(`/api/docs/${docId}/threads`).then((r) => r.json())
 
   await viewer.value?.loadAnnotations(annotations)
   viewer.value?.loadThreads(threads)
@@ -56,9 +56,7 @@ Order matters: load annotations first (threads reference annotation ids).
 Subscribe to `thread-update` and persist:
 
 ```vue
-<DocumentViewer
-  @thread-update="onThreadUpdate"
-/>
+<DocumentViewer @thread-update="onThreadUpdate" />
 ```
 
 ```ts
@@ -96,9 +94,7 @@ Both call `addReply()` internally and fire `thread-update` with `action: 'reply-
 Marking a thread resolved doesn't delete the annotation — it just changes the `resolved` flag and adds a `resolvedAt` / `resolvedByUserId`. The annotation still renders on the page (typically with a subtle visual difference, e.g. lower opacity). Filter resolved threads from your side panel UI if you want a "todo" view:
 
 ```ts
-const unresolvedThreads = computed(() =>
-  allThreads.value.filter(t => !t.resolved),
-)
+const unresolvedThreads = computed(() => allThreads.value.filter((t) => !t.resolved))
 ```
 
 ## Current user attribution

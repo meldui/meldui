@@ -33,12 +33,7 @@ const toolbar: ToolbarConfig = {
 ```
 
 ```vue
-<DocumentViewer
-  source="/doc.pdf"
-  wasm-url="/pdfium.wasm"
-  :toolbar="toolbar"
-  ...
-/>
+<DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :toolbar="toolbar" ... />
 ```
 
 <ToolbarCustomDemo client:only="vue" />
@@ -48,7 +43,7 @@ const toolbar: ToolbarConfig = {
 Reorders or restricts the toolbar groups. Default order is:
 
 ```ts
-['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+;['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
 ```
 
 Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order.
@@ -91,11 +86,7 @@ const sidePanelOpen = ref(false)
 <template>
   <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm">
     <template #side-panel>
-      <ViewerSidePanel
-        v-if="sidePanelOpen"
-        title="Custom Outline"
-        @close="sidePanelOpen = false"
-      >
+      <ViewerSidePanel v-if="sidePanelOpen" title="Custom Outline" @close="sidePanelOpen = false">
         <MyCustomOutline />
       </ViewerSidePanel>
     </template>
@@ -107,12 +98,12 @@ const sidePanelOpen = ref(false)
 
 ## Slot reference
 
-| Slot | Purpose |
-| --- | --- |
-| `default` (no slot) | None — the renderers fill the viewport |
-| `toolbar-extra` | Append elements to the right side of the toolbar (before the overflow menu) |
-| `side-panel` | Replace the side-panel host. Bypasses the built-in `outline` / `thumbnails` / `annotations` panels |
-| `empty` | Override the empty state shown while the source is loading or null |
+| Slot                | Purpose                                                                                            |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `default` (no slot) | None — the renderers fill the viewport                                                             |
+| `toolbar-extra`     | Append elements to the right side of the toolbar (before the overflow menu)                        |
+| `side-panel`        | Replace the side-panel host. Bypasses the built-in `outline` / `thumbnails` / `annotations` panels |
+| `empty`             | Override the empty state shown while the source is loading or null                                 |
 
 ## Replacing format renderers
 
@@ -132,28 +123,24 @@ import { useTouch, useCommands, useAnnotationThreads } from '@meldui/vue'
 
 The viewer's root element carries the `document-viewer` class and `data-document-viewer` attribute. Internal parts use prefixed classes (no `document-` prefix — see [Theming](/docs/document-viewer/theming)):
 
-| Class | Element |
-| --- | --- |
-| `document-viewer` | Root container |
-| `viewer-toolbar` | Sticky top toolbar |
-| `search-popover` | Search popover content |
-| `highlight-tooltip` | Floating tooltip on selected highlight |
-| `comment-form` | Inline comment composer |
-| `pdf-viewer` | PDF renderer wrapper |
-| `pdf-page` | Each page inside the PDF renderer |
-| `image-viewer` / `text-viewer` / `markdown-viewer` | Non-PDF renderer wrappers |
-| `annotations-panel` / `outline-panel` / `thumbnails-panel` | Side panel wrappers |
-| `annotation-row` | A row inside the annotations panel |
-| `comment-marker` | On-page sticky-note pin |
+| Class                                                      | Element                                |
+| ---------------------------------------------------------- | -------------------------------------- |
+| `document-viewer`                                          | Root container                         |
+| `viewer-toolbar`                                           | Sticky top toolbar                     |
+| `search-popover`                                           | Search popover content                 |
+| `highlight-tooltip`                                        | Floating tooltip on selected highlight |
+| `comment-form`                                             | Inline comment composer                |
+| `pdf-viewer`                                               | PDF renderer wrapper                   |
+| `pdf-page`                                                 | Each page inside the PDF renderer      |
+| `image-viewer` / `text-viewer` / `markdown-viewer`         | Non-PDF renderer wrappers              |
+| `annotations-panel` / `outline-panel` / `thumbnails-panel` | Side panel wrappers                    |
+| `annotation-row`                                           | A row inside the annotations panel     |
+| `comment-marker`                                           | On-page sticky-note pin                |
 
 Override these in your global CSS or via Tailwind utilities. The `class` prop on `<DocumentViewer>` is merged onto the root with `cn()` so per-instance overrides work cleanly.
 
 ```vue
-<DocumentViewer
-  class="rounded-xl border shadow-lg"
-  source="/doc.pdf"
-  wasm-url="/pdfium.wasm"
-/>
+<DocumentViewer class="rounded-xl border shadow-lg" source="/doc.pdf" wasm-url="/pdfium.wasm" />
 ```
 
 ## Permissions

@@ -26,7 +26,7 @@ async function showCitation(citation: { pageIndex: number; rect: PdfRect; id: st
     pageIndex: citation.pageIndex,
     rect: citation.rect,
     segmentRects: [citation.rect],
-    color: '#92E89E',     // green to distinguish from user highlights
+    color: '#92E89E', // green to distinguish from user highlights
     opacity: 0.5,
     metadata: {
       is_ephemeral: true,
@@ -45,7 +45,7 @@ The metadata is free-form, but the `is_ephemeral` convention lets your annotatio
 
 ```ts
 function onCreate({ annotation }: { annotation: Annotation }) {
-  if (annotation.metadata?.is_ephemeral) return   // don't save AI citations
+  if (annotation.metadata?.is_ephemeral) return // don't save AI citations
   fetch('/api/annotations', { method: 'POST', body: JSON.stringify(annotation) })
 }
 ```
@@ -56,10 +56,10 @@ Otherwise every AI response would litter your database with ephemeral highlights
 
 A common pattern is to use a different colour for AI citations than for user highlights, so users can visually distinguish "my notes" from "AI cited this":
 
-| Origin | Colour |
-| --- | --- |
-| User-created highlight | Yellow `#FFCD45` (default) |
-| AI citation | Green `#92E89E` or Cyan `#A0E7E5` |
+| Origin                 | Colour                            |
+| ---------------------- | --------------------------------- |
+| User-created highlight | Yellow `#FFCD45` (default)        |
+| AI citation            | Green `#92E89E` or Cyan `#A0E7E5` |
 
 Combine with `metadata.is_ephemeral: true` and your event handler can filter both ways.
 

@@ -32,8 +32,8 @@ Both are wired into the toolbar internally.
 
 ```ts
 interface SaveAsCopyOptions {
-  applyRedactions?: boolean  // burn in pending redactions before saving (Phase 2)
-  flatten?: boolean          // flatten annotations into page contents (loses editability)
+  applyRedactions?: boolean // burn in pending redactions before saving (Phase 2)
+  flatten?: boolean // flatten annotations into page contents (loses editability)
 }
 
 const buffer = await viewer.value?.saveAsCopy()
