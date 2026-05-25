@@ -16,7 +16,7 @@
  * Keyboard shortcuts and touch gestures are wired here via the dedicated
  * composables (`useMeldKeyboard`, `useMeldTouch`).
  */
-import { computed, defineAsyncComponent, onMounted, provide, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { MELD_THREADS_INJECT_KEY } from './injectionKeys'
 import { resolveFeatures } from './plugins/pluginRegistry'
 import { detectDocumentType } from './utils/documentType'
@@ -83,6 +83,20 @@ const emit = defineEmits<{
       thread: MeldThread
       action: 'reply-added' | 'reply-deleted' | 'resolved' | 'unresolved'
     },
+  ): void
+  /**
+   * The user asked to open the conversation for an annotation. Fires for
+   * both: clicking a sticky-note pin marker on the page
+   * (`source: 'comment-marker'`) and clicking the view-thread icon in a
+   * highlight's floating tooltip (`source: 'highlight-tooltip'`).
+   *
+   * Emitted regardless of `features.commentThreads`, so consumers hosting
+   * their own annotation panel can react to it even when the built-in
+   * panel is disabled.
+   */
+  (
+    e: 'thread-open-requested',
+    payload: { annotationId: string; source: 'highlight-tooltip' | 'comment-marker' },
   ): void
 }>()
 
@@ -502,14 +516,21 @@ function handleRendererAnnotationDeleted(payload: { annotationId: string }) {
 function handleRendererAnnotationSelected(payload: { annotation: MeldAnnotation | null }) {
   selectedAnnotation.value = payload.annotation
   emit('annotation-selected', payload)
-  // Clicking a comment-pin on the page should surface that comment in the
-  // annotations panel (doqo's behaviour). For highlights we leave the
-  // panel state alone — the floating tooltip handles their UX in place.
-  if (payload.annotation?.type === 'sticky-note' && resolvedFeatures.value.commentThreads) {
-    focusedAnnotationId.value = payload.annotation.id
-    if (!isCommentsOpen.value) {
-      isCommentsOpen.value = true
-      emit('panel-toggle', { panel: 'comments', open: true })
+  // Comment-pin click on the page = "open this thread". Surface that as a
+  // top-level event so external panels can react even when the built-in
+  // panel is disabled.
+  if (payload.annotation?.type === 'sticky-note') {
+    emit('thread-open-requested', {
+      annotationId: payload.annotation.id,
+      source: 'comment-marker',
+    })
+    // Built-in panel auto-open stays gated behind the feature flag.
+    if (resolvedFeatures.value.commentThreads) {
+      focusedAnnotationId.value = payload.annotation.id
+      if (!isCommentsOpen.value) {
+        isCommentsOpen.value = true
+        emit('panel-toggle', { panel: 'comments', open: true })
+      }
     }
   }
 }
@@ -546,13 +567,30 @@ function handleHighlightReplyAdded(payload: { annotationId: string; content: str
  * but is triggered explicitly by the user rather than by selection.
  */
 function handleHighlightThreadOpened(payload: { annotationId: string }) {
+  // External panels need this signal regardless of whether the built-in
+  // panel is enabled — emit first, then handle the internal-panel side.
+  emit('thread-open-requested', {
+    annotationId: payload.annotationId,
+    source: 'highlight-tooltip',
+  })
   if (!resolvedFeatures.value.commentThreads) return
+  // Snapshot the annotation before deselectAll fires the renderer's null
+  // selection signal — we'll re-assert it on the next tick so the panel row
+  // keeps its active styling (border + ring + bg) even though the page
+  // selection is cleared to close the floating tooltip.
+  const target =
+    annotations.value.find((a) => a.id === payload.annotationId) ?? selectedAnnotation.value
   focusedAnnotationId.value = payload.annotationId
   if (!isCommentsOpen.value) {
     isCommentsOpen.value = true
     emit('panel-toggle', { panel: 'comments', open: true })
   }
   pdfRendererRef.value?.deselectAll()
+  if (target) {
+    void nextTick().then(() => {
+      selectedAnnotation.value = target
+    })
+  }
 }
 /** Renderer captured a click while the comment tool is active. */
 function handleCommentPositionPicked(payload: {
@@ -972,7 +1010,7 @@ defineExpose<MeldViewerInstance>({
         v-if="resolvedFeatures.commentThreads"
         title="Annotations"
         position="right"
-        width="320px"
+        width="380px"
         :is-open="isCommentsOpen"
         @close="isCommentsOpen = false"
       >

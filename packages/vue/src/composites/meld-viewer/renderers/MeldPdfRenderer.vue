@@ -605,9 +605,7 @@ defineExpose({
                                             )
                                         "
                                         @view-thread="
-                                          handleHighlightThreadOpened(
-                                            context.annotation.object.id,
-                                          )
+                                          handleHighlightThreadOpened(context.annotation.object.id)
                                         "
                                         @delete="
                                           handleHighlightDelete(

@@ -109,7 +109,7 @@ const groupedByPage = computed(() => {
         >
           Page {{ pageIndex + 1 }}
         </h3>
-        <ul class="flex flex-col gap-2 px-2 py-2">
+        <ul class="flex flex-col divide-y divide-border">
           <li v-for="item in pageItems" :key="item.annotation.id">
             <AnnotationRow
               :annotation="item.annotation"

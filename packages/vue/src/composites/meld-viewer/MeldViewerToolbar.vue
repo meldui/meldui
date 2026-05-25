@@ -416,7 +416,14 @@ function toggleInteraction() {
           </TooltipTrigger>
           <TooltipContent>Highlight</TooltipContent>
         </Tooltip>
-        <Tooltip v-if="features.commentThreads">
+        <!--
+          Comment-creation tool. Mirrors the Highlight tool's gating — only
+          the parent group's `features.annotations` flag controls
+          visibility. `commentThreads` is reserved for the built-in side
+          panel, so consumers hosting their own annotations panel still
+          get this tool whenever annotations are enabled.
+        -->
+        <Tooltip>
           <TooltipTrigger as-child>
             <Button
               variant="ghost"

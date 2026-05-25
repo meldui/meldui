@@ -241,6 +241,34 @@ onBeforeUnmount(() => unsubscribeActiveResultChange?.())
 // `onAnnotationEvent` fires on every create / update / delete with a
 // `committed` boolean. We only emit upward for committed changes so the
 // consumer's persistence layer doesn't see in-flight drag/resize states.
+//
+// For HIGHLIGHT creates, EmbedPDF doesn't populate the annotation's
+// `contents` with the highlighted text — but the selection plugin does
+// extract it whenever something asks for it (the annotation plugin calls
+// `getSelectedText()` internally while building the highlight, which fires
+// the `onTextRetrieved` event). We subscribe to that event and snapshot
+// the most recent payload into `lastSelectedText`, then use it as the
+// fallback when a highlight `create` event arrives without contents.
+// `onTextRetrieved` is synchronous, so the cache is populated before the
+// `create` event fires in the same call stack.
+
+let lastSelectedText = ''
+let unsubscribeTextRetrieved: (() => void) | undefined
+
+watch(
+  () => selectionCap.provides.value,
+  (cap) => {
+    unsubscribeTextRetrieved?.()
+    if (!cap) return
+    unsubscribeTextRetrieved = cap.onTextRetrieved((event) => {
+      const pages = event?.text
+      lastSelectedText = Array.isArray(pages)
+        ? pages.map((p) => (p ?? '').trim()).filter(Boolean).join(' ').trim()
+        : ''
+    })
+  },
+  { immediate: true },
+)
 
 let unsubscribeAnnotationEvent: (() => void) | undefined
 
@@ -256,7 +284,16 @@ watch(
       if (!event.committed) return
       if (event.type === 'create') {
         const meld = pdfToMeld(event.annotation)
-        if (meld) emit('annotation-created', { annotation: meld })
+        if (meld) {
+          // Manually-created highlights arrive without `selectedText`
+          // (EmbedPDF doesn't pass the selection text through). Fall back
+          // to the snapshot we captured on the last `onEndSelection`.
+          if (meld.type === 'highlight' && !meld.selectedText && lastSelectedText) {
+            meld.selectedText = lastSelectedText
+            lastSelectedText = ''
+          }
+          emit('annotation-created', { annotation: meld })
+        }
       } else if (event.type === 'update') {
         const meld = pdfToMeld(event.annotation)
         if (meld) {
@@ -332,7 +369,10 @@ function emitSlotDeselection(uid: string) {
   emit('annotation-selected', { annotation: null })
 }
 
-onBeforeUnmount(() => unsubscribeAnnotationEvent?.())
+onBeforeUnmount(() => {
+  unsubscribeAnnotationEvent?.()
+  unsubscribeTextRetrieved?.()
+})
 
 // Click-outside-to-deselect for annotations.
 //
@@ -625,8 +665,12 @@ function getAnnotations(filter?: AnnotationFilter): MeldAnnotation[] {
 function importAnnotations(items: MeldAnnotationTransferItem[]): void {
   const scope = annotation.provides.value
   if (!scope) return
+  // Strip Vue reactive proxies before mapping — see the comment on
+  // `loadAnnotations` for why this matters. `meldToPdf` does shallow
+  // copies, so without cloning here a proxied annotation would still
+  // hand proxied inner objects to `scope.importAnnotations`.
   const mapped: AnnotationTransferItem[] = items.map((item) => ({
-    annotation: meldToPdf(item.annotation),
+    annotation: meldToPdf(JSON.parse(JSON.stringify(item.annotation)) as MeldAnnotation),
     ctx: item.ctx,
   })) as AnnotationTransferItem[]
   scope.importAnnotations(mapped)
@@ -670,11 +714,22 @@ async function exportAnnotations(filter?: AnnotationFilter): Promise<MeldAnnotat
 const pendingLoad: { ref: MeldAnnotation[] | null } = { ref: null }
 
 function loadAnnotations(annotations: MeldAnnotation[]): void {
+  // JSON round-trip to strip any Vue reactive proxies the consumer might
+  // have wrapped the annotations in (e.g., `ref(SEEDED_ANNOTATIONS)` in a
+  // story). `annotationMapping.meldToPdf` is shallow, so without this
+  // clone the proxy-wrapped inner properties (rect, segmentRects,
+  // metadata) leak into `scope.importAnnotations` — EmbedPDF's plugin
+  // then silently suppresses the per-annotation `create` events
+  // (annotations still render on the page, but consumers never see them
+  // surfaced as events). Annotation data is plain JSON, so the
+  // round-trip is safe; `structuredClone` would fail because Proxy
+  // objects aren't cloneable.
+  const plain = JSON.parse(JSON.stringify(annotations)) as MeldAnnotation[]
   if (!annotation.provides.value) {
-    pendingLoad.ref = annotations
+    pendingLoad.ref = plain
     return
   }
-  importAnnotations(annotations.map((a) => ({ annotation: a })))
+  importAnnotations(plain.map((a) => ({ annotation: a })))
 }
 
 watch(
