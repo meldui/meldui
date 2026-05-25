@@ -20,6 +20,7 @@ import { computed, defineAsyncComponent, nextTick, onMounted, provide, ref, watc
 import { MELD_THREADS_INJECT_KEY } from './injectionKeys'
 import { resolveFeatures } from './plugins/pluginRegistry'
 import { detectDocumentType } from './utils/documentType'
+import { pageClickToPdfCoord } from './utils/pageCoords'
 import type { MeldCommandCallbacks } from './composables/useMeldCommands'
 import { useMeldTouch } from './composables/useMeldTouch'
 import { useAnnotationThreads } from './composables/useAnnotationThreads'
@@ -606,15 +607,34 @@ function handleCommentPositionPicked(payload: {
 async function handleCommentFormSubmit(content: string) {
   const pos = pendingCommentPosition.value
   if (!pos) return
-  // EmbedPDF expects `rect` in PDF coords; we passed screen pixels because
-  // the page wrapper at scale=1 maps 1:1 to PDF points. For other zoom
-  // levels we'd convert by the current scale here — TODO when we
-  // generalise to non-100% creation.
   if (isPdf.value && pdfRendererRef.value) {
+    // The click coord arrives in CSS pixels in the *rotated* page wrapper's
+    // local frame. EmbedPDF's annotation rect is in PDF points on the
+    // *unrotated* page (document space — same coord system the seeded
+    // highlight rects use, which is why they survive zoom + rotation
+    // correctly). Run the click through the helper to undo both the
+    // zoom and the rotation before storing it.
+    const click = pageClickToPdfCoord(
+      { x: pos.x, y: pos.y },
+      { width: pos.pageWidth, height: pos.pageHeight },
+      currentScale.value,
+      currentRotation.value as 0 | 90 | 180 | 270,
+    )
+    // Anchor the click at the pin's *center*. EmbedPDF rotates the rect
+    // around the page origin, so the box top-left lands on a different
+    // visible corner at each rotation. The center, however, is rotation-
+    // invariant — set rect.origin to click - size/2 and the pin appears
+    // centered on the click no matter the rotation. Size matches the
+    // 24×24 visual marker in MeldCommentMarker.vue.
+    const size = { width: 24, height: 24 }
+    const origin = {
+      x: click.x - size.width / 2,
+      y: click.y - size.height / 2,
+    }
     await pdfRendererRef.value.createAnnotation({
       type: 'comment',
       pageIndex: pos.pageIndex,
-      rect: { origin: { x: pos.x, y: pos.y }, size: { width: 24, height: 24 } },
+      rect: { origin, size },
       contents: content,
       author: props.currentUser?.name,
     })
