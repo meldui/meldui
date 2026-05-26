@@ -21,7 +21,7 @@
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:publish": "pnpm build && changeset publish",
-    "release": "pnpm check:fix && pnpm build && changeset publish"
+    "release": "pnpm check && pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",

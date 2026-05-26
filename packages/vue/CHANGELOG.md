@@ -1,5 +1,11 @@
 # @meldui/vue
 
+## 0.3.0
+
+### Minor Changes
+
+- 00b972c: added document-viewer
+
 ## 0.2.0
 
 ### Minor Changes

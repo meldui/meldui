@@ -4621,31 +4621,31 @@ It is built as a single composite with a `features` prop. Every capability is op
 
 ## What's in the box
 
-| Capability | Plugin / Feature | Phase |
-| --- | --- | --- |
-| Continuous-scroll PDF rendering with virtualization | Viewport + Scroll + Render + Tiling (always on) | 1 |
-| Zoom, rotate, two-page spread, hand tool, fullscreen | Toggle via `features` | 1 |
-| Full-text search with case/whole-word | `features.search` | 1 |
-| Outline & thumbnail side panels | `features.outline`, `features.thumbnails` | 1 |
-| Print + Download + `saveAsCopy()` | `features.print`, `features.download` | 1 |
-| Highlights, sticky-note comments | `features.annotations` | 1 |
-| Threaded comments overlay (replies + resolved) | `features.commentThreads` | 1 |
-| Undo / Redo | `features.undoRedo` | 1 |
-| Keyboard shortcuts, touch gestures | `features.keyboardShortcuts`, `features.touchGestures` | 1 |
-| Image / text / markdown rendering | Auto-detected from `source` / `mimeType` | 1 |
-| Stamps, signatures, redaction, forms, attachments | `features.stamps` / `signature` / `redaction` / `forms` / `attachments` | 2 |
+| Capability                                           | Plugin / Feature                                                        | Phase |
+| ---------------------------------------------------- | ----------------------------------------------------------------------- | ----- |
+| Continuous-scroll PDF rendering with virtualization  | Viewport + Scroll + Render + Tiling (always on)                         | 1     |
+| Zoom, rotate, two-page spread, hand tool, fullscreen | Toggle via `features`                                                   | 1     |
+| Full-text search with case/whole-word                | `features.search`                                                       | 1     |
+| Outline & thumbnail side panels                      | `features.outline`, `features.thumbnails`                               | 1     |
+| Print + Download + `saveAsCopy()`                    | `features.print`, `features.download`                                   | 1     |
+| Highlights, sticky-note comments                     | `features.annotations`                                                  | 1     |
+| Threaded comments overlay (replies + resolved)       | `features.commentThreads`                                               | 1     |
+| Undo / Redo                                          | `features.undoRedo`                                                     | 1     |
+| Keyboard shortcuts, touch gestures                   | `features.keyboardShortcuts`, `features.touchGestures`                  | 1     |
+| Image / text / markdown rendering                    | Auto-detected from `source` / `mimeType`                                | 1     |
+| Stamps, signatures, redaction, forms, attachments    | `features.stamps` / `signature` / `redaction` / `forms` / `attachments` | 2     |
 
 ## Comparison with other Vue PDF libraries
 
-| | DocumentViewer | `@tato30/vue-pdf` | `vue-pdf-embed` | PDFTron Web Viewer |
-| --- | --- | --- | --- | --- |
-| Engine | PDFium (WASM) | pdf.js (canvas) | pdf.js (canvas) | PDFNet (WASM) |
-| Multi-format (image / text / md) | ✅ | ❌ | ❌ | ❌ |
-| Native annotations | ✅ | ❌ | ❌ | ✅ |
-| Threaded comments overlay | ✅ | ❌ | ❌ | ❌ |
-| Programmatic API | ✅ | partial | ❌ | ✅ |
-| Tree-shaken plugins | ✅ | n/a | n/a | ❌ |
-| License | Internal (MeldUI) | MIT | MIT | Commercial |
+|                                  | DocumentViewer    | `@tato30/vue-pdf` | `vue-pdf-embed` | PDFTron Web Viewer |
+| -------------------------------- | ----------------- | ----------------- | --------------- | ------------------ |
+| Engine                           | PDFium (WASM)     | pdf.js (canvas)   | pdf.js (canvas) | PDFNet (WASM)      |
+| Multi-format (image / text / md) | ✅                | ❌                | ❌              | ❌                 |
+| Native annotations               | ✅                | ❌                | ❌              | ✅                 |
+| Threaded comments overlay        | ✅                | ❌                | ❌              | ❌                 |
+| Programmatic API                 | ✅                | partial           | ❌              | ✅                 |
+| Tree-shaken plugins              | ✅                | n/a               | n/a             | ❌                 |
+| License                          | Internal (MeldUI) | MIT               | MIT             | Commercial         |
 
 ## Next steps
 
@@ -4681,14 +4681,14 @@ Every annotation extends `AnnotationBase`:
 
 ```ts
 interface AnnotationBase {
-  id: string                    // UUID v4
+  id: string // UUID v4
   type: AnnotationType
-  pageIndex: number             // 0-based
-  rect: PdfRect                 // bounding box in PDF points
+  pageIndex: number // 0-based
+  rect: PdfRect // bounding box in PDF points
   author?: string
-  createdAt?: string            // ISO-8601
+  createdAt?: string // ISO-8601
   modifiedAt?: string
-  metadata?: Record<string, unknown>  // free-form (e.g. is_ephemeral, citation_id)
+  metadata?: Record<string, unknown> // free-form (e.g. is_ephemeral, citation_id)
 }
 ```
 
@@ -4696,13 +4696,13 @@ The `Annotation` union discriminates on `type`:
 
 ```ts
 type Annotation =
-  | HighlightAnnotation       // type: 'highlight'
-  | CommentAnnotation         // type: 'comment'
-  | FreeTextAnnotation        // type: 'free-text'
-  | InkAnnotation             // type: 'ink'
-  | StampAnnotation           // type: 'stamp'
-  | SignatureAnnotation       // type: 'signature'
-  | RedactionAnnotation       // type: 'redaction'
+  | HighlightAnnotation // type: 'highlight'
+  | CommentAnnotation // type: 'comment'
+  | FreeTextAnnotation // type: 'free-text'
+  | InkAnnotation // type: 'ink'
+  | StampAnnotation // type: 'stamp'
+  | SignatureAnnotation // type: 'signature'
+  | RedactionAnnotation // type: 'redaction'
 ```
 
 ### `HighlightAnnotation`
@@ -4710,10 +4710,10 @@ type Annotation =
 ```ts
 interface HighlightAnnotation extends AnnotationBase {
   type: 'highlight'
-  segmentRects: PdfRect[]     // one rect per highlighted text segment
-  color: string               // hex, e.g. '#FFCD45'
-  opacity: number             // 0–1; default 0.4
-  selectedText?: string       // text covered, captured at creation
+  segmentRects: PdfRect[] // one rect per highlighted text segment
+  color: string // hex, e.g. '#FFCD45'
+  opacity: number // 0–1; default 0.4
+  selectedText?: string // text covered, captured at creation
 }
 ```
 
@@ -4725,11 +4725,11 @@ interface HighlightAnnotation extends AnnotationBase {
 interface CommentAnnotation extends AnnotationBase {
   type: 'comment'
   contents: string
-  color?: string              // marker tint
+  color?: string // marker tint
 }
 ```
 
-The on-page pin (`CommentMarker`) lives at `rect.x, rect.y`. Reply data is **not** stored on the annotation — it lives in the separate threads overlay (see below).
+The on-page pin (`CommentMarker`) lives at `rect.origin`. Reply data is **not** stored on the annotation — it lives in the separate threads overlay (see below).
 
 ### `FreeTextAnnotation`
 
@@ -4750,7 +4750,7 @@ interface FreeTextAnnotation extends AnnotationBase {
 ```ts
 interface InkAnnotation extends AnnotationBase {
   type: 'ink'
-  inkList: { points: { x: number; y: number }[] }[]   // one entry per stroke
+  inkList: { points: { x: number; y: number }[] }[] // one entry per stroke
   strokeWidth: number
   color: string
   opacity: number
@@ -4768,12 +4768,12 @@ interface StampAnnotation extends AnnotationBase {
 
 interface SignatureAnnotation extends AnnotationBase {
   type: 'signature'
-  imageDataUrl?: string       // base64 PNG/SVG
+  imageDataUrl?: string // base64 PNG/SVG
 }
 
 interface RedactionAnnotation extends AnnotationBase {
   type: 'redaction'
-  pending: boolean            // true = visible in panel, false = burned in
+  pending: boolean // true = visible in panel, false = burned in
   fillColor?: string
 }
 ```
@@ -4808,8 +4808,8 @@ Via the `DocumentViewerInstance`:
 await viewer.value?.createAnnotation({
   type: 'highlight',
   pageIndex: 0,
-  rect: { x: 100, y: 200, width: 300, height: 20 },
-  segmentRects: [{ x: 100, y: 200, width: 300, height: 20 }],
+  rect: { origin: { x: 100, y: 200 }, size: { width: 300, height: 20 } },
+  segmentRects: [{ origin: { x: 100, y: 200 }, size: { width: 300, height: 20 } }],
   color: '#FFCD45',
   opacity: 0.4,
   selectedText: 'Important sentence.',
@@ -4828,7 +4828,7 @@ For document review workflows, load saved annotations from your backend before t
 const viewer = ref<DocumentViewerInstance | null>(null)
 
 onMounted(async () => {
-  const saved: Annotation[] = await fetch('/api/annotations?docId=42').then(r => r.json())
+  const saved: Annotation[] = await fetch('/api/annotations?docId=42').then((r) => r.json())
   await viewer.value?.loadAnnotations(saved)
 })
 </script>
@@ -4924,9 +4924,7 @@ await viewer.value?.deleteReply(annotationId, reply.id)
 All three emit `thread-update` with `{ thread, action }` so you can persist:
 
 ```vue
-<DocumentViewer
-  @thread-update="({ thread, action }) => persistThread(thread, action)"
-/>
+<DocumentViewer @thread-update="({ thread, action }) => persistThread(thread, action)" />
 ```
 
 ### Author identity
@@ -5001,29 +4999,29 @@ The minimum required set is always registered (zero opt-in needed):
 
 Each `features` flag adds exactly one plugin (with a few exceptions noted below):
 
-| Feature flag | Plugin package(s) added |
-| --- | --- |
-| `zoom` | `@embedpdf/plugin-zoom` |
-| `rotate` | `@embedpdf/plugin-rotate` |
-| `spread` | `@embedpdf/plugin-spread` |
-| `pan` | `@embedpdf/plugin-pan` (auto-adds `interaction-manager` if not already on) |
-| `fullscreen` | `@embedpdf/plugin-fullscreen` |
-| `selection` | `@embedpdf/plugin-selection` (auto-adds `interaction-manager`) |
-| `search` | `@embedpdf/plugin-search` |
-| `outline` | `@embedpdf/plugin-bookmark` |
-| `thumbnails` | `@embedpdf/plugin-thumbnail` |
-| `print` | `@embedpdf/plugin-print` |
-| `download` | `@embedpdf/plugin-export` |
-| `annotations` | `@embedpdf/plugin-annotation` (auto-adds `interaction-manager`, `selection`, `history`) |
-| `commentThreads` | — (no plugin; pure overlay, requires `annotations`) |
-| `undoRedo` | `@embedpdf/plugin-history` (auto-enabled by `annotations`) |
-| `keyboardShortcuts` | `@embedpdf/plugin-hotkeys` |
-| `touchGestures` | — (pure DOM listeners, no plugin) |
-| `stamps` (Phase 2) | `@embedpdf/plugin-stamp` |
-| `signature` (Phase 2) | `@embedpdf/plugin-signature` |
-| `redaction` (Phase 2) | `@embedpdf/plugin-redaction` |
-| `forms` (Phase 2) | `@embedpdf/plugin-form` |
-| `attachments` (Phase 2) | `@embedpdf/plugin-attachment` |
+| Feature flag            | Plugin package(s) added                                                                 |
+| ----------------------- | --------------------------------------------------------------------------------------- |
+| `zoom`                  | `@embedpdf/plugin-zoom`                                                                 |
+| `rotate`                | `@embedpdf/plugin-rotate`                                                               |
+| `spread`                | `@embedpdf/plugin-spread`                                                               |
+| `pan`                   | `@embedpdf/plugin-pan` (auto-adds `interaction-manager` if not already on)              |
+| `fullscreen`            | `@embedpdf/plugin-fullscreen`                                                           |
+| `selection`             | `@embedpdf/plugin-selection` (auto-adds `interaction-manager`)                          |
+| `search`                | `@embedpdf/plugin-search`                                                               |
+| `outline`               | `@embedpdf/plugin-bookmark`                                                             |
+| `thumbnails`            | `@embedpdf/plugin-thumbnail`                                                            |
+| `print`                 | `@embedpdf/plugin-print`                                                                |
+| `download`              | `@embedpdf/plugin-export`                                                               |
+| `annotations`           | `@embedpdf/plugin-annotation` (auto-adds `interaction-manager`, `selection`, `history`) |
+| `commentThreads`        | — (no plugin; pure overlay, requires `annotations`)                                     |
+| `undoRedo`              | `@embedpdf/plugin-history` (auto-enabled by `annotations`)                              |
+| `keyboardShortcuts`     | `@embedpdf/plugin-hotkeys`                                                              |
+| `touchGestures`         | — (pure DOM listeners, no plugin)                                                       |
+| `stamps` (Phase 2)      | `@embedpdf/plugin-stamp`                                                                |
+| `signature` (Phase 2)   | `@embedpdf/plugin-signature`                                                            |
+| `redaction` (Phase 2)   | `@embedpdf/plugin-redaction`                                                            |
+| `forms` (Phase 2)       | `@embedpdf/plugin-form`                                                                 |
+| `attachments` (Phase 2) | `@embedpdf/plugin-attachment`                                                           |
 
 Install only the plugins you actually flag on — see [Getting Started → Install](/docs/document-viewer/getting-started#install).
 
@@ -5031,15 +5029,16 @@ Install only the plugins you actually flag on — see [Getting Started → Insta
 
 Approximate **gzipped** JS contributions (excluding the WASM binary, which loads separately):
 
-| Feature profile | Approx. gzipped JS |
-| --- | --- |
-| Minimum (read-only PDF, no opt-ins) | ~110 KB |
-| Read-only + zoom + search + download | ~140 KB |
-| Review (above + outline + thumbnails + annotations + commentThreads + undoRedo) | ~200 KB |
-| Kitchen-sink (all Phase 1 flags on) | ~240 KB |
-| Kitchen-sink + all Phase 2 flags | ~310 KB |
+| Feature profile                                                                 | Approx. gzipped JS |
+| ------------------------------------------------------------------------------- | ------------------ |
+| Minimum (read-only PDF, no opt-ins)                                             | ~110 KB            |
+| Read-only + zoom + search + download                                            | ~140 KB            |
+| Review (above + outline + thumbnails + annotations + commentThreads + undoRedo) | ~200 KB            |
+| Kitchen-sink (all Phase 1 flags on)                                             | ~240 KB            |
+| Kitchen-sink + all Phase 2 flags                                                | ~310 KB            |
 
 The big constants beyond the headless plugins:
+
 - `@embedpdf/engines` ~25 KB
 - `@embedpdf/core` ~30 KB
 - `@embedpdf/models` ~10 KB
@@ -5075,7 +5074,7 @@ PDFium runs inside a Web Worker by default (`worker={true}`), keeping the main t
 If your app hits the worker engine's **relative-`wasmUrl` resolution issue** (the worker is built from a blob URL whose base differs from the page's), opt back to main-thread mode:
 
 ```vue
-<DocumentViewer worker={false} wasm-url="https://your-cdn.com/pdfium.wasm" ... />
+<DocumentViewer worker="{false}" wasm-url="https://your-cdn.com/pdfium.wasm" ... />
 ```
 
 Fully-qualified URLs (`https://...`) and absolute paths (`/pdfium.wasm`) work with either mode.
@@ -5138,12 +5137,7 @@ const toolbar: ToolbarConfig = {
 ```
 
 ```vue
-<DocumentViewer
-  source="/doc.pdf"
-  wasm-url="/pdfium.wasm"
-  :toolbar="toolbar"
-  ...
-/>
+<DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :toolbar="toolbar" ... />
 ```
 
 
@@ -5153,7 +5147,7 @@ const toolbar: ToolbarConfig = {
 Reorders or restricts the toolbar groups. Default order is:
 
 ```ts
-['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+;['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
 ```
 
 Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order.
@@ -5196,11 +5190,7 @@ const sidePanelOpen = ref(false)
 <template>
   <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm">
     <template #side-panel>
-      <ViewerSidePanel
-        v-if="sidePanelOpen"
-        title="Custom Outline"
-        @close="sidePanelOpen = false"
-      >
+      <ViewerSidePanel v-if="sidePanelOpen" title="Custom Outline" @close="sidePanelOpen = false">
         <MyCustomOutline />
       </ViewerSidePanel>
     </template>
@@ -5212,12 +5202,12 @@ const sidePanelOpen = ref(false)
 
 ## Slot reference
 
-| Slot | Purpose |
-| --- | --- |
-| `default` (no slot) | None — the renderers fill the viewport |
-| `toolbar-extra` | Append elements to the right side of the toolbar (before the overflow menu) |
-| `side-panel` | Replace the side-panel host. Bypasses the built-in `outline` / `thumbnails` / `annotations` panels |
-| `empty` | Override the empty state shown while the source is loading or null |
+| Slot                | Purpose                                                                                            |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `default` (no slot) | None — the renderers fill the viewport                                                             |
+| `toolbar-extra`     | Append elements to the right side of the toolbar (before the overflow menu)                        |
+| `side-panel`        | Replace the side-panel host. Bypasses the built-in `outline` / `thumbnails` / `annotations` panels |
+| `empty`             | Override the empty state shown while the source is loading or null                                 |
 
 ## Replacing format renderers
 
@@ -5237,28 +5227,24 @@ You can also import the underlying composables and build a fully custom layout:
 
 The viewer's root element carries the `document-viewer` class and `data-document-viewer` attribute. Internal parts use prefixed classes (no `document-` prefix — see [Theming](/docs/document-viewer/theming)):
 
-| Class | Element |
-| --- | --- |
-| `document-viewer` | Root container |
-| `viewer-toolbar` | Sticky top toolbar |
-| `search-popover` | Search popover content |
-| `highlight-tooltip` | Floating tooltip on selected highlight |
-| `comment-form` | Inline comment composer |
-| `pdf-viewer` | PDF renderer wrapper |
-| `pdf-page` | Each page inside the PDF renderer |
-| `image-viewer` / `text-viewer` / `markdown-viewer` | Non-PDF renderer wrappers |
-| `annotations-panel` / `outline-panel` / `thumbnails-panel` | Side panel wrappers |
-| `annotation-row` | A row inside the annotations panel |
-| `comment-marker` | On-page sticky-note pin |
+| Class                                                      | Element                                |
+| ---------------------------------------------------------- | -------------------------------------- |
+| `document-viewer`                                          | Root container                         |
+| `viewer-toolbar`                                           | Sticky top toolbar                     |
+| `search-popover`                                           | Search popover content                 |
+| `highlight-tooltip`                                        | Floating tooltip on selected highlight |
+| `comment-form`                                             | Inline comment composer                |
+| `pdf-viewer`                                               | PDF renderer wrapper                   |
+| `pdf-page`                                                 | Each page inside the PDF renderer      |
+| `image-viewer` / `text-viewer` / `markdown-viewer`         | Non-PDF renderer wrappers              |
+| `annotations-panel` / `outline-panel` / `thumbnails-panel` | Side panel wrappers                    |
+| `annotation-row`                                           | A row inside the annotations panel     |
+| `comment-marker`                                           | On-page sticky-note pin                |
 
 Override these in your global CSS or via Tailwind utilities. The `class` prop on `<DocumentViewer>` is merged onto the root with `cn()` so per-instance overrides work cleanly.
 
 ```vue
-<DocumentViewer
-  class="rounded-xl border shadow-lg"
-  source="/doc.pdf"
-  wasm-url="/pdfium.wasm"
-/>
+<DocumentViewer class="rounded-xl border shadow-lg" source="/doc.pdf" wasm-url="/pdfium.wasm" />
 ```
 
 ## Permissions
@@ -5315,59 +5301,59 @@ The `features` prop is a flat object of opt-in flags. Disabled flags **do not re
 
 ### Navigation / view controls
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `zoom` | `false` | Zoom in / out buttons, fit presets (page / width / actual), pinch-to-zoom on touch |
-| `rotate` | `false` | Rotate CW / CCW per 90° |
-| `spread` | `false` | Two-page spread view mode toggle |
-| `pan` | `false` | Hand-tool (drag-to-pan) interaction mode |
-| `fullscreen` | `false` | Fullscreen toggle (`F11` if `keyboardShortcuts` is on) |
+| Flag         | Default | What it enables                                                                    |
+| ------------ | ------- | ---------------------------------------------------------------------------------- |
+| `zoom`       | `false` | Zoom in / out buttons, fit presets (page / width / actual), pinch-to-zoom on touch |
+| `rotate`     | `false` | Rotate CW / CCW per 90°                                                            |
+| `spread`     | `false` | Two-page spread view mode toggle                                                   |
+| `pan`        | `false` | Hand-tool (drag-to-pan) interaction mode                                           |
+| `fullscreen` | `false` | Fullscreen toggle (`F11` if `keyboardShortcuts` is on)                             |
 
 ### Search / selection
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `search` | `false` | Search popover with case / whole-word toggles, prev / next, match counter |
-| `selection` | `false` | Text selection on the page + copy-to-clipboard |
+| Flag        | Default | What it enables                                                           |
+| ----------- | ------- | ------------------------------------------------------------------------- |
+| `search`    | `false` | Search popover with case / whole-word toggles, prev / next, match counter |
+| `selection` | `false` | Text selection on the page + copy-to-clipboard                            |
 
 ### Side panels
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `outline` | `false` | Document outline / bookmark tree side panel |
-| `thumbnails` | `false` | Thumbnail grid side panel |
+| Flag         | Default | What it enables                             |
+| ------------ | ------- | ------------------------------------------- |
+| `outline`    | `false` | Document outline / bookmark tree side panel |
+| `thumbnails` | `false` | Thumbnail grid side panel                   |
 
 ### Export
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `print` | `false` | Print toolbar button (uses native browser print dialog) |
+| Flag       | Default | What it enables                                                             |
+| ---------- | ------- | --------------------------------------------------------------------------- |
+| `print`    | `false` | Print toolbar button (uses native browser print dialog)                     |
 | `download` | `false` | Download button. Combine with `downloadUrl` prop to serve a re-encoded copy |
 
 ### Annotations (Phase 1)
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `annotations` | `false` | Highlight tool + sticky-note comment tool, plus full annotation CRUD via the programmatic API |
-| `commentThreads` | `false` | Threaded comments overlay (replies + resolved state). Requires `annotations` |
-| `undoRedo` | `false` | Undo / redo toolbar buttons + `Ctrl+Z` / `Ctrl+Shift+Z` |
+| Flag             | Default | What it enables                                                                               |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------- |
+| `annotations`    | `false` | Highlight tool + sticky-note comment tool, plus full annotation CRUD via the programmatic API |
+| `commentThreads` | `false` | Threaded comments overlay (replies + resolved state). Requires `annotations`                  |
+| `undoRedo`       | `false` | Undo / redo toolbar buttons + `Ctrl+Z` / `Ctrl+Shift+Z`                                       |
 
 ### Editing (Phase 2 — opt-in)
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
-| `stamps` | `false` | Stamp tool + stamp library picker |
-| `signature` | `false` | Signature pad dialog + place-signature flow |
-| `redaction` | `false` | Text-redact + area-redact tools + `saveAsCopy` burn-in |
-| `forms` | `false` | Interactive PDF form-field rendering and `setFieldValue` API |
-| `attachments` | `false` | Attachments side panel + downloadAttachment API |
+| Flag          | Default | What it enables                                              |
+| ------------- | ------- | ------------------------------------------------------------ |
+| `stamps`      | `false` | Stamp tool + stamp library picker                            |
+| `signature`   | `false` | Signature pad dialog + place-signature flow                  |
+| `redaction`   | `false` | Text-redact + area-redact tools + `saveAsCopy` burn-in       |
+| `forms`       | `false` | Interactive PDF form-field rendering and `setFieldValue` API |
+| `attachments` | `false` | Attachments side panel + downloadAttachment API              |
 
 ### Interaction
 
-| Flag | Default | What it enables |
-| --- | --- | --- |
+| Flag                | Default | What it enables                                                                                                                                                                     |
+| ------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `keyboardShortcuts` | `false` | Arrow keys (page nav), `+` / `-` (zoom), `R` (rotate), `Ctrl+F` (search), `F11` (fullscreen), `Esc` (close popovers), `C` / `O` / `T` (toggle comment / outline / thumbnails panel) |
-| `touchGestures` | `false` | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`) |
+| `touchGestures`     | `false` | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`)                                                                                                         |
 
 ## Per-feature configuration: `featureConfig`
 
@@ -5382,7 +5368,7 @@ const featureConfig: FeatureConfig = {
     author: 'alex@example.com',
     defaultTools: [
       { id: 'h-yellow', label: 'Yellow', color: '#FFCD45', opacity: 0.4 },
-      { id: 'h-cyan',   label: 'Cyan',   color: '#A0E7E5', opacity: 0.4 },
+      { id: 'h-cyan', label: 'Cyan', color: '#A0E7E5', opacity: 0.4 },
     ],
   },
 }
@@ -5390,39 +5376,39 @@ const featureConfig: FeatureConfig = {
 
 ### `zoom`
 
-| Option | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `min` | `number` | `0.25` | Minimum scale factor |
-| `max` | `number` | `8` | Maximum scale factor |
-| `step` | `number` | `0.1` | Increment for zoom-in / zoom-out buttons |
-| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual'` | `'fit-width'` | Initial zoom preset |
+| Option        | Type                                    | Default       | Notes                                    |
+| ------------- | --------------------------------------- | ------------- | ---------------------------------------- |
+| `min`         | `number`                                | `0.25`        | Minimum scale factor                     |
+| `max`         | `number`                                | `8`           | Maximum scale factor                     |
+| `step`        | `number`                                | `0.1`         | Increment for zoom-in / zoom-out buttons |
+| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual'` | `'fit-width'` | Initial zoom preset                      |
 
 ### `annotations`
 
-| Option | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `author` | `string` | `currentUser?.displayName` | Attached to created annotations |
-| `useAnnotationMode` | `boolean` | `false` | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately |
-| `defaultTools` | `AnnotationToolConfig[]` | 5 highlight presets (yellow / green / blue / pink / purple at α 0.4) | Override the floating highlight tooltip's colour palette. Each tool has `{ id, label, color, opacity }`. The 5 default colours match `HIGHLIGHT_COLORS` exported from `@meldui/vue` |
+| Option              | Type                     | Default                                                              | Notes                                                                                                                                                                               |
+| ------------------- | ------------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `author`            | `string`                 | `currentUser?.displayName`                                           | Attached to created annotations                                                                                                                                                     |
+| `useAnnotationMode` | `boolean`                | `false`                                                              | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately                                                                             |
+| `defaultTools`      | `AnnotationToolConfig[]` | 5 highlight presets (yellow / green / blue / pink / purple at α 0.4) | Override the floating highlight tooltip's colour palette. Each tool has `{ id, label, color, opacity }`. The 5 default colours match `HIGHLIGHT_COLORS` exported from `@meldui/vue` |
 
 ### `stamps` (Phase 2)
 
-| Option | Type | Notes |
-| --- | --- | --- |
-| `libraries` | `StampLibraryConfig[]` | Preload stamp libraries from URL or `ArrayBuffer` |
+| Option           | Type                                 | Notes                                                                 |
+| ---------------- | ------------------------------------ | --------------------------------------------------------------------- |
+| `libraries`      | `StampLibraryConfig[]`               | Preload stamp libraries from URL or `ArrayBuffer`                     |
 | `defaultLibrary` | `{ id, name, categories? } \| false` | Set the toolbar's default library; `false` to hide the library picker |
 
 ### `signature` (Phase 2)
 
-| Option | Type | Notes |
-| --- | --- | --- |
-| `mode` | `'signature-only' \| 'signature-and-initials'` | Whether the user is prompted for initials in addition to a full signature |
-| `defaultSize` | `{ width: number; height: number }` | Initial bounding box for placed signatures |
+| Option        | Type                                           | Notes                                                                     |
+| ------------- | ---------------------------------------------- | ------------------------------------------------------------------------- |
+| `mode`        | `'signature-only' \| 'signature-and-initials'` | Whether the user is prompted for initials in addition to a full signature |
+| `defaultSize` | `{ width: number; height: number }`            | Initial bounding box for placed signatures                                |
 
 ### `redaction` (Phase 2)
 
-| Option | Type | Notes |
-| --- | --- | --- |
+| Option              | Type      | Notes                                                                                                                               |
+| ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `useAnnotationMode` | `boolean` | If `true`, new redactions are pending (visible in panel) and applied via `applyAllRedactions()`; otherwise they burn in immediately |
 
 ## Highlight colour palette
@@ -5592,12 +5578,22 @@ Three common feature profiles:
   source="/doc.pdf"
   wasm-url="/pdfium.wasm"
   :features="{
-    zoom: true, rotate: true, spread: true, pan: true, fullscreen: true,
-    search: true, selection: true,
-    outline: true, thumbnails: true,
-    print: true, download: true,
-    annotations: true, commentThreads: true, undoRedo: true,
-    keyboardShortcuts: true, touchGestures: true,
+    zoom: true,
+    rotate: true,
+    spread: true,
+    pan: true,
+    fullscreen: true,
+    search: true,
+    selection: true,
+    outline: true,
+    thumbnails: true,
+    print: true,
+    download: true,
+    annotations: true,
+    commentThreads: true,
+    undoRedo: true,
+    keyboardShortcuts: true,
+    touchGestures: true,
   }"
 />
 ```
@@ -5626,16 +5622,16 @@ This page maps the API surface of common Vue PDF libraries to `DocumentViewer`'s
 
 ### Prop mapping
 
-| `@tato30/vue-pdf` | `DocumentViewer` |
-| --- | --- |
-| `pdf` | `source` (same `URL \| File \| ArrayBuffer`) |
-| `page` | `initial-page` (1-based, same) |
-| `scale` | `initial-scale` (`'fit-page' \| 'fit-width' \| 'actual' \| number`) |
-| `rotation` | Not a prop — use `features.rotate` + `initialScale`, or call `goToPage` after mount |
-| `text-layer` | Always on when `features.search` or `features.selection` is enabled |
-| `annotation-layer` | `features.annotations` |
-| `fit-parent` | Default (the viewer fills its container) |
-| `width`/`height` | Set on the parent element; viewer fills it |
+| `@tato30/vue-pdf`  | `DocumentViewer`                                                                    |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| `pdf`              | `source` (same `URL \| File \| ArrayBuffer`)                                        |
+| `page`             | `initial-page` (1-based, same)                                                      |
+| `scale`            | `initial-scale` (`'fit-page' \| 'fit-width' \| 'actual' \| number`)                 |
+| `rotation`         | Not a prop — use `features.rotate` + `initialScale`, or call `goToPage` after mount |
+| `text-layer`       | Always on when `features.search` or `features.selection` is enabled                 |
+| `annotation-layer` | `features.annotations`                                                              |
+| `fit-parent`       | Default (the viewer fills its container)                                            |
+| `width`/`height`   | Set on the parent element; viewer fills it                                          |
 
 ### Behaviour differences
 
@@ -5659,14 +5655,14 @@ This page maps the API surface of common Vue PDF libraries to `DocumentViewer`'s
 
 ### Prop mapping
 
-| `vue-pdf-embed` | `DocumentViewer` |
-| --- | --- |
-| `source` | `source` (same) |
-| `page` | `initial-page` |
-| `text-layer` | Always on with `features.search` / `features.selection` |
-| `annotation-layer` | `features.annotations` |
-| `rotation` | Use `features.rotate` |
-| `disable-stream` | n/a — DocumentViewer always streams |
+| `vue-pdf-embed`    | `DocumentViewer`                                        |
+| ------------------ | ------------------------------------------------------- |
+| `source`           | `source` (same)                                         |
+| `page`             | `initial-page`                                          |
+| `text-layer`       | Always on with `features.search` / `features.selection` |
+| `annotation-layer` | `features.annotations`                                  |
+| `rotation`         | Use `features.rotate`                                   |
+| `disable-stream`   | n/a — DocumentViewer always streams                     |
 
 ### Behaviour differences
 
@@ -5702,12 +5698,21 @@ The PDF.js viewer (`pdf.js/web/viewer.html`) corresponds **directly** to `Docume
   source="/doc.pdf"
   wasm-url="/pdfium.wasm"
   :features="{
-    zoom: true, rotate: true, spread: true, pan: true, fullscreen: true,
-    search: true, selection: true,
-    outline: true, thumbnails: true,
-    print: true, download: true,
-    annotations: true, undoRedo: true,
-    keyboardShortcuts: true, touchGestures: true,
+    zoom: true,
+    rotate: true,
+    spread: true,
+    pan: true,
+    fullscreen: true,
+    search: true,
+    selection: true,
+    outline: true,
+    thumbnails: true,
+    print: true,
+    download: true,
+    annotations: true,
+    undoRedo: true,
+    keyboardShortcuts: true,
+    touchGestures: true,
   }"
 />
 ```
@@ -5718,19 +5723,19 @@ PDFTron is the most direct comparison — both are commercial-grade PDF SDKs wit
 
 ### Property mapping
 
-| PDFTron `WebViewer` | `DocumentViewer` |
-| --- | --- |
-| `initialDoc` | `source` |
-| `licenseKey` | n/a (internal package, no license) |
-| `path` (location of viewer assets) | `wasm-url` (just the WASM file) |
-| `enableAnnotations` | `features.annotations` |
-| `disabledElements` | `toolbar.hide: [...]` |
-| `customElements` | `toolbar.customButtons` |
-| `documentXFDFRetriever` | `loadAnnotations` (call after `document-loaded`) |
-| `extractAnnotations()` | `exportAnnotations()` |
-| `printDocument()` | Trigger `print` button or call `window.print()` |
-| `downloadPdf()` | Trigger `download` button |
-| Annotation Manager events | `@annotation-created` / `@annotation-updated` / `@annotation-deleted` |
+| PDFTron `WebViewer`                | `DocumentViewer`                                                      |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| `initialDoc`                       | `source`                                                              |
+| `licenseKey`                       | n/a (internal package, no license)                                    |
+| `path` (location of viewer assets) | `wasm-url` (just the WASM file)                                       |
+| `enableAnnotations`                | `features.annotations`                                                |
+| `disabledElements`                 | `toolbar.hide: [...]`                                                 |
+| `customElements`                   | `toolbar.customButtons`                                               |
+| `documentXFDFRetriever`            | `loadAnnotations` (call after `document-loaded`)                      |
+| `extractAnnotations()`             | `exportAnnotations()`                                                 |
+| `printDocument()`                  | Trigger `print` button or call `window.print()`                       |
+| `downloadPdf()`                    | Trigger `download` button                                             |
+| Annotation Manager events          | `@annotation-created` / `@annotation-updated` / `@annotation-deleted` |
 
 ### Annotation format
 
@@ -5760,7 +5765,7 @@ For teams migrating from the internal doqo viewer:
 
 ## Common gotchas in any migration
 
-1. **PDF-points vs. screen-pixels** — both `@tato30/vue-pdf` and PDFTron expose mixed coordinate systems. `DocumentViewer`'s `rect` and `segmentRects` are always in PDF points (1/72 inch, bottom-left origin). If your prior code used screen pixels, you'll need to convert via the current scale + rotation.
+1. **PDF-points vs. screen-pixels** — both `@tato30/vue-pdf` and PDFTron expose mixed coordinate systems. `DocumentViewer`'s `rect` and `segmentRects` are in PDF points (1/72 inch) measured from the **top-left of the page** (DOM convention — not the PDF spec's bottom-left origin). If your prior code used screen pixels, you'll need to convert via the current scale + rotation. If your prior code used PDF-spec bottom-up coordinates, flip the y axis (`y_top_down = pageHeight - y_bottom_up - height`).
 2. **0-based vs. 1-based pages** — `pageIndex` is 0-based; `initialPage` / `goToPage` are 1-based. Consistent within `DocumentViewer` but the convention may differ from your prior code.
 3. **Persistence is yours** — PDFTron has built-in collaboration sync. `DocumentViewer` does not — you wire `@annotation-*` events to your backend yourself.
 
@@ -5912,8 +5917,8 @@ await viewer.value?.loadAnnotations([
     id: '0190f4...',
     type: 'highlight',
     pageIndex: 0,
-    rect: { x: 100, y: 200, width: 200, height: 20 },
-    segmentRects: [{ x: 100, y: 200, width: 200, height: 20 }],
+    rect: { origin: { x: 100, y: 200 }, size: { width: 200, height: 20 } },
+    segmentRects: [{ origin: { x: 100, y: 200 }, size: { width: 200, height: 20 } }],
     color: '#FFCD45',
     opacity: 0.4,
   },
@@ -5928,7 +5933,7 @@ Creates a new annotation. `id`, `createdAt`, `modifiedAt` are auto-assigned if o
 const created = await viewer.value?.createAnnotation({
   type: 'comment',
   pageIndex: 2,
-  rect: { x: 150, y: 300, width: 24, height: 24 },
+  rect: { origin: { x: 150, y: 300 }, size: { width: 24, height: 24 } },
   contents: 'Question about this paragraph',
 })
 ```
@@ -5983,6 +5988,7 @@ Returns whether there's a step to walk in that direction.
 ### `saveAsCopy(options?: SaveAsCopyOptions): Promise<ArrayBuffer>`
 
 Returns a fresh PDF buffer with the current annotations baked in. Useful for:
+
 - Generating a permanent record of a reviewed document
 - Burning in redactions for compliance
 - Downloading the annotated copy
@@ -6016,16 +6022,16 @@ Removes a reply. Emits `thread-update` with `action: 'reply-deleted'`.
 
 `DocumentViewer` emits these events. All fire only for **committed** state — in-flight drag / resize / typing states are debounced.
 
-| Event | Payload | When |
-| --- | --- | --- |
-| `document-loaded` | `DocumentInfo` | First load completes |
-| `document-error` | `{ error: string }` | Load fails (404, decode error, etc.) |
-| `page-change` | `{ page: number }` | Viewport-centered page changes |
-| `annotation-created` | `{ annotation: Annotation }` | New annotation committed (user-drawn or programmatic) |
-| `annotation-updated` | `{ annotation, patch }` | Existing annotation patched |
-| `annotation-deleted` | `{ annotationId: string }` | Annotation removed |
-| `annotation-selected` | `{ annotation: Annotation \| null }` | Selection changed |
-| `thread-update` | `{ thread, action }` | Reply added/deleted, or thread resolved/unresolved |
+| Event                 | Payload                              | When                                                  |
+| --------------------- | ------------------------------------ | ----------------------------------------------------- |
+| `document-loaded`     | `DocumentInfo`                       | First load completes                                  |
+| `document-error`      | `{ error: string }`                  | Load fails (404, decode error, etc.)                  |
+| `page-change`         | `{ page: number }`                   | Viewport-centered page changes                        |
+| `annotation-created`  | `{ annotation: Annotation }`         | New annotation committed (user-drawn or programmatic) |
+| `annotation-updated`  | `{ annotation, patch }`              | Existing annotation patched                           |
+| `annotation-deleted`  | `{ annotationId: string }`           | Annotation removed                                    |
+| `annotation-selected` | `{ annotation: Annotation \| null }` | Selection changed                                     |
+| `thread-update`       | `{ thread, action }`                 | Reply added/deleted, or thread resolved/unresolved    |
 
 ```vue
 <DocumentViewer
@@ -6100,25 +6106,25 @@ The viewer chrome adapts to dark mode via `dark:` Tailwind classes on every inte
 
 ### What's themed vs. what isn't
 
-| Element | Themed |
-| --- | --- |
-| Toolbar background, buttons, icons, dividers | ✅ via `bg-background` / `text-foreground` |
-| Side panel chrome (header, close button, list rows) | ✅ |
-| Search popover, highlight tooltip, comment form, comment marker | ✅ |
-| Annotations panel rows + reply form | ✅ |
-| **The PDF page itself** | ❌ The page is rendered by PDFium with the document's original page colour (typically white) — EmbedPDF does not invert page colours. For a dark-aware reader, add a wrapper with `bg-muted/30` to soften the contrast with the rest of the app |
+| Element                                                         | Themed                                                                                                                                                                                                                                          |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Toolbar background, buttons, icons, dividers                    | ✅ via `bg-background` / `text-foreground`                                                                                                                                                                                                      |
+| Side panel chrome (header, close button, list rows)             | ✅                                                                                                                                                                                                                                              |
+| Search popover, highlight tooltip, comment form, comment marker | ✅                                                                                                                                                                                                                                              |
+| Annotations panel rows + reply form                             | ✅                                                                                                                                                                                                                                              |
+| **The PDF page itself**                                         | ❌ The page is rendered by PDFium with the document's original page colour (typically white) — EmbedPDF does not invert page colours. For a dark-aware reader, add a wrapper with `bg-muted/30` to soften the contrast with the rest of the app |
 
 ## MeldUI primitives in use
 
 Every UI element inside `DocumentViewer` is composed from MeldUI primitives so styling overrides naturally inherit. The internals use:
 
-| Primitive | Used by |
-| --- | --- |
-| `Button` | Every toolbar button, comment form actions, reply submit |
-| `Popover` | Search popover, panel toggles on mobile |
-| `Tooltip` | Highlight tooltip wrapper, button hover labels |
-| `Textarea` | Comment form, reply form |
-| `Toggle` | Search case / whole-word toggles |
+| Primitive  | Used by                                                  |
+| ---------- | -------------------------------------------------------- |
+| `Button`   | Every toolbar button, comment form actions, reply submit |
+| `Popover`  | Search popover, panel toggles on mobile                  |
+| `Tooltip`  | Highlight tooltip wrapper, button hover labels           |
+| `Textarea` | Comment form, reply form                                 |
+| `Toggle`   | Search case / whole-word toggles                         |
 
 Override the variants via your Tailwind theme — see [Theming guide (Getting Started)](/docs/getting-started/theming).
 
@@ -6134,7 +6140,9 @@ The viewer's root carries `class="document-viewer"` and `data-document-viewer`. 
 
 /* Custom border around the annotated PDF page */
 .document-viewer .pdf-page {
-  box-shadow: 0 0 0 1px theme(colors.border), 0 4px 12px theme(colors.shadow / 0.1);
+  box-shadow:
+    0 0 0 1px theme(colors.border),
+    0 4px 12px theme(colors.shadow / 0.1);
 }
 
 /* Brand-coloured highlight tooltip */
@@ -6150,11 +6158,7 @@ The full list of internal classes is documented in [Customization → CSS class 
 For one-off styling, pass `class` directly:
 
 ```vue
-<DocumentViewer
-  class="rounded-xl border shadow-lg"
-  source="/doc.pdf"
-  wasm-url="/pdfium.wasm"
-/>
+<DocumentViewer class="rounded-xl border shadow-lg" source="/doc.pdf" wasm-url="/pdfium.wasm" />
 ```
 
 The prop merges onto the root via `cn()`, so Tailwind utility conflicts resolve in your favour.
@@ -6167,9 +6171,9 @@ The 5 default highlight colours live in `HIGHLIGHT_COLORS`. Override them via `f
 const featureConfig = {
   annotations: {
     defaultTools: [
-      { id: 'brand-1', label: 'Brand Primary',   color: '#0066FF', opacity: 0.35 },
+      { id: 'brand-1', label: 'Brand Primary', color: '#0066FF', opacity: 0.35 },
       { id: 'brand-2', label: 'Brand Secondary', color: '#FF6B35', opacity: 0.35 },
-      { id: 'brand-3', label: 'Brand Accent',    color: '#A0E7E5', opacity: 0.35 },
+      { id: 'brand-3', label: 'Brand Accent', color: '#A0E7E5', opacity: 0.35 },
     ],
   },
 }
@@ -6238,12 +6242,14 @@ Fix it server-side:
 If `source` points to a different origin than your app, that origin must send `Access-Control-Allow-Origin` headers. Without them, the browser refuses to share the response with PDFium.
 
 Workarounds:
+
 1. **Proxy through your own backend** — fetch the PDF server-side and re-serve it from your own origin.
 2. **Pass a `Blob` or `ArrayBuffer` directly** if you can fetch it yourself with appropriate credentials.
 
 ```ts
-const buffer = await fetch('https://third-party.com/doc.pdf', { credentials: 'include' })
-  .then(r => r.arrayBuffer())
+const buffer = await fetch('https://third-party.com/doc.pdf', { credentials: 'include' }).then(
+  (r) => r.arrayBuffer(),
+)
 ```
 
 ```vue
@@ -6276,6 +6282,7 @@ If you swap `source` rapidly (e.g. a thumbnail list of N PDFs), in-flight loads 
 ## Large PDF appears blank / takes >30 s to render the first page
 
 Two checks:
+
 1. **Worker mode on?** Without `worker={true}` (the default), large documents block the main thread during initial decode.
 2. **Tiling enabled?** Tiling is always-on in the minimum plugin set, but a custom plugin registry that omits it will render every page at full resolution simultaneously — fatal on large docs.
 
@@ -6301,9 +6308,10 @@ See [Annotations → Persisting changes](/docs/document-viewer/annotations#persi
 ## `loadAnnotations` runs but no highlights appear
 
 Confirm:
+
 1. `features.annotations` is `true` — without the flag the annotation plugin isn't registered, so the data load is dropped.
 2. The `pageIndex` values are **0-based** (page 1 → `pageIndex: 0`).
-3. The `rect` coordinates are in **PDF points** (1/72 inch from the bottom-left of the page), not screen pixels.
+3. The `rect` coordinates are in **PDF points** (1/72 inch) measured from the **top-left** of the page (DOM convention, not the PDF spec's bottom-up). For a Letter page, `origin.y = 0` is the top and `origin.y = 792` is the bottom.
 4. For highlights, `segmentRects` must include at least one rect — the engine renders the highlight from `segmentRects`, not from `rect`.
 
 A minimal valid highlight:
@@ -6313,8 +6321,8 @@ A minimal valid highlight:
   id: 'a-1',
   type: 'highlight',
   pageIndex: 0,
-  rect:         { x: 100, y: 600, width: 200, height: 20 },
-  segmentRects: [{ x: 100, y: 600, width: 200, height: 20 }],
+  rect:         { origin: { x: 100, y: 600 }, size: { width: 200, height: 20 } },
+  segmentRects: [{ origin: { x: 100, y: 600 }, size: { width: 200, height: 20 } }],
   color: '#FFCD45',
   opacity: 0.4,
 }
@@ -6323,6 +6331,7 @@ A minimal valid highlight:
 ## `saveAsCopy()` returns a corrupted file
 
 A few possibilities:
+
 - The buffer is consumed twice (e.g. you also passed it to `new Blob([buffer])` somewhere it was already transferred). Use `buffer.slice(0)` to clone before transferring.
 - Your backend is expecting a multipart form but you're sending raw `application/pdf`. Wrap in `FormData` if so.
 - Network compression is munging the bytes. Make sure your upload preserves binary integrity.
@@ -6330,6 +6339,7 @@ A few possibilities:
 ## Browser support
 
 `DocumentViewer` requires:
+
 - **WebAssembly** — universal in evergreen browsers; not supported in IE11.
 - **`Worker`** (for default worker mode) — universal.
 - **`OffscreenCanvas`** (used by EmbedPDF tiling for some operations) — Safari 16.4+, Firefox 105+, Chrome 69+.
@@ -6355,6 +6365,7 @@ export default defineConfig({
 The floating tooltip is anchored to the engine's selection state. If your app has CSS that sets `pointer-events: none` on a parent, or if a sibling element with higher z-index captures pointerdown, the tooltip's outside-click guard fires and immediately closes it.
 
 Check that the wrapper around `<DocumentViewer>` doesn't have:
+
 - `pointer-events: none` (or any parent that does)
 - A `<div>` overlay with `z-index: 9999` covering the tooltip
 - A keyboard shortcut that consumes `pointerdown` events at the document level
@@ -6933,8 +6944,8 @@ Both are wired into the toolbar internally.
 
 ```ts
 interface SaveAsCopyOptions {
-  applyRedactions?: boolean  // burn in pending redactions before saving (Phase 2)
-  flatten?: boolean          // flatten annotations into page contents (loses editability)
+  applyRedactions?: boolean // burn in pending redactions before saving (Phase 2)
+  flatten?: boolean // flatten annotations into page contents (loses editability)
 }
 
 const buffer = await viewer.value?.saveAsCopy()
@@ -7091,24 +7102,24 @@ The **Hotkeys** plugin wires keyboard shortcuts that mirror desktop PDF reader c
 
 ## Bindings
 
-| Shortcut | Action |
-| --- | --- |
-| `←` / `→` / `PageUp` / `PageDown` | Previous / next page |
-| `Home` / `End` | First / last page |
-| `+` / `-` | Zoom in / out |
-| `0` | Fit page |
-| `R` | Rotate CW |
-| `Shift + R` | Rotate CCW |
-| `Ctrl/Cmd + F` | Open search popover |
-| `Esc` | Close search / panel / popover |
-| `F11` | Toggle fullscreen |
-| `Ctrl/Cmd + Z` | Undo (requires `features.undoRedo`) |
-| `Ctrl/Cmd + Shift + Z` / `Ctrl + Y` | Redo |
-| `C` | Toggle annotations panel |
-| `O` | Toggle outline panel |
-| `T` | Toggle thumbnails panel |
-| `P` | Print |
-| `D` | Download |
+| Shortcut                            | Action                              |
+| ----------------------------------- | ----------------------------------- |
+| `←` / `→` / `PageUp` / `PageDown`   | Previous / next page                |
+| `Home` / `End`                      | First / last page                   |
+| `+` / `-`                           | Zoom in / out                       |
+| `0`                                 | Fit page                            |
+| `R`                                 | Rotate CW                           |
+| `Shift + R`                         | Rotate CCW                          |
+| `Ctrl/Cmd + F`                      | Open search popover                 |
+| `Esc`                               | Close search / panel / popover      |
+| `F11`                               | Toggle fullscreen                   |
+| `Ctrl/Cmd + Z`                      | Undo (requires `features.undoRedo`) |
+| `Ctrl/Cmd + Shift + Z` / `Ctrl + Y` | Redo                                |
+| `C`                                 | Toggle annotations panel            |
+| `O`                                 | Toggle outline panel                |
+| `T`                                 | Toggle thumbnails panel             |
+| `P`                                 | Print                               |
+| `D`                                 | Download                            |
 
 Bindings only fire when the focus is inside the viewer (so they don't fight with the host app's shortcuts).
 
@@ -7741,10 +7752,10 @@ The **Zoom** plugin handles all zoom interactions: explicit zoom buttons, fit pr
 
 ```ts
 interface ZoomFeatureConfig {
-  min?: number          // default 0.25
-  max?: number          // default 8
-  step?: number         // default 0.1
-  defaultMode?: 'fit-page' | 'fit-width' | 'actual'  // default 'fit-width'
+  min?: number // default 0.25
+  max?: number // default 8
+  step?: number // default 0.1
+  defaultMode?: 'fit-page' | 'fit-width' | 'actual' // default 'fit-width'
 }
 ```
 
@@ -7874,7 +7885,7 @@ async function showCitation(citation: { pageIndex: number; rect: PdfRect; id: st
     pageIndex: citation.pageIndex,
     rect: citation.rect,
     segmentRects: [citation.rect],
-    color: '#92E89E',     // green to distinguish from user highlights
+    color: '#92E89E', // green to distinguish from user highlights
     opacity: 0.5,
     metadata: {
       is_ephemeral: true,
@@ -7893,7 +7904,7 @@ The metadata is free-form, but the `is_ephemeral` convention lets your annotatio
 
 ```ts
 function onCreate({ annotation }: { annotation: Annotation }) {
-  if (annotation.metadata?.is_ephemeral) return   // don't save AI citations
+  if (annotation.metadata?.is_ephemeral) return // don't save AI citations
   fetch('/api/annotations', { method: 'POST', body: JSON.stringify(annotation) })
 }
 ```
@@ -7904,10 +7915,10 @@ Otherwise every AI response would litter your database with ephemeral highlights
 
 A common pattern is to use a different colour for AI citations than for user highlights, so users can visually distinguish "my notes" from "AI cited this":
 
-| Origin | Colour |
-| --- | --- |
-| User-created highlight | Yellow `#FFCD45` (default) |
-| AI citation | Green `#92E89E` or Cyan `#A0E7E5` |
+| Origin                 | Colour                            |
+| ---------------------- | --------------------------------- |
+| User-created highlight | Yellow `#FFCD45` (default)        |
+| AI citation            | Green `#92E89E` or Cyan `#A0E7E5` |
 
 Combine with `metadata.is_ephemeral: true` and your event handler can filter both ways.
 
@@ -7970,6 +7981,7 @@ No prop on `DocumentViewer` is required — the chrome uses `bg-background` / `t
 ## Themed parts
 
 ✅ **Themed**:
+
 - Toolbar background, buttons, icons, dividers
 - Side panel headers, rows, scrollbars
 - Search popover
@@ -7979,6 +7991,7 @@ No prop on `DocumentViewer` is required — the chrome uses `bg-background` / `t
 - Empty states
 
 ❌ **Not themed**:
+
 - The PDF page contents (text, images) — PDFium renders the document as-authored
 - Image-format documents (`image/*` source) — rendered as-is
 - Highlight colours on the PDF — the colour is the colour the highlight was saved with; doesn't adapt
@@ -8110,7 +8123,7 @@ const items = await viewerA.value?.exportAnnotations()
 await fetch('/api/transfers', { method: 'POST', body: JSON.stringify({ docId, items }) })
 
 // System B: GET the transfer and import
-const { items } = await fetch(`/api/transfers/${transferId}`).then(r => r.json())
+const { items } = await fetch(`/api/transfers/${transferId}`).then((r) => r.json())
 await viewerB.value?.importAnnotations(items)
 ```
 
@@ -8130,7 +8143,7 @@ The `ctx` carries binary side-data for stamps and signatures (the rasterized sta
 For stamps and signatures (Phase 2), you'll need to serialize the `ArrayBuffer` to base64 manually:
 
 ```ts
-const serialized = items.map(item => ({
+const serialized = items.map((item) => ({
   annotation: item.annotation,
   ctx: item.ctx
     ? { mimeType: item.ctx.mimeType, base64: arrayBufferToBase64(item.ctx.data) }
@@ -8185,19 +8198,19 @@ Accessibility patterns and touch-device patterns for DocumentViewer.
 
 Mirrors desktop PDF reader conventions. The full binding table:
 
-| Shortcut | Action |
-| --- | --- |
-| `←` `→` `PageUp` `PageDown` | Prev / next page |
-| `Home` / `End` | First / last page |
-| `+` `-` | Zoom in / out |
-| `0` | Fit page |
-| `R` / `Shift+R` | Rotate CW / CCW |
-| `Ctrl/Cmd+F` | Open search popover |
-| `Esc` | Close search / panel / popover |
-| `F11` | Toggle fullscreen |
-| `Ctrl/Cmd+Z` / `Ctrl+Shift+Z` | Undo / redo (requires `features.undoRedo`) |
-| `C` / `O` / `T` | Toggle annotations / outline / thumbnails panel |
-| `P` / `D` | Print / download |
+| Shortcut                      | Action                                          |
+| ----------------------------- | ----------------------------------------------- |
+| `←` `→` `PageUp` `PageDown`   | Prev / next page                                |
+| `Home` / `End`                | First / last page                               |
+| `+` `-`                       | Zoom in / out                                   |
+| `0`                           | Fit page                                        |
+| `R` / `Shift+R`               | Rotate CW / CCW                                 |
+| `Ctrl/Cmd+F`                  | Open search popover                             |
+| `Esc`                         | Close search / panel / popover                  |
+| `F11`                         | Toggle fullscreen                               |
+| `Ctrl/Cmd+Z` / `Ctrl+Shift+Z` | Undo / redo (requires `features.undoRedo`)      |
+| `C` / `O` / `T`               | Toggle annotations / outline / thumbnails panel |
+| `P` / `D`                     | Print / download                                |
 
 Bindings only fire when focus is **inside** the viewer (the viewport, toolbar, or panels), so they don't fight with host-app shortcuts.
 
@@ -8219,11 +8232,11 @@ onMounted(() => {
 
 When `features.touchGestures` is on:
 
-| Gesture | Action |
-| --- | --- |
-| Swipe left / right | Previous / next page |
-| Pinch | Zoom (requires `features.zoom`) |
-| Double-tap | Cycle through zoom presets |
+| Gesture            | Action                          |
+| ------------------ | ------------------------------- |
+| Swipe left / right | Previous / next page            |
+| Pinch              | Zoom (requires `features.zoom`) |
+| Double-tap         | Cycle through zoom presets      |
 
 Single-tap and drag are reserved for selection and panning, respectively.
 
@@ -8310,10 +8323,7 @@ For 500+ page documents, scrolling end-to-end is slow even with virtualization. 
 `fit-page` for a 1000-page document means tiny pages. `fit-width` is usually better:
 
 ```vue
-<DocumentViewer
-  :feature-config="{ zoom: { defaultMode: 'fit-width' } }"
-  ...
-/>
+<DocumentViewer :feature-config="{ zoom: { defaultMode: 'fit-width' } }" ... />
 ```
 
 ### 3. Keep `worker: true`
@@ -8334,7 +8344,10 @@ const loading = ref(true)
 
 <template>
   <div class="relative h-[600px]">
-    <div v-if="loading" class="absolute inset-0 z-10 flex items-center justify-center bg-background/80">
+    <div
+      v-if="loading"
+      class="absolute inset-0 z-10 flex items-center justify-center bg-background/80"
+    >
       <Spinner />
     </div>
     <DocumentViewer
@@ -8371,11 +8384,11 @@ function go() {
 Approximate steady-state memory for a typical PDF (8.5 × 11 inch, mixed text + images):
 
 | Pages | Memory (Chrome, fit-width) |
-| --- | --- |
-| 10 | ~50 MB |
-| 100 | ~80 MB |
-| 1000 | ~120 MB |
-| 5000 | ~180 MB |
+| ----- | -------------------------- |
+| 10    | ~50 MB                     |
+| 100   | ~80 MB                     |
+| 1000  | ~120 MB                    |
+| 5000  | ~180 MB                    |
 
 The constant ~50 MB is the WASM runtime + DOM. The growth is dominated by the document's parsed structure (independent of how much you've scrolled).
 
@@ -8384,12 +8397,7 @@ The constant ~50 MB is the WASM runtime + DOM. The growth is dominated by the do
 If a user lands on a deep-link to a specific page, set `initial-page` to avoid them scrolling there manually:
 
 ```vue
-<DocumentViewer
-  source="/long-doc.pdf"
-  wasm-url="/pdfium.wasm"
-  :initial-page="page"
-  ...
-/>
+<DocumentViewer source="/long-doc.pdf" wasm-url="/pdfium.wasm" :initial-page="page" ... />
 ```
 
 ## Documents with many annotations
@@ -8405,7 +8413,7 @@ For very high counts (10,000+ annotations across many pages), consider lazy-load
 ```ts
 async function onPageChange({ page }: { page: number }) {
   const range = [page - 1, page, page + 1] // page ± 1
-  const annotations = await fetch(`/api/annotations?pages=${range.join(',')}`).then(r => r.json())
+  const annotations = await fetch(`/api/annotations?pages=${range.join(',')}`).then((r) => r.json())
   await viewer.value?.loadAnnotations(annotations)
 }
 ```
@@ -8436,7 +8444,9 @@ Most review workflows store annotations on your backend, then re-hydrate them wh
 const viewer = ref<DocumentViewerInstance | null>(null)
 
 onMounted(async () => {
-  const saved: Annotation[] = await fetch(`/api/documents/${docId}/annotations`).then(r => r.json())
+  const saved: Annotation[] = await fetch(`/api/documents/${docId}/annotations`).then((r) =>
+    r.json(),
+  )
   await viewer.value?.loadAnnotations(saved)
 })
 </script>
@@ -8457,8 +8467,8 @@ If you're using `features.commentThreads`, threads are a separate data model. Lo
 
 ```ts
 const [annotations, threads] = await Promise.all([
-  fetch(`/api/documents/${docId}/annotations`).then(r => r.json()),
-  fetch(`/api/documents/${docId}/threads`).then(r => r.json()),
+  fetch(`/api/documents/${docId}/annotations`).then((r) => r.json()),
+  fetch(`/api/documents/${docId}/threads`).then((r) => r.json()),
 ])
 
 await viewer.value?.loadAnnotations(annotations)
@@ -8490,8 +8500,8 @@ The `Annotation` type is JSON-serializable and round-trips cleanly. A minimum hi
   "id": "0190f4c0-...",
   "type": "highlight",
   "pageIndex": 0,
-  "rect": { "x": 100, "y": 600, "width": 300, "height": 20 },
-  "segmentRects": [{ "x": 100, "y": 600, "width": 300, "height": 20 }],
+  "rect": { "origin": { "x": 100, "y": 600 }, "size": { "width": 300, "height": 20 } },
+  "segmentRects": [{ "origin": { "x": 100, "y": 600 }, "size": { "width": 300, "height": 20 } }],
   "color": "#FFCD45",
   "opacity": 0.4,
   "selectedText": "Important sentence",
@@ -8544,12 +8554,12 @@ If `mime-type` is omitted, the type is detected from the `source`:
 
 ## Format ↔ renderer map
 
-| MIME type | Renderer | Features supported |
-| --- | --- | --- |
-| `application/pdf` | `PdfViewer.vue` (EmbedPDF + PDFium) | Full feature set (annotations, search, outline, thumbnails, etc.) |
-| `image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/svg+xml` | `ImageViewer.vue` | Zoom, fit presets, print, download |
-| `text/plain` | `TextViewer.vue` | DOM-based search, print, download |
-| `text/markdown` | `MarkdownViewer.vue` | DOM-based search, print, download |
+| MIME type                                                             | Renderer                            | Features supported                                                |
+| --------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------- |
+| `application/pdf`                                                     | `PdfViewer.vue` (EmbedPDF + PDFium) | Full feature set (annotations, search, outline, thumbnails, etc.) |
+| `image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/svg+xml` | `ImageViewer.vue`                   | Zoom, fit presets, print, download                                |
+| `text/plain`                                                          | `TextViewer.vue`                    | DOM-based search, print, download                                 |
+| `text/markdown`                                                       | `MarkdownViewer.vue`                | DOM-based search, print, download                                 |
 
 ## Feature flags that apply per format
 
@@ -8576,6 +8586,7 @@ Without `:key`, swapping `source` reuses the renderer; for cross-format swaps (P
 ## Programmatic API differences
 
 Most `DocumentViewerInstance` methods work for all formats:
+
 - `getDocumentInfo()`, `getCurrentPage()` (returns 1 for non-paged formats), `goToPage()` (no-op)
 - `loadAnnotations`, `createAnnotation`, etc. — no-ops for non-PDF formats (no annotation layer)
 - `saveAsCopy()` — PDF only
@@ -8621,11 +8632,11 @@ await fetch('/api/documents/reviewed', {
 
 ## When to use this vs. `exportAnnotations`
 
-| Need | Use |
-| --- | --- |
-| Show the annotated doc to someone who doesn't have `DocumentViewer` | `saveAsCopy()` |
-| Backup the annotations so the user can later edit them in `DocumentViewer` | `exportAnnotations()` (preserves editability) |
-| Both (e.g. archive + future re-edit) | Do both — store the JSON for editing, ship the PDF for sharing |
+| Need                                                                       | Use                                                            |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Show the annotated doc to someone who doesn't have `DocumentViewer`        | `saveAsCopy()`                                                 |
+| Backup the annotations so the user can later edit them in `DocumentViewer` | `exportAnnotations()` (preserves editability)                  |
+| Both (e.g. archive + future re-edit)                                       | Do both — store the JSON for editing, ship the PDF for sharing |
 
 `saveAsCopy()` burns annotations into the PDF contents in a way that's spec-compliant for PDF 1.7 — most professional PDF readers (Adobe, Preview, Foxit) will show them. But the original "editable annotation" metadata may be lost, so subsequent rounds of editing should start from the original source + the `exportAnnotations()` JSON.
 
@@ -8692,8 +8703,12 @@ const permissions: ViewerPermissions = {
     source="/shared-doc.pdf"
     wasm-url="/pdfium.wasm"
     :features="{
-      zoom: true, search: true, outline: true, thumbnails: true,
-      annotations: true, commentThreads: true,
+      zoom: true,
+      search: true,
+      outline: true,
+      thumbnails: true,
+      annotations: true,
+      commentThreads: true,
     }"
     :permissions="permissions"
   />
@@ -8716,7 +8731,7 @@ A common share-link pattern: an editor publishes a reviewed document and shares 
 
 
 onMounted(async () => {
-  const { annotations, threads } = await fetch(`/shared/${shareToken}`).then(r => r.json())
+  const { annotations, threads } = await fetch(`/shared/${shareToken}`).then((r) => r.json())
   await viewer.value?.loadAnnotations(annotations)
   viewer.value?.loadThreads(threads)
 })
@@ -8811,8 +8826,8 @@ Store threads in your own database and sync via the `thread-update` event.
 
 ```ts
 onMounted(async () => {
-  const annotations = await fetch(`/api/docs/${docId}/annotations`).then(r => r.json())
-  const threads = await fetch(`/api/docs/${docId}/threads`).then(r => r.json())
+  const annotations = await fetch(`/api/docs/${docId}/annotations`).then((r) => r.json())
+  const threads = await fetch(`/api/docs/${docId}/threads`).then((r) => r.json())
 
   await viewer.value?.loadAnnotations(annotations)
   viewer.value?.loadThreads(threads)
@@ -8826,9 +8841,7 @@ Order matters: load annotations first (threads reference annotation ids).
 Subscribe to `thread-update` and persist:
 
 ```vue
-<DocumentViewer
-  @thread-update="onThreadUpdate"
-/>
+<DocumentViewer @thread-update="onThreadUpdate" />
 ```
 
 ```ts
@@ -8866,9 +8879,7 @@ Both call `addReply()` internally and fire `thread-update` with `action: 'reply-
 Marking a thread resolved doesn't delete the annotation — it just changes the `resolved` flag and adds a `resolvedAt` / `resolvedByUserId`. The annotation still renders on the page (typically with a subtle visual difference, e.g. lower opacity). Filter resolved threads from your side panel UI if you want a "todo" view:
 
 ```ts
-const unresolvedThreads = computed(() =>
-  allThreads.value.filter(t => !t.resolved),
-)
+const unresolvedThreads = computed(() => allThreads.value.filter((t) => !t.resolved))
 ```
 
 ## Current user attribution
@@ -8911,8 +8922,8 @@ The default toolbar covers most needs, but the `toolbar` prop lets you reorder g
 
 
 const toolbar: ToolbarConfig = {
-  groups: ['nav', 'zoom', 'panels'],     // restrict + reorder
-  hide: ['rotate-cw', 'rotate-ccw'],     // hide individual buttons
+  groups: ['nav', 'zoom', 'panels'], // restrict + reorder
+  hide: ['rotate-cw', 'rotate-ccw'], // hide individual buttons
   customButtons: [
     {
       id: 'share',
@@ -8940,7 +8951,7 @@ const toolbar: ToolbarConfig = {
 The default group order is:
 
 ```ts
-['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+;['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
 ```
 
 Pass a subset to hide the rest entirely. Pass a reordered array to change visual order:
@@ -9019,9 +9030,7 @@ Conditionally configure based on the current user:
 
 ```ts
 const toolbar = computed<ToolbarConfig>(() => ({
-  groups: isReviewer.value
-    ? ['nav', 'zoom', 'tools', 'panels']
-    : ['nav', 'zoom', 'export'],
+  groups: isReviewer.value ? ['nav', 'zoom', 'tools', 'panels'] : ['nav', 'zoom', 'export'],
   hide: isReviewer.value ? [] : ['print', 'download'],
 }))
 ```
