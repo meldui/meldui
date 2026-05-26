@@ -1,5 +1,12 @@
 # @meldui/charts-vue
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [9e22618]
+  - @meldui/vue@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes
