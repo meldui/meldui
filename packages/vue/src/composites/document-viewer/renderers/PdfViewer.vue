@@ -229,16 +229,21 @@ const plugins = computed(() =>
 )
 
 /**
- * Promote a root-relative or scheme-relative `wasmUrl` (e.g. `/pdfium.wasm`)
- * to a fully-qualified absolute URL before handing it to the engine.
+ * Promote a relative `wasmUrl` to a fully-qualified absolute URL before
+ * handing it to the engine.
  *
  * The worker engine inlines its source into a `Blob` and instantiates the
  * worker from `URL.createObjectURL(blob)`. Inside that worker,
  * `self.location.href` is `blob:http://host/<uuid>` — a non-base URL — so a
  * raw `fetch('/pdfium.wasm')` throws "Failed to parse URL". Resolving here
- * against `window.location.origin` keeps the call site identical for
- * consumers (they still pass `/pdfium.wasm`) while the worker receives a
+ * keeps the call site identical for consumers while the worker receives a
  * URL it can fetch unconditionally.
+ *
+ * Resolution is against `document.baseURI` (the page's effective base),
+ * which honors both root-deployed sites and subpath deployments (e.g.
+ * GitHub Pages project sites). Per URL spec, a leading `/` always resolves
+ * from the origin root regardless of base — subpath consumers should use a
+ * bare relative path (`"pdfium.wasm"`) or a fully-qualified URL.
  *
  * Fully-qualified URLs are returned unchanged. Undefined falls through to
  * EmbedPDF's CDN default.
@@ -247,8 +252,8 @@ const resolvedWasmUrl = computed<string | undefined>(() => {
   const raw = props.wasmUrl
   if (!raw) return undefined
   if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) return raw
-  if (typeof window === 'undefined') return raw
-  return new URL(raw, window.location.origin).href
+  if (typeof document === 'undefined') return raw
+  return new URL(raw, document.baseURI).href
 })
 
 const { engine, isLoading, error } = usePdfiumEngine({

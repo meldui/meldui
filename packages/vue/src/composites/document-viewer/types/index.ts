@@ -463,7 +463,16 @@ export interface DocumentViewerProps {
   /** Stable identifier used for annotation namespacing. */
   documentId?: string
 
-  /** URL where `pdfium.wasm` is served from. Required for PDF rendering. */
+  /**
+   * URL where `pdfium.wasm` is served from. Required for PDF rendering.
+   *
+   * Resolved against `document.baseURI` before being handed to the engine,
+   * so bare relative paths (`"pdfium.wasm"`), `./`/`../` paths, root-relative
+   * paths (`"/pdfium.wasm"`), and fully-qualified URLs all work. For sites
+   * deployed under a subpath (e.g. GitHub Pages project sites), prefer a bare
+   * relative path or a fully-qualified URL — per URL spec a leading `/` always
+   * resolves from the origin root regardless of base.
+   */
   wasmUrl?: string
 
   /**

@@ -13,8 +13,15 @@ import { HIGHLIGHT_COLORS, type Annotation, type CommentThread } from '@meldui/v
 export const SAMPLE_PDF_URL =
   'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
 
-/** Public path for the bundled PDFium WASM (copied by `pnpm prepare-assets`). */
-export const WASM_URL = '/pdfium.wasm'
+/**
+ * Public path for the bundled PDFium WASM (copied by `pnpm prepare-assets`).
+ * Resolved against `document.baseURI` so the asset is fetched relative to the
+ * Storybook iframe — works both at the dev root (`localhost:6007`) and under
+ * the GitHub Pages subpath (`meldui.github.io/meldui/`). Passing a
+ * fully-qualified URL also bypasses PdfViewer's origin-based resolver, which
+ * would otherwise strip the subpath.
+ */
+export const WASM_URL = new URL('pdfium.wasm', document.baseURI).href
 
 /** A short markdown sample for the multi-format demo. */
 export const SAMPLE_MARKDOWN = `# DocumentViewer
