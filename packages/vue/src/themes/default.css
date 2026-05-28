@@ -181,9 +181,10 @@
    <style>) so the docs site — which loads the theme but not the compiled
    component CSS — picks it up too.
 
-   The thumb is invisible until hover (`:hover`) or active scroll
-   (`[data-scrolling]`, toggled by the v-meld-scroll directive). No color
-   transition, and intentionally no `scrollbar-width`/`scrollbar-color`:
+   The thumb is invisible until the pointer is over the scroll area, then
+   hides 600ms after it leaves — driven by the `data-scroll-visible` attribute
+   the v-meld-scroll directive toggles (reka's `type="hover"` semantics). No
+   color transition, and intentionally no `scrollbar-width`/`scrollbar-color`:
      1. Animating a colour from the `transparent` keyword (transparent BLACK)
         toward a light grey interpolates through dark shades — the brief
         black→grey flicker on pointer-enter. An instant toggle avoids it and
@@ -212,8 +213,7 @@
   min-height: 40px;
 }
 
-.meldscroll:hover::-webkit-scrollbar-thumb,
-.meldscroll[data-scrolling]::-webkit-scrollbar-thumb {
+.meldscroll[data-scroll-visible]::-webkit-scrollbar-thumb {
   background-color: var(--border);
 }
 
