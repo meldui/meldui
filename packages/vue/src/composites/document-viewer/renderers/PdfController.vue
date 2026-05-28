@@ -579,15 +579,22 @@ async function saveAsCopy(): Promise<ArrayBuffer> {
 
 /**
  * Print the active PDF document using the EmbedPDF print plugin. The plugin
- * auto-injects a hidden `<PrintFrame>` so we don't need to mount one. With
- * `includeAnnotations` defaulting to `true`, current annotations are baked
- * into the print job natively — no `saveAsCopy()` round-trip needed.
+ * auto-injects a hidden `<PrintFrame>` so we don't need to mount one.
+ *
+ * `includeAnnotations: false` prints the clean document — no highlights and
+ * no comment markers. The plugin would otherwise bake every annotation's
+ * appearance stream into the page (default `true`), which surfaces the
+ * sticky-note's native yellow square in place of our on-screen
+ * `CommentMarker` pin. EmbedPDF's print options are all-or-nothing
+ * (`PdfPrintOptions` has no per-subtype filter), so suppressing the comment
+ * marker means suppressing annotations entirely — matching the overlay-only
+ * behaviour where annotations never appear in print.
  */
 async function printDocument(): Promise<void> {
   const scope = print.provides.value
   if (!scope) return
   return new Promise((resolve, reject) => {
-    scope.print().wait(
+    scope.print({ includeAnnotations: false }).wait(
       () => resolve(),
       (err) => reject(err),
     )
