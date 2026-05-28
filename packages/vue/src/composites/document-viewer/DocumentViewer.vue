@@ -16,7 +16,16 @@
  * Keyboard shortcuts and touch gestures are wired here via the dedicated
  * composables (`useKeyboard`, `useTouch`).
  */
-import { computed, defineAsyncComponent, nextTick, onMounted, provide, ref, watch } from 'vue'
+import {
+  computed,
+  defineAsyncComponent,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  provide,
+  ref,
+  watch,
+} from 'vue'
 import { THREADS_INJECT_KEY } from './injectionKeys'
 import { resolveFeatures } from './plugins/pluginRegistry'
 import { detectDocumentType } from './utils/documentType'
@@ -30,7 +39,6 @@ import ViewerToolbar from './ViewerToolbar.vue'
 import ImageViewer from './renderers/ImageViewer.vue'
 import TextViewer from './renderers/TextViewer.vue'
 import MarkdownViewer from './renderers/MarkdownViewer.vue'
-import SearchPopover from './SearchPopover.vue'
 import ViewerSidePanel from './ViewerSidePanel.vue'
 import AnnotationsPanel from './panels/AnnotationsPanel.vue'
 import { cn } from '../../lib/utils'
@@ -45,7 +53,9 @@ import type {
   CommentThread,
   DocumentViewerInstance,
   DocumentViewerProps,
+  Scale,
   ViewMode,
+  ZoomPreset,
 } from './types'
 
 const props = withDefaults(defineProps<DocumentViewerProps>(), {
@@ -296,6 +306,17 @@ function handleZoomOut() {
     currentScale.value = Math.max(currentScale.value / 1.1, 0.25)
   }
 }
+function handleRequestZoom(level: Scale) {
+  // Numeric levels and named presets both flow through the renderer's
+  // `requestZoom` for PDFs (it handles fit-width/fit-page/actual-size/automatic
+  // plus arbitrary numbers). For non-PDFs only numeric scales make sense — fit
+  // modes silently fall back to 1.
+  if (isPdf.value) {
+    pdfRendererRef.value?.requestZoom(level as number | ZoomPreset)
+    return
+  }
+  currentScale.value = typeof level === 'number' ? level : 1
+}
 function handleRotate(direction: 'cw' | 'ccw') {
   if (isPdf.value) {
     if (direction === 'cw') pdfRendererRef.value?.rotateClockwise()
@@ -477,6 +498,15 @@ function handleRendererInteractionModeChange(payload: { mode: InteractionMode })
 function handleRendererFullscreenChange(payload: { isFullscreen: boolean }) {
   isFullscreen.value = payload.isFullscreen
 }
+
+// Non-PDF document types don't have the EmbedPDF Fullscreen plugin, so we
+// listen to the native event directly. For PDFs this is harmless — the
+// plugin's event fires first and both sources agree on the final state.
+const onFullscreenChange = () => {
+  isFullscreen.value = !!document.fullscreenElement
+}
+onMounted(() => document.addEventListener('fullscreenchange', onFullscreenChange))
+onUnmounted(() => document.removeEventListener('fullscreenchange', onFullscreenChange))
 function handleRendererSearchStateChange(payload: {
   total: number
   activeResultIndex: number
@@ -931,10 +961,16 @@ defineExpose<DocumentViewerInstance>({
       :is-thumbnails-open="isThumbnailsOpen"
       :is-comments-open="isCommentsOpen"
       :is-search-open="isSearchOpen"
+      :is-fullscreen="isFullscreen"
       :active-annotation-tool="activeAnnotationTool"
+      :search-total="searchTotal"
+      :search-active-index="searchActiveIndex"
+      :search-match-case="searchMatchCase"
+      :search-whole-word="searchWholeWord"
       @page-change="handlePageChange"
       @zoom-in="handleZoomIn"
       @zoom-out="handleZoomOut"
+      @request-zoom="handleRequestZoom"
       @rotate="handleRotate"
       @view-mode-change="handleViewModeChange"
       @interaction-mode-change="handleInteractionModeChange"
@@ -943,22 +979,12 @@ defineExpose<DocumentViewerInstance>({
       @print="handlePrint"
       @download="handleDownload"
       @fullscreen="handleFullscreen"
-    >
-      <template #search-content>
-        <SearchPopover
-          :total="searchTotal"
-          :active-result-index="searchActiveIndex"
-          :match-case="searchMatchCase"
-          :whole-word="searchWholeWord"
-          @search="handleSearchInput"
-          @next-match="handleNextMatch"
-          @previous-match="handlePreviousMatch"
-          @set-match-case="handleSetMatchCase"
-          @set-whole-word="handleSetWholeWord"
-          @close="handleCloseSearch"
-        />
-      </template>
-    </ViewerToolbar>
+      @search="handleSearchInput"
+      @next-match="handleNextMatch"
+      @previous-match="handlePreviousMatch"
+      @set-match-case="handleSetMatchCase"
+      @set-whole-word="handleSetWholeWord"
+    />
 
     <div class="flex flex-1 overflow-hidden">
       <div class="relative flex-1 overflow-hidden">
