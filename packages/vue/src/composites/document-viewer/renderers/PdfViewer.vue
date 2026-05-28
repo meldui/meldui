@@ -401,7 +401,19 @@ defineExpose({
 
           <DocumentContent :document-id="coreState.activeDocumentId">
             <template #default="{ isLoaded }">
-              <div v-if="isLoaded" class="flex h-full w-full">
+              <!--
+                `[&>div]:min-w-0` lets the document area shrink to the space left
+                by the side panels. EmbedPDF's <GlobalPointerProvider> renders a
+                `width:100%` block with the flex default `min-width:auto` (and we
+                can't pass it a class), so as a direct flex child of this row it
+                refuses to shrink when an inner-row panel (thumbnails / outline)
+                opens — it overflows past the row, and the document Viewport's
+                right edge + horizontal scrollbar get clipped by the
+                overflow-hidden ancestor, cropping a zoomed page with no reachable
+                scroll. The side panels are <aside>, so only the
+                GlobalPointerProvider <div> is targeted.
+              -->
+              <div v-if="isLoaded" class="flex h-full w-full [&>div]:min-w-0">
                 <!-- Thumbnails side panel (left) -->
                 <ViewerSidePanel
                   v-if="resolvedFeatures.thumbnails"
