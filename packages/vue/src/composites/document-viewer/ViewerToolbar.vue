@@ -44,7 +44,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu'
-import { Popover, PopoverContent, PopoverTrigger } from '../../components/ui/popover'
+import { Popover, PopoverAnchor, PopoverContent } from '../../components/ui/popover'
 import {
   Tooltip,
   TooltipContent,
@@ -404,34 +404,41 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
       <span class="flex-1" />
 
       <!-- Search -->
-      <!--
-        Note: PopoverTrigger must be the only `as-child` wrapper around the
-        Button. Double-wrapping with TooltipTrigger AND PopoverTrigger both
-        as-child confuses Reka's anchor resolution (popper renders at
-        translate(0, -200%) — off-screen). We drop the Tooltip here; the
-        title attribute provides the discoverability hint.
-      -->
       <Popover
         v-if="features.search && isSearchableType"
         :open="isSearchOpen"
         @update:open="(v) => v !== isSearchOpen && emit('toggle-panel', 'search')"
       >
-        <PopoverTrigger as-child>
-          <Button
-            v-show="isGroupVisible('search') && !isButtonHidden('search')"
-            variant="ghost"
-            size="icon-sm"
-            :aria-pressed="isSearchOpen"
-            aria-label="Search"
-            title="Search (Ctrl+F)"
-          >
-            <IconSearch :size="16" />
-          </Button>
-        </PopoverTrigger>
+        <!--
+          The search button wants a Tooltip AND opens the popover. Wrapping one
+          Button in both `TooltipTrigger as-child` and `PopoverTrigger as-child`
+          (or nesting them) breaks Reka's popover anchor (renders off-screen).
+          So we anchor the popover with <PopoverAnchor> and give the Button only
+          the tooltip's single `as-child`. Open is controlled via `isSearchOpen`;
+          the click only OPENS (closing is handled by the popover's
+          interact-outside → @update:open) to avoid a double-toggle.
+        -->
+        <PopoverAnchor class="inline-flex">
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <Button
+                v-show="isGroupVisible('search') && !isButtonHidden('search')"
+                variant="ghost"
+                size="icon-sm"
+                :aria-pressed="isSearchOpen"
+                aria-label="Search"
+                @click="!isSearchOpen && emit('toggle-panel', 'search')"
+              >
+                <IconSearch :size="16" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">Search (Ctrl+F)</TooltipContent>
+          </Tooltip>
+        </PopoverAnchor>
         <PopoverContent
           align="end"
           :side-offset="8"
-          class="w-[calc(100vw-1rem)] max-w-md p-2 lg:w-auto"
+          class="w-[calc(100vw-1rem)] sm:w-auto max-w-md p-2"
         >
           <slot name="search-content">
             <SearchPopover
