@@ -14,6 +14,7 @@
  */
 import { ThumbImg, ThumbnailsPane } from '@embedpdf/plugin-thumbnail/vue'
 import { cn } from '../../../lib/utils'
+import { vMeldScroll } from '../directives/meldScroll'
 
 interface Props {
   documentId: string
@@ -33,7 +34,7 @@ function handleClick(pageIndex: number) {
 
 <template>
   <div class="thumbnails-panel relative h-full overflow-hidden">
-    <ThumbnailsPane :document-id="documentId">
+    <ThumbnailsPane v-meld-scroll :document-id="documentId">
       <template #default="{ meta }">
         <button
           :key="meta.pageIndex"

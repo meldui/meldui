@@ -38,6 +38,7 @@ import OutlinePanel from '../panels/OutlinePanel.vue'
 import ThumbnailsPanel from '../panels/ThumbnailsPanel.vue'
 import ViewerSidePanel from '../ViewerSidePanel.vue'
 import { buildPlugins, resolveFeatures } from '../plugins/pluginRegistry'
+import { vMeldScroll } from '../directives/meldScroll'
 import type {
   AnnotationFilter,
   AnnotationTransferItem,
@@ -435,6 +436,7 @@ defineExpose({
                 -->
                 <GlobalPointerProvider :document-id="coreState.activeDocumentId">
                   <Viewport
+                    v-meld-scroll
                     :document-id="coreState.activeDocumentId"
                     class="h-full flex-1 bg-muted"
                   >

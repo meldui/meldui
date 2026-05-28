@@ -9,6 +9,7 @@ import { onMounted, ref, watch } from 'vue'
 import type { PdfBookmarkObject } from '@embedpdf/models'
 import { useBookmarkCapability } from '@embedpdf/plugin-bookmark/vue'
 import OutlineNode from './OutlineNode.vue'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface Props {
   documentId: string
@@ -79,14 +80,16 @@ function handleNavigate(item: PdfBookmarkObject) {
     <div v-else-if="bookmarks.length === 0" class="px-4 py-3 text-sm text-muted-foreground">
       This document has no outline.
     </div>
-    <ul v-else role="tree" class="flex-1 overflow-auto px-2 py-2">
-      <OutlineNode
-        v-for="(item, index) in bookmarks"
-        :key="index"
-        :item="item"
-        :level="0"
-        @navigate="handleNavigate"
-      />
-    </ul>
+    <ScrollArea v-else class="min-h-0 flex-1">
+      <ul role="tree" class="px-2 py-2">
+        <OutlineNode
+          v-for="(item, index) in bookmarks"
+          :key="index"
+          :item="item"
+          :level="0"
+          @navigate="handleNavigate"
+        />
+      </ul>
+    </ScrollArea>
   </div>
 </template>
