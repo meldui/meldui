@@ -199,37 +199,54 @@ watch(
 )
 
 // Scroll the active search match into view. EmbedPDF's SearchLayer paints
-// highlights at the right page coordinates but does not scroll the viewport —
-// without this, clicking "Next match" past the current page leaves the
-// active highlight invisible somewhere below.
+// highlights at the right page coordinates but does not scroll the viewport.
+//
+// We subscribe to TWO events because EmbedPDF emits them in different cases:
+//   - `onSearchResult` — a search finished and the FIRST hit becomes active
+//     (activeResultIndex → 0). The plugin does NOT emit `onActiveResultChange`
+//     for this, so without it the very first match is highlighted but never
+//     scrolled into view (only navigating to the 2nd match would scroll).
+//   - `onActiveResultChange` — the user moved to the next/previous match.
 let unsubscribeActiveResultChange: (() => void) | undefined
+let unsubscribeSearchResult: (() => void) | undefined
+
+function scrollToActiveSearchResult() {
+  const scope = search.provides.value
+  if (!scope) return
+  const state = scope.getState()
+  const index = state.activeResultIndex
+  if (index == null || index < 0) return
+  const result = state.results?.[index]
+  if (!result) return
+  const firstRect = result.rects?.[0]
+  const scrollScope = scroll.provides.value
+  if (!scrollScope) return
+  scrollScope.scrollToPage({
+    pageNumber: result.pageIndex + 1,
+    pageCoordinates: firstRect ? { x: firstRect.origin.x, y: firstRect.origin.y } : undefined,
+    // Center the match vertically when possible — feels less jarring
+    // than top-aligning when a single keystroke skips many pages.
+    alignY: 30,
+    behavior: 'smooth',
+  })
+}
 
 watch(
   () => search.provides.value,
   (scope) => {
     unsubscribeActiveResultChange?.()
+    unsubscribeSearchResult?.()
     if (!scope) return
-    unsubscribeActiveResultChange = scope.onActiveResultChange((index) => {
-      const state = scope.getState()
-      const result = state.results?.[index]
-      if (!result) return
-      const firstRect = result.rects?.[0]
-      const scrollScope = scroll.provides.value
-      if (!scrollScope) return
-      scrollScope.scrollToPage({
-        pageNumber: result.pageIndex + 1,
-        pageCoordinates: firstRect ? { x: firstRect.origin.x, y: firstRect.origin.y } : undefined,
-        // Center the match vertically when possible — feels less jarring
-        // than top-aligning when a single keystroke skips many pages.
-        alignY: 30,
-        behavior: 'smooth',
-      })
-    })
+    unsubscribeActiveResultChange = scope.onActiveResultChange(() => scrollToActiveSearchResult())
+    unsubscribeSearchResult = scope.onSearchResult(() => scrollToActiveSearchResult())
   },
   { immediate: true },
 )
 
-onBeforeUnmount(() => unsubscribeActiveResultChange?.())
+onBeforeUnmount(() => {
+  unsubscribeActiveResultChange?.()
+  unsubscribeSearchResult?.()
+})
 
 // ───────────────────────────────────────────────────────────────────────
 // Annotation lifecycle subscription
