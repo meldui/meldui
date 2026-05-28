@@ -25,7 +25,7 @@ export type DocumentType = 'pdf' | 'image' | 'text' | 'markdown' | 'unknown'
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /** Named zoom presets supported by the toolbar. */
-export type ZoomPreset = 'fit-page' | 'fit-width' | 'actual-size' | 'automatic'
+export type ZoomPreset = 'fit-page' | 'fit-width' | 'actual-size'
 
 /** Either a fractional scale (e.g. 1.5 = 150%) or a named preset. */
 export type Scale = number | ZoomPreset

@@ -149,7 +149,7 @@ interface PdfRendererInstance {
   goToPage: (page: number) => void
   nextPage: () => void
   prevPage: () => void
-  requestZoom: (level: number | 'fit-page' | 'fit-width' | 'actual-size' | 'automatic') => void
+  requestZoom: (level: number | 'fit-page' | 'fit-width' | 'actual-size') => void
   searchKeyword: (keyword: string) => void
   nextMatch: () => void
   previousMatch: () => void
@@ -308,8 +308,8 @@ function handleZoomOut() {
 }
 function handleRequestZoom(level: Scale) {
   // Numeric levels and named presets both flow through the renderer's
-  // `requestZoom` for PDFs (it handles fit-width/fit-page/actual-size/automatic
-  // plus arbitrary numbers). For non-PDFs only numeric scales make sense — fit
+  // `requestZoom` for PDFs (it handles fit-width/fit-page/actual-size plus
+  // arbitrary numbers). For non-PDFs only numeric scales make sense — fit
   // modes silently fall back to 1.
   if (isPdf.value) {
     pdfRendererRef.value?.requestZoom(level as number | ZoomPreset)

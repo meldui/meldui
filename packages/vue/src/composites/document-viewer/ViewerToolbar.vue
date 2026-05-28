@@ -203,7 +203,6 @@ interface ZoomPresetItem {
   kind: 'mode' | 'percent'
 }
 const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
-  { label: 'Automatic', value: 'automatic' satisfies ZoomPreset, kind: 'mode' },
   { label: 'Fit Width', value: 'fit-width' satisfies ZoomPreset, kind: 'mode' },
   { label: 'Fit Page', value: 'fit-page' satisfies ZoomPreset, kind: 'mode' },
   { label: '50%', value: 0.5, kind: 'percent' },

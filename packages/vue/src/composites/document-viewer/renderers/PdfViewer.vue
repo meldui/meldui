@@ -296,11 +296,10 @@ defineExpose({
   // Convenience methods that proxy to the controller — safe even when null.
   zoomIn: () => controllerRef.value?.zoomIn(),
   zoomOut: () => controllerRef.value?.zoomOut(),
-  requestZoom: (level: number | 'fit-page' | 'fit-width' | 'actual-size' | 'automatic') => {
+  requestZoom: (level: number | 'fit-page' | 'fit-width' | 'actual-size') => {
     if (level === 'actual-size') return controllerRef.value?.actualSize()
     if (level === 'fit-width') return controllerRef.value?.fitWidth()
     if (level === 'fit-page') return controllerRef.value?.fitPage()
-    if (level === 'automatic') return controllerRef.value?.requestZoom('automatic' as never)
     return controllerRef.value?.requestZoom(level)
   },
   rotateClockwise: () => controllerRef.value?.rotateClockwise(),

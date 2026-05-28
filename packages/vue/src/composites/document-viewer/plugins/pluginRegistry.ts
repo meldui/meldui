@@ -27,7 +27,7 @@ import { RenderPluginPackage } from '@embedpdf/plugin-render/vue'
 import { TilingPluginPackage } from '@embedpdf/plugin-tiling/vue'
 
 // Phase 1 — view controls (always registered)
-import { ZoomPluginPackage } from '@embedpdf/plugin-zoom/vue'
+import { ZoomPluginPackage, ZoomMode, type ZoomLevel } from '@embedpdf/plugin-zoom/vue'
 import { RotatePluginPackage } from '@embedpdf/plugin-rotate/vue'
 import { SpreadPluginPackage } from '@embedpdf/plugin-spread/vue'
 import { PanPluginPackage } from '@embedpdf/plugin-pan/vue'
@@ -52,7 +52,23 @@ import { RedactionPluginPackage } from '@embedpdf/plugin-redaction/vue'
 import { FormPluginPackage } from '@embedpdf/plugin-form/vue'
 import { AttachmentPluginPackage } from '@embedpdf/plugin-attachment/vue'
 
-import type { DocumentSource, FeatureConfig, ViewerFeatures } from '../types'
+import type { DocumentSource, FeatureConfig, ViewerFeatures, ZoomPreset } from '../types'
+
+/**
+ * Map a {@link ZoomPreset} to EmbedPDF's `ZoomLevel`. Defaults to fit-page so
+ * a freshly-opened document fits the viewport instead of rendering at 100%
+ * (which often overflows). Consumers override via `featureConfig.zoom.defaultMode`.
+ */
+function resolveDefaultZoom(preset: ZoomPreset | undefined): ZoomLevel {
+  switch (preset) {
+    case 'fit-width':
+      return ZoomMode.FitWidth
+    case 'actual-size':
+      return 1
+    default:
+      return ZoomMode.FitPage
+  }
+}
 
 /** Default feature flags — sensible defaults for a typical PDF viewer. */
 export const DEFAULT_FEATURES: Required<ViewerFeatures> = {
@@ -124,6 +140,7 @@ export function buildPlugins({
   // by `features` separately so the composables they expose are safe to call).
   plugins.push(
     createPluginRegistration(ZoomPluginPackage, {
+      defaultZoomLevel: resolveDefaultZoom(config.zoom?.defaultMode),
       minZoom: config.zoom?.min,
       maxZoom: config.zoom?.max,
     }),
