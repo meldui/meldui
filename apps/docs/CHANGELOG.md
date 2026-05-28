@@ -1,5 +1,14 @@
 # docs
 
+## 0.1.2
+
+### Patch Changes
+
+- bug fixes on documentviewer
+- Updated dependencies
+  - @meldui/charts-vue@0.3.2
+  - @meldui/vue@0.3.2
+
 ## 0.1.1
 
 ### Patch Changes
