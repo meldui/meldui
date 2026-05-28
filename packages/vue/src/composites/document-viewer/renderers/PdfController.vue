@@ -199,37 +199,54 @@ watch(
 )
 
 // Scroll the active search match into view. EmbedPDF's SearchLayer paints
-// highlights at the right page coordinates but does not scroll the viewport —
-// without this, clicking "Next match" past the current page leaves the
-// active highlight invisible somewhere below.
+// highlights at the right page coordinates but does not scroll the viewport.
+//
+// We subscribe to TWO events because EmbedPDF emits them in different cases:
+//   - `onSearchResult` — a search finished and the FIRST hit becomes active
+//     (activeResultIndex → 0). The plugin does NOT emit `onActiveResultChange`
+//     for this, so without it the very first match is highlighted but never
+//     scrolled into view (only navigating to the 2nd match would scroll).
+//   - `onActiveResultChange` — the user moved to the next/previous match.
 let unsubscribeActiveResultChange: (() => void) | undefined
+let unsubscribeSearchResult: (() => void) | undefined
+
+function scrollToActiveSearchResult() {
+  const scope = search.provides.value
+  if (!scope) return
+  const state = scope.getState()
+  const index = state.activeResultIndex
+  if (index == null || index < 0) return
+  const result = state.results?.[index]
+  if (!result) return
+  const firstRect = result.rects?.[0]
+  const scrollScope = scroll.provides.value
+  if (!scrollScope) return
+  scrollScope.scrollToPage({
+    pageNumber: result.pageIndex + 1,
+    pageCoordinates: firstRect ? { x: firstRect.origin.x, y: firstRect.origin.y } : undefined,
+    // Center the match vertically when possible — feels less jarring
+    // than top-aligning when a single keystroke skips many pages.
+    alignY: 30,
+    behavior: 'smooth',
+  })
+}
 
 watch(
   () => search.provides.value,
   (scope) => {
     unsubscribeActiveResultChange?.()
+    unsubscribeSearchResult?.()
     if (!scope) return
-    unsubscribeActiveResultChange = scope.onActiveResultChange((index) => {
-      const state = scope.getState()
-      const result = state.results?.[index]
-      if (!result) return
-      const firstRect = result.rects?.[0]
-      const scrollScope = scroll.provides.value
-      if (!scrollScope) return
-      scrollScope.scrollToPage({
-        pageNumber: result.pageIndex + 1,
-        pageCoordinates: firstRect ? { x: firstRect.origin.x, y: firstRect.origin.y } : undefined,
-        // Center the match vertically when possible — feels less jarring
-        // than top-aligning when a single keystroke skips many pages.
-        alignY: 30,
-        behavior: 'smooth',
-      })
-    })
+    unsubscribeActiveResultChange = scope.onActiveResultChange(() => scrollToActiveSearchResult())
+    unsubscribeSearchResult = scope.onSearchResult(() => scrollToActiveSearchResult())
   },
   { immediate: true },
 )
 
-onBeforeUnmount(() => unsubscribeActiveResultChange?.())
+onBeforeUnmount(() => {
+  unsubscribeActiveResultChange?.()
+  unsubscribeSearchResult?.()
+})
 
 // ───────────────────────────────────────────────────────────────────────
 // Annotation lifecycle subscription
@@ -579,15 +596,22 @@ async function saveAsCopy(): Promise<ArrayBuffer> {
 
 /**
  * Print the active PDF document using the EmbedPDF print plugin. The plugin
- * auto-injects a hidden `<PrintFrame>` so we don't need to mount one. With
- * `includeAnnotations` defaulting to `true`, current annotations are baked
- * into the print job natively — no `saveAsCopy()` round-trip needed.
+ * auto-injects a hidden `<PrintFrame>` so we don't need to mount one.
+ *
+ * `includeAnnotations: false` prints the clean document — no highlights and
+ * no comment markers. The plugin would otherwise bake every annotation's
+ * appearance stream into the page (default `true`), which surfaces the
+ * sticky-note's native yellow square in place of our on-screen
+ * `CommentMarker` pin. EmbedPDF's print options are all-or-nothing
+ * (`PdfPrintOptions` has no per-subtype filter), so suppressing the comment
+ * marker means suppressing annotations entirely — matching the overlay-only
+ * behaviour where annotations never appear in print.
  */
 async function printDocument(): Promise<void> {
   const scope = print.provides.value
   if (!scope) return
   return new Promise((resolve, reject) => {
-    scope.print().wait(
+    scope.print({ includeAnnotations: false }).wait(
       () => resolve(),
       (err) => reject(err),
     )

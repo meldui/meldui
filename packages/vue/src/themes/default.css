@@ -172,6 +172,55 @@
   }
 }
 
+/* ==========================================================================
+   DocumentViewer Scrollbar (.meldscroll)
+   Auto-hiding native scrollbar matching <ScrollArea>, used ONLY for the two
+   EmbedPDF-owned scrollers (the document <Viewport> and the <ThumbnailsPane>)
+   whose scroll element can't be replaced by the component. Everything else in
+   the viewer uses the <ScrollArea> component. Lives here (not in an SFC
+   <style>) so the docs site — which loads the theme but not the compiled
+   component CSS — picks it up too.
+
+   The thumb is invisible until the pointer is over the scroll area, then
+   hides 600ms after it leaves — driven by the `data-scroll-visible` attribute
+   the v-meld-scroll directive toggles (reka's `type="hover"` semantics). No
+   color transition, and intentionally no `scrollbar-width`/`scrollbar-color`:
+     1. Animating a colour from the `transparent` keyword (transparent BLACK)
+        toward a light grey interpolates through dark shades — the brief
+        black→grey flicker on pointer-enter. An instant toggle avoids it and
+        matches reka's <ScrollArea> (which reveals instantly via Presence).
+     2. Chromium ignores `::-webkit-scrollbar-*` rules whenever the standard
+        `scrollbar-width`/`scrollbar-color` props are set, which would drop
+        this styling entirely.
+   The track keeps a constant width so revealing the thumb never reflows the
+   document (native bars, unlike reka's overlay, occupy layout while present).
+   ========================================================================== */
+
+.meldscroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.meldscroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.meldscroll::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  min-height: 40px;
+}
+
+.meldscroll[data-scroll-visible]::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+}
+
+.meldscroll::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /**
  * DataTable CSS Custom Properties
  * Minimal configuration - uses Tailwind classes for most styling

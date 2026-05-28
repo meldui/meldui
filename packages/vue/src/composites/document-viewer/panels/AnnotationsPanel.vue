@@ -15,6 +15,7 @@
  */
 import { computed } from 'vue'
 import AnnotationRow from './AnnotationRow.vue'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import type { Annotation, CommentThread } from '../types'
 
 interface Props {
@@ -100,7 +101,13 @@ const groupedByPage = computed(() => {
       No annotations yet.
     </div>
 
-    <div v-else class="flex flex-1 flex-col overflow-auto">
+    <!--
+      Lift the scrollbar above the sticky `z-10` page headers. reka's
+      scrollbar is an absolutely-positioned overlay with no z-index, so the
+      `z-10` headers would otherwise paint over it. Arbitrary-variant utility
+      (not a scoped <style>) so it also applies on the docs site.
+    -->
+    <ScrollArea v-else class="min-h-0 flex-1 [&_[data-slot=scroll-area-scrollbar]]:z-20">
       <template v-for="[pageIndex, pageItems] in groupedByPage" :key="pageIndex">
         <h3
           role="heading"
@@ -128,6 +135,6 @@ const groupedByPage = computed(() => {
           </li>
         </ul>
       </template>
-    </div>
+    </ScrollArea>
   </div>
 </template>

@@ -38,6 +38,7 @@ import OutlinePanel from '../panels/OutlinePanel.vue'
 import ThumbnailsPanel from '../panels/ThumbnailsPanel.vue'
 import ViewerSidePanel from '../ViewerSidePanel.vue'
 import { buildPlugins, resolveFeatures } from '../plugins/pluginRegistry'
+import { vMeldScroll } from '../directives/meldScroll'
 import type {
   AnnotationFilter,
   AnnotationTransferItem,
@@ -295,11 +296,10 @@ defineExpose({
   // Convenience methods that proxy to the controller — safe even when null.
   zoomIn: () => controllerRef.value?.zoomIn(),
   zoomOut: () => controllerRef.value?.zoomOut(),
-  requestZoom: (level: number | 'fit-page' | 'fit-width' | 'actual-size' | 'automatic') => {
+  requestZoom: (level: number | 'fit-page' | 'fit-width' | 'actual-size') => {
     if (level === 'actual-size') return controllerRef.value?.actualSize()
     if (level === 'fit-width') return controllerRef.value?.fitWidth()
     if (level === 'fit-page') return controllerRef.value?.fitPage()
-    if (level === 'automatic') return controllerRef.value?.requestZoom('automatic' as never)
     return controllerRef.value?.requestZoom(level)
   },
   rotateClockwise: () => controllerRef.value?.rotateClockwise(),
@@ -401,7 +401,19 @@ defineExpose({
 
           <DocumentContent :document-id="coreState.activeDocumentId">
             <template #default="{ isLoaded }">
-              <div v-if="isLoaded" class="flex h-full w-full">
+              <!--
+                `[&>div]:min-w-0` lets the document area shrink to the space left
+                by the side panels. EmbedPDF's <GlobalPointerProvider> renders a
+                `width:100%` block with the flex default `min-width:auto` (and we
+                can't pass it a class), so as a direct flex child of this row it
+                refuses to shrink when an inner-row panel (thumbnails / outline)
+                opens — it overflows past the row, and the document Viewport's
+                right edge + horizontal scrollbar get clipped by the
+                overflow-hidden ancestor, cropping a zoomed page with no reachable
+                scroll. The side panels are <aside>, so only the
+                GlobalPointerProvider <div> is targeted.
+              -->
+              <div v-if="isLoaded" class="flex h-full w-full [&>div]:min-w-0">
                 <!-- Thumbnails side panel (left) -->
                 <ViewerSidePanel
                   v-if="resolvedFeatures.thumbnails"
@@ -435,6 +447,7 @@ defineExpose({
                 -->
                 <GlobalPointerProvider :document-id="coreState.activeDocumentId">
                   <Viewport
+                    v-meld-scroll
                     :document-id="coreState.activeDocumentId"
                     class="h-full flex-1 bg-muted"
                   >

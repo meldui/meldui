@@ -68,7 +68,12 @@ const panelId = `side-panel-${Math.random().toString(36).slice(2, 9)}`
         </Button>
       </header>
 
-      <div class="flex-1 overflow-auto">
+      <!--
+        No scroll here: each panel owns its own scroll region (MeldUI
+        <ScrollArea> for outline/annotations, EmbedPDF's own scroller for
+        thumbnails) so the viewer never shows a second, unstyled native bar.
+      -->
+      <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
         <slot />
       </div>
     </aside>

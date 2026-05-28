@@ -11,6 +11,7 @@ import { IncremarkContent, ThemeProvider, type UseIncremarkOptions } from '@incr
 import '@incremark/theme/styles.css'
 import { printMarkdown } from '../composables/usePrint'
 import { useTextSearch } from '../composables/useTextSearch'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import type { DocumentSource } from '../types'
 
 interface Props {
@@ -121,34 +122,34 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    class="markdown-viewer h-full w-full overflow-auto bg-muted/30 flex items-start justify-center p-4"
-  >
-    <div v-if="isLoading" class="flex items-center justify-center p-8">
-      <div class="flex flex-col items-center gap-2">
-        <div
-          class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"
-        />
-        <span class="text-sm text-muted-foreground">Loading markdown file&hellip;</span>
+  <ScrollArea class="markdown-viewer h-full w-full bg-muted/30">
+    <div class="flex min-h-full items-start justify-center p-4">
+      <div v-if="isLoading" class="flex items-center justify-center p-8">
+        <div class="flex flex-col items-center gap-2">
+          <div
+            class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"
+          />
+          <span class="text-sm text-muted-foreground">Loading markdown file&hellip;</span>
+        </div>
+      </div>
+
+      <div v-else class="relative shadow-lg bg-background max-w-4xl w-full">
+        <article
+          ref="contentRef"
+          class="markdown-content prose prose-neutral dark:prose-invert max-w-none p-6"
+          :style="{ fontSize }"
+        >
+          <ThemeProvider :theme="incremarkTheme">
+            <IncremarkContent
+              :content="content"
+              :is-finished="true"
+              :incremark-options="incremarkOptions"
+            />
+          </ThemeProvider>
+        </article>
       </div>
     </div>
-
-    <div v-else class="relative shadow-lg bg-background max-w-4xl w-full">
-      <article
-        ref="contentRef"
-        class="markdown-content prose prose-neutral dark:prose-invert max-w-none p-6"
-        :style="{ fontSize }"
-      >
-        <ThemeProvider :theme="incremarkTheme">
-          <IncremarkContent
-            :content="content"
-            :is-finished="true"
-            :incremark-options="incremarkOptions"
-          />
-        </ThemeProvider>
-      </article>
-    </div>
-  </div>
+  </ScrollArea>
 </template>
 
 <style scoped>

@@ -5,6 +5,7 @@
  */
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useTextSearch } from '../composables/useTextSearch'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import type { DocumentSource } from '../types'
 
 interface Props {
@@ -81,25 +82,25 @@ onBeforeUnmount(() => abortController?.abort())
 </script>
 
 <template>
-  <div
-    class="text-viewer h-full w-full overflow-auto bg-muted/30 flex items-start justify-center p-4"
-  >
-    <div v-if="isLoading" class="flex items-center justify-center p-8">
-      <div class="flex flex-col items-center gap-2">
-        <div
-          class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"
-        />
-        <span class="text-sm text-muted-foreground">Loading text file&hellip;</span>
+  <ScrollArea class="text-viewer h-full w-full bg-muted/30">
+    <div class="flex min-h-full items-start justify-center p-4">
+      <div v-if="isLoading" class="flex items-center justify-center p-8">
+        <div class="flex flex-col items-center gap-2">
+          <div
+            class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"
+          />
+          <span class="text-sm text-muted-foreground">Loading text file&hellip;</span>
+        </div>
+      </div>
+
+      <div v-else class="relative shadow-lg bg-background max-w-4xl w-full">
+        <pre
+          ref="contentRef"
+          :style="{ fontSize: `${0.875 * scale}rem` }"
+          class="whitespace-pre-wrap font-mono p-6 leading-relaxed text-foreground"
+          >{{ content }}</pre
+        >
       </div>
     </div>
-
-    <div v-else class="relative shadow-lg bg-background max-w-4xl w-full">
-      <pre
-        ref="contentRef"
-        :style="{ fontSize: `${0.875 * scale}rem` }"
-        class="whitespace-pre-wrap font-mono p-6 leading-relaxed text-foreground"
-        >{{ content }}</pre
-      >
-    </div>
-  </div>
+  </ScrollArea>
 </template>
