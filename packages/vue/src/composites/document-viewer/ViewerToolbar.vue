@@ -304,9 +304,7 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center">
             <template v-for="(preset, i) in ZOOM_PRESETS" :key="String(preset.value)">
-              <DropdownMenuSeparator
-                v-if="i > 0 && preset.kind !== ZOOM_PRESETS[i - 1].kind"
-              />
+              <DropdownMenuSeparator v-if="i > 0 && preset.kind !== ZOOM_PRESETS[i - 1].kind" />
               <DropdownMenuItem @click="emit('request-zoom', preset.value)">
                 {{ preset.label }}
               </DropdownMenuItem>
@@ -341,13 +339,13 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
               v-show="!isButtonHidden('rotate-ccw')"
               variant="ghost"
               size="icon-sm"
-              aria-label="Rotate counter-clockwise"
+              aria-label="Rotate left"
               @click="emit('rotate', 'ccw')"
             >
               <IconRotate :size="16" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Rotate counter-clockwise</TooltipContent>
+          <TooltipContent>Rotate left</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger as-child>
@@ -355,13 +353,13 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
               v-show="!isButtonHidden('rotate-cw')"
               variant="ghost"
               size="icon-sm"
-              aria-label="Rotate clockwise"
+              aria-label="Rotate right"
               @click="emit('rotate', 'cw')"
             >
               <IconRotateClockwise :size="16" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Rotate clockwise</TooltipContent>
+          <TooltipContent>Rotate right</TooltipContent>
         </Tooltip>
       </div>
 
@@ -633,26 +631,35 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
       </div>
 
       <!-- Mobile overflow menu -->
+      <!--
+        DropdownMenuTrigger must be the only `as-child` wrapper around the
+        Button. Double-wrapping with TooltipTrigger AND DropdownMenuTrigger
+        both as-child confuses Reka's anchor resolution (the menu renders
+        off-screen and never appears). We drop the Tooltip here; the
+        title attribute provides the discoverability hint. Same fix as the
+        search popover above.
+      -->
       <DropdownMenu>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <DropdownMenuTrigger as-child>
-              <Button variant="ghost" size="icon-sm" class="lg:hidden" aria-label="More actions">
-                <IconDots :size="16" />
-              </Button>
-            </DropdownMenuTrigger>
-          </TooltipTrigger>
-          <TooltipContent>More</TooltipContent>
-        </Tooltip>
+        <DropdownMenuTrigger as-child>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            class="lg:hidden"
+            aria-label="More actions"
+            title="More actions"
+          >
+            <IconDots :size="16" />
+          </Button>
+        </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-56">
           <!-- Rotation -->
           <DropdownMenuItem v-if="features.rotate && isPdfType" @click="emit('rotate', 'ccw')">
             <IconRotate :size="16" />
-            <span class="flex-1">Rotate counter-clockwise</span>
+            <span class="flex-1">Rotate left</span>
           </DropdownMenuItem>
           <DropdownMenuItem v-if="features.rotate && isPdfType" @click="emit('rotate', 'cw')">
             <IconRotateClockwise :size="16" />
-            <span class="flex-1">Rotate clockwise</span>
+            <span class="flex-1">Rotate right</span>
           </DropdownMenuItem>
 
           <!-- View / interaction modes -->
@@ -670,11 +677,7 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
             <span class="flex-1">{{
               interactionMode === 'hand' ? 'Hand tool' : 'Text select'
             }}</span>
-            <IconCheck
-              v-if="interactionMode === 'hand'"
-              :size="16"
-              class="text-primary"
-            />
+            <IconCheck v-if="interactionMode === 'hand'" :size="16" class="text-primary" />
           </DropdownMenuItem>
 
           <DropdownMenuSeparator v-if="isPdfType" />
@@ -711,10 +714,7 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
           <DropdownMenuItem
             v-if="features.annotations && isPdfType"
             @click="
-              emit(
-                'set-annotation-tool',
-                activeAnnotationTool === 'highlight' ? null : 'highlight',
-              )
+              emit('set-annotation-tool', activeAnnotationTool === 'highlight' ? null : 'highlight')
             "
           >
             <IconHighlight :size="16" />
@@ -733,11 +733,7 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
           >
             <IconMessageCirclePlus :size="16" />
             <span class="flex-1">Add comment</span>
-            <IconCheck
-              v-if="activeAnnotationTool === 'comment'"
-              :size="16"
-              class="text-primary"
-            />
+            <IconCheck v-if="activeAnnotationTool === 'comment'" :size="16" class="text-primary" />
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
