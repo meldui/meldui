@@ -7,7 +7,7 @@
  */
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { sourceToUrl } from '../utils/documentType'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import type { DocumentSource } from '../types'
 
 interface Props {
@@ -58,19 +58,21 @@ function handleError() {
 
 <template>
   <ScrollArea class="image-viewer h-full w-full bg-muted">
-    <div class="flex min-h-full items-center justify-center p-8">
+    <div class="flex min-h-full min-w-full items-center justify-center p-8">
       <img
         :src="imageUrl"
         :alt="alt"
         :style="{
           transform,
-          transformOrigin: 'center center',
+          transformOrigin: 'top left',
           transition: 'transform 200ms ease-out',
         }"
-        class="max-w-full max-h-full object-contain"
+        draggable="false"
+        class="max-w-full max-h-full object-contain select-none"
         @load="handleLoad"
         @error="handleError"
       />
     </div>
+    <ScrollBar orientation="horizontal" />
   </ScrollArea>
 </template>
