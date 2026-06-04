@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm prepare-assets && astro dev",
-    "build": "pnpm prepare-assets && tsx scripts/generate-llms.ts && astro build && pagefind --site dist",
+    "build": "pnpm prepare-assets && pnpm generate-a2ui-reference && tsx scripts/generate-llms.ts && astro build && pagefind --site dist",
     "generate-llms": "tsx scripts/generate-llms.ts",
+    "generate-a2ui-reference": "tsx scripts/generate-a2ui-reference.ts",
     "preview": "astro preview",
     "prepare-assets": "node -e \"import('node:fs/promises').then(async fs => { await fs.mkdir('public', { recursive: true }); await fs.copyFile('./node_modules/@embedpdf/pdfium/dist/pdfium.wasm', 'public/pdfium.wasm') }).catch(e => { console.warn('[docs] could not copy pdfium.wasm:', e.message); process.exit(0) })\""
   },
@@ -15,6 +16,7 @@
     "@astrojs/sitemap": "^3.3.1",
     "@astrojs/vue": "^5.0.6",
     "@internationalized/date": "^3.10.0",
+    "@meldui/a2ui": "workspace:*",
     "@meldui/charts-vue": "workspace:*",
     "@meldui/tabler-vue": "workspace:*",
     "@meldui/vue": "workspace:*",

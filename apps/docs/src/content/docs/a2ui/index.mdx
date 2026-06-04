@@ -1,0 +1,73 @@
+---
+title: A2UI Catalog
+description: Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
+category: a2ui
+package: '@meldui/a2ui'
+order: 1
+keywords:
+  - a2ui
+  - agent-ui
+  - generative-ui
+  - catalog
+---
+
+## What is A2UI?
+
+[A2UI](https://a2ui.org) is a protocol where an **agent** streams JSON describing a UI and a **client** renders it against a **catalog** — a JSON-Schema document that maps abstract component names (like `Card`, `Button`, `Markdown`) to a concrete design system. The agent never hard-codes layout; it emits data, and the catalog is the contract that decides how that data is rendered.
+
+`@meldui/a2ui` is that catalog for MeldUI. Because the catalog is framework-agnostic, **any** A2UI-speaking agent — Google ADK, CopilotKit, a custom server — can target MeldUI without knowing it renders in Vue.
+
+> **Scope today:** this package is the **catalog contract** — the schema and component definitions. The Vue reference renderer (`provideA2UI`, `<A2UISurface>`, the mapping to `@meldui/vue` components) ships in a follow-up release. See the [Catalog Reference](/docs/a2ui/reference) for the full component list.
+
+## Install
+
+```bash
+pnpm add @meldui/a2ui
+```
+
+## The catalog id
+
+```
+https://meldui.dev/catalogs/vue/v1/catalog.json
+```
+
+This stable, versioned id is how agents negotiate. A client advertises the catalogs it can render; the agent picks one and targets it for the lifetime of a surface:
+
+```jsonc
+// client → agent (capabilities)
+{
+  "a2uiClientCapabilities": {
+    "supportedCatalogIds": ["https://meldui.dev/catalogs/vue/v1/catalog.json"],
+  },
+}
+```
+
+A future incompatible revision will publish a new versioned id (e.g. `.../v2/catalog.json`) rather than mutating this one.
+
+## Consuming the contract
+
+Fetch the raw, generated catalog artifact (for agent-side prompt embedding or tooling):
+
+```ts
+import catalog from '@meldui/a2ui/catalog' // meldui-v1.catalog.json
+```
+
+Or use the typed helpers from the main entry:
+
+```ts
+import { catalog, CATALOG_ID, MELDUI_COMPONENT_NAMES } from '@meldui/a2ui'
+```
+
+## What's in the catalog
+
+One advertised catalog, grouped by reliability tier:
+
+- **A2UI Basic primitives** — kept under their exact spec names for ecosystem interop (`Row`, `Column`, `Card`, `Text`, `Button`, `TextField`, …).
+- **Structural & display** — `Avatar`, `Alert`, `Badge`, `Stepper`, `Accordion`, `Table`, …
+- **Rich** — `Markdown` (the primary text path, tolerant of streamed/partial Markdown), `Timeline`, `Combobox`, `Chart`, …
+
+It also declares the A2UI Basic **functions** (`required`, `email`, `formatDate`, …) and a **theme** token shape. See the [Catalog Reference](/docs/a2ui/reference) for every component, its props, and the functions.
+
+## Attribution
+
+The Basic primitive definitions, functions, and theme schema derive from [google/A2UI](https://github.com/google/A2UI) (`specification/v0_9`, Apache-2.0). MeldUI reuses the shared A2UI common types so its components are structurally interoperable with the wider ecosystem.

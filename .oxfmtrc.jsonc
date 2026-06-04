@@ -15,5 +15,13 @@
     "**/build/**",
     "**/.turbo/**",
     "**/storybook-static/**",
+    // @meldui/a2ui: generated catalog artifact + vendored A2UI JSON (kept in
+    // codegen/source formatting; reformatting would break the drift check).
+    "**/packages/a2ui/src/schema/**",
+    "**/packages/a2ui/src/catalog/functions.json",
+    "**/packages/a2ui/src/catalog/theme-schema.json",
+    "**/packages/a2ui/scripts/*.fixture.json",
+    // Generated A2UI catalog reference (emitted by generate-a2ui-reference).
+    "**/content/docs/a2ui/reference.mdx",
   ],
 }

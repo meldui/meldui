@@ -20,6 +20,8 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 
 ## Pages
 
+- [A2UI Catalog](/docs/a2ui): Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
+- [Catalog Reference](/docs/a2ui/reference): The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
 - [Area Chart](/docs/charts/area-chart): Visualize volume and cumulative data with filled areas beneath lines.
 - [Bar Chart](/docs/charts/bar-chart): Compare values across categories with vertical, horizontal, and stacked bars.
 - [Chart Events](/docs/charts/events): Handle user interactions with chart click, hover, legend, and selection events.

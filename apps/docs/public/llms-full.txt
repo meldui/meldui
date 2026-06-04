@@ -20,6 +20,8 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 
 ## Pages
 
+- [A2UI Catalog](/docs/a2ui): Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
+- [Catalog Reference](/docs/a2ui/reference): The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
 - [Area Chart](/docs/charts/area-chart): Visualize volume and cumulative data with filled areas beneath lines.
 - [Bar Chart](/docs/charts/bar-chart): Compare values across categories with vertical, horizontal, and stacked bars.
 - [Chart Events](/docs/charts/events): Handle user interactions with chart click, hover, legend, and selection events.
@@ -166,6 +168,462 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 ---
 
 # Full API Reference
+
+## A2UI Catalog
+
+Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
+
+## What is A2UI?
+
+[A2UI](https://a2ui.org) is a protocol where an **agent** streams JSON describing a UI and a **client** renders it against a **catalog** — a JSON-Schema document that maps abstract component names (like `Card`, `Button`, `Markdown`) to a concrete design system. The agent never hard-codes layout; it emits data, and the catalog is the contract that decides how that data is rendered.
+
+`@meldui/a2ui` is that catalog for MeldUI. Because the catalog is framework-agnostic, **any** A2UI-speaking agent — Google ADK, CopilotKit, a custom server — can target MeldUI without knowing it renders in Vue.
+
+> **Scope today:** this package is the **catalog contract** — the schema and component definitions. The Vue reference renderer (`provideA2UI`, `<A2UISurface>`, the mapping to `@meldui/vue` components) ships in a follow-up release. See the [Catalog Reference](/docs/a2ui/reference) for the full component list.
+
+## Install
+
+```bash
+pnpm add @meldui/a2ui
+```
+
+## The catalog id
+
+```
+https://meldui.dev/catalogs/vue/v1/catalog.json
+```
+
+This stable, versioned id is how agents negotiate. A client advertises the catalogs it can render; the agent picks one and targets it for the lifetime of a surface:
+
+```jsonc
+// client → agent (capabilities)
+{
+  "a2uiClientCapabilities": {
+    "supportedCatalogIds": ["https://meldui.dev/catalogs/vue/v1/catalog.json"]
+  }
+}
+```
+
+A future incompatible revision will publish a new versioned id (e.g. `.../v2/catalog.json`) rather than mutating this one.
+
+## Consuming the contract
+
+Fetch the raw, generated catalog artifact (for agent-side prompt embedding or tooling):
+
+```ts
+
+```
+
+Or use the typed helpers from the main entry:
+
+```ts
+
+```
+
+## What's in the catalog
+
+One advertised catalog, grouped by reliability tier:
+
+- **A2UI Basic primitives** — kept under their exact spec names for ecosystem interop (`Row`, `Column`, `Card`, `Text`, `Button`, `TextField`, …).
+- **Structural & display** — `Avatar`, `Alert`, `Badge`, `Stepper`, `Accordion`, `Table`, …
+- **Rich** — `Markdown` (the primary text path, tolerant of streamed/partial Markdown), `Timeline`, `Combobox`, `Chart`, …
+
+It also declares the A2UI Basic **functions** (`required`, `email`, `formatDate`, …) and a **theme** token shape. See the [Catalog Reference](/docs/a2ui/reference) for every component, its props, and the functions.
+
+## Attribution
+
+The Basic primitive definitions, functions, and theme schema derive from [google/A2UI](https://github.com/google/A2UI) (`specification/v0_9`, Apache-2.0). MeldUI reuses the shared A2UI common types so its components are structurally interoperable with the wider ecosystem.
+
+---
+
+## Catalog Reference
+
+The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
+
+> Auto-generated from the catalog definitions. Do not edit by hand — run `pnpm --filter docs generate-a2ui-reference`.
+
+## Catalog
+
+- **Catalog ID:** `https://meldui.dev/catalogs/vue/v1/catalog.json`
+- **A2UI version:** `v0.9`
+- **Components:** 35 · **Functions:** 14
+
+All components below are advertised under a single `catalogId`. The groups are an authoring/reliability grouping, not separate catalogs.
+
+## Components
+
+### Basic primitives
+
+#### Text
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `text` | `DynamicString` | yes | The text content to display. While simple Markdown formatting is supported (i.e. without HTML, images, or links), utilizing dedicated UI components is generally preferred for a richer and more structured presentation. |
+| `variant` | `enum` | no | A hint for the base text style. One of: `h1`, `h2`, `h3`, `h4`, `h5`, `caption`, `body`. Default: `body`. |
+
+#### Image
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `url` | `DynamicString` | yes | The URL of the image to display. |
+| `description` | `DynamicString` | no | Accessibility text for the image. |
+| `fit` | `enum` | no | Specifies how the image should be resized to fit its container. This corresponds to the CSS 'object-fit' property. One of: `contain`, `cover`, `fill`, `none`, `scaleDown`. Default: `fill`. |
+| `variant` | `enum` | no | A hint for the image size and style. One of: `icon`, `avatar`, `smallFeature`, `mediumFeature`, `largeFeature`, `header`. Default: `mediumFeature`. |
+
+#### Icon
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | `oneOf` | yes | The name of the icon to display. |
+
+#### Row
+
+A layout component that arranges its children horizontally. To create a grid layout, nest Columns within this Row.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `children` | `ChildList` | yes | Defines the children. Use an array of strings for a fixed set of children, or a template object to generate children from a data list. Children cannot be defined inline, they must be referred to by ID. |
+| `justify` | `enum` | no | Defines the arrangement of children along the main axis (horizontally). Use 'spaceBetween' to push items to the edges, or 'start'/'end'/'center' to pack them together. One of: `center`, `end`, `spaceAround`, `spaceBetween`, `spaceEvenly`, `start`, `stretch`. Default: `start`. |
+| `align` | `enum` | no | Defines the alignment of children along the cross axis (vertically). This is similar to the CSS 'align-items' property, but uses camelCase values (e.g., 'start'). One of: `start`, `center`, `end`, `stretch`. Default: `stretch`. |
+
+#### Column
+
+A layout component that arranges its children vertically. To create a grid layout, nest Rows within this Column.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `children` | `ChildList` | yes | Defines the children. Use an array of strings for a fixed set of children, or a template object to generate children from a data list. Children cannot be defined inline, they must be referred to by ID. |
+| `justify` | `enum` | no | Defines the arrangement of children along the main axis (vertically). Use 'spaceBetween' to push items to the edges (e.g. header at top, footer at bottom), or 'start'/'end'/'center' to pack them together. One of: `start`, `center`, `end`, `spaceBetween`, `spaceAround`, `spaceEvenly`, `stretch`. Default: `start`. |
+| `align` | `enum` | no | Defines the alignment of children along the cross axis (horizontally). This is similar to the CSS 'align-items' property. One of: `center`, `end`, `start`, `stretch`. Default: `stretch`. |
+
+#### List
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `children` | `ChildList` | yes | Defines the children. Use an array of strings for a fixed set of children, or a template object to generate children from a data list. |
+| `direction` | `enum` | no | The direction in which the list items are laid out. One of: `vertical`, `horizontal`. Default: `vertical`. |
+| `align` | `enum` | no | Defines the alignment of children along the cross axis. One of: `start`, `center`, `end`, `stretch`. Default: `stretch`. |
+
+#### Card
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `child` | `ComponentId` | yes | The ID of the single child component to be rendered inside the card. To display multiple elements, you MUST wrap them in a layout component (like Column or Row) and pass that container's ID here. Do NOT pass multiple IDs or a non-existent ID. Do NOT define the child component inline. |
+
+#### Tabs
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `tabs` | `array` | yes | An array of objects, where each object defines a tab with a title and a child component. |
+
+#### Modal
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `trigger` | `ComponentId` | yes | The ID of the component that opens the modal when interacted with (e.g., a button). Do NOT define the component inline. |
+| `content` | `ComponentId` | yes | The ID of the component to be displayed inside the modal. Do NOT define the component inline. |
+
+#### Divider
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `axis` | `enum` | no | The orientation of the divider. One of: `horizontal`, `vertical`. Default: `horizontal`. |
+
+#### Button
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `child` | `ComponentId` | yes | The ID of the child component. Use a 'Text' component for a labeled button. Only use an 'Icon' if the requirements explicitly ask for an icon-only button. Do NOT define the child component inline. |
+| `variant` | `enum` | no | A hint for the button style. If omitted, a default button style is used. 'primary' indicates this is the main call-to-action button. 'borderless' means the button has no visual border or background, making its child content appear like a clickable link. One of: `default`, `primary`, `borderless`. Default: `default`. |
+| `action` | `Action` | yes |  |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### TextField
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `label` | `DynamicString` | yes | The text label for the input field. |
+| `value` | `DynamicString` | no | The value of the text field. |
+| `variant` | `enum` | no | The type of input field to display. One of: `longText`, `number`, `shortText`, `obscured`. Default: `shortText`. |
+| `validationRegexp` | `string` | no | A regular expression used for client-side validation of the input. |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### CheckBox
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `label` | `DynamicString` | yes | The text to display next to the checkbox. |
+| `value` | `DynamicBoolean` | yes | The current state of the checkbox (true for checked, false for unchecked). |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### ChoicePicker
+
+A component that allows selecting one or more options from a list.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `label` | `DynamicString` | no | The label for the group of options. |
+| `variant` | `enum` | no | A hint for how the choice picker should be displayed and behave. One of: `multipleSelection`, `mutuallyExclusive`. Default: `mutuallyExclusive`. |
+| `options` | `array` | yes | The list of available options to choose from. |
+| `value` | `DynamicStringList` | yes | The list of currently selected values. This should be bound to a string array in the data model. |
+| `displayStyle` | `enum` | no | The display style of the component. One of: `checkbox`, `chips`. Default: `checkbox`. |
+| `filterable` | `boolean` | no | If true, displays a search input to filter the options. Default: `false`. |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### Slider
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `label` | `DynamicString` | no | The label for the slider. |
+| `min` | `number` | no | The minimum value of the slider. Default: `0`. |
+| `max` | `number` | yes | The maximum value of the slider. |
+| `value` | `DynamicNumber` | yes | The current value of the slider. |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### DateTimeInput
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `value` | `DynamicString` | yes | The selected date and/or time value in ISO 8601 format. If not yet set, initialize with an empty string. |
+| `enableDate` | `boolean` | no | If true, allows the user to select a date. Default: `false`. |
+| `enableTime` | `boolean` | no | If true, allows the user to select a time. Default: `false`. |
+| `min` | `DynamicString` | no | The minimum allowed date/time in ISO 8601 format. |
+| `max` | `DynamicString` | no | The maximum allowed date/time in ISO 8601 format. |
+| `label` | `DynamicString` | no | The text label for the input field. |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+### Structural & display
+
+#### Avatar
+
+A user/entity avatar showing an image with a text fallback (e.g. initials).
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `src` | `DynamicString` | no | URL of the avatar image. |
+| `alt` | `DynamicString` | no | Accessibility text for the avatar. |
+| `fallback` | `DynamicString` | no | Text shown when no image is available (e.g. initials). |
+| `size` | `enum` | no | A hint for the avatar size. One of: `sm`, `md`, `lg`. Default: `md`. |
+
+#### AvatarGroup
+
+A horizontally overlapping group of Avatar components.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `children` | `ChildList` | yes | The Avatar components to group, referenced by ID. |
+| `max` | `number` | no | Maximum avatars to show before collapsing the rest into a "+N" badge. |
+
+#### Kbd
+
+Renders one or more keyboard keys (e.g. ["Ctrl", "K"]).
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `keys` | `DynamicStringList` | yes | The keyboard keys to display, in order. |
+
+#### Alert
+
+A callout banner conveying status or an important message.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `title` | `DynamicString` | no | The alert title. |
+| `description` | `DynamicString` | no | The alert body text. |
+| `variant` | `enum` | no | The severity/intent of the alert. One of: `info`, `success`, `warning`, `destructive`. Default: `info`. |
+
+#### Badge
+
+A small status/label chip.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `label` | `DynamicString` | yes | The badge text. |
+| `variant` | `enum` | no | A hint for the badge style. One of: `default`, `secondary`, `destructive`, `outline`, `success`, `warning`. Default: `default`. |
+
+#### Stepper
+
+A sequence of ordered steps with a current active step.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `steps` | `array` | yes | The ordered steps. |
+| `value` | `DynamicNumber` | no | The zero-based index of the current active step. |
+| `orientation` | `enum` | no | The layout orientation of the stepper. One of: `horizontal`, `vertical`. Default: `horizontal`. |
+
+#### ButtonGroup
+
+A set of related Button components grouped together.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `children` | `ChildList` | yes | The Button components to group, referenced by ID. |
+| `orientation` | `enum` | no | The layout orientation of the group. One of: `horizontal`, `vertical`. Default: `horizontal`. |
+
+#### Carousel
+
+A horizontally swipeable set of slides.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `children` | `ChildList` | yes | The slide components, referenced by ID. |
+| `orientation` | `enum` | no | The scroll orientation. One of: `horizontal`, `vertical`. Default: `horizontal`. |
+| `loop` | `boolean` | no | If true, the carousel loops back to the start after the last slide. Default: `false`. |
+
+#### ToggleGroup
+
+A group of toggle buttons supporting single or multiple selection.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `options` | `array` | yes | The toggle options. |
+| `value` | `DynamicStringList` | yes | The currently selected value(s), bound to a string array. |
+| `variant` | `enum` | no | Whether one or multiple options may be selected at once. One of: `single`, `multiple`. Default: `single`. |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### Accordion
+
+A vertically stacked set of collapsible sections.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `items` | `array` | yes | The collapsible sections. |
+| `type` | `enum` | no | Whether one or multiple sections may be open at once. One of: `single`, `multiple`. Default: `single`. |
+
+#### ScrollArea
+
+A scrollable viewport wrapping a single child component.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `child` | `ComponentId` | yes | The ID of the child component to make scrollable. Do NOT define it inline. |
+| `maxHeight` | `string` | no | Maximum height before scrolling (CSS length, e.g. '320px'). |
+| `orientation` | `enum` | no | The scroll orientation. One of: `vertical`, `horizontal`, `both`. Default: `vertical`. |
+
+#### Separator
+
+A visual separator line with an optional label.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `axis` | `enum` | no | The orientation of the separator. One of: `horizontal`, `vertical`. Default: `horizontal`. |
+| `label` | `DynamicString` | no | Optional text centered on the separator. |
+
+#### Table
+
+A simple tabular display. Columns are declared statically; rows are bound to an array in the data model.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `columns` | `array` | yes | The column definitions, in display order. |
+| `rows` | `DataBinding` | yes | A data binding to an array of row objects. Each object is keyed by the column `key`s. |
+| `caption` | `DynamicString` | no | Optional table caption. |
+
+### Rich
+
+#### Markdown
+
+Renders Markdown content. Tolerates incomplete/streamed Markdown (e.g. an unterminated emphasis or code fence mid-stream); bind `content` to a data path that the agent appends to. This is the preferred component for rich textual answers.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `content` | `DynamicString` | yes | The Markdown source to render. May be streamed/partial. |
+
+#### Timeline
+
+A vertical sequence of time-ordered events.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `items` | `array` | yes | The timeline entries, in order. |
+
+#### Sidebar
+
+An app-like layout shell with a collapsible side panel and a main content area, for surfaces that drive a fuller UI.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `content` | `ComponentId` | yes | The ID of the main content component. Do NOT define it inline. |
+| `header` | `ComponentId` | no | Optional ID of a component rendered at the top of the side panel. |
+| `footer` | `ComponentId` | no | Optional ID of a component rendered at the bottom of the side panel. |
+| `side` | `enum` | no | Which side the panel is anchored to. One of: `left`, `right`. Default: `left`. |
+
+#### Combobox
+
+A single-select input with a searchable dropdown of options.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `label` | `DynamicString` | no | The input label. |
+| `placeholder` | `DynamicString` | no | Placeholder text when empty. |
+| `options` | `array` | yes | The selectable options. |
+| `value` | `DynamicString` | yes | The currently selected value, bound to a string in the data model. |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### MultiSelect
+
+A multi-select input with a searchable dropdown of options.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `label` | `DynamicString` | no | The input label. |
+| `placeholder` | `DynamicString` | no | Placeholder text when empty. |
+| `options` | `array` | yes | The selectable options. |
+| `value` | `DynamicStringList` | yes | The currently selected values, bound to a string array in the data model. |
+| `maxSelected` | `number` | no | Optional maximum number of selectable options. |
+
+Accepts client-side validation `checks` (A2UI `Checkable`).
+
+#### Chart
+
+A data visualization rendered via @meldui/charts-vue.
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `chartType` | `enum` | yes | The kind of chart to render. One of: `line`, `bar`, `area`, `pie`, `scatter`. |
+| `data` | `DataBinding` | yes | A data binding to the series/array the chart visualizes. |
+| `title` | `DynamicString` | no | Optional chart title. |
+
+## Functions
+
+A2UI functions available for data bindings and validation `checks`.
+
+| Function | Description |
+| --- | --- |
+| `required` | Checks that the value is not null, undefined, or empty. |
+| `regex` | Checks that the value matches a regular expression string. |
+| `length` | Checks string length constraints. |
+| `numeric` | Checks numeric range constraints. |
+| `email` | Checks that the value is a valid email address. |
+| `formatString` | Performs string interpolation of data model values and other functions in the catalog functions list and returns the resulting string. The value string can contain interpolated expressions in the `$&#123;expression&#125;` format. Supported expression types include: JSON Pointer paths to the data model (e.g., `$&#123;/absolute/path&#125;` or `$&#123;relative/path&#125;`), and client-side function calls (e.g., `$&#123;now()&#125;`). Function arguments must be named (e.g., `$&#123;formatDate(value:$&#123;/currentDate&#125;, format:'MM-dd')&#125;`). To include a literal `$&#123;` sequence, escape it as `\\$&#123;`. |
+| `formatNumber` | Formats a number with the specified grouping and decimal precision. |
+| `formatCurrency` | Formats a number as a currency string. |
+| `formatDate` | Formats a timestamp into a string using a pattern. |
+| `pluralize` | Returns a localized string based on the Common Locale Data Repository (CLDR) plural category of the count (zero, one, two, few, many, other). Requires an 'other' fallback. For English, just use 'one' and 'other'. |
+| `openUrl` | Opens the specified URL in a browser or handler. This function has no return value. |
+| `and` | Performs a logical AND operation on a list of boolean values. |
+| `or` | Performs a logical OR operation on a list of boolean values. |
+| `not` | Performs a logical NOT operation on a boolean value. |
+
+## Theme
+
+Theme tokens an agent may set on `createSurface` (renderer maps these onto MeldUI design tokens).
+
+| Token | Type | Description |
+| --- | --- | --- |
+| `primaryColor` | `string` | The primary brand color used for highlights (e.g., primary buttons, active borders). Renderers may generate variants of this color for different contexts. Format: Hexadecimal code (e.g., '#00BFFF'). |
+| `iconUrl` | `string` | A URL for an image that identifies the agent or tool associated with the surface. |
+| `agentDisplayName` | `string` | Text to be displayed next to the surface to identify the agent or tool that created it. |
+
+---
 
 ## Area Chart
 

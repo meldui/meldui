@@ -26,9 +26,11 @@ const docs = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    category: z.enum(['getting-started', 'components', 'composites', 'charts', 'examples']),
+    category: z.enum(['getting-started', 'components', 'composites', 'charts', 'examples', 'a2ui']),
     subcategory: z.string().optional(),
-    package: z.enum(['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue']).optional(),
+    package: z
+      .enum(['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue', '@meldui/a2ui'])
+      .optional(),
     componentName: z.string().optional(),
     props: z.array(propSchema).optional(),
     events: z.array(eventSchema).optional(),
