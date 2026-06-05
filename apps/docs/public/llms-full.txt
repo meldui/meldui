@@ -199,8 +199,8 @@ This stable, versioned id is how agents negotiate. A client advertises the catal
 // client → agent (capabilities)
 {
   "a2uiClientCapabilities": {
-    "supportedCatalogIds": ["https://meldui.dev/catalogs/vue/v1/catalog.json"]
-  }
+    "supportedCatalogIds": ["https://meldui.dev/catalogs/vue/v1/catalog.json"],
+  },
 }
 ```
 

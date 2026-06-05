@@ -32,6 +32,22 @@ Confirmed first-hand (resolves the open risk from the catalog change's plan). we
 
 Both of Google's own renderers are fine-grained and reuse `GenericBinder`/`resolveSignal`; the community Vue lib is the outlier. This change follows the official pattern.
 
+### Spike findings (web_core 0.10.0 — verified by compiling against the installed package)
+
+Corrections/refinements to the assumed surface above:
+
+- `DataContext` constructor is `(surface, path)` — the `functionInvoker` is derived internally from `surface.catalog`. Use `surface`-scoped contexts, not a hand-built one.
+- `MessageProcessor(catalogs, actionHandler?)` accepts a global `actionHandler`; `SurfaceModel` also exposes `onAction: EventSource<A2uiClientAction>` and `dispatchAction(payload, sourceComponentId)`. The processor exposes `getClientCapabilities()` which builds the `a2uiClientCapabilities` (incl. `supportedCatalogIds`) — use it rather than hand-rolling negotiation.
+- **The catalog and `GenericBinder` are driven by Zod schemas, not JSON Schema.** `ComponentApi = { name: string; schema: z.ZodTypeAny }`; `Catalog<T>(id, components: T[], functions?, themeSchema?)`. `scrapeSchemaBehavior(zodSchema)` is what classifies each prop as DYNAMIC / ACTION / STRUCTURAL / CHECKABLE / STATIC, so an accurate Zod schema per component is required for the binder to work.
+- web_core ships reusable Zod building blocks: `@a2ui/web_core/v0_9/basic_catalog` exports component APIs (`TextApi`, `ButtonApi`, …) and `basic_functions`; `@a2ui/web_core/v0_9` exports the common-type Zod schemas (`DynamicStringSchema`, `DynamicNumberSchema`, `DynamicBooleanSchema`, `DynamicStringListSchema`, `ChildListSchema`, `ComponentIdSchema`, `ActionSchema`, `DataBindingSchema`).
+
+**Implication — the renderer catalog is a Zod layer, parallel to Change A's JSON contract:**
+
+- For the 16 Basic primitives: reuse web_core's `*Api` (name + Zod schema) and attach a MeldUI Vue render component.
+- For the 19 MeldUI components (structural/display + rich): author a Zod schema from the exported common-type schemas, define `{ name, schema }`, and attach a Vue render component.
+- `VueComponentApi extends ComponentApi { render: Component }` (mirrors React's `ReactComponentImplementation`).
+- Change A's `meldui-v1.catalog.json` remains the **agent-facing** contract; this Zod catalog is the **renderer-facing** one. They describe the same component names/props and MUST stay consistent — a test asserts the renderer catalog's component-name set equals `MELDUI_COMPONENT_NAMES` from `@meldui/a2ui`.
+
 ## Goals / Non-Goals
 
 **Goals:**

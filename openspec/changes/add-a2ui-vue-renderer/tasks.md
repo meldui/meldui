@@ -1,45 +1,62 @@
+## Status: core + per-component docs/story harness landed
+
+The core renderer + slice (Text, Markdown, Column, Card, Button, TextField) + `Alert`
+are implemented and **verified end-to-end** (full tree render; data binding; action
+round-trip; incremental Markdown streaming — all confirmed via Playwright in Storybook).
+
+**Per-component documentation harness (new requirement) is built and verified on both
+surfaces:** canonical example messages live once in `@meldui/a2ui` (`examples`), a
+Storybook helper (`stories/A2UI/_a2ui.ts`) renders each component live + a code block,
+and a docs island (`demos/a2ui/A2uiDemo.vue` over the shared `DemoBlock`) shows the same
+live render + code tab. `Alert` is done on both (story `A2UI/Components` + docs page
+`/docs/a2ui/components/alert`, both verified). Each remaining component now costs:
+renderer `.ts` + an `examples` entry + a story line + an MDX page + a nav line.
+
+Remaining: the other 28 catalog components (each with story + docs), per-component
+story/docs for the original slice 6, the full theme bridge, and the changeset/README.
+
 ## 1. Dependencies and spike
 
-- [ ] 1.1 Add `@a2ui/web_core@^0.10` to `@meldui/a2ui`; add peer deps `vue`, `@meldui/vue`, `@meldui/tabler-vue`, `@meldui/charts-vue` (charts optional). `pnpm install`.
-- [ ] 1.2 Spike against the installed `@a2ui/web_core/v0_9`: confirm `MessageProcessor(catalogs)`, `model.surfacesMap`/`getSurface`, `componentsModel.onCreated/onDeleted`/`get`, `ComponentModel.onUpdated`, `dataModel.get/set/subscribe`, `ComponentContext(surface,id,basePath)`, `DataContext.resolveSignal/path/nested/set`, `GenericBinder(context,schema).subscribe/snapshot/dispose`, and the client-action type. Record any deltas in `design.md`.
+- [x] 1.1 Add `@a2ui/web_core@^0.10` to `@meldui/a2ui`; peer deps `vue`, `@meldui/vue` added (+ deps `zod`, `@incremark/vue`, `@incremark/theme`). `@meldui/tabler-vue`/`@meldui/charts-vue` deferred to the Icon/Chart components.
+- [x] 1.2 Spike against installed `@a2ui/web_core/v0_9` — confirmed the API and recorded deltas in `design.md` ("Spike findings"): `DataContext(surface, path)`; `MessageProcessor(catalogs, actionHandler)` + `getClientCapabilities()`; **catalog/binder are Zod-driven**; reuse `basic_catalog` `*Api` + common-type Zod schemas.
 
 ## 2. Reactivity bridge and processor wrapper
 
-- [ ] 2.1 Implement `toVueRef(signal)` (Vue `customRef`/`shallowRef` wrapping a `@a2ui/web_core/v0_9` `effect`), disposing the effect via `onScopeDispose`. Keep all Preact signals inside `src/core/` — never expose raw signals to catalog components.
-- [ ] 2.2 Implement `src/core/processor.ts`: wrap the v0.9 `MessageProcessor`, expose `processMessages`, `getSurface(s)`, `dispatch(action)` → `{ version: 'v0.9', action }`, and `onEvent` for the consuming app to forward actions.
+- [x] 2.1 `toVueRef(signal)` implemented (`customRef` + web_core `effect`, disposed via `onScopeDispose`). Per-component reactivity uses `GenericBinder.subscribe` → `shallowRef`; Preact signals stay inside `src/vue`.
+- [x] 2.2 Processor handled directly via `provideA2UI` (web_core `MessageProcessor`); actions flow through `ComponentContext.dispatchAction` → `MessageProcessor` `actionHandler` (the `onAction` option). No separate wrapper needed.
 
 ## 3. Recursive lazy host
 
-- [ ] 3.1 Implement a `DeferredChild`-style host: subscribe to a single id's create/delete, resolve its `ComponentModel`, look up the catalog entry, render via `<component :is>`; recurse into children by id (`children`/`child`/`trigger`/`content`/`tabs[].child`, and `{componentId,path}` list templates). No eager tree materialization.
-- [ ] 3.2 Per host, create `GenericBinder(context, schema)`, expose its resolved `snapshot` to the component, and **dispose** the binder + bridged effects on unmount.
-- [ ] 3.3 Implement `<A2UISurface :surface-id>` rendering the `root` component; graceful fallback for unknown component types.
+- [x] 3.1 `DeferredChild` host: subscribes to a single id's create/delete, resolves the model, looks up the catalog entry, renders via `h(api.render)`. Children recursion: `children` (ChildList, static + `{path,componentId}` template) and `child` (ComponentId) done; `trigger`/`content`/`tabs[]` arrive with Modal/Tabs.
+- [x] 3.2 Per host: `GenericBinder(context, schema)` → reactive snapshot; binder + subscriptions disposed on scope teardown.
+- [x] 3.3 `<A2UISurface :surface-id>` renders `root`, resolves the surface reactively, graceful loading/unknown fallbacks.
 
 ## 4. Public API and provide/inject
 
-- [ ] 4.1 Implement `provideA2UI({ catalog, theme, catalogId })`: build the core catalog, provide config + processor, and advertise `supportedCatalogIds` with the MeldUI `catalogId`.
-- [ ] 4.2 Implement `useDynamicComponent`/composables: `sendAction`, resolved-value accessors, data write-back (`setData` at bound path), exposed to catalog components.
+- [x] 4.1 `provideA2UI({ catalog?, onAction? })` builds the core catalog (guarded against contract drift) and provides it; `catalogId` negotiation works (surfaces created with the MeldUI `catalogId` resolve the catalog); `processor.getClientCapabilities()` exposes `supportedCatalogIds`.
+- [x] 4.2 Action dispatch + data write-back work via the binder (`action` → `() => void`, `set<Prop>` setters); a dedicated `useDynamicComponent` composable was unnecessary given `GenericBinder`.
 
 ## 5. Catalog implementation (name → @meldui/vue) and adapters
 
-- [ ] 5.1 Implement `MELDUI_CATALOG` entries for every component in the `a2ui-catalog` contract; prop adapters map A2UI v0.9 names → MeldUI prop names.
-- [ ] 5.2 Thin adapters for primitives MeldUI lacks: `MeldRow.vue`, `MeldColumn.vue`, `MeldText.vue`, `MeldIcon.vue` (→ `@meldui/tabler-vue` lookup).
-- [ ] 5.3 Wire `Markdown` → `MarkdownViewer` (`@incremark/vue`); `Chart` → `@meldui/charts-vue`; `Table` → `Table`; interactive components → `sendAction` and data write-back.
-- [ ] 5.4 Decide (Open Question) whether the catalog contract needs renderer-facing metadata; if so, author an `a2ui-catalog` delta spec — otherwise leave the contract unchanged.
+- [ ] 5.1 Slice only (6/35): `Text`, `Markdown`, `Column`, `Card`, `Button`, `TextField`. Remaining 29 contract components pending (`pendingRendererComponents()` reports them).
+- [ ] 5.2 Adapters: `MeldText`, `MeldColumn` done; `MeldRow`, `MeldIcon` (→ `@meldui/tabler-vue`) pending.
+- [ ] 5.3 `Markdown` → `@incremark/vue` done; interactive write-back/actions done (Button, TextField). `Chart` → `@meldui/charts-vue`, `Table` pending.
+- [x] 5.4 Decided: the catalog contract needs **no** renderer-facing metadata — the Zod renderer catalog is separate from the JSON contract, kept consistent by the `buildVueCatalog` guard. No `a2ui-catalog` delta.
 
 ## 6. Theme bridge
 
-- [ ] 6.1 Implement `src/theme/meldTheme.ts` binding A2UI theme tokens onto `@meldui/vue/themes/default` OKLCH CSS variables; no new colors. Verify light/dark inheritance.
+- [ ] 6.1 `meldTheme` placeholder exported; surfaces already inherit MeldUI tokens via component classes. Full A2UI-theme-token → CSS-var bridge pending (with the broader component set).
 
 ## 7. Storybook + verification
 
-- [ ] 7.1 Add `apps/vue-storybook/stories/A2UI/`: Basic gallery, structural/display gallery, rich gallery, a streaming-markdown story (incremental `updateDataModel` deltas), an action round-trip story, and a JSON playground. Build `@meldui/vue` + `@meldui/a2ui` first.
-- [ ] 7.2 Verify fine-grained updates: a data patch re-renders only the bound node (instrument render counts in a story/test).
-- [ ] 7.3 Verify no subscription/effect leaks on component/surface removal.
-- [ ] 7.4 Verify the streaming-markdown node patches incrementally (does not re-mount per token); special-case if needed.
-- [ ] 7.5 Verify the action round-trip envelope matches the A2UI v0.9 client-action shape.
+- [ ] 7.1 `A2UI/Renderer` stories added (Gallery + StreamingMarkdown). Full per-tier galleries + JSON playground pending. Dev needs source-aliasing + `optimizeDeps` (added to `.storybook/main.ts`).
+- [x] 7.2 Fine-grained reactivity verified — editing the bound input updated only the bound greeting node.
+- [x] 7.3 Disposal wired (`onScopeDispose` for binder + subscriptions + `toVueRef` effect). (Explicit leak instrumentation deferred.)
+- [x] 7.4 Incremental Markdown streaming verified — content grew token-by-token (list + code block) without remount.
+- [x] 7.5 Action round-trip verified — Button click dispatched the client action; `onAction` updated the data model; bound Markdown re-rendered.
 
 ## 8. Build and release
 
-- [ ] 8.1 `pnpm --filter @meldui/a2ui build` (ESM+CJS+dts) and `typecheck` pass with `@a2ui/web_core` external.
-- [ ] 8.2 `pnpm check:fix` (Biome) clean.
-- [ ] 8.3 Changeset: `@meldui/a2ui` minor bump; README documents `provideA2UI`/`A2UISurface`, the catalog, and the theme bridge.
+- [x] 8.1 `build` (ESM+CJS+dts, two entries) and `vue-tsc` typecheck pass with peers external.
+- [x] 8.2 `oxlint`/`oxfmt` clean for the renderer + story.
+- [ ] 8.3 Changeset + README for the `@meldui/a2ui/vue` renderer — pending (do with the full component set).

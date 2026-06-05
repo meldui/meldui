@@ -23,6 +23,8 @@ export { defineComponent } from './catalog/common'
 export { buildCatalog } from './catalog/build'
 export { renderCatalogMarkdown } from './docs'
 
+export { examples, surfaceExample, type A2uiExampleMessage } from './examples'
+
 import { buildCatalog } from './catalog/build'
 
 /** The assembled MeldUI A2UI catalog document (same content as the published JSON). */

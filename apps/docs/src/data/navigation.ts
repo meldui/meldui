@@ -189,6 +189,10 @@ export const navigation: NavItem[] = [
     items: [
       { title: 'Overview', href: '/docs/a2ui' },
       { title: 'Catalog Reference', href: '/docs/a2ui/reference' },
+      {
+        title: 'Components',
+        items: [{ title: 'Alert', href: '/docs/a2ui/components/alert' }],
+      },
     ],
   },
   {

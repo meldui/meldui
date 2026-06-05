@@ -32,10 +32,17 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'MeldUIA2UI',
+      entry: {
+        index: resolve(__dirname, 'src/index.ts'),
+        'vue/index': resolve(__dirname, 'src/vue/index.ts'),
+      },
       formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
+      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'cjs'}`,
+    },
+    rollupOptions: {
+      // Keep the framework-agnostic contract free of these; the Vue renderer
+      // entry treats them all as externals (peers / protocol core).
+      external: ['vue', /^@meldui\//, /^@a2ui\//, /^@incremark\//, 'zod', '@preact/signals-core'],
     },
     sourcemap: true,
     emptyOutDir: true,
