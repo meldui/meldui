@@ -22,6 +22,12 @@ import { listEntry } from './components/list'
 import { scrollAreaEntry } from './components/scroll-area'
 import { buttonGroupEntry } from './components/button-group'
 import { tableEntry } from './components/table'
+import { checkBoxEntry } from './components/checkbox'
+import { sliderEntry } from './components/slider'
+import { choicePickerEntry } from './components/choice-picker'
+import { toggleGroupEntry } from './components/toggle-group'
+import { multiSelectEntry } from './components/multi-select'
+import { dateTimeInputEntry } from './components/datetime-input'
 
 /**
  * The MeldUI Vue renderer catalog. Vertical slice: a representative set proving
@@ -49,6 +55,12 @@ export const meldVueCatalog: VueComponentApi[] = [
   scrollAreaEntry,
   buttonGroupEntry,
   tableEntry,
+  checkBoxEntry,
+  sliderEntry,
+  choicePickerEntry,
+  toggleGroupEntry,
+  multiSelectEntry,
+  dateTimeInputEntry,
 ]
 
 /** Contract components not yet implemented by the Vue renderer. */

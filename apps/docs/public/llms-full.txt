@@ -21,7 +21,20 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 ## Pages
 
 - [A2UI Catalog](/docs/a2ui): Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
+- [Alert](/docs/a2ui/components/alert): Render a status callout from an A2UI agent using MeldUI's Alert.
+- [Avatar](/docs/a2ui/components/avatar): Render a user/entity avatar from an A2UI agent.
+- [AvatarGroup](/docs/a2ui/components/avatar-group): Render an overlapping group of avatars from an A2UI agent.
+- [Badge](/docs/a2ui/components/badge): Render a small status/label chip from an A2UI agent.
+- [ButtonGroup](/docs/a2ui/components/button-group): Group related buttons from an A2UI agent.
 - [Catalog Reference](/docs/a2ui/reference): The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
+- [Divider](/docs/a2ui/components/divider): Render a simple divider from an A2UI agent.
+- [Image](/docs/a2ui/components/image): Render an image from an A2UI agent.
+- [Kbd](/docs/a2ui/components/kbd): Render keyboard keys from an A2UI agent.
+- [List](/docs/a2ui/components/list): Arrange a list of components from an A2UI agent.
+- [Row](/docs/a2ui/components/row): Arrange components horizontally from an A2UI agent.
+- [ScrollArea](/docs/a2ui/components/scroll-area): Wrap content in a scrollable viewport from an A2UI agent.
+- [Separator](/docs/a2ui/components/separator): Render a separator line from an A2UI agent.
+- [Table](/docs/a2ui/components/table): Render tabular data from an A2UI agent.
 - [Area Chart](/docs/charts/area-chart): Visualize volume and cumulative data with filled areas beneath lines.
 - [Bar Chart](/docs/charts/bar-chart): Compare values across categories with vertical, horizontal, and stacked bars.
 - [Chart Events](/docs/charts/events): Handle user interactions with chart click, hover, legend, and selection events.
@@ -236,6 +249,74 @@ The Basic primitive definitions, functions, and theme schema derive from [google
 
 ---
 
+## Alert
+
+Render a status callout from an A2UI agent using MeldUI's Alert.
+
+The **`Alert`** component renders a callout banner conveying status or an important message. An agent emits an `Alert` with an optional `title`/`description` and a `variant` (`info`, `success`, `warning`, `destructive`); the MeldUI renderer maps it to the MeldUI `Alert`.
+
+
+
+## Properties
+
+| Prop          | Type            | Required | Description                                            |
+| ------------- | --------------- | -------- | ------------------------------------------------------ |
+| `title`       | `DynamicString` | no       | The alert title.                                       |
+| `description` | `DynamicString` | no       | The alert body text.                                   |
+| `variant`     | `enum`          | no       | `info` (default), `success`, `warning`, `destructive`. |
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full component contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Avatar
+
+Render a user/entity avatar from an A2UI agent.
+
+The **`Avatar`** component shows an image with a text fallback (e.g. initials). Props: `src`, `alt`, `fallback`, and `size` (`sm`, `md`, `lg`).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## AvatarGroup
+
+Render an overlapping group of avatars from an A2UI agent.
+
+The **`AvatarGroup`** component overlaps several `Avatar` children (referenced by id) and collapses the overflow past `max` into a `+N` badge.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Badge
+
+Render a small status/label chip from an A2UI agent.
+
+The **`Badge`** component renders a compact status or label chip. An agent emits a `Badge` with a `label` and an optional `variant` (`default`, `secondary`, `destructive`, `success`, `warning`, `info`, `neutral`).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## ButtonGroup
+
+Group related buttons from an A2UI agent.
+
+The **`ButtonGroup`** component visually joins related `Button` children (by id), with `orientation` control.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
 ## Catalog Reference
 
 The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
@@ -445,7 +526,7 @@ A small status/label chip.
 | Prop | Type | Required | Description |
 | --- | --- | --- | --- |
 | `label` | `DynamicString` | yes | The badge text. |
-| `variant` | `enum` | no | A hint for the badge style. One of: `default`, `secondary`, `destructive`, `outline`, `success`, `warning`. Default: `default`. |
+| `variant` | `enum` | no | A hint for the badge style. One of: `default`, `secondary`, `destructive`, `success`, `warning`, `info`, `neutral`. Default: `default`. |
 
 #### Stepper
 
@@ -622,6 +703,102 @@ Theme tokens an agent may set on `createSurface` (renderer maps these onto MeldU
 | `primaryColor` | `string` | The primary brand color used for highlights (e.g., primary buttons, active borders). Renderers may generate variants of this color for different contexts. Format: Hexadecimal code (e.g., '#00BFFF'). |
 | `iconUrl` | `string` | A URL for an image that identifies the agent or tool associated with the surface. |
 | `agentDisplayName` | `string` | Text to be displayed next to the surface to identify the agent or tool that created it. |
+
+---
+
+## Divider
+
+Render a simple divider from an A2UI agent.
+
+The **`Divider`** component is the A2UI Basic primitive for a plain horizontal or vertical rule (`axis`), rendered with MeldUI's `Separator`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Image
+
+Render an image from an A2UI agent.
+
+The **`Image`** component displays an image by `url` with `fit` (object-fit) and a size `variant` hint.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Kbd
+
+Render keyboard keys from an A2UI agent.
+
+The **`Kbd`** component renders one or more keyboard keys from a `keys` string array.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## List
+
+Arrange a list of components from an A2UI agent.
+
+The **`List`** primitive lays out its `children` (by id) in a `direction` (`vertical` or `horizontal`), with cross-axis `align`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Row
+
+Arrange components horizontally from an A2UI agent.
+
+The **`Row`** component is an A2UI Basic layout primitive that arranges its `children` (referenced by id) horizontally, with `justify` (main axis) and `align` (cross axis) controls.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## ScrollArea
+
+Wrap content in a scrollable viewport from an A2UI agent.
+
+The **`ScrollArea`** component wraps a single `child` in a scrollable viewport bounded by `maxHeight`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Separator
+
+Render a separator line from an A2UI agent.
+
+The **`Separator`** component draws a divider line with an optional centered `label`; `axis` controls orientation.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Table
+
+Render tabular data from an A2UI agent.
+
+The **`Table`** component renders rows bound from the data model against statically-declared `columns` (`key` + `header`).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
 
 ---
 

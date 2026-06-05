@@ -134,6 +134,99 @@ export const examples: Record<string, A2uiExampleMessage[]> = {
     },
   ),
 
+  CheckBox: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'CheckBox',
+        label: 'Email me about product updates',
+        value: { path: '/subscribed' },
+      },
+    ],
+    { subscribed: true },
+  ),
+
+  Slider: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'Slider',
+        label: 'Volume',
+        min: 0,
+        max: 100,
+        value: { path: '/volume' },
+      },
+    ],
+    { volume: 60 },
+  ),
+
+  ChoicePicker: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'ChoicePicker',
+        label: 'Choose a plan',
+        variant: 'mutuallyExclusive',
+        options: [
+          { label: 'Free', value: 'free' },
+          { label: 'Pro', value: 'pro' },
+          { label: 'Team', value: 'team' },
+        ],
+        value: { path: '/plan' },
+      },
+    ],
+    { plan: ['pro'] },
+  ),
+
+  ToggleGroup: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'ToggleGroup',
+        variant: 'single',
+        options: [
+          { label: 'Left', value: 'left' },
+          { label: 'Center', value: 'center' },
+          { label: 'Right', value: 'right' },
+        ],
+        value: { path: '/align' },
+      },
+    ],
+    { align: ['center'] },
+  ),
+
+  MultiSelect: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'MultiSelect',
+        label: 'Tags',
+        placeholder: 'Select tags…',
+        options: [
+          { label: 'Design', value: 'design' },
+          { label: 'Engineering', value: 'eng' },
+          { label: 'Marketing', value: 'mkt' },
+          { label: 'Sales', value: 'sales' },
+        ],
+        value: { path: '/tags' },
+      },
+    ],
+    { tags: ['design', 'eng'] },
+  ),
+
+  DateTimeInput: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'DateTimeInput',
+        label: 'Due date',
+        enableDate: true,
+        value: { path: '/due' },
+      },
+    ],
+    { due: '2026-06-15' },
+  ),
+
   Image: surfaceExample([
     {
       id: 'root',
