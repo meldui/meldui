@@ -18,6 +18,10 @@ import { separatorEntry } from './components/separator'
 import { dividerEntry } from './components/divider'
 import { imageEntry } from './components/image'
 import { rowEntry } from './components/row'
+import { listEntry } from './components/list'
+import { scrollAreaEntry } from './components/scroll-area'
+import { buttonGroupEntry } from './components/button-group'
+import { tableEntry } from './components/table'
 
 /**
  * The MeldUI Vue renderer catalog. Vertical slice: a representative set proving
@@ -41,6 +45,10 @@ export const meldVueCatalog: VueComponentApi[] = [
   dividerEntry,
   imageEntry,
   rowEntry,
+  listEntry,
+  scrollAreaEntry,
+  buttonGroupEntry,
+  tableEntry,
 ]
 
 /** Contract components not yet implemented by the Vue renderer. */

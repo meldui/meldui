@@ -84,6 +84,56 @@ export const examples: Record<string, A2uiExampleMessage[]> = {
     { id: 'c3', component: 'Badge', label: 'Three', variant: 'success' },
   ]),
 
+  List: surfaceExample([
+    { id: 'root', component: 'List', children: ['i1', 'i2', 'i3'], direction: 'vertical' },
+    { id: 'i1', component: 'Text', text: '• First item' },
+    { id: 'i2', component: 'Text', text: '• Second item' },
+    { id: 'i3', component: 'Text', text: '• Third item' },
+  ]),
+
+  ScrollArea: surfaceExample(
+    [
+      { id: 'root', component: 'ScrollArea', child: 'long', maxHeight: '120px' },
+      { id: 'long', component: 'Markdown', content: { path: '/text' } },
+    ],
+    {
+      text: 'Scroll me.\n\n' + Array.from({ length: 12 }, (_, i) => `- Line ${i + 1}`).join('\n'),
+    },
+  ),
+
+  ButtonGroup: surfaceExample([
+    { id: 'root', component: 'ButtonGroup', children: ['bg1', 'bg2', 'bg3'] },
+    { id: 'bg1', component: 'Button', child: 'bg1l', action: { event: { name: 'prev' } } },
+    { id: 'bg1l', component: 'Text', text: 'Prev' },
+    { id: 'bg2', component: 'Button', child: 'bg2l', action: { event: { name: 'today' } } },
+    { id: 'bg2l', component: 'Text', text: 'Today' },
+    { id: 'bg3', component: 'Button', child: 'bg3l', action: { event: { name: 'next' } } },
+    { id: 'bg3l', component: 'Text', text: 'Next' },
+  ]),
+
+  Table: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'Table',
+        caption: 'Recent sign-ups',
+        columns: [
+          { key: 'name', header: 'Name' },
+          { key: 'plan', header: 'Plan' },
+          { key: 'status', header: 'Status' },
+        ],
+        rows: { path: '/rows' },
+      },
+    ],
+    {
+      rows: [
+        { name: 'Ada Lovelace', plan: 'Pro', status: 'Active' },
+        { name: 'Alan Turing', plan: 'Team', status: 'Active' },
+        { name: 'Grace Hopper', plan: 'Free', status: 'Trial' },
+      ],
+    },
+  ),
+
   Image: surfaceExample([
     {
       id: 'root',
