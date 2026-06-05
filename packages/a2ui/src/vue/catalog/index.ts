@@ -10,6 +10,14 @@ import { cardEntry } from './components/card'
 import { buttonEntry } from './components/button'
 import { textFieldEntry } from './components/text-field'
 import { alertEntry } from './components/alert'
+import { badgeEntry } from './components/badge'
+import { avatarEntry } from './components/avatar'
+import { avatarGroupEntry } from './components/avatar-group'
+import { kbdEntry } from './components/kbd'
+import { separatorEntry } from './components/separator'
+import { dividerEntry } from './components/divider'
+import { imageEntry } from './components/image'
+import { rowEntry } from './components/row'
 
 /**
  * The MeldUI Vue renderer catalog. Vertical slice: a representative set proving
@@ -25,6 +33,14 @@ export const meldVueCatalog: VueComponentApi[] = [
   buttonEntry,
   textFieldEntry,
   alertEntry,
+  badgeEntry,
+  avatarEntry,
+  avatarGroupEntry,
+  kbdEntry,
+  separatorEntry,
+  dividerEntry,
+  imageEntry,
+  rowEntry,
 ]
 
 /** Contract components not yet implemented by the Vue renderer. */

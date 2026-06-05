@@ -191,7 +191,17 @@ export const navigation: NavItem[] = [
       { title: 'Catalog Reference', href: '/docs/a2ui/reference' },
       {
         title: 'Components',
-        items: [{ title: 'Alert', href: '/docs/a2ui/components/alert' }],
+        items: [
+          { title: 'Alert', href: '/docs/a2ui/components/alert' },
+          { title: 'Avatar', href: '/docs/a2ui/components/avatar' },
+          { title: 'Avatar Group', href: '/docs/a2ui/components/avatar-group' },
+          { title: 'Badge', href: '/docs/a2ui/components/badge' },
+          { title: 'Divider', href: '/docs/a2ui/components/divider' },
+          { title: 'Image', href: '/docs/a2ui/components/image' },
+          { title: 'Kbd', href: '/docs/a2ui/components/kbd' },
+          { title: 'Row', href: '/docs/a2ui/components/row' },
+          { title: 'Separator', href: '/docs/a2ui/components/separator' },
+        ],
       },
     ],
   },

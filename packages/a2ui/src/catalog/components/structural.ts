@@ -72,7 +72,7 @@ export const structuralComponents: ComponentDefs = {
       variant: {
         type: 'string',
         description: 'A hint for the badge style.',
-        enum: ['default', 'secondary', 'destructive', 'outline', 'success', 'warning'],
+        enum: ['default', 'secondary', 'destructive', 'success', 'warning', 'info', 'neutral'],
         default: 'default',
       },
     },

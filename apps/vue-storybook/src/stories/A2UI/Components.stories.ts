@@ -13,3 +13,11 @@ export default meta
 type Story = StoryObj
 
 export const Alert: Story = exampleStory('Alert')
+export const Badge: Story = exampleStory('Badge')
+export const Avatar: Story = exampleStory('Avatar')
+export const AvatarGroup: Story = exampleStory('AvatarGroup')
+export const Kbd: Story = exampleStory('Kbd')
+export const Separator: Story = exampleStory('Separator')
+export const Divider: Story = exampleStory('Divider')
+export const Image: Story = exampleStory('Image')
+export const Row: Story = exampleStory('Row')

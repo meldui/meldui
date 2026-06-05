@@ -1020,9 +1020,10 @@
                 "default",
                 "secondary",
                 "destructive",
-                "outline",
                 "success",
-                "warning"
+                "warning",
+                "info",
+                "neutral"
               ],
               "default": "default"
             }
