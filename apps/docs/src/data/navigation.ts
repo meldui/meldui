@@ -192,6 +192,12 @@ export const navigation: NavItem[] = [
       {
         title: 'Components',
         items: [
+          { title: 'Text', href: '/docs/a2ui/components/text' },
+          { title: 'Markdown', href: '/docs/a2ui/components/markdown' },
+          { title: 'Column', href: '/docs/a2ui/components/column' },
+          { title: 'Card', href: '/docs/a2ui/components/card' },
+          { title: 'Button', href: '/docs/a2ui/components/button' },
+          { title: 'TextField', href: '/docs/a2ui/components/text-field' },
           { title: 'Alert', href: '/docs/a2ui/components/alert' },
           { title: 'Avatar', href: '/docs/a2ui/components/avatar' },
           { title: 'Avatar Group', href: '/docs/a2ui/components/avatar-group' },

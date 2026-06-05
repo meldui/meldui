@@ -25,6 +25,68 @@ export function surfaceExample(
 
 /** Example message sequences keyed by component name. */
 export const examples: Record<string, A2uiExampleMessage[]> = {
+  Text: surfaceExample([
+    { id: 'root', component: 'Column', children: ['t1', 't2', 't3'] },
+    { id: 't1', component: 'Text', text: 'A heading', variant: 'h3' },
+    {
+      id: 't2',
+      component: 'Text',
+      text: 'Body text — the default style for paragraphs and descriptions.',
+      variant: 'body',
+    },
+    { id: 't3', component: 'Text', text: 'A small caption', variant: 'caption' },
+  ]),
+
+  Markdown: surfaceExample([
+    {
+      id: 'root',
+      component: 'Markdown',
+      content:
+        '## Markdown\n\nThe primary path for streamed agent text. Supports **bold**, `code`, lists:\n\n- one\n- two\n\n```ts\nconst x = 1\n```',
+    },
+  ]),
+
+  Column: surfaceExample([
+    { id: 'root', component: 'Column', children: ['cl1', 'cl2', 'cl3'], align: 'start' },
+    { id: 'cl1', component: 'Badge', label: 'First' },
+    { id: 'cl2', component: 'Badge', label: 'Second', variant: 'secondary' },
+    { id: 'cl3', component: 'Badge', label: 'Third', variant: 'success' },
+  ]),
+
+  Card: surfaceExample([
+    { id: 'root', component: 'Card', child: 'cardcol' },
+    { id: 'cardcol', component: 'Column', children: ['cc1', 'cc2'] },
+    { id: 'cc1', component: 'Text', text: 'Card title', variant: 'h4' },
+    { id: 'cc2', component: 'Text', text: 'Card body content goes here.', variant: 'body' },
+  ]),
+
+  Button: surfaceExample([
+    { id: 'root', component: 'Row', children: ['bt1', 'bt2', 'bt3'] },
+    {
+      id: 'bt1',
+      component: 'Button',
+      child: 'bt1l',
+      variant: 'primary',
+      action: { event: { name: 'save' } },
+    },
+    { id: 'bt1l', component: 'Text', text: 'Save' },
+    { id: 'bt2', component: 'Button', child: 'bt2l', action: { event: { name: 'cancel' } } },
+    { id: 'bt2l', component: 'Text', text: 'Cancel' },
+    {
+      id: 'bt3',
+      component: 'Button',
+      child: 'bt3l',
+      variant: 'borderless',
+      action: { event: { name: 'learn' } },
+    },
+    { id: 'bt3l', component: 'Text', text: 'Learn more' },
+  ]),
+
+  TextField: surfaceExample(
+    [{ id: 'root', component: 'TextField', label: 'Your name', value: { path: '/name' } }],
+    { name: 'Ada' },
+  ),
+
   Alert: surfaceExample([
     {
       id: 'root',

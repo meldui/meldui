@@ -12,6 +12,12 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
+export const Text: Story = exampleStory('Text')
+export const Markdown: Story = exampleStory('Markdown')
+export const Column: Story = exampleStory('Column')
+export const Card: Story = exampleStory('Card')
+export const Button: Story = exampleStory('Button')
+export const TextField: Story = exampleStory('TextField')
 export const Alert: Story = exampleStory('Alert')
 export const Badge: Story = exampleStory('Badge')
 export const Avatar: Story = exampleStory('Avatar')

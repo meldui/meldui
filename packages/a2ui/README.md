@@ -4,7 +4,10 @@ The **MeldUI [A2UI](https://a2ui.org) catalog** — a portable, framework-agnost
 
 A2UI is a protocol where an agent streams JSON describing a UI and a client renders it against a **catalog**: a JSON-Schema document that maps abstract component names to a concrete design system. This package _is_ that catalog for MeldUI. It targets **A2UI v0.9**.
 
-> **Scope:** this package, today, is the **catalog contract only** — the schema and the component definitions. The Vue reference renderer (`provideA2UI`, `<A2UISurface>`, the `@meldui/vue` component mapping) ships separately in a follow-up release.
+This package provides two things:
+
+- **`@meldui/a2ui`** — the portable, framework-agnostic catalog contract (schema + component definitions). Any A2UI agent can target it.
+- **`@meldui/a2ui/vue`** — the Vue reference renderer that turns streamed A2UI v0.9 messages into live `@meldui/vue` components (all 35 catalog components).
 
 ## Install
 
@@ -56,6 +59,42 @@ One advertised catalog, organized into reliability tiers (not separate catalogs)
 `DataTable` is intentionally excluded (too complex for reliable LLM generation); `Table` covers tabular output.
 
 The catalog also declares the A2UI Basic **functions** (`required`, `regex`, `length`, `email`, `formatString`, `formatDate`, …) and a **theme** token shape.
+
+## Vue renderer (`@meldui/a2ui/vue`)
+
+The reference renderer maps the catalog to `@meldui/vue` components and renders streamed A2UI v0.9 messages. It's built on Google's `@a2ui/web_core` with fine-grained, per-component reactivity.
+
+```bash
+pnpm add @meldui/a2ui @meldui/vue vue
+# optional, for the Icon and Chart components:
+pnpm add @meldui/tabler-vue @meldui/charts-vue
+```
+
+Call `provideA2UI` in a root `setup()`, feed streamed messages to `processor.processMessages(...)`, and mount `<A2UISurface :surface-id="...">`:
+
+```vue
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { A2UISurface, provideA2UI } from '@meldui/a2ui/vue'
+import '@incremark/theme/styles.css' // for the Markdown component
+
+const { processor } = provideA2UI({
+  // forward client actions (e.g. a Button press) back to your agent
+  onAction: (action) => sendToAgent(action),
+})
+
+onMounted(() => {
+  // messages arrive from your transport (SSE / WebSocket / A2A)
+  processor.processMessages(incomingMessages)
+})
+</script>
+
+<template>
+  <A2UISurface surface-id="main" />
+</template>
+```
+
+Consumers also import the MeldUI theme once (`@meldui/vue/themes/default`) so surfaces inherit MeldUI's light/dark design tokens. Interactive components two-way bind to the data model; `Button`/input actions are dispatched through `onAction`.
 
 ## Development
 
