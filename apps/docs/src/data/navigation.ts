@@ -205,6 +205,7 @@ export const navigation: NavItem[] = [
           { title: 'Combobox', href: '/docs/a2ui/components/combobox' },
           { title: 'Date Time Input', href: '/docs/a2ui/components/date-time-input' },
           { title: 'Divider', href: '/docs/a2ui/components/divider' },
+          { title: 'Icon', href: '/docs/a2ui/components/icon' },
           { title: 'Image', href: '/docs/a2ui/components/image' },
           { title: 'Kbd', href: '/docs/a2ui/components/kbd' },
           { title: 'List', href: '/docs/a2ui/components/list' },

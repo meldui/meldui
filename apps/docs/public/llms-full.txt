@@ -21,20 +21,36 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 ## Pages
 
 - [A2UI Catalog](/docs/a2ui): Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
+- [Accordion](/docs/a2ui/components/accordion): A collapsible accordion from an A2UI agent.
 - [Alert](/docs/a2ui/components/alert): Render a status callout from an A2UI agent using MeldUI's Alert.
 - [Avatar](/docs/a2ui/components/avatar): Render a user/entity avatar from an A2UI agent.
 - [AvatarGroup](/docs/a2ui/components/avatar-group): Render an overlapping group of avatars from an A2UI agent.
 - [Badge](/docs/a2ui/components/badge): Render a small status/label chip from an A2UI agent.
 - [ButtonGroup](/docs/a2ui/components/button-group): Group related buttons from an A2UI agent.
+- [Carousel](/docs/a2ui/components/carousel): A swipeable carousel from an A2UI agent.
 - [Catalog Reference](/docs/a2ui/reference): The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
+- [Chart](/docs/a2ui/components/chart): A data visualization from an A2UI agent.
+- [CheckBox](/docs/a2ui/components/check-box): A boolean checkbox bound to the data model from an A2UI agent.
+- [ChoicePicker](/docs/a2ui/components/choice-picker): Single or multiple choice selection from an A2UI agent.
+- [Combobox](/docs/a2ui/components/combobox): A searchable single-select from an A2UI agent.
+- [DateTimeInput](/docs/a2ui/components/date-time-input): A date/time picker from an A2UI agent.
 - [Divider](/docs/a2ui/components/divider): Render a simple divider from an A2UI agent.
+- [Icon](/docs/a2ui/components/icon): A named icon from an A2UI agent.
 - [Image](/docs/a2ui/components/image): Render an image from an A2UI agent.
 - [Kbd](/docs/a2ui/components/kbd): Render keyboard keys from an A2UI agent.
 - [List](/docs/a2ui/components/list): Arrange a list of components from an A2UI agent.
+- [Modal](/docs/a2ui/components/modal): A dialog overlay from an A2UI agent.
+- [MultiSelect](/docs/a2ui/components/multi-select): A searchable multi-select input from an A2UI agent.
 - [Row](/docs/a2ui/components/row): Arrange components horizontally from an A2UI agent.
 - [ScrollArea](/docs/a2ui/components/scroll-area): Wrap content in a scrollable viewport from an A2UI agent.
 - [Separator](/docs/a2ui/components/separator): Render a separator line from an A2UI agent.
+- [Sidebar](/docs/a2ui/components/sidebar): An app-like layout shell from an A2UI agent.
+- [Slider](/docs/a2ui/components/slider): A numeric range slider from an A2UI agent.
+- [Stepper](/docs/a2ui/components/stepper): An ordered step sequence from an A2UI agent.
 - [Table](/docs/a2ui/components/table): Render tabular data from an A2UI agent.
+- [Tabs](/docs/a2ui/components/tabs): A tabbed interface from an A2UI agent.
+- [Timeline](/docs/a2ui/components/timeline): A vertical event timeline from an A2UI agent.
+- [ToggleGroup](/docs/a2ui/components/toggle-group): A group of toggle buttons from an A2UI agent.
 - [Area Chart](/docs/charts/area-chart): Visualize volume and cumulative data with filled areas beneath lines.
 - [Bar Chart](/docs/charts/bar-chart): Compare values across categories with vertical, horizontal, and stacked bars.
 - [Chart Events](/docs/charts/events): Handle user interactions with chart click, hover, legend, and selection events.
@@ -249,6 +265,18 @@ The Basic primitive definitions, functions, and theme schema derive from [google
 
 ---
 
+## Accordion
+
+A collapsible accordion from an A2UI agent.
+
+The **`Accordion`** component renders collapsible `items` (each a `title` + `child`), in `single` or `multiple` open mode.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
 ## Alert
 
 Render a status callout from an A2UI agent using MeldUI's Alert.
@@ -310,6 +338,18 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 Group related buttons from an A2UI agent.
 
 The **`ButtonGroup`** component visually joins related `Button` children (by id), with `orientation` control.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Carousel
+
+A swipeable carousel from an A2UI agent.
+
+The **`Carousel`** component renders `children` as swipeable slides, with optional `loop` and `orientation`.
 
 
 
@@ -706,11 +746,83 @@ Theme tokens an agent may set on `createSurface` (renderer maps these onto MeldU
 
 ---
 
+## Chart
+
+A data visualization from an A2UI agent.
+
+The **`Chart`** renders a `chartType` (line, bar, area, pie, scatter) over data bound from the data model, via @meldui/charts-vue.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## CheckBox
+
+A boolean checkbox bound to the data model from an A2UI agent.
+
+The **`CheckBox`** component renders a labelled boolean toggle whose `value` is two-way bound to the data model.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## ChoicePicker
+
+Single or multiple choice selection from an A2UI agent.
+
+The **`ChoicePicker`** selects one (`mutuallyExclusive`) or several (`multipleSelection`) `options`; the selected values bind to `value` (a string array).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Combobox
+
+A searchable single-select from an A2UI agent.
+
+The **`Combobox`** picks a single value from `options` via a searchable dropdown, bound to `value`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## DateTimeInput
+
+A date/time picker from an A2UI agent.
+
+The **`DateTimeInput`** renders a date and/or time field (`enableDate`/`enableTime`) bound to `value` (ISO 8601).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
 ## Divider
 
 Render a simple divider from an A2UI agent.
 
 The **`Divider`** component is the A2UI Basic primitive for a plain horizontal or vertical rule (`axis`), rendered with MeldUI's `Separator`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Icon
+
+A named icon from an A2UI agent.
+
+The **`Icon`** renders a named icon (mapped to Tabler icons) or a custom SVG path.
 
 
 
@@ -754,6 +866,30 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 
 ---
 
+## Modal
+
+A dialog overlay from an A2UI agent.
+
+The **`Modal`** component opens a dialog: the `trigger` component opens it, and the `content` component renders inside.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## MultiSelect
+
+A searchable multi-select input from an A2UI agent.
+
+The **`MultiSelect`** component picks several `options` via a searchable dropdown; the selection binds to `value`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
 ## Row
 
 Arrange components horizontally from an A2UI agent.
@@ -790,11 +926,83 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 
 ---
 
+## Sidebar
+
+An app-like layout shell from an A2UI agent.
+
+The **`Sidebar`** renders an app-like shell: a side panel (`header`/`footer`) beside the main `content`, anchored to either `side`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Slider
+
+A numeric range slider from an A2UI agent.
+
+The **`Slider`** component renders a numeric range input bound to `value`, bounded by `min`/`max`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Stepper
+
+An ordered step sequence from an A2UI agent.
+
+The **`Stepper`** renders ordered `steps` (each a `title` + optional `description`) with a current active `value` (zero-based).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
 ## Table
 
 Render tabular data from an A2UI agent.
 
 The **`Table`** component renders rows bound from the data model against statically-declared `columns` (`key` + `header`).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Tabs
+
+A tabbed interface from an A2UI agent.
+
+The **`Tabs`** component renders a set of `tabs`, each with a `title` and a `child` component shown when the tab is active.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Timeline
+
+A vertical event timeline from an A2UI agent.
+
+The **`Timeline`** renders time-ordered `items`, each with a `title`, optional `description`, and `timestamp`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## ToggleGroup
+
+A group of toggle buttons from an A2UI agent.
+
+The **`ToggleGroup`** renders segmented toggle buttons supporting `single` or `multiple` selection, bound to `value`.
 
 
 
