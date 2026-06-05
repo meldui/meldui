@@ -28,6 +28,10 @@ import { choicePickerEntry } from './components/choice-picker'
 import { toggleGroupEntry } from './components/toggle-group'
 import { multiSelectEntry } from './components/multi-select'
 import { dateTimeInputEntry } from './components/datetime-input'
+import { tabsEntry } from './components/tabs'
+import { accordionEntry } from './components/accordion'
+import { modalEntry } from './components/modal'
+import { carouselEntry } from './components/carousel'
 
 /**
  * The MeldUI Vue renderer catalog. Vertical slice: a representative set proving
@@ -61,6 +65,10 @@ export const meldVueCatalog: VueComponentApi[] = [
   toggleGroupEntry,
   multiSelectEntry,
   dateTimeInputEntry,
+  tabsEntry,
+  accordionEntry,
+  modalEntry,
+  carouselEntry,
 ]
 
 /** Contract components not yet implemented by the Vue renderer. */

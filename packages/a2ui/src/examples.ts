@@ -227,6 +227,52 @@ export const examples: Record<string, A2uiExampleMessage[]> = {
     { due: '2026-06-15' },
   ),
 
+  Tabs: surfaceExample([
+    {
+      id: 'root',
+      component: 'Tabs',
+      tabs: [
+        { title: 'Account', child: 'tab1' },
+        { title: 'Password', child: 'tab2' },
+      ],
+    },
+    { id: 'tab1', component: 'Markdown', content: 'Manage your **account** details here.' },
+    { id: 'tab2', component: 'Markdown', content: 'Change your **password** here.' },
+  ]),
+
+  Accordion: surfaceExample([
+    {
+      id: 'root',
+      component: 'Accordion',
+      type: 'single',
+      items: [
+        { title: 'Is it accessible?', child: 'acc1' },
+        { title: 'Is it styled?', child: 'acc2' },
+      ],
+    },
+    { id: 'acc1', component: 'Text', text: 'Yes — it follows the WAI-ARIA accordion pattern.' },
+    { id: 'acc2', component: 'Text', text: 'Yes — it uses MeldUI styling out of the box.' },
+  ]),
+
+  Modal: surfaceExample([
+    { id: 'root', component: 'Modal', trigger: 'mtrigger', content: 'mcontent' },
+    { id: 'mtrigger', component: 'Button', child: 'mtl', action: { event: { name: 'open' } } },
+    { id: 'mtl', component: 'Text', text: 'Open dialog' },
+    { id: 'mcontent', component: 'Column', children: ['mc1', 'mc2'] },
+    { id: 'mc1', component: 'Text', text: 'Are you sure?', variant: 'h4' },
+    { id: 'mc2', component: 'Text', text: 'This action cannot be undone.', variant: 'caption' },
+  ]),
+
+  Carousel: surfaceExample([
+    { id: 'root', component: 'Carousel', children: ['cs1', 'cs2', 'cs3'], loop: true },
+    { id: 'cs1', component: 'Card', child: 'cs1c' },
+    { id: 'cs1c', component: 'Text', text: 'Slide 1', variant: 'h3' },
+    { id: 'cs2', component: 'Card', child: 'cs2c' },
+    { id: 'cs2c', component: 'Text', text: 'Slide 2', variant: 'h3' },
+    { id: 'cs3', component: 'Card', child: 'cs3c' },
+    { id: 'cs3c', component: 'Text', text: 'Slide 3', variant: 'h3' },
+  ]),
+
   Image: surfaceExample([
     {
       id: 'root',
