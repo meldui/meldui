@@ -26,8 +26,10 @@ const MeldScrollArea = defineComponent({
       return h(
         ScrollArea,
         {
-          class: 'rounded-md border',
-          style: maxHeight ? { maxHeight } : undefined,
+          // reka's ScrollArea scrolls only with a definite height on the root
+          // (its viewport is size-full); map the A2UI `maxHeight` to a height.
+          class: 'rounded-md border p-3',
+          style: maxHeight ? { height: maxHeight } : undefined,
           'data-a2ui': 'ScrollArea',
         },
         () => (childId ? h(DeferredChild, { surface, id: childId, basePath }) : null),

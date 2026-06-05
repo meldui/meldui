@@ -5,10 +5,12 @@ import { DeferredChild } from '../../DeferredChild'
 import { defineVueComponent } from '../../define'
 import type { A2uiRenderProps } from '../../types'
 
-// A2UI variant → MeldUI Button variant.
-const VARIANT: Record<string, 'default' | 'secondary' | 'ghost'> = {
+// A2UI variant → MeldUI Button variant. `default` maps to `outline` (a neutral
+// bordered button that also groups cleanly inside a ButtonGroup); `primary` is
+// the solid call-to-action; `borderless` is a link-like ghost button.
+const VARIANT: Record<string, 'default' | 'outline' | 'ghost'> = {
   primary: 'default',
-  default: 'secondary',
+  default: 'outline',
   borderless: 'ghost',
 }
 
