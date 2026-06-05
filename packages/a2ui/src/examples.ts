@@ -273,6 +273,87 @@ export const examples: Record<string, A2uiExampleMessage[]> = {
     { id: 'cs3c', component: 'Text', text: 'Slide 3', variant: 'h3' },
   ]),
 
+  Stepper: surfaceExample([
+    {
+      id: 'root',
+      component: 'Stepper',
+      value: 1,
+      steps: [
+        { title: 'Account', description: 'Create your account' },
+        { title: 'Profile', description: 'Set up your profile' },
+        { title: 'Done', description: 'Review & finish' },
+      ],
+    },
+  ]),
+
+  Timeline: surfaceExample([
+    {
+      id: 'root',
+      component: 'Timeline',
+      items: [
+        { title: 'Order placed', description: 'Your order is confirmed.', timestamp: 'Jun 1' },
+        { title: 'Shipped', description: 'Package is on its way.', timestamp: 'Jun 3' },
+        { title: 'Delivered', description: 'Left at the front door.', timestamp: 'Jun 5' },
+      ],
+    },
+  ]),
+
+  Sidebar: surfaceExample([
+    { id: 'root', component: 'Sidebar', header: 'sbh', content: 'sbc', footer: 'sbf' },
+    { id: 'sbh', component: 'Text', text: 'MeldUI', variant: 'h5' },
+    {
+      id: 'sbc',
+      component: 'Markdown',
+      content: 'Main content area.\n\nThe agent drives an app-like surface.',
+    },
+    { id: 'sbf', component: 'Text', text: '© 2026', variant: 'caption' },
+  ]),
+
+  Combobox: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'Combobox',
+        label: 'Framework',
+        placeholder: 'Select a framework…',
+        options: [
+          { label: 'Vue', value: 'vue' },
+          { label: 'React', value: 'react' },
+          { label: 'Svelte', value: 'svelte' },
+          { label: 'Angular', value: 'angular' },
+        ],
+        value: { path: '/framework' },
+      },
+    ],
+    { framework: 'vue' },
+  ),
+
+  Chart: surfaceExample(
+    [
+      {
+        id: 'root',
+        component: 'Chart',
+        chartType: 'bar',
+        title: 'Weekly revenue',
+        data: { path: '/chart' },
+      },
+    ],
+    {
+      chart: {
+        series: [{ name: 'Revenue', data: [30, 40, 45, 50, 49, 60, 70] }],
+        xAxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
+      },
+    },
+  ),
+
+  Icon: surfaceExample([
+    { id: 'root', component: 'Row', children: ['ic1', 'ic2', 'ic3', 'ic4'] },
+    { id: 'ic1', component: 'Icon', name: 'home' },
+    { id: 'ic2', component: 'Icon', name: 'settings' },
+    { id: 'ic3', component: 'Icon', name: 'favorite' },
+    { id: 'ic4', component: 'Icon', name: 'search' },
+  ]),
+
   Image: surfaceExample([
     {
       id: 'root',

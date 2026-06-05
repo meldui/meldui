@@ -416,6 +416,12 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@meldui/charts-vue':
+        specifier: workspace:*
+        version: link:../charts-vue
+      '@meldui/tabler-vue':
+        specifier: workspace:*
+        version: link:../tabler-vue
       '@meldui/vue':
         specifier: workspace:*
         version: link:../vue

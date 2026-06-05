@@ -32,6 +32,12 @@ import { tabsEntry } from './components/tabs'
 import { accordionEntry } from './components/accordion'
 import { modalEntry } from './components/modal'
 import { carouselEntry } from './components/carousel'
+import { stepperEntry } from './components/stepper'
+import { timelineEntry } from './components/timeline'
+import { sidebarEntry } from './components/sidebar'
+import { comboboxEntry } from './components/combobox'
+import { chartEntry } from './components/chart'
+import { iconEntry } from './components/icon'
 
 /**
  * The MeldUI Vue renderer catalog. Vertical slice: a representative set proving
@@ -69,6 +75,12 @@ export const meldVueCatalog: VueComponentApi[] = [
   accordionEntry,
   modalEntry,
   carouselEntry,
+  stepperEntry,
+  timelineEntry,
+  sidebarEntry,
+  comboboxEntry,
+  chartEntry,
+  iconEntry,
 ]
 
 /** Contract components not yet implemented by the Vue renderer. */

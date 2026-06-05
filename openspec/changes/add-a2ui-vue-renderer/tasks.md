@@ -38,9 +38,9 @@ story/docs for the original slice 6, the full theme bridge, and the changeset/RE
 
 ## 5. Catalog implementation (name → @meldui/vue) and adapters
 
-- [ ] 5.1 Slice only (6/35): `Text`, `Markdown`, `Column`, `Card`, `Button`, `TextField`. Remaining 29 contract components pending (`pendingRendererComponents()` reports them).
-- [ ] 5.2 Adapters: `MeldText`, `MeldColumn` done; `MeldRow`, `MeldIcon` (→ `@meldui/tabler-vue`) pending.
-- [ ] 5.3 `Markdown` → `@incremark/vue` done; interactive write-back/actions done (Button, TextField). `Chart` → `@meldui/charts-vue`, `Table` pending.
+- [x] 5.1 **All 35/35** contract components implemented (`pendingRendererComponents()` returns `[]`), each with a Storybook story + docs page, verified rendering in Storybook.
+- [x] 5.2 Adapters/layout: `MeldText`, `MeldRow`, `MeldColumn`, `MeldIcon` (→ `@meldui/tabler-vue` material-name map), `MeldImage`, etc.
+- [x] 5.3 `Markdown` → `@incremark/vue`; `Chart` → `@meldui/charts-vue` (ECharts); `Table` data-bound; all interactive inputs two-way bound via the binder setters.
 - [x] 5.4 Decided: the catalog contract needs **no** renderer-facing metadata — the Zod renderer catalog is separate from the JSON contract, kept consistent by the `buildVueCatalog` guard. No `a2ui-catalog` delta.
 
 ## 6. Theme bridge
