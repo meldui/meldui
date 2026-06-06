@@ -115,7 +115,8 @@ const StyledTable = surfacePanel({
 })
 const RestyleHost = defineComponent({
   name: 'RestyleHost',
-  render: () => h('div', { class: 'flex flex-col gap-6 max-w-2xl' }, [h(PlainTable), h(StyledTable)]),
+  render: () =>
+    h('div', { class: 'flex flex-col gap-6 max-w-2xl' }, [h(PlainTable), h(StyledTable)]),
 })
 
 export const ComponentRestyle: Story = liveWithCode(RestyleHost, [

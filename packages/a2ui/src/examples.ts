@@ -116,7 +116,7 @@ export const examples: Record<string, A2uiExampleMessage[]> = {
   ]),
 
   AvatarGroup: surfaceExample([
-    { id: 'root', component: 'AvatarGroup', children: ['a1', 'a2', 'a3', 'a4'], max: 3 },
+    { id: 'root', component: 'AvatarGroup', children: ['a1', 'a2', 'a3', 'a4'], max: 3, size: 'lg' },
     { id: 'a1', component: 'Avatar', src: 'https://i.pravatar.cc/100?img=1', fallback: 'A' },
     { id: 'a2', component: 'Avatar', src: 'https://i.pravatar.cc/100?img=2', fallback: 'B' },
     { id: 'a3', component: 'Avatar', src: 'https://i.pravatar.cc/100?img=3', fallback: 'C' },

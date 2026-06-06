@@ -48,6 +48,43 @@ export function liveWithCode(Host: Component, sections: CodeSection[]) {
   }
 }
 
+/** A single labelled mini-surface rendering one component's canonical example. */
+function miniSurface(name: string) {
+  return defineComponent({
+    name: `A2uiMini_${name}`,
+    setup() {
+      const { processor } = provideA2UI()
+      onMounted(() => processor.processMessages((examples[name] ?? []) as never))
+      return () =>
+        h('div', { class: 'flex flex-col gap-1.5' }, [
+          h('div', { class: 'text-xs font-medium text-muted-foreground' }, name),
+          h('div', { class: 'rounded-lg border border-border p-4' }, [
+            h(A2UISurface, { surfaceId: 's1' }),
+          ]),
+        ])
+    },
+  })
+}
+
+/** A gallery story: each named component's example rendered live in a responsive
+ *  grid (each in its own isolated surface). Names without an example are skipped. */
+export function galleryStory(names: readonly string[]) {
+  const present = names.filter((n) => examples[n]?.length)
+  const Grid = defineComponent({
+    name: 'A2uiGallery',
+    setup() {
+      const minis = present.map((n) => miniSurface(n))
+      return () =>
+        h(
+          'div',
+          { class: 'grid grid-cols-1 gap-6 p-4 md:grid-cols-2' },
+          minis.map((M) => h(M)),
+        )
+    },
+  })
+  return { render: () => ({ components: { Grid }, template: '<Grid />' }) }
+}
+
 export interface A2uiStoryOptions {
   onAction?: Parameters<typeof provideA2UI>[0] extends { onAction?: infer F } ? F : never
   onStreamStart?: (processor: A2uiHandle['processor']) => () => void

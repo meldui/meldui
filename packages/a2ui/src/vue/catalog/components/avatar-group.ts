@@ -2,7 +2,7 @@ import { defineComponent, h, type PropType } from 'vue'
 import { AvatarGroup } from '@meldui/vue'
 import { DeferredChild } from '../../DeferredChild'
 import { defineVueComponent } from '../../define'
-import { a2, meldApi } from '../schemas'
+import { a2, meldApi, z } from '../schemas'
 import type { A2uiRenderProps } from '../../types'
 
 interface ChildRef {
@@ -13,6 +13,7 @@ interface ChildRef {
 const AvatarGroupApi = meldApi('AvatarGroup', {
   children: a2.childList,
   max: a2.num.optional(),
+  size: z.enum(['sm', 'md', 'lg']).optional(),
 })
 
 const MeldAvatarGroup = defineComponent({
@@ -29,7 +30,11 @@ const MeldAvatarGroup = defineComponent({
       const children: ChildRef[] = raw.map((c) => (typeof c === 'string' ? { id: c, basePath } : c))
       return h(
         AvatarGroup,
-        { max: props.p.max as number | undefined, 'data-a2ui': 'AvatarGroup' },
+        {
+          max: props.p.max as number | undefined,
+          size: props.p.size as 'sm' | 'md' | 'lg' | undefined,
+          'data-a2ui': 'AvatarGroup',
+        },
         () =>
           children.map((c) =>
             h(DeferredChild, {

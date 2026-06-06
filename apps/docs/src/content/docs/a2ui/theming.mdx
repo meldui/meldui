@@ -8,7 +8,7 @@ order: 3
 
 import A2uiThemeDemo from '../../../demos/a2ui/A2uiThemeDemo.vue'
 
-MeldUI uses **semantic theming**: the agent describes *structure* ("a primary button", "a table"), and the **consuming app owns the look**. An agent never sends colors — so the same surface renders consistently in MeldUI's style across every app. There are two seams the host app uses to style rendered surfaces, and neither requires the agent to change.
+MeldUI uses **semantic theming**: the agent describes _structure_ ("a primary button", "a table"), and the **consuming app owns the look**. An agent never sends colors — so the same surface renders consistently in MeldUI's style across every app. There are two seams the host app uses to style rendered surfaces, and neither requires the agent to change.
 
 ## 1. Token overrides
 
@@ -37,7 +37,7 @@ Below, the **same** `Button` messages render first with MeldUI's default tokens,
   vars={{ '--primary': '#7c3aed', '--ring': '#7c3aed', '--radius': '1rem' }}
 />
 
-> The A2UI protocol has an optional `theme.primaryColor` an agent *could* send. MeldUI intentionally does **not** map it onto CSS — the host owns color so surfaces stay consistent across agents. A per-surface agent override is a deferred, opt-in future addition.
+> The A2UI protocol has an optional `theme.primaryColor` an agent _could_ send. MeldUI intentionally does **not** map it onto CSS — the host owns color so surfaces stay consistent across agents. A per-surface agent override is a deferred, opt-in future addition.
 
 ## 2. Per-component restyle via `data-a2ui`
 
@@ -46,17 +46,23 @@ Every rendered component carries a `data-a2ui="<ComponentName>"` attribute on it
 For example, MeldUI's default `Table` is intentionally minimal. An app can give it borders, a header background, and taller rows:
 
 ```css
-[data-a2ui="Table"] table {
+[data-a2ui='Table'] table {
   border: 1px solid var(--border);
   border-radius: 10px;
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
 }
-[data-a2ui="Table"] thead { background: var(--muted); }
-[data-a2ui="Table"] th,
-[data-a2ui="Table"] td { padding: 0.875rem 1rem; }
-[data-a2ui="Table"] tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+[data-a2ui='Table'] thead {
+  background: var(--muted);
+}
+[data-a2ui='Table'] th,
+[data-a2ui='Table'] td {
+  padding: 0.875rem 1rem;
+}
+[data-a2ui='Table'] tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--border);
+}
 ```
 
 The default Table (see the [Table page](/docs/a2ui/components/table)) versus the same `Table` messages with the rules above applied by the host:
@@ -65,18 +71,24 @@ The default Table (see the [Table page](/docs/a2ui/components/table)) versus the
   client:only="vue"
   component="Table"
   css={`
-[data-a2ui="Table"] table {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  border-collapse: separate;
-  border-spacing: 0;
-  overflow: hidden;
-}
-[data-a2ui="Table"] thead { background: var(--muted); }
-[data-a2ui="Table"] th,
-[data-a2ui="Table"] td { padding: 0.875rem 1rem; }
-[data-a2ui="Table"] tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
-`}
+    [data-a2ui='Table'] table {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+    }
+    [data-a2ui='Table'] thead {
+      background: var(--muted);
+    }
+    [data-a2ui='Table'] th,
+    [data-a2ui='Table'] td {
+      padding: 0.875rem 1rem;
+    }
+    [data-a2ui='Table'] tbody tr:not(:last-child) td {
+      border-bottom: 1px solid var(--border);
+    }
+  `}
 />
 
 Both seams compose: tokens set the palette, `data-a2ui` selectors fine-tune individual components — all on the host side, leaving the agent's messages portable and unchanged.

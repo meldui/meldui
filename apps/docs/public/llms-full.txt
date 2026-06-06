@@ -45,6 +45,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Markdown](/docs/a2ui/components/markdown): Render Markdown (incremental) from an A2UI agent.
 - [Modal](/docs/a2ui/components/modal): A dialog overlay from an A2UI agent.
 - [MultiSelect](/docs/a2ui/components/multi-select): A searchable multi-select input from an A2UI agent.
+- [Playground](/docs/a2ui/playground): Paste raw A2UI v0.9 messages and watch them render live with MeldUI components.
 - [Row](/docs/a2ui/components/row): Arrange components horizontally from an A2UI agent.
 - [ScrollArea](/docs/a2ui/components/scroll-area): Wrap content in a scrollable viewport from an A2UI agent.
 - [Separator](/docs/a2ui/components/separator): Render a separator line from an A2UI agent.
@@ -571,6 +572,7 @@ A horizontally overlapping group of Avatar components.
 | --- | --- | --- | --- |
 | `children` | `ChildList` | yes | The Avatar components to group, referenced by ID. |
 | `max` | `number` | no | Maximum avatars to show before collapsing the rest into a "+N" badge. |
+| `size` | `enum` | no | Uniform size for every avatar and the "+N" badge, so the whole group scales together. Defaults to the base avatar size. One of: `sm`, `md`, `lg`. |
 
 #### Kbd
 
@@ -945,6 +947,22 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 
 ---
 
+## Playground
+
+Paste raw A2UI v0.9 messages and watch them render live with MeldUI components.
+
+Edit a raw **A2UI v0.9** message sequence — the same JSON an agent streams — and press **Render** to see it rendered live with MeldUI components. This is the exact path a surface takes: `createSurface` → `updateComponents` (and optional `updateDataModel`), resolved against the MeldUI catalog by the Vue renderer.
+
+<A2uiPlayground  />
+
+Tips:
+
+- The first message must `createSurface` with `surfaceId: "s1"` and the MeldUI `catalogId`; later messages target that surface.
+- Bind dynamic values with a JSON Pointer (`{ "path": "/some/key" }`) and seed them via an `updateDataModel` message.
+- See the [Catalog Reference](/docs/a2ui/reference) for every component's props, and the per-component pages for copy-paste examples.
+
+---
+
 ## Row
 
 Arrange components horizontally from an A2UI agent.
@@ -1069,7 +1087,7 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 
 How a consuming app themes and restyles A2UI surfaces — token overrides and per-component styling.
 
-MeldUI uses **semantic theming**: the agent describes *structure* ("a primary button", "a table"), and the **consuming app owns the look**. An agent never sends colors — so the same surface renders consistently in MeldUI's style across every app. There are two seams the host app uses to style rendered surfaces, and neither requires the agent to change.
+MeldUI uses **semantic theming**: the agent describes _structure_ ("a primary button", "a table"), and the **consuming app owns the look**. An agent never sends colors — so the same surface renders consistently in MeldUI's style across every app. There are two seams the host app uses to style rendered surfaces, and neither requires the agent to change.
 
 ## 1. Token overrides
 
@@ -1094,7 +1112,7 @@ Below, the **same** `Button` messages render first with MeldUI's default tokens,
 
 
 
-> The A2UI protocol has an optional `theme.primaryColor` an agent *could* send. MeldUI intentionally does **not** map it onto CSS — the host owns color so surfaces stay consistent across agents. A per-surface agent override is a deferred, opt-in future addition.
+> The A2UI protocol has an optional `theme.primaryColor` an agent _could_ send. MeldUI intentionally does **not** map it onto CSS — the host owns color so surfaces stay consistent across agents. A per-surface agent override is a deferred, opt-in future addition.
 
 ## 2. Per-component restyle via `data-a2ui`
 
@@ -1103,17 +1121,23 @@ Every rendered component carries a `data-a2ui="<ComponentName>"` attribute on it
 For example, MeldUI's default `Table` is intentionally minimal. An app can give it borders, a header background, and taller rows:
 
 ```css
-[data-a2ui="Table"] table {
+[data-a2ui='Table'] table {
   border: 1px solid var(--border);
   border-radius: 10px;
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
 }
-[data-a2ui="Table"] thead { background: var(--muted); }
-[data-a2ui="Table"] th,
-[data-a2ui="Table"] td { padding: 0.875rem 1rem; }
-[data-a2ui="Table"] tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+[data-a2ui='Table'] thead {
+  background: var(--muted);
+}
+[data-a2ui='Table'] th,
+[data-a2ui='Table'] td {
+  padding: 0.875rem 1rem;
+}
+[data-a2ui='Table'] tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--border);
+}
 ```
 
 The default Table (see the [Table page](/docs/a2ui/components/table)) versus the same `Table` messages with the rules above applied by the host:

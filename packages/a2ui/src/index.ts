@@ -14,6 +14,7 @@ export { A2UI_VERSION, CATALOG_ID, COMMON_TYPES_URI } from './constants'
 export type { CatalogDocument, ComponentDef, ComponentDefs, JSONSchema } from './types'
 export {
   COMPONENT_DEFS,
+  COMPONENT_TIERS,
   MELDUI_COMPONENT_NAMES,
   basicComponents,
   structuralComponents,

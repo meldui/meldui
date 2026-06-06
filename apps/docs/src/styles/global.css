@@ -75,11 +75,16 @@
     @apply bg-muted text-foreground px-1.5 py-0.5 rounded-md text-sm font-mono;
   }
 
-  pre {
+  /* Direct-child / section scoping (like the headings above) so these do NOT
+     style <pre>/<code> inside <astro-island> Vue demos — e.g. the A2UI Markdown
+     component's incremark code block, which carries its own styling. */
+  > pre,
+  > section pre {
     @apply rounded-lg border border-border bg-muted/50 p-4 overflow-x-auto mb-4;
   }
 
-  pre code {
+  > pre code,
+  > section pre code {
     @apply bg-transparent p-0 text-sm;
   }
 

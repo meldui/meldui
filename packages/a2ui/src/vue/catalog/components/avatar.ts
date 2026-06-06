@@ -21,8 +21,10 @@ const MeldAvatar = defineComponent({
       const src = props.p.src as string | undefined
       const alt = props.p.alt as string | undefined
       const fallback = props.p.fallback as string | undefined
-      const size = SIZE[(props.p.size as string) ?? 'md'] ?? SIZE.md
-      return h(Avatar, { class: size, 'data-a2ui': 'Avatar' }, () => [
+      // Only override the base size when explicitly requested, so grouped avatars
+      // match the AvatarGroup's built-in "+N" badge (which uses the base size).
+      const sizeClass = props.p.size ? SIZE[props.p.size as string] : undefined
+      return h(Avatar, { class: sizeClass, 'data-a2ui': 'Avatar' }, () => [
         src ? h(AvatarImage, { src, alt }) : null,
         h(AvatarFallback, () => fallback ?? '?'),
       ])

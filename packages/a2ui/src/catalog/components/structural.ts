@@ -36,6 +36,11 @@ export const structuralComponents: ComponentDefs = {
         type: 'number',
         description: 'Maximum avatars to show before collapsing the rest into a "+N" badge.',
       },
+      size: {
+        enum: ['sm', 'md', 'lg'],
+        description:
+          'Uniform size for every avatar and the "+N" badge, so the whole group scales together. Defaults to the base avatar size.',
+      },
     },
     required: ['children'],
   },
