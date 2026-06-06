@@ -26,12 +26,15 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Avatar](/docs/a2ui/components/avatar): Render a user/entity avatar from an A2UI agent.
 - [AvatarGroup](/docs/a2ui/components/avatar-group): Render an overlapping group of avatars from an A2UI agent.
 - [Badge](/docs/a2ui/components/badge): Render a small status/label chip from an A2UI agent.
+- [Button](/docs/a2ui/components/button): Render an actionable button from an A2UI agent.
 - [ButtonGroup](/docs/a2ui/components/button-group): Group related buttons from an A2UI agent.
+- [Card](/docs/a2ui/components/card): Wrap content in a card from an A2UI agent.
 - [Carousel](/docs/a2ui/components/carousel): A swipeable carousel from an A2UI agent.
 - [Catalog Reference](/docs/a2ui/reference): The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
 - [Chart](/docs/a2ui/components/chart): A data visualization from an A2UI agent.
 - [CheckBox](/docs/a2ui/components/check-box): A boolean checkbox bound to the data model from an A2UI agent.
 - [ChoicePicker](/docs/a2ui/components/choice-picker): Single or multiple choice selection from an A2UI agent.
+- [Column](/docs/a2ui/components/column): Arrange components vertically from an A2UI agent.
 - [Combobox](/docs/a2ui/components/combobox): A searchable single-select from an A2UI agent.
 - [DateTimeInput](/docs/a2ui/components/date-time-input): A date/time picker from an A2UI agent.
 - [Divider](/docs/a2ui/components/divider): Render a simple divider from an A2UI agent.
@@ -39,6 +42,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Image](/docs/a2ui/components/image): Render an image from an A2UI agent.
 - [Kbd](/docs/a2ui/components/kbd): Render keyboard keys from an A2UI agent.
 - [List](/docs/a2ui/components/list): Arrange a list of components from an A2UI agent.
+- [Markdown](/docs/a2ui/components/markdown): Render Markdown (incremental) from an A2UI agent.
 - [Modal](/docs/a2ui/components/modal): A dialog overlay from an A2UI agent.
 - [MultiSelect](/docs/a2ui/components/multi-select): A searchable multi-select input from an A2UI agent.
 - [Row](/docs/a2ui/components/row): Arrange components horizontally from an A2UI agent.
@@ -49,6 +53,9 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Stepper](/docs/a2ui/components/stepper): An ordered step sequence from an A2UI agent.
 - [Table](/docs/a2ui/components/table): Render tabular data from an A2UI agent.
 - [Tabs](/docs/a2ui/components/tabs): A tabbed interface from an A2UI agent.
+- [Text](/docs/a2ui/components/text): Render styled text from an A2UI agent.
+- [TextField](/docs/a2ui/components/text-field): Render a data-bound text input from an A2UI agent.
+- [Theming](/docs/a2ui/theming): How a consuming app themes and restyles A2UI surfaces — token overrides and per-component styling.
 - [Timeline](/docs/a2ui/components/timeline): A vertical event timeline from an A2UI agent.
 - [ToggleGroup](/docs/a2ui/components/toggle-group): A group of toggle buttons from an A2UI agent.
 - [Area Chart](/docs/charts/area-chart): Visualize volume and cumulative data with filled areas beneath lines.
@@ -333,11 +340,35 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 
 ---
 
+## Button
+
+Render an actionable button from an A2UI agent.
+
+The **`Button`** renders a clickable button (with a child label and an `action`); `variant` is `primary` (solid CTA), `default` (outline), or `borderless`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
 ## ButtonGroup
 
 Group related buttons from an A2UI agent.
 
 The **`ButtonGroup`** component visually joins related `Button` children (by id), with `orientation` control.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Card
+
+Wrap content in a card from an A2UI agent.
+
+The **`Card`** component renders a single `child` inside a bordered, elevated surface.
 
 
 
@@ -782,6 +813,18 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 
 ---
 
+## Column
+
+Arrange components vertically from an A2UI agent.
+
+The **`Column`** primitive arranges its `children` (by id) vertically, with `justify` (main axis) and `align` (cross axis).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
 ## Combobox
 
 A searchable single-select from an A2UI agent.
@@ -859,6 +902,18 @@ See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the
 Arrange a list of components from an A2UI agent.
 
 The **`List`** primitive lays out its `children` (by id) in a `direction` (`vertical` or `horizontal`), with cross-axis `align`.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Markdown
+
+Render Markdown (incremental) from an A2UI agent.
+
+The **`Markdown`** component renders Markdown `content`, tolerating streamed/partial input — the primary path for streamed agent text.
 
 
 
@@ -983,6 +1038,91 @@ The **`Tabs`** component renders a set of `tabs`, each with a `title` and a `chi
 
 
 See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Text
+
+Render styled text from an A2UI agent.
+
+The **`Text`** component renders a line of text with a typography `variant` (`h1`–`h5`, `body`, `caption`).
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## TextField
+
+Render a data-bound text input from an A2UI agent.
+
+The **`TextField`** renders a labelled text input whose `value` is two-way bound to the data model; `variant` selects short/long/number/obscured.
+
+
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Theming
+
+How a consuming app themes and restyles A2UI surfaces — token overrides and per-component styling.
+
+MeldUI uses **semantic theming**: the agent describes *structure* ("a primary button", "a table"), and the **consuming app owns the look**. An agent never sends colors — so the same surface renders consistently in MeldUI's style across every app. There are two seams the host app uses to style rendered surfaces, and neither requires the agent to change.
+
+## 1. Token overrides
+
+Every rendered component reads MeldUI's design tokens (`--primary`, `--primary-foreground`, `--ring`, `--radius`, …) through its classes. Set those CSS variables on any container around `<A2UISurface>` and everything inside inherits them — this is just the CSS cascade. If your app already defines its own `--primary`, surfaces pick it up automatically; or scope an override to a single surface:
+
+```vue
+<template>
+  <!-- the app's brand, applied to one surface -->
+  <div :style="{ '--primary': '#7c3aed', '--ring': '#7c3aed', '--radius': '1rem' }">
+    <A2UISurface surface-id="main" />
+  </div>
+</template>
+```
+
+Below, the **same** `Button` messages render first with MeldUI's default tokens, then with an app brand override (`--primary: #7c3aed`, `--radius: 1rem`). Because each component pairs `bg-primary` with `text-primary-foreground`, the contrast stays correct — the host always owns the matched pair.
+
+**MeldUI default:**
+
+
+
+**With an app brand override:**
+
+
+
+> The A2UI protocol has an optional `theme.primaryColor` an agent *could* send. MeldUI intentionally does **not** map it onto CSS — the host owns color so surfaces stay consistent across agents. A per-surface agent override is a deferred, opt-in future addition.
+
+## 2. Per-component restyle via `data-a2ui`
+
+Every rendered component carries a `data-a2ui="<ComponentName>"` attribute on its root element (e.g. `data-a2ui="Table"`, `data-a2ui="Button"`). That is the stable hook for restyling one component type from your app's global CSS — without touching the agent or the renderer.
+
+For example, MeldUI's default `Table` is intentionally minimal. An app can give it borders, a header background, and taller rows:
+
+```css
+[data-a2ui="Table"] table {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+[data-a2ui="Table"] thead { background: var(--muted); }
+[data-a2ui="Table"] th,
+[data-a2ui="Table"] td { padding: 0.875rem 1rem; }
+[data-a2ui="Table"] tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+```
+
+The default Table (see the [Table page](/docs/a2ui/components/table)) versus the same `Table` messages with the rules above applied by the host:
+
+
+
+Both seams compose: tokens set the palette, `data-a2ui` selectors fine-tune individual components — all on the host side, leaving the agent's messages portable and unchanged.
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
 
 ---
 

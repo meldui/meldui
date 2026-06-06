@@ -1,7 +1,52 @@
-import { defineComponent, h, onMounted, onUnmounted } from 'vue'
+import { type Component, defineComponent, h, onMounted, onUnmounted } from 'vue'
 import { type A2uiExampleMessage, examples } from '@meldui/a2ui'
 import { A2UISurface, type A2uiHandle, provideA2UI } from '@meldui/a2ui/vue'
 import '@incremark/theme/styles.css'
+
+/** One collapsible code block explaining part of a story's implementation. */
+export interface CodeSection {
+  title: string
+  code: string
+}
+
+/**
+ * Wraps a live host component with one or more collapsible code sections that
+ * explain how the story is implemented (A2UI messages, theming CSS/vars,
+ * streaming/action logic). Mirrors the per-component `<details>` code block so
+ * the composed Renderer/Theming stories are documented the same way.
+ */
+export function liveWithCode(Host: Component, sections: CodeSection[]) {
+  const Wrapped = defineComponent({
+    name: 'A2uiLiveWithCode',
+    setup() {
+      return () =>
+        h('div', { class: 'flex flex-col gap-3 p-4' }, [
+          h(Host),
+          ...sections.map((s) =>
+            h('details', { class: 'rounded-lg border border-border bg-muted/30' }, [
+              h(
+                'summary',
+                { class: 'cursor-pointer px-3 py-2 text-sm text-muted-foreground' },
+                s.title,
+              ),
+              h('pre', { class: 'overflow-auto px-3 pb-3 text-xs' }, h('code', null, s.code)),
+            ]),
+          ),
+        ])
+    },
+  })
+  return {
+    render: () => ({ components: { Wrapped }, template: '<Wrapped />' }),
+    parameters: {
+      docs: {
+        source: {
+          code: sections.map((s) => `// ${s.title}\n${s.code}`).join('\n\n'),
+          language: 'ts',
+        },
+      },
+    },
+  }
+}
 
 export interface A2uiStoryOptions {
   onAction?: Parameters<typeof provideA2UI>[0] extends { onAction?: infer F } ? F : never

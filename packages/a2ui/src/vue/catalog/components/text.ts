@@ -31,7 +31,7 @@ const MeldText = defineComponent({
       const variant = (props.p.variant as string) ?? 'body'
       return h(
         TAG[variant] ?? 'p',
-        { class: CLASS[variant] ?? CLASS.body },
+        { class: CLASS[variant] ?? CLASS.body, 'data-a2ui': 'Text' },
         (props.p.text as string) ?? '',
       )
     }

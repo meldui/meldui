@@ -12,8 +12,11 @@ live render + code tab. `Alert` is done on both (story `A2UI/Components` + docs 
 `/docs/a2ui/components/alert`, both verified). Each remaining component now costs:
 renderer `.ts` + an `examples` entry + a story line + an MDX page + a nav line.
 
-Remaining: the other 28 catalog components (each with story + docs), per-component
-story/docs for the original slice 6, the full theme bridge, and the changeset/README.
+All 35 components (each with renderer + `examples` entry + Storybook story + docs page +
+nav line), the changeset, and the renderer README are landed and committed.
+
+Remaining: the full A2UI-theme-token → CSS-var bridge (6.1), the per-tier gallery +
+JSON playground stories (7.1), and explicit leak instrumentation (7.3, deferred).
 
 ## 1. Dependencies and spike
 
@@ -43,9 +46,10 @@ story/docs for the original slice 6, the full theme bridge, and the changeset/RE
 - [x] 5.3 `Markdown` → `@incremark/vue`; `Chart` → `@meldui/charts-vue` (ECharts); `Table` data-bound; all interactive inputs two-way bound via the binder setters.
 - [x] 5.4 Decided: the catalog contract needs **no** renderer-facing metadata — the Zod renderer catalog is separate from the JSON contract, kept consistent by the `buildVueCatalog` guard. No `a2ui-catalog` delta.
 
-## 6. Theme bridge
+## 6. Theming (semantic; no agent color override)
 
-- [ ] 6.1 `meldTheme` placeholder exported; surfaces already inherit MeldUI tokens via component classes. Full A2UI-theme-token → CSS-var bridge pending (with the broader component set).
+- [x] 6.1 **Decided (design D6): semantic theming, no agent color override.** Surfaces inherit the host/MeldUI tokens (`--primary`/`--primary-foreground`/`--ring`) via the CSS cascade — no bridge code. The protocol's optional `theme.primaryColor` is intentionally not mapped onto CSS vars so MeldUI stays visually consistent across any agent. `meldTheme` is the empty default (`{}`). An opt-in per-surface override is captured in design **Future Scope**, to be added only when a concrete multi-agent-branding need arises.
+- [x] 6.2 Documented + demonstrated the two host-side theming seams: (1) token overrides via the CSS cascade and (2) per-component restyle via the `data-a2ui="<Name>"` attribute (now on all 35 components — added to `Text`). Docs page `/docs/a2ui/theming` (island `A2uiThemeDemo.vue`) and Storybook `A2UI/Theming` (`AppThemeOverride` + `ComponentRestyle`), both verified end-to-end (default-vs-branded buttons; default-vs-restyled Table, scoped so they don't bleed).
 
 ## 7. Storybook + verification
 
@@ -59,4 +63,4 @@ story/docs for the original slice 6, the full theme bridge, and the changeset/RE
 
 - [x] 8.1 `build` (ESM+CJS+dts, two entries) and `vue-tsc` typecheck pass with peers external.
 - [x] 8.2 `oxlint`/`oxfmt` clean for the renderer + story.
-- [ ] 8.3 Changeset + README for the `@meldui/a2ui/vue` renderer — pending (do with the full component set).
+- [x] 8.3 Changeset (`.changeset/a2ui-vue-renderer.md`, `@meldui/a2ui` minor) + renderer README section (`## Vue renderer (@meldui/a2ui/vue)`) landed.

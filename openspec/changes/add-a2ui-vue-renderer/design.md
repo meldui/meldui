@@ -109,9 +109,13 @@ A `MELDUI_CATALOG` maps each contract component name to a `@meldui/vue` componen
 
 Import strictly from `@a2ui/web_core/v0_9` (the root export still points at v0_8). Pin `@a2ui/web_core@^0.10`. **Rationale:** v0.9 is the target; the subpath is stable and is what the official v0.9 renderers use.
 
-### D6 — Theme bridge over existing OKLCH tokens
+### D6 — Semantic theming; no agent color override (deferred)
 
-`provideA2UI` accepts a `theme`; the default binds A2UI theme tokens onto MeldUI's existing CSS variables from `@meldui/vue/themes/default`. No new colors. **Rationale:** surfaces inherit MeldUI light/dark for free; single source of truth for tokens.
+Surfaces inherit the host app's / MeldUI's design tokens (`--primary`, `--primary-foreground`, `--ring`, …) purely through the CSS cascade: every render component uses `var(--primary)` etc. via its Tailwind classes, resolving to whatever the consuming app (or `@meldui/vue/themes/default`) defines. This needs no bridge code.
+
+The A2UI protocol's optional `theme.primaryColor` (an agent-supplied accent for multi-agent identity, alongside `iconUrl`/`agentDisplayName`) is **intentionally not bridged onto CSS variables**. **Rationale:** MeldUI's goal is one consistent look across any agent; letting an agent recolor `--primary` per surface invites clashes with the host brand and contrast problems (e.g. a light primary needing a derived foreground). The host/MeldUI always owns color, so `--primary` and `--primary-foreground` always stay the matched pair the app defined.
+
+`meldTheme` remains an empty default (`{}` = "use MeldUI defaults") and `provideA2UI` does not apply a theme. `iconUrl`/`agentDisplayName` are agent-identity chrome (the host chat UI's concern), not renderer styling. The value-override escape hatch is captured under Future Scope.
 
 ## Risks / Trade-offs
 
@@ -124,6 +128,11 @@ Import strictly from `@a2ui/web_core/v0_9` (the root export still points at v0_8
 ## Migration Plan
 
 Additive within `@meldui/a2ui`; depends on `add-a2ui-catalog-contract` being applied first. Rollout: spike web_core → core bridge/host → catalog entries+adapters → theme → stories → changeset (minor bump). Rollback: renderer code is isolated under `src/core`/`src/catalog`/`src/theme`; the published catalog artifact is unaffected.
+
+## Future Scope
+
+- **Agent color override (`theme.primaryColor`).** Deferred per D6. When a concrete multi-agent-branding need arises (distinct tools rendering surfaces in one host, each wanting a recognizable accent), add an opt-in bridge: write the agent's `primaryColor` into a per-surface inline `--primary`/`--ring` on the `<A2UISurface>` root (scoped, so surfaces don't clobber each other or the host brand), and derive a readable `--primary-foreground` via WCAG luminance for light accents. Default stays inherit-from-host; the override fires only when the agent explicitly sends a valid hex. No protocol or catalog change needed — the `theme` token already exists; only the renderer opts in.
+- **Agent identity chrome (`iconUrl`/`agentDisplayName`).** If surfaces should display which agent produced them, surface these from `SurfaceModel.theme` as optional header chrome (likely the host chat UI's responsibility rather than the renderer's).
 
 ## Open Questions
 
