@@ -53,7 +53,17 @@ const config: StorybookConfig = {
       resolve: {
         alias: {
           vue: resolve(__dirname, '../../node_modules/vue/dist/vue.esm-bundler.js'),
+          // Resolve @meldui/a2ui to source so renderer edits hot-reload without
+          // a rebuild and no stale prebundle. Order: subpath before root.
+          '@meldui/a2ui/vue': resolve(__dirname, '../../../packages/a2ui/src/vue/index.ts'),
+          '@meldui/a2ui': resolve(__dirname, '../../../packages/a2ui/src/index.ts'),
         },
+      },
+      optimizeDeps: {
+        // Pre-bundle the heavy workspace UI libs so dev doesn't serve thousands
+        // of individual module requests (icons/components) and hit the browser's
+        // concurrent-connection limit.
+        include: ['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue'],
       },
       define: {
         __VUE_OPTIONS_API__: 'true',

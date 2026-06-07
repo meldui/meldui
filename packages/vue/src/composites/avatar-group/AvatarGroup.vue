@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes, Slots, VNode } from 'vue'
-import { computed, useSlots } from 'vue'
+import { cloneVNode, computed, useSlots } from 'vue'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import type { AvatarGroupVariants } from '.'
@@ -26,6 +26,12 @@ export interface AvatarGroupProps {
    * @default false
    */
   reverse?: AvatarGroupVariants['reverse']
+  /**
+   * Uniform size applied to every avatar AND the "+N" overflow badge, so the
+   * whole group scales together. Overrides individual avatar sizes. When unset,
+   * avatars keep their own size and the badge uses the base Avatar size.
+   */
+  size?: 'sm' | 'md' | 'lg'
   /**
    * Custom CSS classes
    */
@@ -76,6 +82,17 @@ const overflowCount = computed(() => {
   }
   return childNodes.value.length - props.max
 })
+
+// When `size` is set, scale the whole group uniformly: clone each visible avatar
+// with the size class and apply the same class to the overflow badge below.
+const sizeClassMap = { sm: 'size-8', md: 'size-10', lg: 'size-12' } as const
+const avatarSizeClass = computed(() => (props.size ? sizeClassMap[props.size] : undefined))
+
+const sizedChildren = computed(() =>
+  avatarSizeClass.value
+    ? visibleChildren.value.map((child) => cloneVNode(child, { class: avatarSizeClass.value }))
+    : visibleChildren.value,
+)
 </script>
 
 <template>
@@ -83,9 +100,9 @@ const overflowCount = computed(() => {
     :class="cn(avatarGroupVariants({ orientation, spacing, reverse }), props.class)"
     :data-orientation="orientation"
   >
-    <component :is="child" v-for="(child, index) in visibleChildren" :key="index" />
+    <component :is="child" v-for="(child, index) in sizedChildren" :key="index" />
     <slot name="overflow" :count="overflowCount">
-      <Avatar v-if="overflowCount > 0">
+      <Avatar v-if="overflowCount > 0" :class="avatarSizeClass">
         <AvatarFallback class="bg-muted text-muted-foreground text-xs font-medium">
           +{{ overflowCount }}
         </AvatarFallback>

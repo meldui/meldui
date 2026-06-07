@@ -25,6 +25,10 @@
     "**/.turbo/**",
     "**/storybook-static/**",
     "**/.astro/**",
-    "**/demos/**"
+    "**/demos/**",
+    "**/packages/a2ui/src/schema/**",
+    "**/packages/a2ui/src/catalog/functions.json",
+    "**/packages/a2ui/src/catalog/theme-schema.json",
+    "**/packages/a2ui/scripts/*.fixture.json"
   ]
 }

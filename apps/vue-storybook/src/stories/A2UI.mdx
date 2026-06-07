@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="A2UI" />
+
+# A2UI Catalog
+
+[A2UI](https://a2ui.org) lets an **agent** stream JSON describing a UI that a **client** renders against a **catalog** — a framework-agnostic contract mapping abstract component names to a design system. **`@meldui/a2ui`** is that catalog for MeldUI, so any A2UI-speaking agent can render MeldUI components.
+
+> **Scope today:** `@meldui/a2ui` ships the **catalog contract** (schema + component definitions). The Vue renderer — which will power interactive stories here in Storybook (component galleries, streaming Markdown, a JSON playground) — lands in a follow-up release.
+
+## Catalog id
+
+```
+https://meldui.dipayanb.com/a2ui/v1/catalog.json
+```
+
+A client advertises this id in `supportedCatalogIds`; the agent targets it for a surface's lifetime.
+
+## Install
+
+```bash
+pnpm add @meldui/a2ui
+```
+
+```ts
+import catalog from '@meldui/a2ui/catalog' // the raw, generated catalog.json
+import { CATALOG_ID, MELDUI_COMPONENT_NAMES } from '@meldui/a2ui'
+```
+
+## What's in it
+
+One catalog, grouped by tier: **Basic primitives** (`Row`, `Card`, `Text`, `Button`, `TextField`, …, kept under exact A2UI spec names for interop), **structural & display** (`Avatar`, `Alert`, `Badge`, `Accordion`, `Table`, …), and **rich** (`Markdown`, `Timeline`, `Combobox`, `Chart`, …), plus the A2UI functions and a theme token shape.
+
+For the full component reference — every component, its props, and the functions — see the **A2UI → Catalog Reference** page in the MeldUI documentation site (`/docs/a2ui`), which is generated directly from the catalog contract.

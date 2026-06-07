@@ -3,15 +3,19 @@ import { ref, onMounted, watch } from 'vue'
 import { Tabs, TabsList, TabsTrigger, TabsContent, ClipboardCopyButton } from '@meldui/vue'
 import { codeToHtml } from 'shiki'
 
-const props = defineProps<{
-  code: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    code: string
+    lang?: string
+  }>(),
+  { lang: 'vue' },
+)
 
 const highlightedHtml = ref('')
 
 async function highlight(code: string) {
   highlightedHtml.value = await codeToHtml(code, {
-    lang: 'vue',
+    lang: props.lang,
     themes: { light: 'github-light', dark: 'github-dark' },
   })
 }

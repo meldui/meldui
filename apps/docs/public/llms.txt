@@ -20,6 +20,45 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 
 ## Pages
 
+- [A2UI Catalog](/docs/a2ui): Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
+- [Accordion](/docs/a2ui/components/accordion): A collapsible accordion from an A2UI agent.
+- [Alert](/docs/a2ui/components/alert): Render a status callout from an A2UI agent using MeldUI's Alert.
+- [Avatar](/docs/a2ui/components/avatar): Render a user/entity avatar from an A2UI agent.
+- [AvatarGroup](/docs/a2ui/components/avatar-group): Render an overlapping group of avatars from an A2UI agent.
+- [Badge](/docs/a2ui/components/badge): Render a small status/label chip from an A2UI agent.
+- [Button](/docs/a2ui/components/button): Render an actionable button from an A2UI agent.
+- [ButtonGroup](/docs/a2ui/components/button-group): Group related buttons from an A2UI agent.
+- [Card](/docs/a2ui/components/card): Wrap content in a card from an A2UI agent.
+- [Carousel](/docs/a2ui/components/carousel): A swipeable carousel from an A2UI agent.
+- [Catalog Reference](/docs/a2ui/reference): The components, functions, and theme tokens in the MeldUI A2UI catalog, generated from the contract.
+- [Chart](/docs/a2ui/components/chart): A data visualization from an A2UI agent.
+- [CheckBox](/docs/a2ui/components/check-box): A boolean checkbox bound to the data model from an A2UI agent.
+- [ChoicePicker](/docs/a2ui/components/choice-picker): Single or multiple choice selection from an A2UI agent.
+- [Column](/docs/a2ui/components/column): Arrange components vertically from an A2UI agent.
+- [Combobox](/docs/a2ui/components/combobox): A searchable single-select from an A2UI agent.
+- [DateTimeInput](/docs/a2ui/components/date-time-input): A date/time picker from an A2UI agent.
+- [Divider](/docs/a2ui/components/divider): Render a simple divider from an A2UI agent.
+- [Icon](/docs/a2ui/components/icon): A named icon from an A2UI agent.
+- [Image](/docs/a2ui/components/image): Render an image from an A2UI agent.
+- [Kbd](/docs/a2ui/components/kbd): Render keyboard keys from an A2UI agent.
+- [List](/docs/a2ui/components/list): Arrange a list of components from an A2UI agent.
+- [Markdown](/docs/a2ui/components/markdown): Render Markdown (incremental) from an A2UI agent.
+- [Modal](/docs/a2ui/components/modal): A dialog overlay from an A2UI agent.
+- [MultiSelect](/docs/a2ui/components/multi-select): A searchable multi-select input from an A2UI agent.
+- [Playground](/docs/a2ui/playground): Paste raw A2UI v0.9 messages and watch them render live with MeldUI components.
+- [Row](/docs/a2ui/components/row): Arrange components horizontally from an A2UI agent.
+- [ScrollArea](/docs/a2ui/components/scroll-area): Wrap content in a scrollable viewport from an A2UI agent.
+- [Separator](/docs/a2ui/components/separator): Render a separator line from an A2UI agent.
+- [Sidebar](/docs/a2ui/components/sidebar): An app-like layout shell from an A2UI agent.
+- [Slider](/docs/a2ui/components/slider): A numeric range slider from an A2UI agent.
+- [Stepper](/docs/a2ui/components/stepper): An ordered step sequence from an A2UI agent.
+- [Table](/docs/a2ui/components/table): Render tabular data from an A2UI agent.
+- [Tabs](/docs/a2ui/components/tabs): A tabbed interface from an A2UI agent.
+- [Text](/docs/a2ui/components/text): Render styled text from an A2UI agent.
+- [TextField](/docs/a2ui/components/text-field): Render a data-bound text input from an A2UI agent.
+- [Theming](/docs/a2ui/theming): How a consuming app themes and restyles A2UI surfaces — token overrides and per-component styling.
+- [Timeline](/docs/a2ui/components/timeline): A vertical event timeline from an A2UI agent.
+- [ToggleGroup](/docs/a2ui/components/toggle-group): A group of toggle buttons from an A2UI agent.
 - [Area Chart](/docs/charts/area-chart): Visualize volume and cumulative data with filled areas beneath lines.
 - [Bar Chart](/docs/charts/bar-chart): Compare values across categories with vertical, horizontal, and stacked bars.
 - [Chart Events](/docs/charts/events): Handle user interactions with chart click, hover, legend, and selection events.

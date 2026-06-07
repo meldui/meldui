@@ -1,0 +1,96 @@
+---
+title: Theming
+description: How a consuming app themes and restyles A2UI surfaces — token overrides and per-component styling.
+category: a2ui
+package: '@meldui/a2ui'
+order: 3
+---
+
+import A2uiThemeDemo from '../../../demos/a2ui/A2uiThemeDemo.vue'
+
+MeldUI uses **semantic theming**: the agent describes _structure_ ("a primary button", "a table"), and the **consuming app owns the look**. An agent never sends colors — so the same surface renders consistently in MeldUI's style across every app. There are two seams the host app uses to style rendered surfaces, and neither requires the agent to change.
+
+## 1. Token overrides
+
+Every rendered component reads MeldUI's design tokens (`--primary`, `--primary-foreground`, `--ring`, `--radius`, …) through its classes. Set those CSS variables on any container around `<A2UISurface>` and everything inside inherits them — this is just the CSS cascade. If your app already defines its own `--primary`, surfaces pick it up automatically; or scope an override to a single surface:
+
+```vue
+<template>
+  <!-- the app's brand, applied to one surface -->
+  <div :style="{ '--primary': '#7c3aed', '--ring': '#7c3aed', '--radius': '1rem' }">
+    <A2UISurface surface-id="main" />
+  </div>
+</template>
+```
+
+Below, the **same** `Button` messages render first with MeldUI's default tokens, then with an app brand override (`--primary: #7c3aed`, `--radius: 1rem`). Because each component pairs `bg-primary` with `text-primary-foreground`, the contrast stays correct — the host always owns the matched pair.
+
+**MeldUI default:**
+
+<A2uiThemeDemo client:only="vue" component="Button" />
+
+**With an app brand override:**
+
+<A2uiThemeDemo
+  client:only="vue"
+  component="Button"
+  vars={{ '--primary': '#7c3aed', '--ring': '#7c3aed', '--radius': '1rem' }}
+/>
+
+> The A2UI protocol has an optional `theme.primaryColor` an agent _could_ send. MeldUI intentionally does **not** map it onto CSS — the host owns color so surfaces stay consistent across agents. A per-surface agent override is a deferred, opt-in future addition.
+
+## 2. Per-component restyle via `data-a2ui`
+
+Every rendered component carries a `data-a2ui="<ComponentName>"` attribute on its root element (e.g. `data-a2ui="Table"`, `data-a2ui="Button"`). That is the stable hook for restyling one component type from your app's global CSS — without touching the agent or the renderer.
+
+For example, MeldUI's default `Table` is intentionally minimal. An app can give it borders, a header background, and taller rows:
+
+```css
+[data-a2ui='Table'] table {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+[data-a2ui='Table'] thead {
+  background: var(--muted);
+}
+[data-a2ui='Table'] th,
+[data-a2ui='Table'] td {
+  padding: 0.875rem 1rem;
+}
+[data-a2ui='Table'] tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--border);
+}
+```
+
+The default Table (see the [Table page](/docs/a2ui/components/table)) versus the same `Table` messages with the rules above applied by the host:
+
+<A2uiThemeDemo
+  client:only="vue"
+  component="Table"
+  css={`
+    [data-a2ui='Table'] table {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+    }
+    [data-a2ui='Table'] thead {
+      background: var(--muted);
+    }
+    [data-a2ui='Table'] th,
+    [data-a2ui='Table'] td {
+      padding: 0.875rem 1rem;
+    }
+    [data-a2ui='Table'] tbody tr:not(:last-child) td {
+      border-bottom: 1px solid var(--border);
+    }
+  `}
+/>
+
+Both seams compose: tokens set the palette, `data-a2ui` selectors fine-tune individual components — all on the host side, leaving the agent's messages portable and unchanged.
+
+See the [Catalog Reference](/docs/a2ui/reference) for the full contract and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.

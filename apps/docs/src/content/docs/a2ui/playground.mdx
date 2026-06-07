@@ -1,0 +1,19 @@
+---
+title: Playground
+description: Paste raw A2UI v0.9 messages and watch them render live with MeldUI components.
+category: a2ui
+package: '@meldui/a2ui'
+order: 4
+---
+
+import A2uiPlayground from '../../../demos/a2ui/A2uiPlayground.vue'
+
+Edit a raw **A2UI v0.9** message sequence — the same JSON an agent streams — and press **Render** to see it rendered live with MeldUI components. This is the exact path a surface takes: `createSurface` → `updateComponents` (and optional `updateDataModel`), resolved against the MeldUI catalog by the Vue renderer.
+
+<A2uiPlayground client:only="vue" />
+
+Tips:
+
+- The first message must `createSurface` with `surfaceId: "s1"` and the MeldUI `catalogId`; later messages target that surface.
+- Bind dynamic values with a JSON Pointer (`{ "path": "/some/key" }`) and seed them via an `updateDataModel` message.
+- See the [Catalog Reference](/docs/a2ui/reference) for every component's props, and the per-component pages for copy-paste examples.
