@@ -5,7 +5,7 @@ MeldUI components can only be used today by hand-wiring them into a Vue app. To 
 ## What Changes
 
 - Add a new package `@meldui/a2ui` (`packages/a2ui/`) whose **first and headline deliverable is the catalog contract** — not yet the renderer.
-- Define a stable `catalogId` URI identifying the MeldUI catalog and its version (e.g. `https://meldui.dev/catalogs/vue/v1/catalog.json`).
+- Define a stable `catalogId` URI identifying the MeldUI catalog and its version (`https://meldui.dipayanb.com/a2ui/v1/catalog.json`).
 - Define **per-component JSON-Schema definitions** targeting **A2UI v0.9** (flat `component` discriminator, plain-JSON data model, JSON Pointer binding) for:
   - **A2UI Basic primitives** kept under their exact spec names for ecosystem interop: `Row`, `Column`, `List`, `Card`, `Modal`, `Tabs`, `Text`, `Image`, `Icon`, `Divider`, `Button`, `TextField`, `CheckBox`, `Slider`, `ChoicePicker`, `DateTimeInput`.
   - **MeldUI structural & display** components: `Avatar`, `AvatarGroup`, `Kbd`, `Alert`, `Badge`, `Stepper`, `ButtonGroup`, `Carousel`, `ToggleGroup`, `Accordion`, `ScrollArea`, `Separator`, `Table`.

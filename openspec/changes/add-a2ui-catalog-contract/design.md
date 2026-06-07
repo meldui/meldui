@@ -56,9 +56,9 @@ Each component's A2UI JSON-Schema fragment is authored as **co-located metadata*
 
 Author against v0.9's flat-discriminator component shape and plain-JSON data model. The `version: "v0.9"` literal and the `catalogId` version segment are defined once and referenced everywhere. **Why:** v0.9 is current and dramatically simpler to model than v0.8; supporting both would double the schema surface for a deprecated format.
 
-### D5 — `catalogId` URI: stable identity now, resolvable host later
+### D5 — `catalogId` URI: stable identity, resolvable host, no framework segment
 
-Use a stable, versioned URI of the form `https://meldui.dev/catalogs/vue/v1/catalog.json` as the `catalogId`, and also export the file from the package (`@meldui/a2ui/catalog`) for direct import. The id functions as an opaque identity for negotiation even before the URL is live; making it physically resolvable (canonical hosting) is tracked as an open question. **Why:** negotiation is by string match — the contract is usable immediately; hosting is an independent concern.
+Use `https://meldui.dipayanb.com/a2ui/v1/catalog.json` as the `catalogId`, and also export the file from the package (`@meldui/a2ui/catalog`) for direct import. The path has **no framework segment** (`vue` was dropped) because the catalog is the framework-agnostic MeldUI contract; a renderer is a separate concern. The id is both the negotiation identity (string match) and the physical host: the docs site (Cloudflare Pages) serves the file as a public asset. **Why:** one URL that both identifies and resolves the contract, framework-neutral so a future React/Flutter renderer targets the same id.
 
 ### D6 — Package follows the existing sibling template
 
@@ -67,7 +67,7 @@ Use a stable, versioned URI of the form `https://meldui.dev/catalogs/vue/v1/cata
 ## Risks / Trade-offs
 
 - **Complex components are hard for LLMs to emit correctly** (`Table`, `Combobox`, `Sidebar`, `Chart`) → keep their schemas tight, strongly-typed, and well-`description`'d; document `Markdown` + display-only components as the primary path so agents lean on the reliable set.
-- **`catalogId` not yet resolvable** → ship the file in-package and use a single consistent placeholder URI; agents negotiate by string id regardless. Tracked in Open Questions.
+- **`catalogId` hosting** → RESOLVED: served as a public asset by the docs site (Cloudflare Pages) at `https://meldui.dipayanb.com/a2ui/v1/catalog.json`; also shipped in-package via `@meldui/a2ui/catalog`. Agents negotiate by string id regardless.
 - **`@a2ui/web_core` API not yet verified first-hand** (this change doesn't depend on it, but the renderer will) → de-risked here by keeping the catalog purely declarative and spec-driven; the renderer change owns confirming web_core's exports.
 - **v0.9 spec evolution** → pin `version`/`catalogId` in one place so a future bump is a localized edit; the codegen re-emits the artifact consistently.
 - **Schema/renderer drift** → mitigated by D3 codegen + CI no-diff check; the renderer change attaches components to the same definitions rather than re-declaring props.
@@ -92,4 +92,4 @@ Rollback: the package is additive and unreferenced by existing exports; removing
 
 ## Open Questions
 
-- **Canonical hosting for the `catalogId` URI** — `meldui.dev/catalogs/...` vs a GitHub Pages/raw URL of this repo. Until resolved, use the placeholder consistently. (Still open.)
+- **Canonical hosting for the `catalogId` URI** — RESOLVED: hosted at `https://meldui.dipayanb.com/a2ui/v1/catalog.json`, served as a public asset by the docs site on Cloudflare Pages (with permissive CORS via `public/_headers`). The docs build copies the catalog from `@meldui/a2ui` into `public/a2ui/v1/`, so a redeploy publishes any contract update. The `vue` path segment was dropped (the catalog is framework-agnostic). Versioning: `v1` stable + backward-compatible-in-place; breaking → `/a2ui/v2/`.

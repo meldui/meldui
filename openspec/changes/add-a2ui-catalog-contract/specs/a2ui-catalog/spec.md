@@ -7,7 +7,7 @@ The MeldUI A2UI catalog SHALL be identified by a single stable, versioned `catal
 #### Scenario: Catalog declares a versioned id
 
 - **WHEN** the generated `meldui-v1.catalog.json` is inspected
-- **THEN** its top-level `catalogId` is a versioned URI (e.g. `https://meldui.dev/catalogs/vue/v1/catalog.json`)
+- **THEN** its top-level `catalogId` is a versioned URI (`https://meldui.dipayanb.com/a2ui/v1/catalog.json`)
 - **AND** the same id value is sourced from a single shared constant, not duplicated literals
 
 #### Scenario: New catalog version gets a new id

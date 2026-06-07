@@ -6,7 +6,7 @@
 
 ## 2. Define catalog identity and shared constants
 
-- [x] 2.1 Add a single source for `CATALOG_ID` (placeholder `https://meldui.dev/catalogs/vue/v1/catalog.json`) and the `A2UI_VERSION = "v0.9"` literal; export from one module and reference everywhere.
+- [x] 2.1 Add a single source for `CATALOG_ID` (`https://meldui.dipayanb.com/a2ui/v1/catalog.json`, hosted by the docs site) and the `A2UI_VERSION = "v0.9"` literal; export from one module and reference everywhere.
 - [x] 2.2 Define the `CatalogComponentDef` metadata type (component name + A2UI v0.9 JSON-Schema of its properties + notes) used as the single source of truth for codegen.
 
 ## 3. Author per-component schema definitions (A2UI v0.9)

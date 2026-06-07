@@ -1,0 +1,7 @@
+# Cloudflare Pages headers.
+# Serve the A2UI catalog as a public, cross-origin-fetchable contract so any
+# A2UI agent or tool can resolve the catalogId URL.
+/a2ui/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET
+  Cache-Control: public, max-age=300, must-revalidate

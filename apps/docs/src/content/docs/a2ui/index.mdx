@@ -28,16 +28,16 @@ pnpm add @meldui/a2ui
 ## The catalog id
 
 ```
-https://meldui.dev/catalogs/vue/v1/catalog.json
+https://meldui.dipayanb.com/a2ui/v1/catalog.json
 ```
 
-This stable, versioned id is how agents negotiate. A client advertises the catalogs it can render; the agent picks one and targets it for the lifetime of a surface:
+This stable, versioned id is both how agents negotiate and where the catalog is hosted (fetch it directly to validate or tool against). A client advertises the catalogs it can render; the agent picks one and targets it for the lifetime of a surface:
 
 ```jsonc
 // client → agent (capabilities)
 {
   "a2uiClientCapabilities": {
-    "supportedCatalogIds": ["https://meldui.dev/catalogs/vue/v1/catalog.json"],
+    "supportedCatalogIds": ["https://meldui.dipayanb.com/a2ui/v1/catalog.json"],
   },
 }
 ```

@@ -8,15 +8,17 @@
 export const A2UI_VERSION = 'v0.9' as const
 
 /**
- * Stable, versioned identifier for the MeldUI catalog. Agents negotiate by
- * this id (see `supportedCatalogIds`); a future incompatible revision must use
- * a new versioned id (e.g. `.../v2/catalog.json`) rather than mutating this.
+ * Stable, versioned identifier for the MeldUI catalog — also the URL it is
+ * physically hosted at (served as a public asset by the docs site on Cloudflare
+ * Pages). Agents negotiate by this id (see `supportedCatalogIds`).
  *
- * NOTE: this URI is the catalog's identity for negotiation. Making it
- * physically resolvable (canonical hosting) is tracked as an open item; the
- * artifact is also shipped in-package via the `@meldui/a2ui/catalog` export.
+ * The path has no framework segment: the catalog is the framework-agnostic
+ * MeldUI contract, not a renderer. Versioning policy: `v1` is stable and
+ * backward-compatible edits overwrite it in place; a breaking revision must use
+ * a new versioned id (`.../a2ui/v2/catalog.json`) rather than mutating this.
+ * The artifact is also shipped in-package via the `@meldui/a2ui/catalog` export.
  */
-export const CATALOG_ID = 'https://meldui.dev/catalogs/vue/v1/catalog.json' as const
+export const CATALOG_ID = 'https://meldui.dipayanb.com/a2ui/v1/catalog.json' as const
 
 /**
  * Base URI of the A2UI common types schema. The MeldUI catalog reuses these

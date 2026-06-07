@@ -35,7 +35,7 @@ A client advertises support for this catalog by id, and the agent targets it:
 // client → agent (negotiation)
 {
   "a2uiClientCapabilities": {
-    "supportedCatalogIds": ["https://meldui.dev/catalogs/vue/v1/catalog.json"],
+    "supportedCatalogIds": ["https://meldui.dipayanb.com/a2ui/v1/catalog.json"],
   },
 }
 ```
@@ -43,10 +43,12 @@ A client advertises support for this catalog by id, and the agent targets it:
 ## Catalog id
 
 ```
-https://meldui.dev/catalogs/vue/v1/catalog.json
+https://meldui.dipayanb.com/a2ui/v1/catalog.json
 ```
 
-This is the stable identifier agents negotiate against (`CATALOG_ID`). A future incompatible revision will use a new versioned id (e.g. `.../v2/catalog.json`).
+This is both the stable identifier agents negotiate against (`CATALOG_ID`) and the URL the catalog is hosted at (served as a public asset by the docs site). There is no framework segment in the path — the catalog is the framework-agnostic MeldUI contract, not a renderer.
+
+**Versioning:** `v1` is stable. Backward-compatible changes (new optional props or components) overwrite the `v1` file in place; a breaking revision mints a new id (`.../a2ui/v2/catalog.json`) so agents can pin to a major version.
 
 ## Components
 
