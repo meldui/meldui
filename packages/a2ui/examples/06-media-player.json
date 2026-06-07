@@ -32,7 +32,7 @@
           "url": "https://picsum.photos/seed/meldui-album/480/480",
           "description": "Album cover art",
           "fit": "cover",
-          "variant": "largeFeature"
+          "variant": "header"
         },
         {
           "id": "trackInfo",
