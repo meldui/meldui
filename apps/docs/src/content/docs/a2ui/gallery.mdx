@@ -1,0 +1,20 @@
+---
+title: Gallery
+description: Complete A2UI surfaces — from a simple card to an app-like settings shell — rendered live with MeldUI components, with the exact messages an agent would stream.
+category: a2ui
+package: '@meldui/a2ui'
+order: 5
+keywords:
+  - a2ui
+  - examples
+  - gallery
+  - generative-ui
+---
+
+import A2uiGallery from '../../../demos/a2ui/A2uiGallery.vue'
+
+Real, end-to-end surfaces an agent can build by streaming A2UI to the MeldUI catalog — ordered simple → complex. Each renders live; switch to the **Code** tab to see the exact **A2UI v0.9** message sequence (`createSurface` → optional `updateDataModel` → `updateComponents`) that produced it.
+
+Want to tweak one? Copy its messages into the [Playground](/docs/a2ui/playground). For the per-component snippets, see the individual [component pages](/docs/a2ui/components/text); for the full contract, the [Catalog Reference](/docs/a2ui/reference).
+
+<A2uiGallery client:only="vue" />

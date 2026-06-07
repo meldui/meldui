@@ -1,0 +1,349 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "s1",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": {
+      "surfaceId": "s1",
+      "path": "/",
+      "value": {
+        "fullName": "Ada Lovelace",
+        "email": "ada@meldui.dev",
+        "bio": "Working on analytical engines and design systems.",
+        "timezone": "Europe/London",
+        "theme": ["system"],
+        "notifyChannels": ["email", "push"],
+        "twoFactor": true,
+        "profileVisibility": "team",
+        "sessions": [
+          {
+            "device": "MacBook Pro · Chrome",
+            "location": "London, UK",
+            "lastActive": "Active now"
+          },
+          {
+            "device": "iPhone 15 · Safari",
+            "location": "London, UK",
+            "lastActive": "2 hours ago"
+          },
+          {
+            "device": "Windows · Edge",
+            "location": "Berlin, DE",
+            "lastActive": "3 days ago"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        {
+          "id": "root",
+          "component": "Sidebar",
+          "side": "left",
+          "header": "sbHeader",
+          "content": "mainTabs",
+          "footer": "sbFooter"
+        },
+        {
+          "id": "sbHeader",
+          "component": "Row",
+          "align": "center",
+          "justify": "start",
+          "children": ["sbAvatar", "sbName"]
+        },
+        {
+          "id": "sbAvatar",
+          "component": "Avatar",
+          "src": "https://i.pravatar.cc/100?img=47",
+          "fallback": "AL",
+          "alt": "Ada Lovelace",
+          "size": "md"
+        },
+        {
+          "id": "sbName",
+          "component": "Column",
+          "children": ["sbNameText", "sbPlanBadge"]
+        },
+        {
+          "id": "sbNameText",
+          "component": "Text",
+          "text": { "path": "/fullName" },
+          "variant": "h5"
+        },
+        {
+          "id": "sbPlanBadge",
+          "component": "Badge",
+          "label": "Pro plan",
+          "variant": "info"
+        },
+        {
+          "id": "sbFooter",
+          "component": "Button",
+          "child": "signOutLabel",
+          "variant": "borderless",
+          "action": { "event": { "name": "sign-out" } }
+        },
+        { "id": "signOutLabel", "component": "Text", "text": "Sign out" }
+      ]
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        {
+          "id": "mainTabs",
+          "component": "Tabs",
+          "tabs": [
+            { "title": "Profile", "child": "profilePanel" },
+            { "title": "Notifications", "child": "notifyPanel" },
+            { "title": "Security", "child": "securityPanel" }
+          ]
+        },
+        { "id": "profilePanel", "component": "Card", "child": "profileCol" },
+        {
+          "id": "profileCol",
+          "component": "Column",
+          "children": [
+            "profileHeading",
+            "nameField",
+            "emailField",
+            "bioField",
+            "tzField",
+            "themeToggle",
+            "profileSave"
+          ],
+          "align": "stretch"
+        },
+        {
+          "id": "profileHeading",
+          "component": "Text",
+          "text": "Public profile",
+          "variant": "h4"
+        },
+        {
+          "id": "nameField",
+          "component": "TextField",
+          "label": "Full name",
+          "value": { "path": "/fullName" }
+        },
+        {
+          "id": "emailField",
+          "component": "TextField",
+          "label": "Email",
+          "variant": "shortText",
+          "value": { "path": "/email" },
+          "validationRegexp": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+        },
+        {
+          "id": "bioField",
+          "component": "TextField",
+          "label": "Bio",
+          "variant": "longText",
+          "value": { "path": "/bio" }
+        },
+        {
+          "id": "tzField",
+          "component": "Combobox",
+          "label": "Timezone",
+          "placeholder": "Select timezone…",
+          "options": [
+            { "label": "London (GMT)", "value": "Europe/London" },
+            { "label": "Berlin (CET)", "value": "Europe/Berlin" },
+            { "label": "New York (EST)", "value": "America/New_York" },
+            { "label": "Tokyo (JST)", "value": "Asia/Tokyo" }
+          ],
+          "value": { "path": "/timezone" }
+        },
+        {
+          "id": "themeToggle",
+          "component": "ToggleGroup",
+          "variant": "single",
+          "options": [
+            { "label": "Light", "value": "light" },
+            { "label": "Dark", "value": "dark" },
+            { "label": "System", "value": "system" }
+          ],
+          "value": { "path": "/theme" }
+        },
+        {
+          "id": "profileSave",
+          "component": "Button",
+          "child": "profileSaveLabel",
+          "variant": "primary",
+          "action": {
+            "event": { "name": "save-profile" },
+            "data": {
+              "fullName": { "path": "/fullName" },
+              "email": { "path": "/email" },
+              "bio": { "path": "/bio" },
+              "timezone": { "path": "/timezone" },
+              "theme": { "path": "/theme" }
+            }
+          }
+        },
+        {
+          "id": "profileSaveLabel",
+          "component": "Text",
+          "text": "Save changes"
+        }
+      ]
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        { "id": "notifyPanel", "component": "Card", "child": "notifyCol" },
+        {
+          "id": "notifyCol",
+          "component": "Column",
+          "children": ["notifyHeading", "notifyChannels", "visibilityHeading", "visibilityPicker"],
+          "align": "stretch"
+        },
+        {
+          "id": "notifyHeading",
+          "component": "Text",
+          "text": "Notifications",
+          "variant": "h4"
+        },
+        {
+          "id": "notifyChannels",
+          "component": "MultiSelect",
+          "label": "Send me notifications via",
+          "placeholder": "Choose channels…",
+          "options": [
+            { "label": "Email", "value": "email" },
+            { "label": "Push", "value": "push" },
+            { "label": "SMS", "value": "sms" },
+            { "label": "Slack", "value": "slack" }
+          ],
+          "value": { "path": "/notifyChannels" }
+        },
+        {
+          "id": "visibilityHeading",
+          "component": "Text",
+          "text": "Profile visibility",
+          "variant": "h5"
+        },
+        {
+          "id": "visibilityPicker",
+          "component": "ChoicePicker",
+          "label": "Who can see your profile?",
+          "variant": "mutuallyExclusive",
+          "options": [
+            { "label": "Everyone", "value": "public" },
+            { "label": "My team", "value": "team" },
+            { "label": "Only me", "value": "private" }
+          ],
+          "value": { "path": "/profileVisibility" }
+        }
+      ]
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        {
+          "id": "securityPanel",
+          "component": "Column",
+          "children": ["twoFaCard", "sessionsCard", "faqAccordion", "dangerZone"],
+          "align": "stretch"
+        },
+        { "id": "twoFaCard", "component": "Card", "child": "twoFaRow" },
+        {
+          "id": "twoFaRow",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "center",
+          "children": ["twoFaText", "twoFaCheck"]
+        },
+        {
+          "id": "twoFaText",
+          "component": "Column",
+          "children": ["twoFaTitle", "twoFaSub"]
+        },
+        {
+          "id": "twoFaTitle",
+          "component": "Text",
+          "text": "Two-factor authentication",
+          "variant": "h5"
+        },
+        {
+          "id": "twoFaSub",
+          "component": "Text",
+          "text": "Require a code from your authenticator app at sign-in.",
+          "variant": "caption"
+        },
+        {
+          "id": "twoFaCheck",
+          "component": "CheckBox",
+          "label": "Enabled",
+          "value": { "path": "/twoFactor" }
+        },
+        { "id": "sessionsCard", "component": "Card", "child": "sessionsCol" },
+        {
+          "id": "sessionsCol",
+          "component": "Column",
+          "children": ["sessionsHeading", "sessionsTable"],
+          "align": "stretch"
+        },
+        {
+          "id": "sessionsHeading",
+          "component": "Text",
+          "text": "Active sessions",
+          "variant": "h5"
+        },
+        {
+          "id": "sessionsTable",
+          "component": "Table",
+          "columns": [
+            { "key": "device", "header": "Device" },
+            { "key": "location", "header": "Location" },
+            { "key": "lastActive", "header": "Last active" }
+          ],
+          "rows": { "path": "/sessions" }
+        },
+        {
+          "id": "faqAccordion",
+          "component": "Accordion",
+          "type": "single",
+          "items": [
+            { "title": "How do I reset my password?", "child": "faq1" },
+            { "title": "What data do you store?", "child": "faq2" }
+          ]
+        },
+        {
+          "id": "faq1",
+          "component": "Markdown",
+          "content": "Use **Sign out**, then choose *Forgot password* on the login screen. A reset link is valid for 30 minutes."
+        },
+        {
+          "id": "faq2",
+          "component": "Markdown",
+          "content": "Only what you provide here plus session metadata. See the [privacy policy](https://meldui.dipayanb.com) for details."
+        },
+        {
+          "id": "dangerZone",
+          "component": "Alert",
+          "title": "Delete account",
+          "description": "Permanently remove your account and all associated data. This cannot be undone.",
+          "variant": "destructive"
+        }
+      ]
+    }
+  }
+]

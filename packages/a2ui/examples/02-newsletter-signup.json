@@ -1,0 +1,87 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "s1",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": {
+      "surfaceId": "s1",
+      "path": "/",
+      "value": { "email": "", "frequency": ["weekly"], "consent": false }
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        { "id": "root", "component": "Card", "child": "form" },
+        {
+          "id": "form",
+          "component": "Column",
+          "children": ["heading", "sub", "email", "frequency", "consent", "divider", "submit"],
+          "align": "stretch"
+        },
+        {
+          "id": "heading",
+          "component": "Text",
+          "text": "Subscribe to the changelog",
+          "variant": "h4"
+        },
+        {
+          "id": "sub",
+          "component": "Text",
+          "text": "Product updates, no spam. Unsubscribe any time.",
+          "variant": "caption"
+        },
+        {
+          "id": "email",
+          "component": "TextField",
+          "label": "Email address",
+          "variant": "shortText",
+          "value": { "path": "/email" },
+          "validationRegexp": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+        },
+        {
+          "id": "frequency",
+          "component": "ChoicePicker",
+          "label": "How often?",
+          "variant": "mutuallyExclusive",
+          "displayStyle": "chips",
+          "options": [
+            { "label": "Weekly digest", "value": "weekly" },
+            { "label": "Monthly digest", "value": "monthly" },
+            { "label": "Only major releases", "value": "major" }
+          ],
+          "value": { "path": "/frequency" }
+        },
+        {
+          "id": "consent",
+          "component": "CheckBox",
+          "label": "I agree to receive marketing emails",
+          "value": { "path": "/consent" }
+        },
+        { "id": "divider", "component": "Divider" },
+        {
+          "id": "submit",
+          "component": "Button",
+          "child": "submitLabel",
+          "variant": "primary",
+          "action": {
+            "event": { "name": "subscribe" },
+            "data": {
+              "email": { "path": "/email" },
+              "frequency": { "path": "/frequency" },
+              "consent": { "path": "/consent" }
+            }
+          }
+        },
+        { "id": "submitLabel", "component": "Text", "text": "Subscribe" }
+      ]
+    }
+  }
+]

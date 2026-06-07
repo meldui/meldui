@@ -1,0 +1,44 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "s1",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        { "id": "root", "component": "Card", "child": "col" },
+        {
+          "id": "col",
+          "component": "Column",
+          "children": ["title", "body", "cta"],
+          "align": "start"
+        },
+        {
+          "id": "title",
+          "component": "Text",
+          "text": "Welcome to MeldUI 👋",
+          "variant": "h3"
+        },
+        {
+          "id": "body",
+          "component": "Text",
+          "text": "This whole card was streamed by an agent and rendered live from a single A2UI message — no front-end code shipped for it.",
+          "variant": "body"
+        },
+        {
+          "id": "cta",
+          "component": "Button",
+          "child": "ctaLabel",
+          "variant": "primary",
+          "action": { "event": { "name": "get-started" } }
+        },
+        { "id": "ctaLabel", "component": "Text", "text": "Get started" }
+      ]
+    }
+  }
+]

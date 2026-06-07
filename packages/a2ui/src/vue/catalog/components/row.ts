@@ -48,6 +48,7 @@ const MeldRow = defineComponent({
             surface,
             id: c.id,
             basePath: c.basePath,
+            weighted: true,
           }),
         ),
       )

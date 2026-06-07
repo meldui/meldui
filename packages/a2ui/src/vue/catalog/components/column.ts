@@ -50,6 +50,7 @@ const MeldColumn = defineComponent({
             surface,
             id: c.id,
             basePath: c.basePath,
+            weighted: true,
           }),
         ),
       )

@@ -38,6 +38,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Combobox](/docs/a2ui/components/combobox): A searchable single-select from an A2UI agent.
 - [DateTimeInput](/docs/a2ui/components/date-time-input): A date/time picker from an A2UI agent.
 - [Divider](/docs/a2ui/components/divider): Render a simple divider from an A2UI agent.
+- [Gallery](/docs/a2ui/gallery): Complete A2UI surfaces — from a simple card to an app-like settings shell — rendered live with MeldUI components, with the exact messages an agent would stream.
 - [Icon](/docs/a2ui/components/icon): A named icon from an A2UI agent.
 - [Image](/docs/a2ui/components/image): Render an image from an A2UI agent.
 - [Kbd](/docs/a2ui/components/kbd): Render keyboard keys from an A2UI agent.

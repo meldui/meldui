@@ -38,6 +38,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Combobox](/docs/a2ui/components/combobox): A searchable single-select from an A2UI agent.
 - [DateTimeInput](/docs/a2ui/components/date-time-input): A date/time picker from an A2UI agent.
 - [Divider](/docs/a2ui/components/divider): Render a simple divider from an A2UI agent.
+- [Gallery](/docs/a2ui/gallery): Complete A2UI surfaces — from a simple card to an app-like settings shell — rendered live with MeldUI components, with the exact messages an agent would stream.
 - [Icon](/docs/a2ui/components/icon): A named icon from an A2UI agent.
 - [Image](/docs/a2ui/components/image): Render an image from an A2UI agent.
 - [Kbd](/docs/a2ui/components/kbd): Render keyboard keys from an A2UI agent.
@@ -860,6 +861,18 @@ The **`Divider`** component is the A2UI Basic primitive for a plain horizontal o
 
 
 See the [Catalog Reference](/docs/a2ui/reference) for the full contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## Gallery
+
+Complete A2UI surfaces — from a simple card to an app-like settings shell — rendered live with MeldUI components, with the exact messages an agent would stream.
+
+Real, end-to-end surfaces an agent can build by streaming A2UI to the MeldUI catalog — ordered simple → complex. Each renders live; switch to the **Code** tab to see the exact **A2UI v0.9** message sequence (`createSurface` → optional `updateDataModel` → `updateComponents`) that produced it.
+
+Want to tweak one? Copy its messages into the [Playground](/docs/a2ui/playground). For the per-component snippets, see the individual [component pages](/docs/a2ui/components/text); for the full contract, the [Catalog Reference](/docs/a2ui/reference).
+
+<A2uiGallery  />
 
 ---
 

@@ -191,6 +191,7 @@ export const navigation: NavItem[] = [
       { title: 'Catalog Reference', href: '/docs/a2ui/reference' },
       { title: 'Theming', href: '/docs/a2ui/theming' },
       { title: 'Playground', href: '/docs/a2ui/playground' },
+      { title: 'Gallery', href: '/docs/a2ui/gallery' },
       {
         title: 'Components',
         items: [

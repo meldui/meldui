@@ -1,0 +1,196 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "s1",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": {
+      "surfaceId": "s1",
+      "path": "/",
+      "value": {
+        "revenue": 48250,
+        "signups": 1284,
+        "churn": 2.1,
+        "revChart": {
+          "series": [{ "name": "Revenue", "data": [30, 40, 45, 50, 49, 60, 70] }],
+          "xAxis": {
+            "categories": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+          }
+        },
+        "channelChart": {
+          "series": [{ "name": "Signups", "data": [540, 320, 210, 140, 74] }],
+          "xAxis": {
+            "categories": ["Organic", "Referral", "Ads", "Social", "Email"]
+          }
+        },
+        "topPlans": [
+          { "plan": "Pro", "users": 640, "mrr": "$19,200" },
+          { "plan": "Team", "users": 210, "mrr": "$14,700" },
+          { "plan": "Free", "users": 434, "mrr": "$0" }
+        ]
+      }
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "children": ["title", "statRow", "tabs"],
+          "align": "stretch"
+        },
+        {
+          "id": "title",
+          "component": "Text",
+          "text": "This week at a glance",
+          "variant": "h3"
+        },
+        {
+          "id": "statRow",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "stretch",
+          "children": ["statRevenue", "statSignups", "statChurn"]
+        },
+        {
+          "id": "statRevenue",
+          "component": "Card",
+          "child": "statRevenueCol",
+          "weight": 1
+        },
+        {
+          "id": "statRevenueCol",
+          "component": "Column",
+          "children": ["statRevenueLabel", "statRevenueValue", "statRevenueTrend"]
+        },
+        {
+          "id": "statRevenueLabel",
+          "component": "Text",
+          "text": "Revenue",
+          "variant": "caption"
+        },
+        {
+          "id": "statRevenueValue",
+          "component": "Text",
+          "text": {
+            "call": "formatCurrency",
+            "args": {
+              "value": { "path": "/revenue" },
+              "currency": "USD",
+              "decimals": 0
+            }
+          },
+          "variant": "h2"
+        },
+        {
+          "id": "statRevenueTrend",
+          "component": "Badge",
+          "label": "+12.4% WoW",
+          "variant": "success"
+        },
+        {
+          "id": "statSignups",
+          "component": "Card",
+          "child": "statSignupsCol",
+          "weight": 1
+        },
+        {
+          "id": "statSignupsCol",
+          "component": "Column",
+          "children": ["statSignupsLabel", "statSignupsValue", "statSignupsTrend"]
+        },
+        {
+          "id": "statSignupsLabel",
+          "component": "Text",
+          "text": "New signups",
+          "variant": "caption"
+        },
+        {
+          "id": "statSignupsValue",
+          "component": "Text",
+          "text": {
+            "call": "formatNumber",
+            "args": { "value": { "path": "/signups" } }
+          },
+          "variant": "h2"
+        },
+        {
+          "id": "statSignupsTrend",
+          "component": "Badge",
+          "label": "+5.1% WoW",
+          "variant": "success"
+        },
+        {
+          "id": "statChurn",
+          "component": "Card",
+          "child": "statChurnCol",
+          "weight": 1
+        },
+        {
+          "id": "statChurnCol",
+          "component": "Column",
+          "children": ["statChurnLabel", "statChurnValue", "statChurnTrend"]
+        },
+        {
+          "id": "statChurnLabel",
+          "component": "Text",
+          "text": "Churn",
+          "variant": "caption"
+        },
+        {
+          "id": "statChurnValue",
+          "component": "Text",
+          "text": { "call": "formatString", "args": { "value": "${/churn}%" } },
+          "variant": "h2"
+        },
+        {
+          "id": "statChurnTrend",
+          "component": "Badge",
+          "label": "+0.3% WoW",
+          "variant": "warning"
+        },
+        {
+          "id": "tabs",
+          "component": "Tabs",
+          "tabs": [
+            { "title": "Revenue", "child": "revPanel" },
+            { "title": "Channels", "child": "channelPanel" },
+            { "title": "Top plans", "child": "plansPanel" }
+          ]
+        },
+        {
+          "id": "revPanel",
+          "component": "Chart",
+          "chartType": "area",
+          "title": "Daily revenue (this week)",
+          "data": { "path": "/revChart" }
+        },
+        {
+          "id": "channelPanel",
+          "component": "Chart",
+          "chartType": "bar",
+          "title": "Signups by channel",
+          "data": { "path": "/channelChart" }
+        },
+        {
+          "id": "plansPanel",
+          "component": "Table",
+          "caption": "Plan breakdown",
+          "columns": [
+            { "key": "plan", "header": "Plan" },
+            { "key": "users", "header": "Users" },
+            { "key": "mrr", "header": "MRR" }
+          ],
+          "rows": { "path": "/topPlans" }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,166 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "s1",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": {
+      "surfaceId": "s1",
+      "path": "/",
+      "value": { "volume": 65, "favorited": true }
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        { "id": "root", "component": "Card", "child": "player" },
+        {
+          "id": "player",
+          "component": "Column",
+          "children": ["cover", "trackInfo", "transport", "volumeRow", "secondaryActions"],
+          "align": "stretch"
+        },
+        {
+          "id": "cover",
+          "component": "Image",
+          "url": "https://picsum.photos/seed/meldui-album/480/480",
+          "description": "Album cover art",
+          "fit": "cover",
+          "variant": "largeFeature"
+        },
+        {
+          "id": "trackInfo",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "center",
+          "children": ["trackText", "favoriteBtn"]
+        },
+        { "id": "trackText", "component": "Column", "children": ["trackTitle", "trackArtist"] },
+        {
+          "id": "trackTitle",
+          "component": "Text",
+          "text": "Strobe (Club Edit)",
+          "variant": "h4"
+        },
+        { "id": "trackArtist", "component": "Text", "text": "deadmau5", "variant": "caption" },
+        {
+          "id": "favoriteBtn",
+          "component": "Button",
+          "child": "favoriteIcon",
+          "variant": "borderless",
+          "action": { "event": { "name": "toggle-favorite" } }
+        },
+        { "id": "favoriteIcon", "component": "Icon", "name": "favorite" },
+
+        {
+          "id": "transport",
+          "component": "Row",
+          "justify": "center",
+          "align": "center",
+          "children": ["prevBtn", "playBtn", "nextBtn"]
+        },
+        {
+          "id": "prevBtn",
+          "component": "Button",
+          "child": "prevIcon",
+          "variant": "borderless",
+          "action": { "event": { "name": "previous-track" } }
+        },
+        { "id": "prevIcon", "component": "Icon", "name": "skipPrevious" },
+        {
+          "id": "playBtn",
+          "component": "Button",
+          "child": "playIcon",
+          "variant": "primary",
+          "action": { "event": { "name": "play-pause" } }
+        },
+        { "id": "playIcon", "component": "Icon", "name": "play" },
+        {
+          "id": "nextBtn",
+          "component": "Button",
+          "child": "nextIcon",
+          "variant": "borderless",
+          "action": { "event": { "name": "next-track" } }
+        },
+        { "id": "nextIcon", "component": "Icon", "name": "skipNext" },
+
+        {
+          "id": "volumeRow",
+          "component": "Row",
+          "justify": "start",
+          "align": "center",
+          "children": ["volumeIcon", "volumeSlider"]
+        },
+        { "id": "volumeIcon", "component": "Icon", "name": "volumeUp" },
+        {
+          "id": "volumeSlider",
+          "component": "Slider",
+          "label": "Volume",
+          "min": 0,
+          "max": 100,
+          "value": { "path": "/volume" },
+          "weight": 1
+        },
+
+        {
+          "id": "secondaryActions",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "center",
+          "children": ["shuffleAction", "shareAction", "downloadAction"]
+        },
+        {
+          "id": "shuffleAction",
+          "component": "Button",
+          "child": "shuffleLabel",
+          "variant": "borderless",
+          "action": { "event": { "name": "shuffle" } }
+        },
+        {
+          "id": "shuffleLabel",
+          "component": "Row",
+          "align": "center",
+          "children": ["shuffleIcon", "shuffleText"]
+        },
+        { "id": "shuffleIcon", "component": "Icon", "name": "refresh" },
+        { "id": "shuffleText", "component": "Text", "text": "Shuffle" },
+        {
+          "id": "shareAction",
+          "component": "Button",
+          "child": "shareLabel",
+          "variant": "borderless",
+          "action": { "event": { "name": "share" } }
+        },
+        {
+          "id": "shareLabel",
+          "component": "Row",
+          "align": "center",
+          "children": ["shareIcon", "shareText"]
+        },
+        { "id": "shareIcon", "component": "Icon", "name": "share" },
+        { "id": "shareText", "component": "Text", "text": "Share" },
+        {
+          "id": "downloadAction",
+          "component": "Button",
+          "child": "downloadLabel",
+          "variant": "borderless",
+          "action": { "event": { "name": "download" } }
+        },
+        {
+          "id": "downloadLabel",
+          "component": "Row",
+          "align": "center",
+          "children": ["downloadIcon", "downloadText"]
+        },
+        { "id": "downloadIcon", "component": "Icon", "name": "download" },
+        { "id": "downloadText", "component": "Text", "text": "Download" }
+      ]
+    }
+  }
+]

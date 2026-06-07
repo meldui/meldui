@@ -1,0 +1,155 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "s1",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": {
+      "surfaceId": "s1",
+      "path": "/",
+      "value": {
+        "orderId": "MLD-4821",
+        "total": 129.5,
+        "items": [
+          { "name": "Mechanical Keyboard", "qty": 1, "price": 99.0 },
+          { "name": "USB-C Cable (2m)", "qty": 2, "price": 15.25 }
+        ]
+      }
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "s1",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "children": ["headerRow", "statusAlert", "timelineCard", "itemsCard", "actions"],
+          "align": "stretch"
+        },
+        {
+          "id": "headerRow",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "center",
+          "children": ["orderTitle", "statusBadge"]
+        },
+        {
+          "id": "orderTitle",
+          "component": "Text",
+          "text": {
+            "call": "formatString",
+            "args": { "value": "Order ${/orderId}" }
+          },
+          "variant": "h3"
+        },
+        {
+          "id": "statusBadge",
+          "component": "Badge",
+          "label": "In transit",
+          "variant": "info"
+        },
+        {
+          "id": "statusAlert",
+          "component": "Alert",
+          "title": "Arriving Friday, Jun 12",
+          "description": "Your package left the regional facility and is on the delivery truck.",
+          "variant": "success"
+        },
+        { "id": "timelineCard", "component": "Card", "child": "timeline" },
+        {
+          "id": "timeline",
+          "component": "Timeline",
+          "items": [
+            {
+              "title": "Order placed",
+              "description": "Payment confirmed",
+              "timestamp": "Jun 5"
+            },
+            {
+              "title": "Packed",
+              "description": "Left the warehouse",
+              "timestamp": "Jun 7"
+            },
+            {
+              "title": "In transit",
+              "description": "Out for delivery",
+              "timestamp": "Jun 9"
+            },
+            { "title": "Delivered", "description": "Estimated Jun 12" }
+          ]
+        },
+        { "id": "itemsCard", "component": "Card", "child": "itemsCol" },
+        {
+          "id": "itemsCol",
+          "component": "Column",
+          "children": ["itemsHeading", "itemsTable", "totalRow"],
+          "align": "stretch"
+        },
+        {
+          "id": "itemsHeading",
+          "component": "Text",
+          "text": "Items in this order",
+          "variant": "h5"
+        },
+        {
+          "id": "itemsTable",
+          "component": "Table",
+          "columns": [
+            { "key": "name", "header": "Item" },
+            { "key": "qty", "header": "Qty" },
+            { "key": "price", "header": "Price" }
+          ],
+          "rows": { "path": "/items" }
+        },
+        {
+          "id": "totalRow",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "center",
+          "children": ["totalLabel", "totalValue"]
+        },
+        {
+          "id": "totalLabel",
+          "component": "Text",
+          "text": "Total",
+          "variant": "h5"
+        },
+        {
+          "id": "totalValue",
+          "component": "Text",
+          "text": {
+            "call": "formatCurrency",
+            "args": { "value": { "path": "/total" }, "currency": "USD" }
+          },
+          "variant": "h5"
+        },
+        {
+          "id": "actions",
+          "component": "ButtonGroup",
+          "children": ["trackBtn", "helpBtn"]
+        },
+        {
+          "id": "trackBtn",
+          "component": "Button",
+          "child": "trackLabel",
+          "variant": "primary",
+          "action": { "event": { "name": "track-package" } }
+        },
+        { "id": "trackLabel", "component": "Text", "text": "Track package" },
+        {
+          "id": "helpBtn",
+          "component": "Button",
+          "child": "helpLabel",
+          "action": { "event": { "name": "contact-support" } }
+        },
+        { "id": "helpLabel", "component": "Text", "text": "Get help" }
+      ]
+    }
+  }
+]
