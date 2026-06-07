@@ -1,5 +1,13 @@
 # task-manager
 
+## 0.1.14
+
+### Patch Changes
+
+- Updated dependencies [46a849a]
+  - @meldui/vue@0.3.3
+  - @meldui/charts-vue@0.3.3
+
 ## 0.1.13
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # docs
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [98435df]
+- Updated dependencies [81ba363]
+- Updated dependencies [46a849a]
+  - @meldui/a2ui@0.1.0
+  - @meldui/vue@0.3.3
+  - @meldui/charts-vue@0.3.3
+
 ## 0.1.2
 
 ### Patch Changes
