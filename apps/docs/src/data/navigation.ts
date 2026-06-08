@@ -5,7 +5,25 @@ export interface NavItem {
   label?: string
 }
 
-export const navigation: NavItem[] = [
+/** Top-level docs sections, surfaced as header menu items. */
+export const SECTIONS = [
+  { id: 'components', label: 'Components', href: '/docs/components' },
+  { id: 'a2ui', label: 'A2UI', href: '/docs/a2ui' },
+] as const
+
+export type DocsSection = (typeof SECTIONS)[number]['id']
+
+/** Which section a docs path belongs to. A2UI lives entirely under /docs/a2ui. */
+export function sectionForPath(pathname: string): DocsSection {
+  return pathname.startsWith('/docs/a2ui') ? 'a2ui' : 'components'
+}
+
+export function navForSection(section: DocsSection): NavItem[] {
+  return section === 'a2ui' ? a2uiNav : componentsNav
+}
+
+// Everything except A2UI: getting started, components, charts, icons, etc.
+export const componentsNav: NavItem[] = [
   {
     title: 'Getting Started',
     items: [
@@ -20,6 +38,7 @@ export const navigation: NavItem[] = [
     title: 'Components',
     label: '62',
     items: [
+      { title: 'Overview', href: '/docs/components' },
       {
         title: 'Interactive',
         items: [
@@ -185,58 +204,64 @@ export const navigation: NavItem[] = [
     ],
   },
   {
-    title: 'A2UI Catalog',
+    title: 'Examples',
+    items: [{ title: 'Common Patterns', href: '/docs/examples' }],
+  },
+]
+
+// The A2UI catalog — its own top-level section.
+export const a2uiNav: NavItem[] = [
+  {
+    title: 'A2UI',
     items: [
       { title: 'Overview', href: '/docs/a2ui' },
       { title: 'Catalog Reference', href: '/docs/a2ui/reference' },
       { title: 'Theming', href: '/docs/a2ui/theming' },
       { title: 'Playground', href: '/docs/a2ui/playground' },
       { title: 'Gallery', href: '/docs/a2ui/gallery' },
-      {
-        title: 'Components',
-        items: [
-          { title: 'Text', href: '/docs/a2ui/components/text' },
-          { title: 'Markdown', href: '/docs/a2ui/components/markdown' },
-          { title: 'Column', href: '/docs/a2ui/components/column' },
-          { title: 'Card', href: '/docs/a2ui/components/card' },
-          { title: 'Button', href: '/docs/a2ui/components/button' },
-          { title: 'TextField', href: '/docs/a2ui/components/text-field' },
-          { title: 'Alert', href: '/docs/a2ui/components/alert' },
-          { title: 'Avatar', href: '/docs/a2ui/components/avatar' },
-          { title: 'Avatar Group', href: '/docs/a2ui/components/avatar-group' },
-          { title: 'Badge', href: '/docs/a2ui/components/badge' },
-          { title: 'Button Group', href: '/docs/a2ui/components/button-group' },
-          { title: 'Accordion', href: '/docs/a2ui/components/accordion' },
-          { title: 'Carousel', href: '/docs/a2ui/components/carousel' },
-          { title: 'Chart', href: '/docs/a2ui/components/chart' },
-          { title: 'CheckBox', href: '/docs/a2ui/components/check-box' },
-          { title: 'Choice Picker', href: '/docs/a2ui/components/choice-picker' },
-          { title: 'Combobox', href: '/docs/a2ui/components/combobox' },
-          { title: 'Date Time Input', href: '/docs/a2ui/components/date-time-input' },
-          { title: 'Divider', href: '/docs/a2ui/components/divider' },
-          { title: 'Icon', href: '/docs/a2ui/components/icon' },
-          { title: 'Image', href: '/docs/a2ui/components/image' },
-          { title: 'Kbd', href: '/docs/a2ui/components/kbd' },
-          { title: 'List', href: '/docs/a2ui/components/list' },
-          { title: 'Modal', href: '/docs/a2ui/components/modal' },
-          { title: 'Multi Select', href: '/docs/a2ui/components/multi-select' },
-          { title: 'Row', href: '/docs/a2ui/components/row' },
-          { title: 'Scroll Area', href: '/docs/a2ui/components/scroll-area' },
-          { title: 'Separator', href: '/docs/a2ui/components/separator' },
-          { title: 'Sidebar', href: '/docs/a2ui/components/sidebar' },
-          { title: 'Slider', href: '/docs/a2ui/components/slider' },
-          { title: 'Stepper', href: '/docs/a2ui/components/stepper' },
-          { title: 'Table', href: '/docs/a2ui/components/table' },
-          { title: 'Tabs', href: '/docs/a2ui/components/tabs' },
-          { title: 'Timeline', href: '/docs/a2ui/components/timeline' },
-          { title: 'Toggle Group', href: '/docs/a2ui/components/toggle-group' },
-        ],
-      },
+      { title: 'All Components', href: '/docs/a2ui/components' },
     ],
   },
   {
-    title: 'Examples',
-    items: [{ title: 'Common Patterns', href: '/docs/examples' }],
+    title: 'Components',
+    label: '35',
+    items: [
+      { title: 'Text', href: '/docs/a2ui/components/text' },
+      { title: 'Markdown', href: '/docs/a2ui/components/markdown' },
+      { title: 'Column', href: '/docs/a2ui/components/column' },
+      { title: 'Card', href: '/docs/a2ui/components/card' },
+      { title: 'Button', href: '/docs/a2ui/components/button' },
+      { title: 'TextField', href: '/docs/a2ui/components/text-field' },
+      { title: 'Alert', href: '/docs/a2ui/components/alert' },
+      { title: 'Avatar', href: '/docs/a2ui/components/avatar' },
+      { title: 'Avatar Group', href: '/docs/a2ui/components/avatar-group' },
+      { title: 'Badge', href: '/docs/a2ui/components/badge' },
+      { title: 'Button Group', href: '/docs/a2ui/components/button-group' },
+      { title: 'Accordion', href: '/docs/a2ui/components/accordion' },
+      { title: 'Carousel', href: '/docs/a2ui/components/carousel' },
+      { title: 'Chart', href: '/docs/a2ui/components/chart' },
+      { title: 'CheckBox', href: '/docs/a2ui/components/check-box' },
+      { title: 'Choice Picker', href: '/docs/a2ui/components/choice-picker' },
+      { title: 'Combobox', href: '/docs/a2ui/components/combobox' },
+      { title: 'Date Time Input', href: '/docs/a2ui/components/date-time-input' },
+      { title: 'Divider', href: '/docs/a2ui/components/divider' },
+      { title: 'Icon', href: '/docs/a2ui/components/icon' },
+      { title: 'Image', href: '/docs/a2ui/components/image' },
+      { title: 'Kbd', href: '/docs/a2ui/components/kbd' },
+      { title: 'List', href: '/docs/a2ui/components/list' },
+      { title: 'Modal', href: '/docs/a2ui/components/modal' },
+      { title: 'Multi Select', href: '/docs/a2ui/components/multi-select' },
+      { title: 'Row', href: '/docs/a2ui/components/row' },
+      { title: 'Scroll Area', href: '/docs/a2ui/components/scroll-area' },
+      { title: 'Separator', href: '/docs/a2ui/components/separator' },
+      { title: 'Sidebar', href: '/docs/a2ui/components/sidebar' },
+      { title: 'Slider', href: '/docs/a2ui/components/slider' },
+      { title: 'Stepper', href: '/docs/a2ui/components/stepper' },
+      { title: 'Table', href: '/docs/a2ui/components/table' },
+      { title: 'Tabs', href: '/docs/a2ui/components/tabs' },
+      { title: 'Timeline', href: '/docs/a2ui/components/timeline' },
+      { title: 'Toggle Group', href: '/docs/a2ui/components/toggle-group' },
+    ],
   },
 ]
 

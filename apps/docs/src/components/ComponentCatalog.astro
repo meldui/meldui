@@ -1,0 +1,219 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content'
+import { examples } from '@meldui/a2ui'
+import ComponentPreview from './ComponentPreview.vue'
+import { lastSeg, pascal } from './demo-preview'
+
+interface Props {
+  /** Which set of components to list. */
+  kind: 'vue' | 'charts' | 'a2ui'
+}
+
+const { kind } = Astro.props
+
+type Entry = CollectionEntry<'docs'>
+
+// Order of groups for the @meldui/vue catalog. Anything not listed is appended.
+const VUE_GROUP_ORDER = [
+  'Interactive',
+  'Form',
+  'Layout',
+  'Navigation',
+  'Overlay',
+  'Data Display',
+  'Feedback',
+  'Composites',
+]
+
+function vueGroup(e: Entry): string {
+  const sub = e.data.subcategory
+  if (!sub) return 'Composites' // composites have no subcategory
+  if (sub === 'Data') return 'Navigation' // normalize a stray frontmatter value
+  return sub
+}
+
+// Which demo (vue/charts) or example (a2ui) renders a component's live preview.
+// vue/charts -> a `*Demo.vue` under src/demos/<dir>/ — the relative key used by
+// ComponentPreview's import.meta.glob. Defaults to the conventional
+// `<Pascal(slug)>Demo`; a page may override it via the `previewDemo` frontmatter
+// field. a2ui -> the example key Pascal(slug) from @meldui/a2ui `examples`.
+function previewKeyOf(e: Entry): string {
+  const slug = lastSeg(e.id)
+  if (kind === 'a2ui') return pascal(slug)
+  const file = e.data.previewDemo ?? `${pascal(slug)}Demo`
+  const dir = kind === 'charts' ? 'charts' : slug
+  return `${dir}/${file}`
+}
+
+const all = await getCollection('docs')
+
+let entries: Entry[]
+let groupOf: (e: Entry) => string
+let groupOrder: string[]
+
+if (kind === 'vue') {
+  entries = all.filter((e) => e.data.componentName && e.data.package === '@meldui/vue')
+  groupOf = vueGroup
+  groupOrder = VUE_GROUP_ORDER
+} else if (kind === 'charts') {
+  entries = all.filter((e) => e.data.package === '@meldui/charts-vue')
+  groupOf = () => 'Charts'
+  groupOrder = ['Charts']
+} else {
+  entries = all.filter((e) => e.id.startsWith('a2ui/components/'))
+  groupOf = () => 'A2UI Components'
+  groupOrder = ['A2UI Components']
+}
+
+// Build-time guard: every entry's preview must resolve to a real demo file (vue/charts)
+// or example (a2ui). Turns a silent "Preview unavailable" into a build failure.
+const availableDemos = new Set(
+  Object.keys(import.meta.glob('../demos/**/*Demo.vue')).map((p) =>
+    p.replace('../demos/', '').replace('.vue', ''),
+  ),
+)
+for (const e of entries) {
+  const key = previewKeyOf(e)
+  const ok = kind === 'a2ui' ? key in examples : availableDemos.has(key)
+  if (!ok) {
+    throw new Error(
+      kind === 'a2ui'
+        ? `[ComponentCatalog] No A2UI example "${key}" for page "${e.id}".`
+        : `[ComponentCatalog] No demo "src/demos/${key}.vue" for page "${e.id}". ` +
+          'Add the demo, or set "previewDemo" in the page frontmatter.',
+    )
+  }
+}
+
+// Bucket entries by group, then order the buckets and sort rows within each.
+const buckets = new Map<string, Entry[]>()
+for (const e of entries) {
+  const g = groupOf(e)
+  if (!buckets.has(g)) buckets.set(g, [])
+  buckets.get(g)!.push(e)
+}
+
+const orderedGroups = [
+  ...groupOrder.filter((g) => buckets.has(g)),
+  ...[...buckets.keys()].filter((g) => !groupOrder.includes(g)).toSorted(),
+]
+
+const groups = orderedGroups.map((title) => ({
+  title,
+  items: buckets.get(title)!.toSorted((a, b) => {
+    const byOrder = (a.data.order ?? 999) - (b.data.order ?? 999)
+    return byOrder !== 0 ? byOrder : a.data.title.localeCompare(b.data.title)
+  }),
+}))
+
+const total = entries.length
+---
+
+<div class="not-prose my-6" data-catalog>
+  <div class="relative mb-6">
+    <svg
+      class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+      />
+    </svg>
+    <input
+      type="search"
+      data-catalog-filter
+      placeholder={`Filter ${total} components…`}
+      aria-label="Filter components"
+      class="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/40"
+    />
+  </div>
+
+  {
+    groups.map((group) => (
+      <section class="mb-8" data-group>
+        <h2 class="mb-3 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+          {group.title}
+          <span class="ml-2 font-normal text-muted-foreground/70" data-group-count>
+            {group.items.length}
+          </span>
+        </h2>
+        <div class="grid grid-cols-1 gap-4">
+          {group.items.map((e) => (
+            <div
+              data-card
+              data-name={e.data.title.toLowerCase()}
+              data-desc={e.data.description.toLowerCase()}
+              class="flex flex-col rounded-lg border border-border bg-card p-4"
+            >
+              <div>
+                <div class="font-medium text-foreground">{e.data.title}</div>
+                <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                  {e.data.description}
+                </p>
+                <a
+                  href={`/docs/${e.id}`}
+                  class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                >
+                  View docs
+                  <svg
+                    class="size-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                  </svg>
+                </a>
+              </div>
+              <div class="mt-4 flex min-h-[9rem] max-h-[44rem] w-full items-center justify-center overflow-auto rounded-md border border-border bg-muted/20 p-3">
+                <ComponentPreview client:visible previewKey={previewKeyOf(e)} kind={kind} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+
+  <p data-catalog-empty hidden class="py-8 text-center text-sm text-muted-foreground">
+    No components match your filter.
+  </p>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-catalog]').forEach((root) => {
+      const input = root.querySelector('[data-catalog-filter]')
+      const empty = root.querySelector('[data-catalog-empty]')
+      const groups = Array.from(root.querySelectorAll('[data-group]'))
+      if (!input) return
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase()
+        let anyVisible = false
+
+        groups.forEach((group) => {
+          let groupVisible = false
+          group.querySelectorAll('[data-card]').forEach((card) => {
+            const match =
+              !q ||
+              card.getAttribute('data-name').includes(q) ||
+              card.getAttribute('data-desc').includes(q)
+            card.hidden = !match
+            if (match) groupVisible = true
+          })
+          group.hidden = !groupVisible
+          if (groupVisible) anyVisible = true
+        })
+
+        if (empty) empty.hidden = anyVisible
+      })
+    })
+  })
+</script>

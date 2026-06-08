@@ -1,8 +1,30 @@
 ---
 import SidebarNav from './SidebarNav.astro'
-import { navigation } from '../data/navigation'
+import { navForSection, SECTIONS, sectionForPath } from '../data/navigation'
+
+const section = sectionForPath(Astro.url.pathname)
+const nav = navForSection(section)
 ---
 
+<!-- Section switcher (mobile drawer only; desktop uses the header nav) -->
+<div class="mb-6 flex gap-1 rounded-lg border border-border p-1 lg:hidden">
+  {
+    SECTIONS.map((s) => (
+      <a
+        href={s.href}
+        class:list={[
+          'flex-1 rounded-md px-3 py-1.5 text-center text-sm font-medium transition-colors',
+          section === s.id
+            ? 'bg-accent text-accent-foreground'
+            : 'text-muted-foreground hover:text-foreground',
+        ]}
+      >
+        {s.label}
+      </a>
+    ))
+  }
+</div>
+
 <nav class="space-y-6" aria-label="Documentation navigation">
-  {navigation.map((group) => <SidebarNav group={group} />)}
+  {nav.map((group) => <SidebarNav group={group} />)}
 </nav>
