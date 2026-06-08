@@ -23,6 +23,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [A2UI Catalog](/docs/a2ui): Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
 - [Accordion](/docs/a2ui/components/accordion): A collapsible accordion from an A2UI agent.
 - [Alert](/docs/a2ui/components/alert): Render a status callout from an A2UI agent using MeldUI's Alert.
+- [All Components](/docs/a2ui/components): Every component in the MeldUI A2UI catalog, with a short description and a link to its reference. Browse the full set on one page.
 - [Avatar](/docs/a2ui/components/avatar): Render a user/entity avatar from an A2UI agent.
 - [AvatarGroup](/docs/a2ui/components/avatar-group): Render an overlapping group of avatars from an A2UI agent.
 - [Badge](/docs/a2ui/components/badge): Render a small status/label chip from an A2UI agent.
@@ -90,6 +91,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Collapsible](/docs/components/collapsible): An interactive component that expands and collapses content.
 - [Combobox](/docs/components/combobox): An autocomplete input with a filterable dropdown list for selecting values.
 - [Command](/docs/components/command): A command palette for searching and executing actions, similar to Cmd+K interfaces.
+- [Components](/docs/components): Every @meldui/vue component at a glance, grouped by type. Browse the full set and jump straight to any component's documentation.
 - [Context Menu](/docs/components/context-menu): A right-click context menu with items, groups, and sub-menus.
 - [Data Pagination](/docs/components/data-pagination): Pagination toolbar for tables, grids, and lists — first/last/prev/next buttons with a page-size selector and "Page X of Y" info.
 - [Dialog](/docs/components/dialog): A modal dialog that overlays content and requires user interaction.
@@ -303,6 +305,18 @@ The **`Alert`** component renders a callout banner conveying status or an import
 | `variant`     | `enum`          | no       | `info` (default), `success`, `warning`, `destructive`. |
 
 See the [Catalog Reference](/docs/a2ui/reference) for the full component contract, and the [A2UI overview](/docs/a2ui) for how agents target the MeldUI catalog.
+
+---
+
+## All Components
+
+Every component in the MeldUI A2UI catalog, with a short description and a link to its reference. Browse the full set on one page.
+
+The A2UI catalog exposes the components below to agents. Use the filter to find one by
+name, or see the [Catalog Reference](/docs/a2ui/reference) for full prop tables and the
+[Gallery](/docs/a2ui/gallery) for live, end-to-end examples.
+
+<ComponentCatalog kind="a2ui" />
 
 ---
 
@@ -1425,17 +1439,7 @@ A comprehensive charting library for Vue 3, built on ECharts with MeldUI theming
 
 ### Available Chart Types
 
-| Chart                                       | Component          | Best For                                    |
-| ------------------------------------------- | ------------------ | ------------------------------------------- |
-| [Line Chart](/docs/charts/line-chart)       | `MeldLineChart`    | Trends over time, continuous data           |
-| [Bar Chart](/docs/charts/bar-chart)         | `MeldBarChart`     | Comparisons across categories               |
-| [Area Chart](/docs/charts/area-chart)       | `MeldAreaChart`    | Volume and cumulative values over time      |
-| [Pie Chart](/docs/charts/pie-chart)         | `MeldPieChart`     | Proportions of a whole                      |
-| [Donut Chart](/docs/charts/donut-chart)     | `MeldDonutChart`   | Proportions with a center metric            |
-| [Scatter Chart](/docs/charts/scatter-chart) | `MeldScatterChart` | Correlations between two variables          |
-| [Radar Chart](/docs/charts/radar-chart)     | `MeldRadarChart`   | Multi-dimensional comparisons               |
-| [Heatmap Chart](/docs/charts/heatmap-chart) | `MeldHeatmapChart` | Density and intensity across two dimensions |
-| [Mixed Chart](/docs/charts/mixed-chart)     | `MeldMixedChart`   | Combining multiple chart types              |
+<ComponentCatalog kind="charts" />
 
 ### Installation
 
@@ -2316,6 +2320,17 @@ Displays a keyboard shortcut hint aligned to the right.
 ## Command Dialog
 
 Use `CommandDialog` to render the command palette in a modal dialog:
+
+---
+
+## Components
+
+Every @meldui/vue component at a glance, grouped by type. Browse the full set and jump straight to any component's documentation.
+
+`@meldui/vue` ships base UI components (built on shadcn-vue) plus MeldUI-original
+composites. Use the filter to find a component by name, or browse by category below.
+
+<ComponentCatalog kind="vue" />
 
 ---
 

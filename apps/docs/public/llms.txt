@@ -23,6 +23,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [A2UI Catalog](/docs/a2ui): Render MeldUI components from any A2UI-speaking agent using the portable @meldui/a2ui catalog contract.
 - [Accordion](/docs/a2ui/components/accordion): A collapsible accordion from an A2UI agent.
 - [Alert](/docs/a2ui/components/alert): Render a status callout from an A2UI agent using MeldUI's Alert.
+- [All Components](/docs/a2ui/components): Every component in the MeldUI A2UI catalog, with a short description and a link to its reference. Browse the full set on one page.
 - [Avatar](/docs/a2ui/components/avatar): Render a user/entity avatar from an A2UI agent.
 - [AvatarGroup](/docs/a2ui/components/avatar-group): Render an overlapping group of avatars from an A2UI agent.
 - [Badge](/docs/a2ui/components/badge): Render a small status/label chip from an A2UI agent.
@@ -90,6 +91,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Collapsible](/docs/components/collapsible): An interactive component that expands and collapses content.
 - [Combobox](/docs/components/combobox): An autocomplete input with a filterable dropdown list for selecting values.
 - [Command](/docs/components/command): A command palette for searching and executing actions, similar to Cmd+K interfaces.
+- [Components](/docs/components): Every @meldui/vue component at a glance, grouped by type. Browse the full set and jump straight to any component's documentation.
 - [Context Menu](/docs/components/context-menu): A right-click context menu with items, groups, and sub-menus.
 - [Data Pagination](/docs/components/data-pagination): Pagination toolbar for tables, grids, and lists — first/last/prev/next buttons with a page-size selector and "Page X of Y" info.
 - [Dialog](/docs/components/dialog): A modal dialog that overlays content and requires user interaction.

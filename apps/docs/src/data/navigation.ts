@@ -20,6 +20,7 @@ export const navigation: NavItem[] = [
     title: 'Components',
     label: '62',
     items: [
+      { title: 'Overview', href: '/docs/components' },
       {
         title: 'Interactive',
         items: [
@@ -192,6 +193,7 @@ export const navigation: NavItem[] = [
       { title: 'Theming', href: '/docs/a2ui/theming' },
       { title: 'Playground', href: '/docs/a2ui/playground' },
       { title: 'Gallery', href: '/docs/a2ui/gallery' },
+      { title: 'All Components', href: '/docs/a2ui/components' },
       {
         title: 'Components',
         items: [

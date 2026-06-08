@@ -1,0 +1,175 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content'
+
+interface Props {
+  /** Which set of components to list. */
+  kind: 'vue' | 'charts' | 'a2ui'
+}
+
+const { kind } = Astro.props
+
+type Entry = CollectionEntry<'docs'>
+
+// Order of groups for the @meldui/vue catalog. Anything not listed is appended.
+const VUE_GROUP_ORDER = [
+  'Interactive',
+  'Form',
+  'Layout',
+  'Navigation',
+  'Overlay',
+  'Data Display',
+  'Feedback',
+  'Composites',
+]
+
+function vueGroup(e: Entry): string {
+  const sub = e.data.subcategory
+  if (!sub) return 'Composites' // composites have no subcategory
+  if (sub === 'Data') return 'Navigation' // normalize a stray frontmatter value
+  return sub
+}
+
+const all = await getCollection('docs')
+
+let entries: Entry[]
+let groupOf: (e: Entry) => string
+let groupOrder: string[]
+
+if (kind === 'vue') {
+  entries = all.filter((e) => e.data.componentName && e.data.package === '@meldui/vue')
+  groupOf = vueGroup
+  groupOrder = VUE_GROUP_ORDER
+} else if (kind === 'charts') {
+  entries = all.filter((e) => e.data.package === '@meldui/charts-vue')
+  groupOf = () => 'Charts'
+  groupOrder = ['Charts']
+} else {
+  entries = all.filter((e) => e.id.startsWith('a2ui/components/'))
+  groupOf = () => 'A2UI Components'
+  groupOrder = ['A2UI Components']
+}
+
+// Bucket entries by group, then order the buckets and sort cards within each.
+const buckets = new Map<string, Entry[]>()
+for (const e of entries) {
+  const g = groupOf(e)
+  if (!buckets.has(g)) buckets.set(g, [])
+  buckets.get(g)!.push(e)
+}
+
+const orderedGroups = [
+  ...groupOrder.filter((g) => buckets.has(g)),
+  ...[...buckets.keys()].filter((g) => !groupOrder.includes(g)).sort(),
+]
+
+const groups = orderedGroups.map((title) => ({
+  title,
+  items: buckets.get(title)!.sort((a, b) => {
+    const byOrder = (a.data.order ?? 999) - (b.data.order ?? 999)
+    return byOrder !== 0 ? byOrder : a.data.title.localeCompare(b.data.title)
+  }),
+}))
+
+const total = entries.length
+---
+
+<div class="not-prose my-6" data-catalog>
+  <div class="relative mb-6">
+    <svg
+      class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+      />
+    </svg>
+    <input
+      type="search"
+      data-catalog-filter
+      placeholder={`Filter ${total} components…`}
+      aria-label="Filter components"
+      class="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/40"
+    />
+  </div>
+
+  {
+    groups.map((group) => (
+      <section class="mb-8" data-group>
+        <h2 class="mb-3 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+          {group.title}
+          <span class="ml-2 font-normal text-muted-foreground/70" data-group-count>
+            {group.items.length}
+          </span>
+        </h2>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {group.items.map((e) => (
+            <a
+              href={`/docs/${e.id}`}
+              data-card
+              data-name={e.data.title.toLowerCase()}
+              data-desc={e.data.description.toLowerCase()}
+              class="group flex flex-col rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-accent"
+            >
+              <span class="flex items-center justify-between font-medium text-foreground">
+                {e.data.title}
+                <svg
+                  class="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
+              </span>
+              <span class="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                {e.data.description}
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+
+  <p data-catalog-empty hidden class="py-8 text-center text-sm text-muted-foreground">
+    No components match your filter.
+  </p>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-catalog]').forEach((root) => {
+      const input = root.querySelector('[data-catalog-filter]')
+      const empty = root.querySelector('[data-catalog-empty]')
+      const groups = Array.from(root.querySelectorAll('[data-group]'))
+      if (!input) return
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase()
+        let anyVisible = false
+
+        groups.forEach((group) => {
+          let groupVisible = false
+          group.querySelectorAll('[data-card]').forEach((card) => {
+            const match =
+              !q ||
+              card.getAttribute('data-name').includes(q) ||
+              card.getAttribute('data-desc').includes(q)
+            card.hidden = !match
+            if (match) groupVisible = true
+          })
+          group.hidden = !groupVisible
+          if (groupVisible) anyVisible = true
+        })
+
+        if (empty) empty.hidden = anyVisible
+      })
+    })
+  })
+</script>
