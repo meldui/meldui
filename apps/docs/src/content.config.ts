@@ -32,6 +32,9 @@ const docs = defineCollection({
       .enum(['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue', '@meldui/a2ui'])
       .optional(),
     componentName: z.string().optional(),
+    // Overrides the demo file used for the component-catalog live preview when it
+    // isn't the conventional `<Pascal(slug)>Demo.vue`. See ComponentCatalog.astro.
+    previewDemo: z.string().optional(),
     props: z.array(propSchema).optional(),
     events: z.array(eventSchema).optional(),
     slots: z.array(slotSchema).optional(),

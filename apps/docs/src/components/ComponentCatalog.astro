@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content'
+import { examples } from '@meldui/a2ui'
 import ComponentPreview from './ComponentPreview.vue'
 import { lastSeg, pascal } from './demo-preview'
 
@@ -24,32 +25,6 @@ const VUE_GROUP_ORDER = [
   'Composites',
 ]
 
-// Large renderers. Every row is full width; these get a taller, top-aligned
-// preview area with minimal padding so big UIs (toolbars, tables, charts) fit.
-// Compact components get a shorter, centered preview instead.
-const LARGE_VUE = new Set([
-  'DataTable',
-  'DocumentViewer',
-  'Sidebar',
-  'ResizablePanelGroup',
-  'Calendar',
-  'RangeCalendar',
-  'Carousel',
-  'Table',
-])
-const LARGE_A2UI = new Set([
-  'Chart',
-  'Table',
-  'Sidebar',
-  'Carousel',
-  'Timeline',
-  'Stepper',
-  'Tabs',
-  'Accordion',
-  'List',
-  'Modal',
-])
-
 function vueGroup(e: Entry): string {
   const sub = e.data.subcategory
   if (!sub) return 'Composites' // composites have no subcategory
@@ -57,31 +32,17 @@ function vueGroup(e: Entry): string {
   return sub
 }
 
-// Demo files are named after the page slug (`<Pascal(slug)>Demo.vue`). These few
-// components have no slug-named primary demo, so map to a representative one.
-const VUE_DEMO_OVERRIDE: Record<string, string> = {
-  'data-pagination': 'DataPaginationGridDemo',
-  filters: 'FiltersStandaloneDemo',
-  'data-table': 'DataTableBasicDemo',
-  'document-viewer': 'BasicPdfDemo',
-}
-
-/** Path (relative to ComponentPreview) or example key used to render the live preview. */
+// Which demo (vue/charts) or example (a2ui) renders a component's live preview.
+// vue/charts -> a `*Demo.vue` under src/demos/<dir>/ — the relative key used by
+// ComponentPreview's import.meta.glob. Defaults to the conventional
+// `<Pascal(slug)>Demo`; a page may override it via the `previewDemo` frontmatter
+// field. a2ui -> the example key Pascal(slug) from @meldui/a2ui `examples`.
 function previewKeyOf(e: Entry): string {
   const slug = lastSeg(e.id)
-  if (kind === 'vue') {
-    const file = VUE_DEMO_OVERRIDE[slug] ?? `${pascal(slug)}Demo`
-    return `${slug}/${file}`
-  }
-  if (kind === 'charts') return `charts/${pascal(slug)}Demo`
-  return pascal(slug) // a2ui example key
-}
-
-/** Large renderers get a taller, top-aligned preview area (see usage below). */
-function isLarge(e: Entry): boolean {
-  if (kind === 'charts') return true
-  if (kind === 'vue') return LARGE_VUE.has(e.data.componentName ?? '')
-  return LARGE_A2UI.has(pascal(lastSeg(e.id)))
+  if (kind === 'a2ui') return pascal(slug)
+  const file = e.data.previewDemo ?? `${pascal(slug)}Demo`
+  const dir = kind === 'charts' ? 'charts' : slug
+  return `${dir}/${file}`
 }
 
 const all = await getCollection('docs')
@@ -102,6 +63,26 @@ if (kind === 'vue') {
   entries = all.filter((e) => e.id.startsWith('a2ui/components/'))
   groupOf = () => 'A2UI Components'
   groupOrder = ['A2UI Components']
+}
+
+// Build-time guard: every entry's preview must resolve to a real demo file (vue/charts)
+// or example (a2ui). Turns a silent "Preview unavailable" into a build failure.
+const availableDemos = new Set(
+  Object.keys(import.meta.glob('../demos/**/*Demo.vue')).map((p) =>
+    p.replace('../demos/', '').replace('.vue', ''),
+  ),
+)
+for (const e of entries) {
+  const key = previewKeyOf(e)
+  const ok = kind === 'a2ui' ? key in examples : availableDemos.has(key)
+  if (!ok) {
+    throw new Error(
+      kind === 'a2ui'
+        ? `[ComponentCatalog] No A2UI example "${key}" for page "${e.id}".`
+        : `[ComponentCatalog] No demo "src/demos/${key}.vue" for page "${e.id}". ` +
+          'Add the demo, or set "previewDemo" in the page frontmatter.',
+    )
+  }
 }
 
 // Bucket entries by group, then order the buckets and sort rows within each.
@@ -190,12 +171,7 @@ const total = entries.length
                   </svg>
                 </a>
               </div>
-              <div
-                class:list={[
-                  'mt-4 flex max-h-[36rem] w-full justify-center overflow-auto rounded-md border border-border bg-muted/20',
-                  isLarge(e) ? 'min-h-[14rem] items-start p-1' : 'min-h-[9rem] items-center p-4',
-                ]}
-              >
+              <div class="mt-4 flex min-h-[9rem] max-h-[44rem] w-full items-center justify-center overflow-auto rounded-md border border-border bg-muted/20 p-3">
                 <ComponentPreview client:visible previewKey={previewKeyOf(e)} kind={kind} />
               </div>
             </div>
