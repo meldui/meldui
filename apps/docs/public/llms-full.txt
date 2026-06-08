@@ -1441,6 +1441,20 @@ A comprehensive charting library for Vue 3, built on ECharts with MeldUI theming
 
 <ComponentCatalog kind="charts" />
 
+#### Component reference
+
+| Chart                                       | Component          | Best For                                    |
+| ------------------------------------------- | ------------------ | ------------------------------------------- |
+| [Line Chart](/docs/charts/line-chart)       | `MeldLineChart`    | Trends over time, continuous data           |
+| [Bar Chart](/docs/charts/bar-chart)         | `MeldBarChart`     | Comparisons across categories               |
+| [Area Chart](/docs/charts/area-chart)       | `MeldAreaChart`    | Volume and cumulative values over time      |
+| [Pie Chart](/docs/charts/pie-chart)         | `MeldPieChart`     | Proportions of a whole                      |
+| [Donut Chart](/docs/charts/donut-chart)     | `MeldDonutChart`   | Proportions with a center metric            |
+| [Scatter Chart](/docs/charts/scatter-chart) | `MeldScatterChart` | Correlations between two variables          |
+| [Radar Chart](/docs/charts/radar-chart)     | `MeldRadarChart`   | Multi-dimensional comparisons               |
+| [Heatmap Chart](/docs/charts/heatmap-chart) | `MeldHeatmapChart` | Density and intensity across two dimensions |
+| [Mixed Chart](/docs/charts/mixed-chart)     | `MeldMixedChart`   | Combining multiple chart types              |
+
 ### Installation
 
 ```bash

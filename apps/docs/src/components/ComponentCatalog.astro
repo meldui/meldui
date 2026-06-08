@@ -1,5 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content'
+import ComponentPreview from './ComponentPreview.vue'
+import { lastSeg, pascal } from './demo-preview'
 
 interface Props {
   /** Which set of components to list. */
@@ -22,11 +24,64 @@ const VUE_GROUP_ORDER = [
   'Composites',
 ]
 
+// Large renderers. Every row is full width; these get a taller, top-aligned
+// preview area with minimal padding so big UIs (toolbars, tables, charts) fit.
+// Compact components get a shorter, centered preview instead.
+const LARGE_VUE = new Set([
+  'DataTable',
+  'DocumentViewer',
+  'Sidebar',
+  'ResizablePanelGroup',
+  'Calendar',
+  'RangeCalendar',
+  'Carousel',
+  'Table',
+])
+const LARGE_A2UI = new Set([
+  'Chart',
+  'Table',
+  'Sidebar',
+  'Carousel',
+  'Timeline',
+  'Stepper',
+  'Tabs',
+  'Accordion',
+  'List',
+  'Modal',
+])
+
 function vueGroup(e: Entry): string {
   const sub = e.data.subcategory
   if (!sub) return 'Composites' // composites have no subcategory
   if (sub === 'Data') return 'Navigation' // normalize a stray frontmatter value
   return sub
+}
+
+// Demo files are named after the page slug (`<Pascal(slug)>Demo.vue`). These few
+// components have no slug-named primary demo, so map to a representative one.
+const VUE_DEMO_OVERRIDE: Record<string, string> = {
+  'data-pagination': 'DataPaginationGridDemo',
+  filters: 'FiltersStandaloneDemo',
+  'data-table': 'DataTableBasicDemo',
+  'document-viewer': 'BasicPdfDemo',
+}
+
+/** Path (relative to ComponentPreview) or example key used to render the live preview. */
+function previewKeyOf(e: Entry): string {
+  const slug = lastSeg(e.id)
+  if (kind === 'vue') {
+    const file = VUE_DEMO_OVERRIDE[slug] ?? `${pascal(slug)}Demo`
+    return `${slug}/${file}`
+  }
+  if (kind === 'charts') return `charts/${pascal(slug)}Demo`
+  return pascal(slug) // a2ui example key
+}
+
+/** Large renderers get a taller, top-aligned preview area (see usage below). */
+function isLarge(e: Entry): boolean {
+  if (kind === 'charts') return true
+  if (kind === 'vue') return LARGE_VUE.has(e.data.componentName ?? '')
+  return LARGE_A2UI.has(pascal(lastSeg(e.id)))
 }
 
 const all = await getCollection('docs')
@@ -49,7 +104,7 @@ if (kind === 'vue') {
   groupOrder = ['A2UI Components']
 }
 
-// Bucket entries by group, then order the buckets and sort cards within each.
+// Bucket entries by group, then order the buckets and sort rows within each.
 const buckets = new Map<string, Entry[]>()
 for (const e of entries) {
   const g = groupOf(e)
@@ -59,12 +114,12 @@ for (const e of entries) {
 
 const orderedGroups = [
   ...groupOrder.filter((g) => buckets.has(g)),
-  ...[...buckets.keys()].filter((g) => !groupOrder.includes(g)).sort(),
+  ...[...buckets.keys()].filter((g) => !groupOrder.includes(g)).toSorted(),
 ]
 
 const groups = orderedGroups.map((title) => ({
   title,
-  items: buckets.get(title)!.sort((a, b) => {
+  items: buckets.get(title)!.toSorted((a, b) => {
     const byOrder = (a.data.order ?? 999) - (b.data.order ?? 999)
     return byOrder !== 0 ? byOrder : a.data.title.localeCompare(b.data.title)
   }),
@@ -106,31 +161,44 @@ const total = entries.length
             {group.items.length}
           </span>
         </h2>
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4">
           {group.items.map((e) => (
-            <a
-              href={`/docs/${e.id}`}
+            <div
               data-card
               data-name={e.data.title.toLowerCase()}
               data-desc={e.data.description.toLowerCase()}
-              class="group flex flex-col rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-accent"
+              class="flex flex-col rounded-lg border border-border bg-card p-4"
             >
-              <span class="flex items-center justify-between font-medium text-foreground">
-                {e.data.title}
-                <svg
-                  class="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="1.5"
+              <div>
+                <div class="font-medium text-foreground">{e.data.title}</div>
+                <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                  {e.data.description}
+                </p>
+                <a
+                  href={`/docs/${e.id}`}
+                  class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                </svg>
-              </span>
-              <span class="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                {e.data.description}
-              </span>
-            </a>
+                  View docs
+                  <svg
+                    class="size-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                  </svg>
+                </a>
+              </div>
+              <div
+                class:list={[
+                  'mt-4 flex max-h-[36rem] w-full justify-center overflow-auto rounded-md border border-border bg-muted/20',
+                  isLarge(e) ? 'min-h-[14rem] items-start p-1' : 'min-h-[9rem] items-center p-4',
+                ]}
+              >
+                <ComponentPreview client:visible previewKey={previewKeyOf(e)} kind={kind} />
+              </div>
+            </div>
           ))}
         </div>
       </section>
