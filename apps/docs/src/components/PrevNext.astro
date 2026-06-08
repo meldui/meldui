@@ -1,8 +1,8 @@
 ---
-import { navigation, flattenNav } from '../data/navigation'
+import { flattenNav, navForSection, sectionForPath } from '../data/navigation'
 
 const currentPath = Astro.url.pathname
-const flat = flattenNav(navigation)
+const flat = flattenNav(navForSection(sectionForPath(currentPath)))
 
 const currentIndex = flat.findIndex(
   (item) => item.href === currentPath || item.href + '/' === currentPath

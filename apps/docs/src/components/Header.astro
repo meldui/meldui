@@ -1,5 +1,10 @@
 ---
 import ThemeToggle from './ThemeToggle.vue'
+import { SECTIONS, sectionForPath } from '../data/navigation'
+
+const path = Astro.url.pathname
+const onDocs = path.startsWith('/docs')
+const section = sectionForPath(path)
 ---
 
 <header
@@ -23,9 +28,24 @@ import ThemeToggle from './ThemeToggle.vue'
       <span class="text-lg">MeldUI</span>
     </a>
 
-    <div class="ml-4 hidden text-sm text-muted-foreground md:block">
-      Documentation
-    </div>
+    <!-- Top-level section nav -->
+    <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Sections">
+      {
+        SECTIONS.map((s) => (
+          <a
+            href={s.href}
+            class:list={[
+              'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+              onDocs && section === s.id
+                ? 'bg-accent text-accent-foreground'
+                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+            ]}
+          >
+            {s.label}
+          </a>
+        ))
+      }
+    </nav>
 
     <!-- Spacer -->
     <div class="flex-1"></div>
