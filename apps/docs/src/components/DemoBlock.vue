@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, inject } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { Tabs, TabsList, TabsTrigger, TabsContent, ClipboardCopyButton } from '@meldui/vue'
 import { codeToHtml } from 'shiki'
-import { DemoPreviewKey } from './demo-preview'
 
 const props = withDefaults(
   defineProps<{
@@ -11,10 +10,6 @@ const props = withDefaults(
   }>(),
   { lang: 'vue' },
 )
-
-// When rendered inside the component catalog preview, show only the live
-// component — no tabs, no syntax highlighting.
-const isPreview = inject(DemoPreviewKey, false)
 
 const highlightedHtml = ref('')
 
@@ -26,21 +21,18 @@ async function highlight(code: string) {
 }
 
 onMounted(() => {
-  if (!isPreview) highlight(props.code)
+  highlight(props.code)
 })
 watch(
   () => props.code,
   (code) => {
-    if (!isPreview) highlight(code)
+    highlight(code)
   },
 )
 </script>
 
 <template>
-  <div v-if="isPreview" class="flex w-full items-center justify-center p-2">
-    <slot />
-  </div>
-  <div v-else class="my-6 overflow-hidden rounded-lg border border-border">
+  <div class="my-6 overflow-hidden rounded-lg border border-border">
     <Tabs default-value="example">
       <div class="border-b border-border bg-muted/30 px-4">
         <TabsList class="h-auto bg-transparent p-0">
@@ -60,7 +52,7 @@ watch(
       </div>
 
       <TabsContent value="example" class="mt-0 p-6">
-        <div class="flex min-h-[120px] items-center justify-center">
+        <div data-demo-example class="flex min-h-[120px] items-center justify-center">
           <slot />
         </div>
       </TabsContent>

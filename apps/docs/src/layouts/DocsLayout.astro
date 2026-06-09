@@ -11,9 +11,10 @@ interface Props {
   title: string
   description: string
   headings?: { depth: number; slug: string; text: string }[]
+  hideSidebar?: boolean
 }
 
-const { title, description, headings = [] } = Astro.props
+const { title, description, headings = [], hideSidebar = false } = Astro.props
 const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3)
 ---
 
@@ -22,34 +23,49 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3)
 
   <div class="mx-auto max-w-[1440px]">
     <div class="flex">
-      <!-- Sidebar -->
-      <aside
-        id="sidebar"
-        class="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-[240px] shrink-0 border-r border-border lg:block"
-      >
-        <div class="h-full overflow-y-auto py-6 pl-6 pr-4 custom-scrollbar">
-          <Sidebar />
-        </div>
-      </aside>
+      {
+        !hideSidebar && (
+          <>
+            {/* Sidebar */}
+            <aside
+              id="sidebar"
+              class="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-[240px] shrink-0 border-r border-border lg:block"
+            >
+              <div class="h-full overflow-y-auto py-6 pl-6 pr-4 custom-scrollbar">
+                <Sidebar />
+              </div>
+            </aside>
 
-      <!-- Mobile sidebar overlay -->
-      <div
-        id="sidebar-overlay"
-        class="fixed inset-0 z-20 hidden bg-background/80 backdrop-blur-sm lg:hidden"
-      >
-      </div>
-      <aside
-        id="sidebar-mobile"
-        class="fixed top-14 left-0 z-30 hidden h-[calc(100vh-3.5rem)] w-[280px] border-r border-border bg-background lg:hidden"
-      >
-        <div class="h-full overflow-y-auto py-6 pl-6 pr-4 custom-scrollbar">
-          <Sidebar />
-        </div>
-      </aside>
+            {/* Mobile sidebar overlay */}
+            <div
+              id="sidebar-overlay"
+              class="fixed inset-0 z-20 hidden bg-background/80 backdrop-blur-sm lg:hidden"
+            />
+            <aside
+              id="sidebar-mobile"
+              class="fixed top-14 left-0 z-30 hidden h-[calc(100vh-3.5rem)] w-[280px] border-r border-border bg-background lg:hidden"
+            >
+              <div class="h-full overflow-y-auto py-6 pl-6 pr-4 custom-scrollbar">
+                <Sidebar />
+              </div>
+            </aside>
+          </>
+        )
+      }
 
       <!-- Main content -->
-      <main class="min-w-0 flex-1 lg:pl-[240px] xl:pr-[200px]">
-        <div class="mx-auto max-w-3xl px-6 py-8 lg:px-8">
+      <main
+        class:list={[
+          'min-w-0 flex-1',
+          !hideSidebar && 'lg:pl-[240px] xl:pr-[200px]',
+        ]}
+      >
+        <div
+          class:list={[
+            'px-6 py-8 lg:px-8',
+            hideSidebar ? 'mx-auto max-w-[1200px]' : 'mx-auto max-w-3xl',
+          ]}
+        >
           <article class="docs-prose" data-pagefind-body>
             <slot />
           </article>
