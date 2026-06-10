@@ -1,8 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content'
-import { examples } from '@meldui/a2ui'
-import ComponentPreview from './ComponentPreview.vue'
-import { lastSeg, pascal } from './demo-preview'
+import a2uiPreviewMap from '../data/a2ui-preview-map.json'
 
 interface Props {
   /** Which set of components to list. */
@@ -12,6 +10,24 @@ interface Props {
 const { kind } = Astro.props
 
 type Entry = CollectionEntry<'docs'>
+
+// A2UI components render through the same MeldUI styling as their Vue counterparts, so an
+// a2ui Accordion looks identical to the Vue Accordion. Reuse the Vue (or charts) catalog's
+// preview image — keyed by a2ui slug → preview id in a2ui-preview-map.json (shared with the
+// capture script). Slugs with no look-alike (layout primitives like column/row/text, plus
+// date-time-input) fall back to their own a2ui capture.
+const a2uiToPreview: Record<string, string> = a2uiPreviewMap
+
+// Which preview image a catalog card should display. Defaults to the entry's own id; a2ui
+// entries borrow their Vue counterpart's image where one exists.
+function previewId(e: Entry): string {
+  const prefix = 'a2ui/components/'
+  if (e.id.startsWith(prefix)) {
+    const slug = e.id.slice(prefix.length)
+    return a2uiToPreview[slug] ?? e.id
+  }
+  return e.id
+}
 
 // Order of groups for the @meldui/vue catalog. Anything not listed is appended.
 const VUE_GROUP_ORDER = [
@@ -32,19 +48,6 @@ function vueGroup(e: Entry): string {
   return sub
 }
 
-// Which demo (vue/charts) or example (a2ui) renders a component's live preview.
-// vue/charts -> a `*Demo.vue` under src/demos/<dir>/ — the relative key used by
-// ComponentPreview's import.meta.glob. Defaults to the conventional
-// `<Pascal(slug)>Demo`; a page may override it via the `previewDemo` frontmatter
-// field. a2ui -> the example key Pascal(slug) from @meldui/a2ui `examples`.
-function previewKeyOf(e: Entry): string {
-  const slug = lastSeg(e.id)
-  if (kind === 'a2ui') return pascal(slug)
-  const file = e.data.previewDemo ?? `${pascal(slug)}Demo`
-  const dir = kind === 'charts' ? 'charts' : slug
-  return `${dir}/${file}`
-}
-
 const all = await getCollection('docs')
 
 let entries: Entry[]
@@ -63,26 +66,6 @@ if (kind === 'vue') {
   entries = all.filter((e) => e.id.startsWith('a2ui/components/'))
   groupOf = () => 'A2UI Components'
   groupOrder = ['A2UI Components']
-}
-
-// Build-time guard: every entry's preview must resolve to a real demo file (vue/charts)
-// or example (a2ui). Turns a silent "Preview unavailable" into a build failure.
-const availableDemos = new Set(
-  Object.keys(import.meta.glob('../demos/**/*Demo.vue')).map((p) =>
-    p.replace('../demos/', '').replace('.vue', ''),
-  ),
-)
-for (const e of entries) {
-  const key = previewKeyOf(e)
-  const ok = kind === 'a2ui' ? key in examples : availableDemos.has(key)
-  if (!ok) {
-    throw new Error(
-      kind === 'a2ui'
-        ? `[ComponentCatalog] No A2UI example "${key}" for page "${e.id}".`
-        : `[ComponentCatalog] No demo "src/demos/${key}.vue" for page "${e.id}". ` +
-          'Add the demo, or set "previewDemo" in the page frontmatter.',
-    )
-  }
 }
 
 // Bucket entries by group, then order the buckets and sort rows within each.
@@ -135,46 +118,40 @@ const total = entries.length
 
   {
     groups.map((group) => (
-      <section class="mb-8" data-group>
-        <h2 class="mb-3 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+      <section class="mb-10" data-group>
+        <h2 class="mb-4 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
           {group.title}
           <span class="ml-2 font-normal text-muted-foreground/70" data-group-count>
             {group.items.length}
           </span>
         </h2>
-        <div class="grid grid-cols-1 gap-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {group.items.map((e) => (
-            <div
+            <a
+              href={`/docs/${e.id}`}
               data-card
               data-name={e.data.title.toLowerCase()}
               data-desc={e.data.description.toLowerCase()}
-              class="flex flex-col rounded-lg border border-border bg-card p-4"
+              class="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/50 hover:bg-accent/20"
             >
-              <div>
-                <div class="font-medium text-foreground">{e.data.title}</div>
-                <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">
+              <div class="border-b border-border bg-muted/30 p-4">
+                <div class="truncate font-medium text-foreground group-hover:text-primary">
+                  {e.data.title}
+                </div>
+                <p class="mt-1 line-clamp-2 min-h-10 text-sm leading-5 text-muted-foreground">
                   {e.data.description}
                 </p>
-                <a
-                  href={`/docs/${e.id}`}
-                  class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-                >
-                  View docs
-                  <svg
-                    class="size-3.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                  </svg>
-                </a>
               </div>
-              <div class="mt-4 flex min-h-[9rem] max-h-[44rem] w-full items-center justify-center overflow-auto rounded-md border border-border bg-muted/20 p-3">
-                <ComponentPreview client:visible previewKey={previewKeyOf(e)} kind={kind} />
+              <div class="preview-img mt-auto flex h-44 w-full items-center justify-center overflow-hidden p-4">
+                <img
+                  src={`/previews/${previewId(e)}.png`}
+                  alt={`${e.data.title} preview`}
+                  loading="lazy"
+                  class="!border-0 max-h-full max-w-full transition-transform duration-300 ease-out group-hover:scale-105"
+                  onerror="this.remove();this.parentElement.classList.add('is-empty')"
+                />
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </section>
@@ -185,6 +162,17 @@ const total = entries.length
     No components match your filter.
   </p>
 </div>
+
+<style is:inline>
+  /* Fallback when a component has no captured preview image yet. */
+  .preview-img.is-empty {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(127, 127, 127, 0.05) 0 10px,
+      rgba(127, 127, 127, 0.12) 10px 20px
+    );
+  }
+</style>
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {

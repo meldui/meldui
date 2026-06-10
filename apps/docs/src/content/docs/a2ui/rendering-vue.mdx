@@ -1,0 +1,213 @@
+---
+title: Rendering with Vue
+description: How a consuming Vue app turns streamed A2UI messages into live MeldUI components with the @meldui/a2ui/vue reference renderer — provideA2UI, processMessages, and A2UISurface.
+category: a2ui
+package: '@meldui/a2ui'
+order: 3
+keywords:
+  - a2ui
+  - vue
+  - renderer
+  - provideA2UI
+  - A2UISurface
+  - generative-ui
+---
+
+import A2uiDemo from '../../../demos/a2ui/A2uiDemo.vue'
+
+`@meldui/a2ui` ships in two halves:
+
+- **`@meldui/a2ui`** — the portable, framework-agnostic **catalog contract** an agent targets (schema + component definitions). Covered in the [Overview](/docs/a2ui).
+- **`@meldui/a2ui/vue`** — the **Vue reference renderer** that turns streamed A2UI v0.9 messages into live `@meldui/vue` components.
+
+This page is about the second half: how a consuming Vue app wires up the renderer and feeds it the messages an agent emits. It's built on Google's [`@a2ui/web_core`](https://github.com/google/A2UI) with fine-grained, per-component reactivity, so only the components whose data changed re-render.
+
+## Install
+
+```bash
+pnpm add @meldui/a2ui @meldui/vue vue
+# optional — only if your surfaces use the Icon or Chart components:
+pnpm add @meldui/tabler-vue @meldui/charts-vue
+```
+
+`@meldui/vue` and `vue` are peer dependencies: the renderer maps catalog components onto your installed `@meldui/vue`, so the surface looks exactly like the rest of your app.
+
+## Set up styles
+
+A2UI surfaces are plain `@meldui/vue` components, so they inherit your app's MeldUI theme through the normal CSS cascade — there's no separate "A2UI theme" to wire up. If you've already followed the [Installation](/docs/getting-started/installation) guide, you're done. Otherwise, import the MeldUI tokens once in your Tailwind v4 entry CSS:
+
+```css
+@import 'tailwindcss';
+@import '@meldui/vue/themes/default';
+
+/* Let Tailwind see the classes the renderer's components use */
+@source "../node_modules/@meldui/vue/dist/**/*.mjs";
+```
+
+The `Markdown` component (the primary path for streamed agent text) also needs its prose styles, imported once anywhere in your app:
+
+```ts
+import '@incremark/theme/styles.css'
+```
+
+## Wire up the renderer
+
+Three steps, all in one root component:
+
+1. Call **`provideA2UI()`** in `setup()` — it creates a message processor and provides it to the subtree.
+2. Feed streamed messages to **`processor.processMessages(...)`** as they arrive from your transport.
+3. Mount **`<A2UISurface :surface-id="…">`** wherever the surface should appear.
+
+```vue
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { provideA2UI, A2UISurface } from '@meldui/a2ui/vue'
+
+const { processor } = provideA2UI({
+  // Forward client actions (e.g. a Button press) back to your agent.
+  onAction: (action) => sendToAgent(action),
+})
+
+onMounted(() => {
+  // `incomingMessages` come from your transport — SSE, WebSocket, or an A2A stream.
+  processor.processMessages(incomingMessages)
+})
+</script>
+
+<template>
+  <A2UISurface surface-id="main" />
+</template>
+```
+
+`<A2UISurface>` must be rendered **inside** a component that called `provideA2UI()` (it injects the processor); otherwise it throws. A surface doesn't need to exist when the component mounts — it resolves reactively when its `createSurface` message arrives, so you can mount the surface before the first message lands.
+
+## What the messages look like
+
+The agent streams A2UI v0.9 messages. A minimal single-surface sequence is `createSurface` → `updateComponents` (with an optional `updateDataModel` for bound values). The `surfaceId` ties the messages to the `<A2UISurface surface-id>` you mounted, and `catalogId` is the [MeldUI catalog id](/docs/a2ui#the-catalog-id):
+
+```json
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "main",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "main",
+      "components": [
+        { "id": "root", "component": "Card", "child": "col" },
+        { "id": "col", "component": "Column", "children": ["t1", "t2"] },
+        { "id": "t1", "component": "Text", "text": "Card title", "variant": "h4" },
+        {
+          "id": "t2",
+          "component": "Text",
+          "text": "Card body content goes here.",
+          "variant": "body"
+        }
+      ]
+    }
+  }
+]
+```
+
+Components reference each other by `id` (`child` / `children`), with `root` as the surface entry point. You can call `processMessages` repeatedly as chunks stream in — later `updateComponents` and `updateDataModel` messages patch the surface in place, and only the affected components re-render. Here's that exact pattern rendered live, with the messages an agent would emit in the **Code** tab:
+
+<A2uiDemo client:only="vue" component="Card" />
+
+## Handling actions
+
+Interactive components (a `Button`, a form control) dispatch a **client action** when the user interacts with them. Provide an `onAction` handler to forward it to your agent:
+
+```ts
+provideA2UI({
+  onAction: (action) => {
+    // action.name             — the event name the agent declared, e.g. "save"
+    // action.sourceComponentId — which component fired it
+    // action.surfaceId         — which surface it belongs to
+    // action.context           — the relevant slice of the surface's data model
+    sendToAgent(action)
+  },
+})
+```
+
+In the catalog, a button declares its event inline — `"action": { "event": { "name": "save" } }` — and that `name` is what arrives as `action.name`.
+
+## Data binding
+
+Inputs two-way bind to the surface's **data model** rather than to local component state. A field points at a path with `value: { "path": "/name" }`, and an `updateDataModel` message seeds (or updates) it:
+
+```json
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "main",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": { "surfaceId": "main", "path": "/", "value": { "name": "Ada" } }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "main",
+      "components": [
+        {
+          "id": "root",
+          "component": "TextField",
+          "label": "Your name",
+          "value": { "path": "/name" }
+        }
+      ]
+    }
+  }
+]
+```
+
+Edits in the rendered input flow back into the data model, and that bound state is what shows up in `action.context` when the user submits — so the agent always sees the current values without you threading state by hand.
+
+## Restricting the catalog
+
+By default the renderer registers all 35 catalog components. To allow only a subset — for a constrained surface, or to keep an agent on a smaller, more reliable vocabulary — pass your own list:
+
+```ts
+import { provideA2UI, meldVueCatalog } from '@meldui/a2ui/vue'
+
+const allowed = meldVueCatalog.filter((c) =>
+  ['Card', 'Column', 'Text', 'Button', 'TextField'].includes(c.name),
+)
+
+provideA2UI({ catalog: allowed })
+```
+
+Every entry you pass must be a real component in the published `@meldui/a2ui` contract — the renderer validates this on setup and throws if a component isn't in the catalog, so the renderer can never drift from the agent-facing contract.
+
+## Multiple surfaces
+
+One `provideA2UI()` host can drive many surfaces. Mount a `<A2UISurface>` per `surfaceId` the agent creates — for example a main panel and a modal:
+
+```vue
+<template>
+  <A2UISurface surface-id="main" />
+  <A2UISurface surface-id="dialog" />
+</template>
+```
+
+Each surface renders independently and resolves as its `createSurface` message arrives.
+
+## Theming
+
+Surfaces use MeldUI's semantic OKLCH tokens through their Tailwind classes, so they automatically follow your app's light/dark palette — no bridge code, and the agent's optional `theme.primaryColor` is intentionally **not** applied so surfaces stay visually consistent across agents. See [A2UI Theming](/docs/a2ui/theming) for token overrides and per-component styling.
+
+## See also
+
+- [A2UI Overview](/docs/a2ui) — the catalog contract and how agents negotiate it.
+- [Catalog Reference](/docs/a2ui/reference) — every component, its props, and the functions.
+- [Playground](/docs/a2ui/playground) — paste raw v0.9 messages and watch them render.
+- [Gallery](/docs/a2ui/gallery) — complete surfaces with the exact messages behind them.

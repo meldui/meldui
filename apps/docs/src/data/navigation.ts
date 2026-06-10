@@ -8,18 +8,23 @@ export interface NavItem {
 /** Top-level docs sections, surfaced as header menu items. */
 export const SECTIONS = [
   { id: 'components', label: 'Components', href: '/docs/components' },
+  { id: 'charts', label: 'Charts', href: '/docs/charts' },
   { id: 'a2ui', label: 'A2UI', href: '/docs/a2ui' },
 ] as const
 
 export type DocsSection = (typeof SECTIONS)[number]['id']
 
-/** Which section a docs path belongs to. A2UI lives entirely under /docs/a2ui. */
+/** Which section a docs path belongs to. Charts and A2UI live under their own roots. */
 export function sectionForPath(pathname: string): DocsSection {
-  return pathname.startsWith('/docs/a2ui') ? 'a2ui' : 'components'
+  if (pathname.startsWith('/docs/a2ui')) return 'a2ui'
+  if (pathname.startsWith('/docs/charts')) return 'charts'
+  return 'components'
 }
 
 export function navForSection(section: DocsSection): NavItem[] {
-  return section === 'a2ui' ? a2uiNav : componentsNav
+  if (section === 'a2ui') return a2uiNav
+  if (section === 'charts') return chartsNav
+  return componentsNav
 }
 
 // Everything except A2UI: getting started, components, charts, icons, etc.
@@ -185,6 +190,14 @@ export const componentsNav: NavItem[] = [
     ],
   },
   {
+    title: 'Examples',
+    items: [{ title: 'Common Patterns', href: '/docs/examples' }],
+  },
+]
+
+// Charts — its own top-level section.
+export const chartsNav: NavItem[] = [
+  {
     title: 'Charts',
     label: '9',
     items: [
@@ -203,10 +216,6 @@ export const componentsNav: NavItem[] = [
       { title: 'Events', href: '/docs/charts/events' },
     ],
   },
-  {
-    title: 'Examples',
-    items: [{ title: 'Common Patterns', href: '/docs/examples' }],
-  },
 ]
 
 // The A2UI catalog — its own top-level section.
@@ -216,6 +225,7 @@ export const a2uiNav: NavItem[] = [
     items: [
       { title: 'Overview', href: '/docs/a2ui' },
       { title: 'Catalog Reference', href: '/docs/a2ui/reference' },
+      { title: 'Rendering with Vue', href: '/docs/a2ui/rendering-vue' },
       { title: 'Theming', href: '/docs/a2ui/theming' },
       { title: 'Playground', href: '/docs/a2ui/playground' },
       { title: 'Gallery', href: '/docs/a2ui/gallery' },

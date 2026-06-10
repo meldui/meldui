@@ -1,6 +1,15 @@
 <script setup>
 import DemoBlock from '../../components/DemoBlock.vue'
-import { FormItem, FormLabel, FormControl, FormDescription, FormMessage, Input, Button } from '@meldui/vue'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, Input, Button } from '@meldui/vue'
+
+const onSubmit = (values) => console.log(values)
+
+function validateUsername(value) {
+  if (!value) return 'Username is required'
+  if (value.length < 2) return 'Username must be at least 2 characters'
+  if (value.length > 50) return 'Username must be at most 50 characters'
+  return true
+}
 
 const code = `\u003cscript setup>
 import { useForm } from 'vee-validate'
@@ -35,16 +44,18 @@ const onSubmit = handleSubmit((values) => console.log(values))
 
 <template>
   <DemoBlock :code="code">
-    <div class="w-full max-w-sm space-y-4">
-      <FormItem>
-        <FormLabel>Username</FormLabel>
-        <FormControl>
-          <Input placeholder="username" />
-        </FormControl>
-        <FormDescription>Your public display name.</FormDescription>
-        <FormMessage />
-      </FormItem>
+    <Form class="w-full max-w-sm space-y-4" @submit="onSubmit">
+      <FormField v-slot="{ componentField }" name="username" :rules="validateUsername">
+        <FormItem>
+          <FormLabel>Username</FormLabel>
+          <FormControl>
+            <Input placeholder="username" v-bind="componentField" />
+          </FormControl>
+          <FormDescription>Your public display name.</FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
       <Button type="submit">Submit</Button>
-    </div>
+    </Form>
   </DemoBlock>
 </template>
