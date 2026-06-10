@@ -44,11 +44,17 @@ const CAPTURE_OVERRIDES = {
   'data-table': '/docs/data-table/basic',
 }
 
-// Components whose demo is a fixed-width / multi-pane layout (resizable panels, a sidebar
-// shell, a scroll box, a dropzone, a carousel viewport). Shrinking these to fit-content
-// squishes the layout to its min-content, so capture them at their natural width instead —
-// like charts/data-table. (Content-sized components — accordion, card, inputs… — still get
-// the fit-content centering.)
+// NATURAL_WIDTH_IDS and CROP_LANDSCAPE are two orthogonal knobs; a preview can be in either,
+// both, or neither:
+//   - default (in neither): fit-content shrink + center, no crop  (accordion, inputs…)
+//   - NATURAL_WIDTH_IDS:     skip the shrink, keep natural width
+//   - CROP_LANDSCAPE:        crop to the card's landscape aspect after capture
+//   - both:                  natural width, then cropped              (data-table, filters…)
+
+// Skip the fit-content shrink — these demos are wide/fixed-width layouts (a table, a document
+// viewer, resizable panels, a sidebar shell, a scroll box, a dropzone, a carousel viewport, a
+// command palette) that fit-content would squish to min-content. Content-sized components
+// (accordion, inputs…) are absent, so they still get the centering.
 const NATURAL_WIDTH_IDS = new Set([
   'components/resizable',
   'components/sidebar',
@@ -56,20 +62,24 @@ const NATURAL_WIDTH_IDS = new Set([
   'components/context-menu',
   'components/carousel',
   'components/aspect-ratio',
-  'components/command',
   'components/card',
+  'components/command',
   'composites/filters',
+  'data-table',
+  'document-viewer',
   // Its own width is tight (max-w-max ~287px); fit-content instead exposes max-content,
   // which includes the hidden w-[400px] dropdown panels and inflates it to ~480px (small
   // font). Capturing natural keeps the font on par with breadcrumb.
   'components/navigation-menu',
 ])
 
-// Tall previews (a many-row table, a full document viewer, a filter/command/pagination demo
-// with sample content) get height-shrunk by the card's fixed-height image area, so they render
-// small with empty sides. Crop these to the card's landscape aspect (~CARD_ASPECT) so they
-// fill the card width and read larger. `anchor:'bottom'` keeps the meaningful part in frame —
-// e.g. the data-pagination toolbar sits below its sample article grid.
+// Crop to the card's landscape aspect (~CARD_ASPECT). Tall previews (a many-row table, a full
+// document viewer, a filter/command/pagination demo with sample content) otherwise get
+// height-shrunk by the card's fixed-height image area and render small with empty sides; the
+// crop makes them fill the card width and read larger. `anchor:'bottom'` keeps the meaningful
+// part in frame — e.g. the data-pagination toolbar sits below its sample article grid.
+// (data-pagination is NOT in NATURAL_WIDTH_IDS — its grid shrinks fine, so it gets the
+// fit-content pass for larger text, then this crop.)
 const CARD_ASPECT = 2.4
 const CROP_LANDSCAPE = {
   'data-table': {},
@@ -185,14 +195,9 @@ async function capture(page, id, href) {
   // Many demos render full-width and left-align their content, so a tight-bbox capture came
   // out wide with the content hugging the left — small and off-center once displayed. Shrink
   // the captured element to fit its content (capped) and center it, so previews read
-  // consistently: content centered in the card, text at full size.
-  // Charts, the data-table grid, document-viewer, and the fixed-width layout components are
-  // wide, layout-driven previews that shouldn't be shrunk — capture them at natural width.
-  const TRANSFORM =
-    !id.startsWith('charts/') &&
-    !id.startsWith('document-viewer') &&
-    id !== 'data-table' &&
-    !NATURAL_WIDTH_IDS.has(id)
+  // consistently: content centered in the card, text at full size. Skip it for charts and the
+  // natural-width set (wide/fixed-width layouts that fit-content would squish).
+  const TRANSFORM = !id.startsWith('charts/') && !NATURAL_WIDTH_IDS.has(id)
   if (TRANSFORM) {
     await el.evaluate((node) => {
       node.style.width = 'fit-content'
@@ -218,11 +223,15 @@ async function capture(page, id, href) {
   const box = crop ? await el.boundingBox().catch(() => null) : null
   if (crop && box) {
     const h = Math.min(box.height, Math.round(box.width / CARD_ASPECT))
-    const y = crop.anchor === 'bottom' ? box.y + box.height - h : box.y
+    const bottom = crop.anchor === 'bottom'
+    const y = bottom ? box.y + box.height - h : box.y
     await page.screenshot({
       path: outPath,
       omitBackground: true,
-      fullPage: true,
+      // A bottom-anchored slice can fall below the viewport, so render the full page for it;
+      // top-anchored slices are within view, where fullPage would needlessly render the whole
+      // (sometimes very long) page just to clip a small strip.
+      fullPage: bottom,
       clip: { x: box.x, y, width: box.width, height: h },
     })
   } else {
