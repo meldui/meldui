@@ -17,7 +17,7 @@ keywords:
 
 `@meldui/a2ui` is that catalog for MeldUI. Because the catalog is framework-agnostic, **any** A2UI-speaking agent — Google ADK, CopilotKit, a custom server — can target MeldUI without knowing it renders in Vue.
 
-> **Scope today:** this package is the **catalog contract** — the schema and component definitions. The Vue reference renderer (`provideA2UI`, `<A2UISurface>`, the mapping to `@meldui/vue` components) ships in a follow-up release. See the [Catalog Reference](/docs/a2ui/reference) for the full component list.
+> **Two halves:** `@meldui/a2ui` is the portable **catalog contract** (schema + component definitions) that any agent targets, and `@meldui/a2ui/vue` is the **Vue reference renderer** (`provideA2UI`, `<A2UISurface>`, the mapping to `@meldui/vue` components). To render A2UI messages in a Vue app, see [Rendering with Vue](/docs/a2ui/rendering-vue). For the full component list, see the [Catalog Reference](/docs/a2ui/reference).
 
 ## Install
 

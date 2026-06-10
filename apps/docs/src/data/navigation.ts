@@ -225,6 +225,7 @@ export const a2uiNav: NavItem[] = [
     items: [
       { title: 'Overview', href: '/docs/a2ui' },
       { title: 'Catalog Reference', href: '/docs/a2ui/reference' },
+      { title: 'Rendering with Vue', href: '/docs/a2ui/rendering-vue' },
       { title: 'Theming', href: '/docs/a2ui/theming' },
       { title: 'Playground', href: '/docs/a2ui/playground' },
       { title: 'Gallery', href: '/docs/a2ui/gallery' },

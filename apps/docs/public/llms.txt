@@ -48,6 +48,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Modal](/docs/a2ui/components/modal): A dialog overlay from an A2UI agent.
 - [MultiSelect](/docs/a2ui/components/multi-select): A searchable multi-select input from an A2UI agent.
 - [Playground](/docs/a2ui/playground): Paste raw A2UI v0.9 messages and watch them render live with MeldUI components.
+- [Rendering with Vue](/docs/a2ui/rendering-vue): How a consuming Vue app turns streamed A2UI messages into live MeldUI components with the @meldui/a2ui/vue reference renderer — provideA2UI, processMessages, and A2UISurface.
 - [Row](/docs/a2ui/components/row): Arrange components horizontally from an A2UI agent.
 - [ScrollArea](/docs/a2ui/components/scroll-area): Wrap content in a scrollable viewport from an A2UI agent.
 - [Separator](/docs/a2ui/components/separator): Render a separator line from an A2UI agent.
