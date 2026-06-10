@@ -93,7 +93,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Command](/docs/components/command): A command palette for searching and executing actions, similar to Cmd+K interfaces.
 - [Components](/docs/components): Every @meldui/vue component at a glance, grouped by type. Browse the full set and jump straight to any component's documentation.
 - [Context Menu](/docs/components/context-menu): A right-click context menu with items, groups, and sub-menus.
-- [Data Pagination](/docs/components/data-pagination): Pagination toolbar for tables, grids, and lists — first/last/prev/next buttons with a page-size selector and "Page X of Y" info.
+- [Data Pagination](/docs/components/data-pagination): Pagination toolbar for tables and lists — prev/next, page-size selector, and page info.
 - [Dialog](/docs/components/dialog): A modal dialog that overlays content and requires user interaction.
 - [Dot](/docs/components/dot): A small status indicator dot with color variants and animation effects.
 - [Drawer](/docs/components/drawer): A touch-friendly drawer component that slides from the bottom of the screen.
@@ -113,7 +113,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Native Select](/docs/components/native-select): A styled native HTML select element.
 - [Navigation Menu](/docs/components/navigation-menu): A complex navigation menu with rich content areas, suitable for site-wide navigation.
 - [Number Field](/docs/components/number-field): A numeric input with increment and decrement buttons.
-- [Pagination](/docs/components/pagination): Navigation controls for paginated content with page numbers, previous/next, and first/last buttons.
+- [Pagination](/docs/components/pagination): Navigation controls for paginated content — page numbers, prev/next, and first/last.
 - [Pin Input](/docs/components/pin-input): A PIN code input with individual boxes for each character.
 - [Popover](/docs/components/popover): A floating content panel that appears on trigger click.
 - [Progress](/docs/components/progress): A horizontal progress bar indicating completion status.
@@ -124,7 +124,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Select](/docs/components/select): A custom select component with keyboard navigation and grouping support.
 - [Separator](/docs/components/separator): A visual divider between content sections.
 - [Sheet](/docs/components/sheet): A panel that slides in from the edge of the screen.
-- [Sidebar](/docs/components/sidebar): A complex sidebar navigation component with collapsible sections, menus, and responsive behavior.
+- [Sidebar](/docs/components/sidebar): A collapsible sidebar navigation with nested menus, sections, and responsive behavior.
 - [Skeleton](/docs/components/skeleton): A placeholder loading animation for content that is still loading.
 - [Slider](/docs/components/slider): A range slider for selecting numeric values with color variants.
 - [Sonner](/docs/components/sonner): Toast notification system for success, error, and informational messages.
@@ -140,7 +140,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Tooltip](/docs/components/tooltip): A popup that displays information when hovering over an element.
 - [Avatar Group](/docs/composites/avatar-group): Displays a stack of avatars with an overflow indicator.
 - [Clipboard Copy](/docs/composites/clipboard-copy): A component for copying text to the clipboard with visual feedback.
-- [Data Table](/docs/data-table): A powerful, feature-rich data table with server-side operations, filtering, sorting, pagination, row selection, column pinning, and keyboard navigation.
+- [Data Table](/docs/data-table): A data table with sorting, filtering, pagination, selection, pinning, and server-side ops.
 - [Data Table: Basic Usage](/docs/data-table/basic): Setting up a basic data table with sorting, pagination, and search.
 - [Data Table: Column Pinning](/docs/data-table/pinning): Pin columns to the left or right edge for horizontal scroll tables.
 - [Data Table: Columns & Cells](/docs/data-table/columns): Type-safe column definitions with createColumnHelper, cell renderers, and aggregation helpers.
@@ -151,7 +151,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Data Table: Server-Side](/docs/data-table/server-side): Server-side operation params, response format, URL state persistence, and the v-model emit contract.
 - [Data Table: useDataTableController](/docs/data-table/use-data-table-controller): The parent-side composable that bundles sorting / filters / pagination refs and applies the filter→page and sort→page reset rules with flush:'sync'.
 - [Date Range Picker](/docs/composites/date-range-picker): A composite date picker with presets, calendar, and support for single or range date selection.
-- [Document Viewer](/docs/document-viewer): A reusable Vue composite for viewing and annotating PDF, image, plain-text, and markdown documents — built on EmbedPDF (PDFium WASM) with a single feature opt-in surface.
+- [Document Viewer](/docs/document-viewer): A Vue composite for viewing and annotating PDF, image, text, and markdown documents.
 - [Document Viewer: Annotations](/docs/document-viewer/annotations): The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
 - [Document Viewer: Bundle & Performance](/docs/document-viewer/bundle-and-perf): Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
 - [Document Viewer: Customization](/docs/document-viewer/customization): Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
@@ -163,8 +163,8 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Document Viewer: Theming](/docs/document-viewer/theming): Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
 - [Document Viewer: Troubleshooting](/docs/document-viewer/troubleshooting): Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
 - [Document Viewer: Use Cases](/docs/document-viewer/use-cases): Runnable demos for the common patterns — load saved annotations, AI citations, import / export, save-as-copy, threaded reviews, and more.
-- [Filters](/docs/composites/filters): A standalone filter toolbar with chip-based filters (8 built-in types), debounced search, a Reset button, and a v-model contract for the aggregated filter values.
-- [Mention](/docs/composites/mention): A rich text input that supports @-mention suggestions with customizable triggers and serialization.
+- [Filters](/docs/composites/filters): A filter toolbar with chip-based filters (8 types), debounced search, reset, and v-model.
+- [Mention](/docs/composites/mention): A rich-text input with @-mention suggestions, customizable triggers, and serialization.
 - [Multi Select](/docs/composites/multi-select): A searchable multi-select dropdown with badge display, groups, and creatable options.
 - [Plugin: Annotation](/docs/document-viewer/plugins/annotation): Native PDF annotations — highlights, sticky-note comments, and the full programmatic CRUD API.
 - [Plugin: Bookmark (Outline)](/docs/document-viewer/plugins/bookmark): Extracts the document outline and renders it as a side-panel tree.

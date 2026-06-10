@@ -1,24 +1,39 @@
-// Captures a static preview image for every component listed in the catalog
-// overview pages. It reads the catalog cards as the source of truth, then visits
-// each component's real doc page and screenshots its first rendered demo (the
-// `[data-demo-example]` pane in DemoBlock). Output goes to public/previews/<id>.png,
-// mirroring the route tree, which is exactly what ComponentCatalog.astro references.
+// Captures a static preview image for every component in the catalog. The component
+// list is derived from the local content collection (the same selection
+// ComponentCatalog.astro uses), then each component's doc page is visited and its first
+// rendered demo (the DemoBlock "Example" pane) is screenshotted into a uniform,
+// transparent frame. Output goes to public/previews/<id>.png, mirroring the route tree,
+// which is exactly what ComponentCatalog.astro references.
+//
+// Source defaults to the deployed site (no local server needed); override with BASE_URL.
 //
 // Usage:
-//   pnpm --filter docs dev        # in one terminal (serves http://localhost:4321)
 //   pnpm --filter docs capture:previews
-//
-// Optional: BASE_URL=http://localhost:4321 to point at a different server.
+//   BASE_URL=http://localhost:4321 pnpm --filter docs capture:previews   # local instead
 
 import { chromium } from 'playwright'
-import { mkdir } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
+import { mkdir, readdir, readFile } from 'node:fs/promises'
+import { dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const BASE = (process.env.BASE_URL ?? 'http://localhost:4321').replace(/\/$/, '')
-const OUT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'previews')
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+const CONTENT_DIR = join(ROOT, 'src', 'content', 'docs')
+const OUT_DIR = join(ROOT, 'public', 'previews')
 
-const CATALOG_PAGES = ['/docs/components', '/docs/charts', '/docs/a2ui/components']
+// a2ui slugs that reuse their Vue counterpart's preview image (shared with
+// ComponentCatalog.astro). These aren't captured from the a2ui surface — the card points
+// at the Vue image instead — so skip them here to avoid generating dead PNGs.
+const a2uiPreviewMap = JSON.parse(
+  await readFile(join(ROOT, 'src', 'data', 'a2ui-preview-map.json'), 'utf8'),
+)
+
+const BASE = (process.env.BASE_URL ?? 'https://meldui.dipayanb.com').replace(/\/$/, '')
+
+// Each component is captured at its tight bounding box at 1:1 (deviceScaleFactor 1), so a
+// PNG pixel == a CSS pixel. The card then displays it at natural size (capped), which keeps
+// text the same physical size across every card. Oversized components (charts/tables) hit
+// the card's cap and scale down; everything else shows true size.
+const DSF = Number(process.env.CAP_DSF ?? 1)
 
 // Some catalog pages link to an overview that only shows code (no live demo). Point
 // those at a sub-page that renders the component through DemoBlock instead. The
@@ -41,55 +56,123 @@ function settleFor(id) {
   return 900
 }
 
-async function collectCards(page) {
-  const seen = new Map() // id -> href
-  for (const path of CATALOG_PAGES) {
-    await page.goto(`${BASE}${path}`, { waitUntil: 'load' })
-    const hrefs = await page.$$eval('a[data-card]', (els) =>
-      els.map((el) => el.getAttribute('href')).filter(Boolean),
-    )
-    for (const href of hrefs) {
-      const id = href.replace(/^\/docs\//, '').replace(/\/$/, '')
-      if (!seen.has(id)) seen.set(id, href)
-    }
+// --- Component list, derived from local content (no overview page scraping) ---
+
+async function walkMdx(dir) {
+  const out = []
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) out.push(...(await walkMdx(full)))
+    else if (entry.name.endsWith('.mdx')) out.push(full)
+  }
+  return out
+}
+
+// Minimal frontmatter reader for the flat scalar fields we need.
+function readFrontmatter(src) {
+  const m = src.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!m) return {}
+  const fm = {}
+  for (const line of m[1].split(/\r?\n/)) {
+    const kv = line.match(/^([A-Za-z0-9_]+):\s*(.*)$/)
+    if (kv) fm[kv[1]] = kv[2].trim().replace(/^['"]|['"]$/g, '')
+  }
+  return fm
+}
+
+// Mirror ComponentCatalog.astro's selectors. Returns Map<id, { href }>.
+async function collectComponents() {
+  const files = await walkMdx(CONTENT_DIR)
+  const seen = new Map()
+  for (const file of files) {
+    const fm = readFrontmatter(await readFile(file, 'utf8'))
+    const id = relative(CONTENT_DIR, file)
+      .replace(/\.mdx$/, '')
+      .replace(/\/index$/, '')
+      .replaceAll('\\', '/')
+    const isVue = !!fm.componentName && fm.package === '@meldui/vue'
+    const isChart = fm.package === '@meldui/charts-vue'
+    const a2uiPrefix = 'a2ui/components/'
+    // Skip a2ui slugs that borrow a Vue preview image — they need no capture of their own.
+    const isA2ui = id.startsWith(a2uiPrefix) && !a2uiPreviewMap[id.slice(a2uiPrefix.length)]
+    if (isVue || isChart || isA2ui) seen.set(id, { href: `/docs/${id}` })
   }
   return seen
 }
+
+// The DemoBlock "Example" pane. Locally it carries [data-demo-example]; on the deployed
+// site it's the first active tab panel's inner wrapper — both resolve to the same
+// `div.flex.min-h-[120px].items-center.justify-center`.
+const EXAMPLE_SEL = '[data-demo-example], [role="tabpanel"][data-state="active"] > div'
 
 async function capture(page, id, href) {
   const visit = CAPTURE_OVERRIDES[id] ?? href
   await page.goto(`${BASE}${visit}`, { waitUntil: 'load' })
 
-  // The Astro dev toolbar is fixed at the viewport bottom and leaks into element
-  // screenshots of taller components. Hide it (and any toast layer) before shooting.
+  // Make backgrounds transparent so the card shows through and the image blends.
   await page.addStyleTag({
-    content: 'astro-dev-toolbar,#vue-sonner-toaster{display:none!important}',
+    content: `
+      html,body,.docs-prose,[role="tabpanel"]{background:transparent !important}
+      astro-dev-toolbar,#vue-sonner-toaster{display:none !important}
+    `,
   })
 
-  // Demos are `client:only="vue"` islands — wait until the first example pane has
-  // hydrated and actually has rendered content with a real height.
+  // Wait for the example to render (client:only island → real content with a real height).
   await page.waitForFunction(
-    () => {
-      const el = document.querySelector('[data-demo-example]')
+    (sel) => {
+      const el = document.querySelector(sel)
       return !!el && el.children.length > 0 && el.getBoundingClientRect().height > 24
     },
+    EXAMPLE_SEL,
     { timeout: 20000 },
   )
 
+  // Fonts must be applied before shooting, else text metrics differ.
+  await page.evaluate(() => document.fonts.ready)
   await page.waitForTimeout(settleFor(id))
 
-  // Prefer the demo's own content (tight bounding box) over the padded, centered
-  // pane so narrow components fill the card instead of floating in whitespace.
-  // Fall back to the pane if the inner content has no real size.
-  const inner = page.locator('[data-demo-example] > *').first()
+  // Shoot the demo's own content (tight bounding box) transparent, so the card can show it
+  // at natural size. Fall back to the example pane if the inner content has no real size.
+  const inner = page
+    .locator(
+      `${EXAMPLE_SEL.split(', ')
+        .map((s) => `${s} > *`)
+        .join(', ')}`,
+    )
+    .first()
   const innerBox = await inner.boundingBox().catch(() => null)
   const el =
-    innerBox && innerBox.width > 16 && innerBox.height > 16
+    innerBox && innerBox.width > 12 && innerBox.height > 12
       ? inner
-      : page.locator('[data-demo-example]').first()
+      : page.locator(EXAMPLE_SEL).first()
+
+  // Many demos render full-width and left-align their content, so a tight-bbox capture came
+  // out wide with the content hugging the left — small and off-center once displayed. Shrink
+  // the captured element to fit its content (capped) and center it, so previews read
+  // consistently: content centered in the card, text at full size.
+  // Charts, the data-table grid, and document-viewer are wide, layout-driven previews that
+  // shouldn't be shrunk — capture them at natural width.
+  const TRANSFORM =
+    !id.startsWith('charts/') && !id.startsWith('document-viewer') && id !== 'data-table'
+  if (TRANSFORM) {
+    await el.evaluate((node) => {
+      node.style.width = 'fit-content'
+      node.style.maxWidth = '30rem'
+      node.style.marginInline = 'auto'
+    })
+    // Width-driven controls (slider, progress, skeleton…) have no intrinsic width and
+    // collapse to ~0 under fit-content. Detect that and give them a sensible fixed width.
+    const box = await el.boundingBox().catch(() => null)
+    if (!box || box.width < 48) {
+      await el.evaluate((node) => {
+        node.style.width = '18rem'
+      })
+    }
+  }
+
   const outPath = join(OUT_DIR, `${id}.png`)
   await mkdir(dirname(outPath), { recursive: true })
-  await el.screenshot({ path: outPath })
+  await el.screenshot({ path: outPath, omitBackground: true })
   return outPath
 }
 
@@ -103,19 +186,19 @@ async function main() {
   const browser = await chromium.launch(launchOpts)
   const page = await browser.newPage({
     viewport: {
-      width: Number(process.env.CAP_WIDTH ?? 640),
+      width: Number(process.env.CAP_WIDTH ?? 1280),
       height: Number(process.env.CAP_HEIGHT ?? 900),
     },
-    deviceScaleFactor: 2,
+    deviceScaleFactor: DSF,
   })
 
-  let cards = await collectCards(page)
+  let cards = await collectComponents()
   if (ONLY.length) cards = new Map([...cards].filter(([id]) => ONLY.includes(id)))
-  console.log(`[capture] ${cards.size} components across ${CATALOG_PAGES.length} catalog pages`)
+  console.log(`[capture] ${cards.size} components from ${BASE}`)
 
   let ok = 0
   const failed = []
-  for (const [id, href] of cards) {
+  for (const [id, { href }] of cards) {
     try {
       await capture(page, id, href)
       ok++

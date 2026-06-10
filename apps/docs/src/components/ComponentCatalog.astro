@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content'
+import a2uiPreviewMap from '../data/a2ui-preview-map.json'
 
 interface Props {
   /** Which set of components to list. */
@@ -9,6 +10,24 @@ interface Props {
 const { kind } = Astro.props
 
 type Entry = CollectionEntry<'docs'>
+
+// A2UI components render through the same MeldUI styling as their Vue counterparts, so an
+// a2ui Accordion looks identical to the Vue Accordion. Reuse the Vue (or charts) catalog's
+// preview image — keyed by a2ui slug → preview id in a2ui-preview-map.json (shared with the
+// capture script). Slugs with no look-alike (layout primitives like column/row/text, plus
+// date-time-input) fall back to their own a2ui capture.
+const a2uiToPreview: Record<string, string> = a2uiPreviewMap
+
+// Which preview image a catalog card should display. Defaults to the entry's own id; a2ui
+// entries borrow their Vue counterpart's image where one exists.
+function previewId(e: Entry): string {
+  const prefix = 'a2ui/components/'
+  if (e.id.startsWith(prefix)) {
+    const slug = e.id.slice(prefix.length)
+    return a2uiToPreview[slug] ?? e.id
+  }
+  return e.id
+}
 
 // Order of groups for the @meldui/vue catalog. Anything not listed is appended.
 const VUE_GROUP_ORDER = [
@@ -115,18 +134,20 @@ const total = entries.length
               data-desc={e.data.description.toLowerCase()}
               class="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/50 hover:bg-accent/20"
             >
-              <div class="p-4">
-                <div class="font-medium text-foreground group-hover:text-primary">
+              <div class="border-b border-border bg-muted/30 p-4">
+                <div class="truncate font-medium text-foreground group-hover:text-primary">
                   {e.data.title}
                 </div>
-                <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">{e.data.description}</p>
+                <p class="mt-1 line-clamp-2 min-h-10 text-sm leading-5 text-muted-foreground">
+                  {e.data.description}
+                </p>
               </div>
-              <div class="preview-img mt-auto flex aspect-[16/10] w-full items-center justify-center overflow-hidden border-t border-border bg-muted/30 p-4">
+              <div class="preview-img mt-auto flex h-44 w-full items-center justify-center overflow-hidden p-4">
                 <img
-                  src={`/previews/${e.id}.png`}
+                  src={`/previews/${previewId(e)}.png`}
                   alt={`${e.data.title} preview`}
                   loading="lazy"
-                  class="max-h-full max-w-full object-contain"
+                  class="!border-0 max-h-full max-w-full transition-transform duration-300 ease-out group-hover:scale-105"
                   onerror="this.remove();this.parentElement.classList.add('is-empty')"
                 />
               </div>
