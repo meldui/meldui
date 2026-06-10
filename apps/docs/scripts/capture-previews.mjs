@@ -1,9 +1,12 @@
 // Captures a static preview image for every component in the catalog. The component
 // list is derived from the local content collection (the same selection
 // ComponentCatalog.astro uses), then each component's doc page is visited and its first
-// rendered demo (the DemoBlock "Example" pane) is screenshotted into a uniform,
-// transparent frame. Output goes to public/previews/<id>.png, mirroring the route tree,
-// which is exactly what ComponentCatalog.astro references.
+// rendered demo (the DemoBlock "Example" pane) is shrunk to fit its content, centered, and
+// screenshotted as a transparent PNG. Output goes to public/previews/<id>.png, mirroring
+// the route tree, which is exactly what ComponentCatalog.astro references.
+//
+// This is a dev-only maintenance tool: it is not part of `dev`/`build` (those serve the
+// committed PNGs). Re-run it to refresh previews after a component's look changes.
 //
 // Source defaults to the deployed site (no local server needed); override with BASE_URL.
 //
@@ -29,10 +32,9 @@ const a2uiPreviewMap = JSON.parse(
 
 const BASE = (process.env.BASE_URL ?? 'https://meldui.dipayanb.com').replace(/\/$/, '')
 
-// Each component is captured at its tight bounding box at 1:1 (deviceScaleFactor 1), so a
-// PNG pixel == a CSS pixel. The card then displays it at natural size (capped), which keeps
-// text the same physical size across every card. Oversized components (charts/tables) hit
-// the card's cap and scale down; everything else shows true size.
+// Captured at 1:1 (deviceScaleFactor 1), so a PNG pixel == a CSS pixel. Combined with the
+// fit-content shrink below, every preview shows text at the same physical size, and the
+// card displays each image centered at its natural size (capped to the card width).
 const DSF = Number(process.env.CAP_DSF ?? 1)
 
 // Some catalog pages link to an overview that only shows code (no live demo). Point
@@ -40,6 +42,41 @@ const DSF = Number(process.env.CAP_DSF ?? 1)
 // captured image is still saved under the catalog id (key), so the card resolves it.
 const CAPTURE_OVERRIDES = {
   'data-table': '/docs/data-table/basic',
+}
+
+// Components whose demo is a fixed-width / multi-pane layout (resizable panels, a sidebar
+// shell, a scroll box, a dropzone, a carousel viewport). Shrinking these to fit-content
+// squishes the layout to its min-content, so capture them at their natural width instead —
+// like charts/data-table. (Content-sized components — accordion, card, inputs… — still get
+// the fit-content centering.)
+const NATURAL_WIDTH_IDS = new Set([
+  'components/resizable',
+  'components/sidebar',
+  'components/scroll-area',
+  'components/context-menu',
+  'components/carousel',
+  'components/aspect-ratio',
+  'components/command',
+  'components/card',
+  'composites/filters',
+  // Its own width is tight (max-w-max ~287px); fit-content instead exposes max-content,
+  // which includes the hidden w-[400px] dropdown panels and inflates it to ~480px (small
+  // font). Capturing natural keeps the font on par with breadcrumb.
+  'components/navigation-menu',
+])
+
+// Tall previews (a many-row table, a full document viewer, a filter/command/pagination demo
+// with sample content) get height-shrunk by the card's fixed-height image area, so they render
+// small with empty sides. Crop these to the card's landscape aspect (~CARD_ASPECT) so they
+// fill the card width and read larger. `anchor:'bottom'` keeps the meaningful part in frame —
+// e.g. the data-pagination toolbar sits below its sample article grid.
+const CARD_ASPECT = 2.4
+const CROP_LANDSCAPE = {
+  'data-table': {},
+  'document-viewer': {},
+  'composites/filters': {},
+  'components/command': {},
+  'components/data-pagination': { anchor: 'bottom' },
 }
 
 // Optional ONLY=id1,id2 to (re)capture just a subset.
@@ -105,6 +142,11 @@ async function collectComponents() {
 // `div.flex.min-h-[120px].items-center.justify-center`.
 const EXAMPLE_SEL = '[data-demo-example], [role="tabpanel"][data-state="active"] > div'
 
+// The example pane's direct children — the demo's own content, our tight capture target.
+const INNER_SEL = EXAMPLE_SEL.split(', ')
+  .map((s) => `${s} > *`)
+  .join(', ')
+
 async function capture(page, id, href) {
   const visit = CAPTURE_OVERRIDES[id] ?? href
   await page.goto(`${BASE}${visit}`, { waitUntil: 'load' })
@@ -133,13 +175,7 @@ async function capture(page, id, href) {
 
   // Shoot the demo's own content (tight bounding box) transparent, so the card can show it
   // at natural size. Fall back to the example pane if the inner content has no real size.
-  const inner = page
-    .locator(
-      `${EXAMPLE_SEL.split(', ')
-        .map((s) => `${s} > *`)
-        .join(', ')}`,
-    )
-    .first()
+  const inner = page.locator(INNER_SEL).first()
   const innerBox = await inner.boundingBox().catch(() => null)
   const el =
     innerBox && innerBox.width > 12 && innerBox.height > 12
@@ -150,10 +186,13 @@ async function capture(page, id, href) {
   // out wide with the content hugging the left — small and off-center once displayed. Shrink
   // the captured element to fit its content (capped) and center it, so previews read
   // consistently: content centered in the card, text at full size.
-  // Charts, the data-table grid, and document-viewer are wide, layout-driven previews that
-  // shouldn't be shrunk — capture them at natural width.
+  // Charts, the data-table grid, document-viewer, and the fixed-width layout components are
+  // wide, layout-driven previews that shouldn't be shrunk — capture them at natural width.
   const TRANSFORM =
-    !id.startsWith('charts/') && !id.startsWith('document-viewer') && id !== 'data-table'
+    !id.startsWith('charts/') &&
+    !id.startsWith('document-viewer') &&
+    id !== 'data-table' &&
+    !NATURAL_WIDTH_IDS.has(id)
   if (TRANSFORM) {
     await el.evaluate((node) => {
       node.style.width = 'fit-content'
@@ -172,7 +211,23 @@ async function capture(page, id, href) {
 
   const outPath = join(OUT_DIR, `${id}.png`)
   await mkdir(dirname(outPath), { recursive: true })
-  await el.screenshot({ path: outPath, omitBackground: true })
+
+  // Crop tall previews to a landscape slice (anchored top, or bottom for pagination) so they
+  // fill the card width instead of shrinking; everything else is captured at its full box.
+  const crop = CROP_LANDSCAPE[id]
+  const box = crop ? await el.boundingBox().catch(() => null) : null
+  if (crop && box) {
+    const h = Math.min(box.height, Math.round(box.width / CARD_ASPECT))
+    const y = crop.anchor === 'bottom' ? box.y + box.height - h : box.y
+    await page.screenshot({
+      path: outPath,
+      omitBackground: true,
+      fullPage: true,
+      clip: { x: box.x, y, width: box.width, height: h },
+    })
+  } else {
+    await el.screenshot({ path: outPath, omitBackground: true })
+  }
   return outPath
 }
 
