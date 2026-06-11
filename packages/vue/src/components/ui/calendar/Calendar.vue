@@ -82,7 +82,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
           {{ formatter.custom(toDate(date), { month: 'short' }) }}
         </div>
         <NativeSelect
-          class="text-xs h-8 pr-6 pl-2 text-transparent relative"
+          class="text-xs h-8 pr-6 pl-2 text-transparent relative [&_option]:text-foreground"
           @change="
             (e: Event) => {
               placeholder = placeholder.set({
@@ -111,7 +111,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
           {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
         </div>
         <NativeSelect
-          class="text-xs h-8 pr-6 pl-2 text-transparent relative"
+          class="text-xs h-8 pr-6 pl-2 text-transparent relative [&_option]:text-foreground"
           @change="
             (e: Event) => {
               placeholder = placeholder.set({

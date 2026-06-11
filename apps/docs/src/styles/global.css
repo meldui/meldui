@@ -92,19 +92,27 @@
     @apply border-l-4 border-primary/30 pl-4 italic text-muted-foreground my-4;
   }
 
-  table {
+  /* Direct-child / section scoping (like the headings above) so these do NOT
+     style the <table> that reka-ui's Calendar/RangeCalendar render inside
+     <astro-island> Vue demos — which otherwise inherit prose th/td borders and
+     backgrounds and render as boxed weekday headers with row dividers. */
+  > table,
+  > section table {
     @apply w-full border-collapse text-sm mb-6;
   }
 
-  th {
+  > table th,
+  > section table th {
     @apply text-left font-semibold text-foreground px-4 py-2 border-b-2 border-border bg-muted/50;
   }
 
-  td {
+  > table td,
+  > section table td {
     @apply px-4 py-2 border-b border-border text-foreground/90;
   }
 
-  tr:last-child td {
+  > table tr:last-child td,
+  > section table tr:last-child td {
     @apply border-b-0;
   }
 

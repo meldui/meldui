@@ -31,6 +31,7 @@ import { useSearch } from '@embedpdf/plugin-search/vue'
 import { useExportCapability } from '@embedpdf/plugin-export/vue'
 import { usePrint } from '@embedpdf/plugin-print/vue'
 import { useCommandsCapability } from '@embedpdf/plugin-commands/vue'
+import type { Command } from '@embedpdf/plugin-commands'
 import { useHistoryCapability } from '@embedpdf/plugin-history/vue'
 import {
   createRenderer,
@@ -526,12 +527,15 @@ function prevPage() {
   scroll.provides.value?.scrollToPreviousPage()
 }
 
-async function copySelection() {
-  // SelectionCapability is wrapped in a `CapabilityState<C>` ({ provides, isLoading, ready })
-  const cap = selectionCap.provides.value
-  if (!cap) return
-  const text = (cap as unknown as { getSelectedText?: () => string }).getSelectedText?.()
-  if (text) await navigator.clipboard.writeText(text)
+function copySelection() {
+  // Delegate to the selection plugin: `copyToClipboard()` runs the document's
+  // `CopyContents` permission check, reads the current selection, and emits an
+  // `onCopyToClipboard` event. The plugin's auto-mounted `CopyToClipboard`
+  // utility (registered via `.addUtility` on `SelectionPluginPackage`)
+  // subscribes to that event and performs the actual `navigator.clipboard`
+  // write — so we don't touch the clipboard ourselves. No-ops when nothing is
+  // selected.
+  selectionCap.provides.value?.forDocument(props.documentId).copyToClipboard()
 }
 
 // ──── Search ────
@@ -819,6 +823,66 @@ onBeforeUnmount(() => {
 // on `document.keydown`, normalises the event into the plugin's shortcut
 // format, and calls `execute()` for any matching registered command. No
 // custom binder needed here.
+
+// ──── Copy-on-Ctrl+C ────
+//
+// EmbedPDF's selection plugin ships the copy *mechanism* (the `copyToClipboard`
+// method + the auto-mounted clipboard-writer utility) but deliberately does NOT
+// bind a keyboard shortcut — the headless plugins leave the trigger to the
+// host. We bridge Ctrl+C / Cmd+C → `copySelection()` through the Commands
+// plugin, kept separate from `buildCommands` because the action is
+// controller-local and must be gated on live selection state.
+//
+// Why gate on selection: `<KeyboardShortcuts>` calls `preventDefault()` whenever
+// a registered shortcut matches. If `ctrl+c` were always registered the viewer
+// would swallow the host page's native copy even with no PDF selection. By
+// registering the command only while a selection exists, `getCommandByShortcut`
+// returns null otherwise and the keystroke passes straight through.
+const copyCommand: Command = {
+  id: 'selection.copy',
+  label: 'Copy',
+  shortcuts: ['ctrl+c', 'meta+c'],
+  action: () => copySelection(),
+}
+
+let copyCommandRegistered = false
+function syncCopyCommand(hasSelection: boolean) {
+  const cap = commandsCap.provides.value
+  if (!cap) return
+  const shouldRegister = hasSelection && props.keyboardShortcutsEnabled !== false
+  if (shouldRegister && !copyCommandRegistered) {
+    cap.registerCommand(copyCommand)
+    copyCommandRegistered = true
+  } else if (!shouldRegister && copyCommandRegistered) {
+    cap.unregisterCommand(copyCommand.id)
+    copyCommandRegistered = false
+  }
+}
+
+let unsubscribeSelectionChange: (() => void) | undefined
+watch(
+  [() => selectionCap.provides.value, () => props.keyboardShortcutsEnabled],
+  ([cap]) => {
+    unsubscribeSelectionChange?.()
+    syncCopyCommand(false) // reset on any dep change before re-subscribing
+    if (!cap) return
+    // Scope-level `onSelectionChange` yields `SelectionRangeX | null`
+    // (`null` = selection cleared), matching the `forDocument(...)` usage
+    // elsewhere in this controller.
+    unsubscribeSelectionChange = cap
+      .forDocument(props.documentId)
+      .onSelectionChange((sel) => syncCopyCommand(sel != null))
+  },
+  { immediate: true },
+)
+
+onBeforeUnmount(() => {
+  unsubscribeSelectionChange?.()
+  if (copyCommandRegistered) {
+    commandsCap.provides.value?.unregisterCommand(copyCommand.id)
+    copyCommandRegistered = false
+  }
+})
 
 defineExpose({
   // zoom
