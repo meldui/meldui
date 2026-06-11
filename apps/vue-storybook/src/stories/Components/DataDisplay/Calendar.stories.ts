@@ -16,6 +16,10 @@ const meta: Meta<typeof Calendar> = {
       },
     },
   },
+  // The calendar's grid is `w-full`, so on the full-width Storybook canvas it
+  // stretches. Constrain every story to fit-content (mirrors how the
+  // RangeCalendar stories wrap in `w-fit`) so it renders compact.
+  decorators: [() => ({ template: '<div class="w-fit"><story /></div>' })],
 }
 
 export default meta
