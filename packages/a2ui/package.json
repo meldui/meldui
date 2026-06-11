@@ -1,6 +1,6 @@
 {
   "name": "@meldui/a2ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MeldUI A2UI catalog — a portable, framework-agnostic catalog contract that lets any A2UI agent target MeldUI components",
   "keywords": [
     "a2ui",

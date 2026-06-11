@@ -1,5 +1,13 @@
 # @meldui/charts-vue
 
+## 0.3.4
+
+### Patch Changes
+
+- Release in step with @meldui/vue (no functional changes).
+- Updated dependencies
+  - @meldui/vue@0.3.4
+
 ## 0.3.3
 
 ### Patch Changes
