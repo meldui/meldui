@@ -1082,7 +1082,12 @@ The agent streams A2UI v0.9 messages. A minimal single-surface sequence is `crea
         { "id": "root", "component": "Card", "child": "col" },
         { "id": "col", "component": "Column", "children": ["t1", "t2"] },
         { "id": "t1", "component": "Text", "text": "Card title", "variant": "h4" },
-        { "id": "t2", "component": "Text", "text": "Card body content goes here.", "variant": "body" }
+        {
+          "id": "t2",
+          "component": "Text",
+          "text": "Card body content goes here.",
+          "variant": "body"
+        }
       ]
     }
   }
@@ -1117,11 +1122,31 @@ Inputs two-way bind to the surface's **data model** rather than to local compone
 
 ```json
 [
-  { "version": "v0.9", "createSurface": { "surfaceId": "main", "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json" } },
-  { "version": "v0.9", "updateDataModel": { "surfaceId": "main", "path": "/", "value": { "name": "Ada" } } },
-  { "version": "v0.9", "updateComponents": { "surfaceId": "main", "components": [
-    { "id": "root", "component": "TextField", "label": "Your name", "value": { "path": "/name" } }
-  ] } }
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "main",
+      "catalogId": "https://meldui.dipayanb.com/a2ui/v1/catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": { "surfaceId": "main", "path": "/", "value": { "name": "Ada" } }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "main",
+      "components": [
+        {
+          "id": "root",
+          "component": "TextField",
+          "label": "Your name",
+          "value": { "path": "/name" }
+        }
+      ]
+    }
+  }
 ]
 ```
 
