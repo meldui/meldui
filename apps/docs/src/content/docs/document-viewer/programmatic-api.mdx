@@ -180,25 +180,25 @@ Removes a reply. Emits `thread-update` with `action: 'reply-deleted'`.
 
 Every event is **notify-only**: the viewer always performs its built-in behavior (zoom, download, print, …) and then emits. There is no `preventDefault` — events are for analytics and side-effects, not for overriding behavior. To replace a behavior, hide the built-in button (`features` off or `toolbar.hide`) and drive your own logic via a `customButtons` entry or the ref API.
 
-| Event                    | Payload                              | When                                                       |
-| ------------------------ | ------------------------------------ | ---------------------------------------------------------- |
-| `document-loaded`        | `DocumentInfo`                       | First load completes                                       |
-| `document-error`         | `{ error: string }`                  | Load fails (404, decode error, etc.)                       |
-| `page-change`            | `{ page: number }`                   | Viewport-centered page changes (all document types)        |
-| `zoom-change`            | `{ scale: number }`                  | Zoom level changes (all document types)                    |
-| `rotation-change`        | `{ rotation: number }`               | Rotation changes                                           |
-| `view-mode-change`       | `{ viewMode: ViewMode }`             | Continuous ↔ spread toggled (PDF)                          |
-| `interaction-mode-change`| `{ mode: InteractionMode }`          | Text ↔ hand tool toggled (PDF)                             |
-| `fullscreen-change`      | `{ isFullscreen: boolean }`          | Entered/exited fullscreen (incl. ESC; all document types)  |
-| `panel-toggle`           | `{ panel, open }`                    | Outline / thumbnails / comments / search panel toggled     |
-| `download`               | _(none)_                             | Download invoked (after the built-in download runs)        |
-| `print`                  | _(none)_                             | Print invoked (after the built-in print runs)              |
-| `annotation-created`     | `{ annotation: Annotation }`         | New annotation committed (user-drawn or programmatic)      |
-| `annotation-updated`     | `{ annotation, patch }`              | Existing annotation patched                                |
-| `annotation-deleted`     | `{ annotationId: string }`           | Annotation removed                                         |
-| `annotation-selected`    | `{ annotation: Annotation \| null }` | Selection changed                                          |
-| `thread-update`          | `{ thread, action }`                 | Reply added/deleted, or thread resolved/unresolved         |
-| `thread-open-requested`  | `{ annotationId, source }`           | User clicked a pin / highlight tooltip (fires even when `commentThreads` is off — host your own panel) |
+| Event                     | Payload                              | When                                                                                                   |
+| ------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `document-loaded`         | `DocumentInfo`                       | First load completes                                                                                   |
+| `document-error`          | `{ error: string }`                  | Load fails (404, decode error, etc.)                                                                   |
+| `page-change`             | `{ page: number }`                   | Viewport-centered page changes (all document types)                                                    |
+| `zoom-change`             | `{ scale: number }`                  | Zoom level changes (all document types)                                                                |
+| `rotation-change`         | `{ rotation: number }`               | Rotation changes                                                                                       |
+| `view-mode-change`        | `{ viewMode: ViewMode }`             | Continuous ↔ spread toggled (PDF)                                                                      |
+| `interaction-mode-change` | `{ mode: InteractionMode }`          | Text ↔ hand tool toggled (PDF)                                                                         |
+| `fullscreen-change`       | `{ isFullscreen: boolean }`          | Entered/exited fullscreen (incl. ESC; all document types)                                              |
+| `panel-toggle`            | `{ panel, open }`                    | Outline / thumbnails / comments / search panel toggled                                                 |
+| `download`                | _(none)_                             | Download invoked (after the built-in download runs)                                                    |
+| `print`                   | _(none)_                             | Print invoked (after the built-in print runs)                                                          |
+| `annotation-created`      | `{ annotation: Annotation }`         | New annotation committed (user-drawn or programmatic)                                                  |
+| `annotation-updated`      | `{ annotation, patch }`              | Existing annotation patched                                                                            |
+| `annotation-deleted`      | `{ annotationId: string }`           | Annotation removed                                                                                     |
+| `annotation-selected`     | `{ annotation: Annotation \| null }` | Selection changed                                                                                      |
+| `thread-update`           | `{ thread, action }`                 | Reply added/deleted, or thread resolved/unresolved                                                     |
+| `thread-open-requested`   | `{ annotationId, source }`           | User clicked a pin / highlight tooltip (fires even when `commentThreads` is off — host your own panel) |
 
 ```vue
 <DocumentViewer

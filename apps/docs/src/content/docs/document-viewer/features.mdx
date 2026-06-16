@@ -50,17 +50,17 @@ The `features` prop is a flat object of flags merged over sensible defaults. Dis
 
 ### Export
 
-| Flag       | Default | What it enables                                                             |
-| ---------- | ------- | --------------------------------------------------------------------------- |
-| `print`    | `true`  | Print toolbar button (uses native browser print dialog)                     |
+| Flag       | Default | What it enables                                                                                                                                                               |
+| ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `print`    | `true`  | Print toolbar button (uses native browser print dialog)                                                                                                                       |
 | `download` | `true`  | Download button. PDFs use the Export plugin; image / text / markdown download straight from the source. Pass `downloadUrl` to serve a server-driven / re-encoded copy instead |
 
 ### Annotations (Phase 1)
 
-| Flag             | Default | What it enables                                                                               |
-| ---------------- | ------- | --------------------------------------------------------------------------------------------- |
-| `annotations`    | `false` | Highlight tool + sticky-note comment tool, plus full annotation CRUD via the programmatic API |
-| `commentThreads` | `false` | Threaded comments overlay (replies + resolved state). Requires `annotations`                  |
+| Flag             | Default | What it enables                                                                                                                                                 |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `annotations`    | `false` | Highlight tool + sticky-note comment tool, plus full annotation CRUD via the programmatic API                                                                   |
+| `commentThreads` | `false` | Threaded comments overlay (replies + resolved state). Requires `annotations`                                                                                    |
 | `undoRedo`       | `false` | Undo / redo via `Ctrl+Z` / `Ctrl+Shift+Z` and the programmatic API (`undo()`, `redo()`, `canUndo()`, `canRedo()`). There are no dedicated toolbar buttons today |
 
 ### Editing (Phase 2 — opt-in)

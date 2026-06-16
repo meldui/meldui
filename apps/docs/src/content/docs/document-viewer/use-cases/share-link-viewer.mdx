@@ -48,7 +48,7 @@ const features = computed(() => ({
 </template>
 ```
 
-> **Why fold permissions into `features`?** The viewer remounts per document anyway, so each document already gets a fresh plugin registration. A restricted feature simply isn't registered (smaller bundle, no dead button). If you instead want the capability to stay loaded but the button hidden — e.g. an admin who *could* download but you want the button gone in this view — use `toolbar.hide` or a `customButtons` replacement rather than turning off the feature.
+> **Why fold permissions into `features`?** The viewer remounts per document anyway, so each document already gets a fresh plugin registration. A restricted feature simply isn't registered (smaller bundle, no dead button). If you instead want the capability to stay loaded but the button hidden — e.g. an admin who _could_ download but you want the button gone in this view — use `toolbar.hide` or a `customButtons` replacement rather than turning off the feature.
 
 ## Pre-seeded read-only review
 

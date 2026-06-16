@@ -25,11 +25,11 @@ Either flag triggers registration of the export plugin (it serves both).
 
 The Download button is **always visible** when `features.download` is on, for **every** document type (PDF, image, text, markdown). What it actually downloads depends on whether `downloadUrl` is set and the document type, resolved in this order:
 
-| Condition | What downloads | How |
-| --- | --- | --- |
-| **`downloadUrl` set** (any type) | The URL you provide | Anchor download straight from `downloadUrl` — the live source is ignored. Use for a server-driven, re-encoded, or watermarked copy. |
-| **PDF**, no `downloadUrl` | A re-encoded copy of the open PDF, **annotations baked in** | EmbedPDF Export plugin (`useExportCapability().download()`) |
-| **Image / text / markdown**, no `downloadUrl` | The original source bytes | Built straight from the `source` prop (no plugin involved) |
+| Condition                                     | What downloads                                              | How                                                                                                                                 |
+| --------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **`downloadUrl` set** (any type)              | The URL you provide                                         | Anchor download straight from `downloadUrl` — the live source is ignored. Use for a server-driven, re-encoded, or watermarked copy. |
+| **PDF**, no `downloadUrl`                     | A re-encoded copy of the open PDF, **annotations baked in** | EmbedPDF Export plugin (`useExportCapability().download()`)                                                                         |
+| **Image / text / markdown**, no `downloadUrl` | The original source bytes                                   | Built straight from the `source` prop (no plugin involved)                                                                          |
 
 ### 1. With `downloadUrl` (any document type)
 
@@ -57,7 +57,7 @@ With no `downloadUrl`, PDFs go through the EmbedPDF Export plugin. The downloade
 <DocumentViewer :source="pdfUrl" :features="{ download: true }" />
 ```
 
-If you need the *pristine* original instead of a re-encoded copy, set `downloadUrl` to the source URL.
+If you need the _pristine_ original instead of a re-encoded copy, set `downloadUrl` to the source URL.
 
 ### 3. Non-PDF without `downloadUrl` (download from source)
 

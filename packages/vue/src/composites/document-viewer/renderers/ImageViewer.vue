@@ -64,7 +64,7 @@ function handleError() {
         :alt="alt"
         :style="{
           transform,
-          transformOrigin: 'top left',
+          transformOrigin: 'center',
           transition: 'transform 200ms ease-out',
         }"
         draggable="false"

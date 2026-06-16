@@ -14,14 +14,14 @@ The default `DocumentViewer` chrome is configured to work out of the box, but ev
 
 `DocumentViewer` is controlled through four distinct, composable inputs:
 
-| Lever | Prop | Controls | Bundle impact |
-| ----- | ---- | -------- | ------------- |
-| **Features** | `features` | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
-| **Feature config** | `featureConfig` | Tuning for an enabled feature (zoom min/max, highlight palette, …). | None |
-| **Toolbar** | `toolbar` (`ToolbarConfig`) | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons. | None |
-| **Slots + ref API** | `#search-content` / `#side-panels`; template ref | Replace chrome pieces; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …). | None |
+| Lever               | Prop                                             | Controls                                                                                                                     | Bundle impact                 |
+| ------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Features**        | `features`                                       | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
+| **Feature config**  | `featureConfig`                                  | Tuning for an enabled feature (zoom min/max, highlight palette, …).                                                          | None                          |
+| **Toolbar**         | `toolbar` (`ToolbarConfig`)                      | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons.                                | None                          |
+| **Slots + ref API** | `#search-content` / `#side-panels`; template ref | Replace chrome pieces; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …).                  | None                          |
 
-Built-in toolbar buttons are intentionally **coupled** to `features`: a flag that's off means the plugin isn't registered, so the button would be dead — it's hidden rather than shown inert. When you want a button **without** the built-in behavior (e.g. a custom Print routed to your own handler), turn the feature off and add a `customButtons` entry. `toolbar.groups`/`toolbar.hide` can only further *hide* built-in buttons, never re-show one for a disabled feature.
+Built-in toolbar buttons are intentionally **coupled** to `features`: a flag that's off means the plugin isn't registered, so the button would be dead — it's hidden rather than shown inert. When you want a button **without** the built-in behavior (e.g. a custom Print routed to your own handler), turn the feature off and add a `customButtons` entry. `toolbar.groups`/`toolbar.hide` can only further _hide_ built-in buttons, never re-show one for a disabled feature.
 
 For **per-document** capability/permission control, see [Per-document permissions](#per-document-permissions-keyed-remount) below — it rides on a per-document `features` object plus a `:key` remount.
 
