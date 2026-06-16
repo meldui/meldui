@@ -10,6 +10,21 @@ import ToolbarCustomDemo from '../../../demos/document-viewer/ToolbarCustomDemo.
 
 The default `DocumentViewer` chrome is configured to work out of the box, but every part of the toolbar and side-panel layout is replaceable.
 
+## The four control levers
+
+`DocumentViewer` is controlled through four distinct, composable inputs:
+
+| Lever | Prop | Controls | Bundle impact |
+| ----- | ---- | -------- | ------------- |
+| **Features** | `features` | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
+| **Feature config** | `featureConfig` | Tuning for an enabled feature (zoom min/max, highlight palette, …). | None |
+| **Toolbar** | `toolbar` (`ToolbarConfig`) | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons. | None |
+| **Slots + ref API** | `#search-content` / `#side-panels`; template ref | Replace chrome pieces; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …). | None |
+
+Built-in toolbar buttons are intentionally **coupled** to `features`: a flag that's off means the plugin isn't registered, so the button would be dead — it's hidden rather than shown inert. When you want a button **without** the built-in behavior (e.g. a custom Print routed to your own handler), turn the feature off and add a `customButtons` entry. `toolbar.groups`/`toolbar.hide` can only further *hide* built-in buttons, never re-show one for a disabled feature.
+
+For **per-document** capability/permission control, see [Per-document permissions](#per-document-permissions-keyed-remount) below — it rides on a per-document `features` object plus a `:key` remount.
+
 ## Toolbar customization
 
 Pass a `toolbar` prop typed as `ToolbarConfig`:
@@ -18,15 +33,23 @@ Pass a `toolbar` prop typed as `ToolbarConfig`:
 import type { ToolbarConfig } from '@meldui/vue'
 
 const toolbar: ToolbarConfig = {
-  groups: ['nav', 'zoom', 'tools', 'panels', 'export'],
-  hide: ['rotate', 'spread'],
+  // Restrict + reorder visible groups (omit `groups` entirely to show all, in
+  // canonical order). Valid groups: pageNav, zoom, rotate, viewMode,
+  // interactionMode, search, panels, annotate, stamp, sign, redact, actions.
+  groups: ['pageNav', 'zoom', 'search', 'panels', 'actions'],
+  // Hide individual built-in buttons by id (e.g. rotate-cw, rotate-ccw,
+  // view-mode, interaction-mode, thumbnails, outline, comments, download,
+  // print, fullscreen, zoom-in, zoom-out, zoom-preset, prev-page, next-page).
+  hide: ['rotate-cw', 'rotate-ccw'],
   customButtons: [
     {
       id: 'share',
       label: 'Share',
-      icon: 'IconShare',
-      position: 'export',
+      icon: 'Share', // Tabler icon name, WITHOUT the `Icon` prefix
+      group: 'actions',
       onClick: () => openShareDialog(),
+      // isActive?: () => boolean   // optional pressed state
+      // isDisabled?: () => boolean // optional disabled state
     },
   ],
 }
@@ -143,34 +166,48 @@ Override these in your global CSS or via Tailwind utilities. The `class` prop on
 <DocumentViewer class="rounded-xl border shadow-lg" source="/doc.pdf" wasm-url="/pdfium.wasm" />
 ```
 
-## Permissions
+## Per-document permissions (keyed remount)
 
-The `permissions` prop on `ViewerToolbar` (when composing your own layout) accepts a `ViewerPermissions` object that gates user-facing actions:
+There is **no separate `permissions` prop**. `DocumentViewer` does not watch `source`, and EmbedPDF freezes its plugin set at mount — so you load a different document by **remounting** the component with a new `:key`. Per-document capabilities and permissions therefore ride directly on the `features` object, recomputed on each remount.
 
-```ts
-interface ViewerPermissions {
-  canAnnotate?: boolean
-  canResolveThreads?: boolean
-  canDownload?: boolean
-  canPrint?: boolean
-  canSaveAsCopy?: boolean
-}
-```
-
-This is **separate** from `features` — `features` decides whether a plugin is registered at all (bundle impact); `permissions` decides whether the (already-registered) UI is shown to the current user.
-
-A read-only viewer for shared links:
+This is the model to use when a left-hand tree/list swaps documents into one viewer: bind `:key` to the document id and compute `features` (and `downloadUrl`) from that document's backend permissions.
 
 ```vue
-<DocumentViewer
-  :features="{ zoom: true, search: true, download: true, annotations: true, commentThreads: true }"
-  :permissions="{ canAnnotate: false, canResolveThreads: false, canDownload: false }"
-  ...
-/>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { DocumentViewer } from '@meldui/vue'
+
+const activeDoc = ref(docs[0]) // { id, url, can_download, can_print, downloadUrl? }
+
+// Capability + per-document permission collapse into one object. When the user
+// picks another document the :key changes, the viewer remounts, and these flags
+// (de)register the matching EmbedPDF plugins for the new document.
+const features = computed(() => ({
+  zoom: true,
+  search: true,
+  print: activeDoc.value.can_print,
+  download: activeDoc.value.can_download,
+  annotations: false,
+}))
+</script>
+
+<template>
+  <DocumentViewer
+    :key="activeDoc.id"
+    :source="activeDoc.url"
+    :download-url="activeDoc.downloadUrl /* server-driven / watermarked copy */"
+    :features="features"
+    wasm-url="/pdfium.wasm"
+  />
+</template>
 ```
+
+> **Why a `:key` is required.** Changing `:source` alone does **not** reload the document — there is no `watch(source)`, and a changed `features`/plugin list is ignored after EmbedPDF has mounted. The `:key` forces a fresh mount so the new document and its feature set both take effect.
+
+If you only need to hide a button for a user who still has the capability (rather than disable the whole feature), use `toolbar.hide` or a `customButtons` replacement instead of toggling `features`.
 
 ## See also
 
 - [Theming](/docs/document-viewer/theming) — Tailwind dark mode, MeldUI primitives, CSS variable overrides
 - [Use case: toolbar customization](/docs/document-viewer/use-cases/toolbar-customization)
-- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer) — read-only via `permissions`
+- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer) — read-only via per-document `features`

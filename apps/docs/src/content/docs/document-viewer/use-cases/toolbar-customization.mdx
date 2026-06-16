@@ -133,7 +133,7 @@ const toolbar = computed<ToolbarConfig>(() => ({
 }))
 ```
 
-This combines with `permissions` for finer access control — see [Share-link viewer](/docs/document-viewer/use-cases/share-link-viewer).
+For per-document access control, compute `features` (and `downloadUrl`) from the document's backend permissions and remount with `:key` — see [Share-link viewer](/docs/document-viewer/use-cases/share-link-viewer).
 
 ## See also
 

@@ -8,56 +8,57 @@ package: '@meldui/vue'
 
 import BasicPdfDemo from '../../../../demos/document-viewer/BasicPdfDemo.vue'
 
-When a document is shared via a public link, you typically want the recipient to be able to **read** but not **edit** — no annotation, no thread replies, no download. The `permissions` prop combined with the `features` flags lets you build this without forking the component.
+When a document is shared via a public link, you typically want the recipient to be able to **read** but not **edit** — no annotation, no thread replies, no download. You express this entirely through the `features` flags: a flag that's off does not register its plugin **and** hides its toolbar button.
+
+There is **no separate `permissions` prop.** Because `DocumentViewer` reloads a new document only on remount (it has no `watch(source)`, and EmbedPDF freezes its plugin set at mount), per-document permissions map cleanly onto a per-document `features` object — bind `:key` to the document/share id so each document mounts with its own flags. See [Per-document permissions](/docs/document-viewer/customization#per-document-permissions-keyed-remount) for the mechanics.
 
 ## Pattern
 
 ```vue
 <script setup lang="ts">
+import { computed } from 'vue'
 import { DocumentViewer } from '@meldui/vue'
-import type { ViewerPermissions } from '@meldui/vue'
 
+// Backend-supplied, per share link.
+const share = props.share // { id, url, can_download, can_print, downloadUrl? }
 const isAnonymousVisitor = !currentUser
-const permissions: ViewerPermissions = {
-  canAnnotate: !isAnonymousVisitor,
-  canResolveThreads: !isAnonymousVisitor,
-  canDownload: false,
-  canPrint: false,
-  canSaveAsCopy: false,
-}
+
+const features = computed(() => ({
+  zoom: true,
+  search: true,
+  outline: true,
+  thumbnails: true,
+  // Capability + permission collapse into one flag. Anonymous visitors get a
+  // read-only viewer; the annotation/comment plugins aren't even registered.
+  annotations: !isAnonymousVisitor,
+  commentThreads: !isAnonymousVisitor,
+  download: share.can_download,
+  print: share.can_print,
+}))
 </script>
 
 <template>
   <DocumentViewer
-    source="/shared-doc.pdf"
+    :key="share.id"
+    :source="share.url"
+    :download-url="share.downloadUrl /* server-driven / watermarked copy */"
     wasm-url="/pdfium.wasm"
-    :features="{
-      zoom: true,
-      search: true,
-      outline: true,
-      thumbnails: true,
-      annotations: true,
-      commentThreads: true,
-    }"
-    :permissions="permissions"
+    :features="features"
   />
 </template>
 ```
 
-## `features` vs. `permissions`
-
-- `features` decides whether the plugin is **registered** (bundle impact). Disabled features are tree-shaken.
-- `permissions` decides whether the **UI for an already-registered feature** is visible to the current user (no bundle impact, runtime-only).
-
-For a share-link viewer, you typically want all the features registered (so a logged-in user clicking the same link gets full functionality) but the UI gated by `permissions` for anonymous visitors.
+> **Why fold permissions into `features`?** The viewer remounts per document anyway, so each document already gets a fresh plugin registration. A restricted feature simply isn't registered (smaller bundle, no dead button). If you instead want the capability to stay loaded but the button hidden — e.g. an admin who *could* download but you want the button gone in this view — use `toolbar.hide` or a `customButtons` replacement rather than turning off the feature.
 
 ## Pre-seeded read-only review
 
-A common share-link pattern: an editor publishes a reviewed document and shares a link. The recipient sees the highlights and threaded comments but can't add their own.
+A common share-link pattern: an editor publishes a reviewed document and shares a link. The recipient sees the highlights and threaded comments but can't add their own. Keep `annotations`/`commentThreads` registered (so the seeded data renders) and gate authoring through the toolbar.
 
 ```vue
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+
+const viewer = ref()
 
 onMounted(async () => {
   const { annotations, threads } = await fetch(`/shared/${shareToken}`).then((r) => r.json())
@@ -69,30 +70,27 @@ onMounted(async () => {
 <template>
   <DocumentViewer
     ref="viewer"
+    :key="shareToken"
     :source="docUrl"
     wasm-url="/pdfium.wasm"
     :features="{ annotations: true, commentThreads: true, zoom: true }"
-    :permissions="{ canAnnotate: false, canResolveThreads: false }"
+    :toolbar="{ groups: ['pageNav', 'zoom', 'panels'] }"
   />
 </template>
 ```
 
+Restricting `toolbar.groups` to read/navigate groups (omitting `annotate`) means the seeded highlights/threads display in the side panel but the highlight/comment **tools** never appear — a read-only review view.
+
 ## Embedding in another page
 
-For embedding the viewer in a 3rd-party page (iframe, embedded widget), set a fixed size and disable everything except viewing:
+For embedding the viewer in a 3rd-party page (iframe, embedded widget), set a fixed size and register only what's needed for viewing:
 
 ```vue
 <DocumentViewer
+  :key="docId"
   :source="docUrl"
   wasm-url="/pdfium.wasm"
   :features="{ zoom: true, search: true }"
-  :permissions="{
-    canAnnotate: false,
-    canResolveThreads: false,
-    canDownload: false,
-    canPrint: false,
-    canSaveAsCopy: false,
-  }"
   class="h-[600px] w-full"
 />
 ```
@@ -113,5 +111,5 @@ The viewport renders without any toolbar. Users still get keyboard shortcuts if 
 
 ## See also
 
-- [Customization → Permissions](/docs/document-viewer/customization#permissions)
+- [Per-document permissions (keyed remount)](/docs/document-viewer/customization#per-document-permissions-keyed-remount)
 - [Features](/docs/document-viewer/features) — flag table
