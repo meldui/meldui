@@ -137,9 +137,7 @@ const emit = defineEmits<{
 const isPdfType = computed(() => props.documentType === 'pdf')
 // Rotation is meaningful for PDFs and images (ImageViewer applies a CSS
 // `rotate()` transform). Text/markdown renderers don't take a rotation prop.
-const canRotate = computed(
-  () => props.documentType === 'pdf' || props.documentType === 'image',
-)
+const canRotate = computed(() => props.documentType === 'pdf' || props.documentType === 'image')
 const isSearchableType = computed(
   () =>
     props.documentType === 'pdf' ||
