@@ -32,6 +32,7 @@ import { detectDocumentType } from './utils/documentType'
 import { pageClickToPdfCoord } from './utils/pageCoords'
 import type { CommandCallbacks } from './composables/useCommands'
 import { useTouch } from './composables/useTouch'
+import { useContentProtection } from './composables/useContentProtection'
 import { useAnnotationThreads } from './composables/useAnnotationThreads'
 import { printImage, printText, resolveSourceToText } from './composables/usePrint'
 import { sourceToUrl } from './utils/documentType'
@@ -917,6 +918,10 @@ useTouch(
   },
 )
 
+// Client-side capture deterrents (opt-in, casual deterrent only — see
+// `useContentProtection` for the honest caveats).
+const { isObscured } = useContentProtection(rootEl, () => resolvedFeatures.value.contentProtection)
+
 // ─────────────────────────────────────────────────────────────────────────
 // Programmatic API — full implementation
 // ─────────────────────────────────────────────────────────────────────────
@@ -1056,9 +1061,21 @@ defineExpose<DocumentViewerInstance>({
 <template>
   <div
     ref="rootEl"
-    :class="cn('document-viewer flex h-full flex-col bg-background text-foreground', props.class)"
+    :class="
+      cn('document-viewer relative flex h-full flex-col bg-background text-foreground', props.class)
+    "
     data-document-viewer
   >
+    <!-- Content-protection overlay: obscures the document on blur / tab-hide /
+         PrintScreen. Sits above the toolbar (z-30). Deterrent only. -->
+    <div
+      v-if="isObscured"
+      class="absolute inset-0 z-50 flex select-none items-center justify-center bg-background/95 text-sm font-medium text-muted-foreground backdrop-blur-md"
+      data-content-protection-overlay
+    >
+      Protected content
+    </div>
+
     <ViewerToolbar
       :features="resolvedFeatures"
       :document-type="documentType"

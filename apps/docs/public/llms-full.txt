@@ -155,6 +155,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Document Viewer](/docs/document-viewer): A Vue composite for viewing and annotating PDF, image, text, and markdown documents.
 - [Document Viewer: Annotations](/docs/document-viewer/annotations): The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
 - [Document Viewer: Bundle & Performance](/docs/document-viewer/bundle-and-perf): Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
+- [Document Viewer: Content Protection](/docs/document-viewer/content-protection): The contentProtection flag — a set of client-side capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
 - [Document Viewer: Customization](/docs/document-viewer/customization): Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
 - [Document Viewer: Features](/docs/document-viewer/features): Every capability flag on the features prop, plus per-feature configuration shapes.
 - [Document Viewer: Getting Started](/docs/document-viewer/getting-started): Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
@@ -6186,10 +6187,7 @@ All three emit `thread-update` with `{ thread, action }` so you can persist:
 Set `currentUser` so replies are attributed correctly:
 
 ```vue
-<DocumentViewer
-  :current-user="{ id: 'u-42', name: 'Alex Chen', avatarUrl: '/me.png' }"
-  ...
-/>
+<DocumentViewer :current-user="{ id: 'u-42', name: 'Alex Chen', avatarUrl: '/me.png' }" ... />
 ```
 
 `currentUser.name` flows through to reply authorship (`CommentReply.authorName`) and to the `author` field on comment annotations the user creates, so new replies and comments carry the correct display name.
@@ -6260,35 +6258,35 @@ The minimum required set is always registered (zero opt-in needed):
 
 These plugins are registered unconditionally; the listed `features` flag toggles the corresponding toolbar / overlay, not whether the package ships:
 
-| Plugin package                                | Toolbar/UX gated by               |
-| --------------------------------------------- | --------------------------------- |
-| `@embedpdf/plugin-zoom`                       | `features.zoom`                   |
-| `@embedpdf/plugin-rotate`                     | `features.rotate`                 |
-| `@embedpdf/plugin-spread`                     | `features.spread`                 |
-| `@embedpdf/plugin-pan`                        | `features.pan`                    |
-| `@embedpdf/plugin-fullscreen`                 | `features.fullscreen`             |
-| `@embedpdf/plugin-interaction-manager`        | (always; bridges pointer events) |
-| `@embedpdf/plugin-selection`                  | `features.selection`              |
-| `@embedpdf/plugin-search`                     | `features.search`                 |
-| `@embedpdf/plugin-bookmark`                   | `features.outline`                |
-| `@embedpdf/plugin-thumbnail`                  | `features.thumbnails`             |
-| `@embedpdf/plugin-export`                     | `features.download` + `saveAsCopy()` |
-| `@embedpdf/plugin-print`                      | `features.print`                  |
-| `@embedpdf/plugin-commands`                   | `features.keyboardShortcuts`     |
-| `@embedpdf/plugin-history`                    | `features.undoRedo`              |
-| `@embedpdf/plugin-annotation`                 | `features.annotations`            |
+| Plugin package                         | Toolbar/UX gated by                  |
+| -------------------------------------- | ------------------------------------ |
+| `@embedpdf/plugin-zoom`                | `features.zoom`                      |
+| `@embedpdf/plugin-rotate`              | `features.rotate`                    |
+| `@embedpdf/plugin-spread`              | `features.spread`                    |
+| `@embedpdf/plugin-pan`                 | `features.pan`                       |
+| `@embedpdf/plugin-fullscreen`          | `features.fullscreen`                |
+| `@embedpdf/plugin-interaction-manager` | (always; bridges pointer events)     |
+| `@embedpdf/plugin-selection`           | `features.selection`                 |
+| `@embedpdf/plugin-search`              | `features.search`                    |
+| `@embedpdf/plugin-bookmark`            | `features.outline`                   |
+| `@embedpdf/plugin-thumbnail`           | `features.thumbnails`                |
+| `@embedpdf/plugin-export`              | `features.download` + `saveAsCopy()` |
+| `@embedpdf/plugin-print`               | `features.print`                     |
+| `@embedpdf/plugin-commands`            | `features.keyboardShortcuts`         |
+| `@embedpdf/plugin-history`             | `features.undoRedo`                  |
+| `@embedpdf/plugin-annotation`          | `features.annotations`               |
 
 `commentThreads` adds **no plugin** — it's a pure overlay keyed by annotation id and requires `features.annotations`. `touchGestures` is also plugin-free (pure DOM listeners).
 
 ### Phase 2 — conditionally registered (tree-shaken when off)
 
-| Feature flag            | Plugin package                  |
-| ----------------------- | ------------------------------- |
-| `stamps`                | `@embedpdf/plugin-stamp`        |
-| `signature`             | `@embedpdf/plugin-signature`    |
-| `redaction`             | `@embedpdf/plugin-redaction`    |
-| `forms`                 | `@embedpdf/plugin-form`         |
-| `attachments`           | `@embedpdf/plugin-attachment`   |
+| Feature flag  | Plugin package                |
+| ------------- | ----------------------------- |
+| `stamps`      | `@embedpdf/plugin-stamp`      |
+| `signature`   | `@embedpdf/plugin-signature`  |
+| `redaction`   | `@embedpdf/plugin-redaction`  |
+| `forms`       | `@embedpdf/plugin-form`       |
+| `attachments` | `@embedpdf/plugin-attachment` |
 
 See [Getting Started → Install](/docs/document-viewer/getting-started#install) for the install set.
 
@@ -6378,6 +6376,75 @@ All Phase 1 plugin chunks ship regardless of `features` flags (the flags gate UI
 
 ---
 
+## Document Viewer: Content Protection
+
+The contentProtection flag — a set of client-side capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
+
+`contentProtection` is an opt-in flag that applies a small bundle of **client-side capture deterrents** to the viewer, aimed at discouraging a casual reader from grabbing or exfiltrating a confidential document.
+
+```vue
+<DocumentViewer
+  source="/confidential.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ contentProtection: true }"
+/>
+```
+
+It defaults to `false`, so existing viewers are unaffected.
+
+## Read this first — what "protection" can and can't mean
+
+> **This is a deterrent, not a guarantee.** No web page can stop a determined viewer from capturing what's on their own screen. Everything `contentProtection` does runs in the page's JavaScript and is **trivially removable** — a viewer can open browser DevTools, disable JavaScript, or delete the overlay node and it's all gone. Treat it as friction against casual capture, never as a security control for truly sensitive material.
+
+Specifically, `contentProtection` **does not** stop:
+
+- **OS screenshots** — macOS `Cmd+Shift+3/4`, Windows `Win+Shift+S` snipping, etc. These write to disk without notifying the page.
+- **Screen recorders** — OBS, QuickTime, Loom, the OS recorder, or a screen-share in a meeting.
+- **A phone photo** of the monitor.
+- **A technical user** with DevTools.
+
+The only browser technology that genuinely makes captures come out black is **DRM-protected media** (EME + Widevine / PlayReady / FairPlay with HDCP), which applies to `<video>`/`<audio>` streams — not arbitrary PDF / canvas / DOM content. That is out of scope for this component. If you have a hard "the viewer must not be able to screenshot this" requirement, a document viewer in a browser is the wrong delivery mechanism.
+
+## What it actually does
+
+When `contentProtection` is `true`, four deterrents are applied at the viewer root (so they cover PDF, image, text, and markdown sources alike):
+
+| Deterrent                | Behaviour                                                                                                                | Honest note                                                                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Obscure on leave**     | When the window loses focus or the tab is hidden, the document is covered by a "Protected content" overlay; it clears when focus returns | The closest thing to screen-record / snipping-tool deterrence. Expect **false positives** — a notification, an alt-tab, or opening DevTools also triggers it |
+| **PrintScreen deterrent**| On the `PrintScreen` key, the clipboard is best-effort cleared and the overlay shows briefly                              | **Windows / Chromium only** — macOS has no PrintScreen key and `Win+Shift+S` often doesn't emit one. It also **wipes whatever the user had on their clipboard** |
+| **Block context menu**   | Right-click is suppressed on the viewer                                                                                   | Stops the casual "Save image as…" / "Copy image". Not screenshot-related                                                                     |
+| **Block drag-out**       | Dragging images or text out of the viewer is cancelled                                                                    | Stops drag-to-desktop / drag-into-another-app exfiltration                                                                                   |
+
+The overlay sits above the toolbar and also covers the viewer in fullscreen.
+
+## It does not touch copy, print, or download
+
+`contentProtection` deliberately leaves text **copy/selection**, **printing**, and **downloading** alone — those already have their own flags, and bundling them here would hide that control. To lock them down, set the existing flags:
+
+```vue
+<DocumentViewer
+  source="/confidential.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    contentProtection: true,
+    selection: false,  // no text selection / copy
+    print: false,      // no Print button / native print path
+    download: false,   // no Download button
+  }"
+/>
+```
+
+See [Features](/docs/document-viewer/features) for those flags.
+
+## Notes
+
+- **Runtime-toggleable.** Unlike most feature flags, `contentProtection` is read live — flipping it on or off on a mounted viewer takes effect without a `:key` remount.
+- **Programmatic API is not gated.** The `DocumentViewerInstance` methods (annotation CRUD, `saveAsCopy`, etc.) are unaffected; this flag only changes in-page interaction behaviour.
+- **No configuration object.** It's a single boolean by design. If you need to tune individual deterrents or the overlay copy, open an issue.
+
+---
+
 ## Document Viewer: Customization
 
 Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
@@ -6388,12 +6455,12 @@ The default `DocumentViewer` chrome is configured to work out of the box, but ev
 
 `DocumentViewer` is controlled through four distinct, composable inputs:
 
-| Lever               | Prop                                             | Controls                                                                                                                     | Bundle impact                 |
-| ------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| **Features**        | `features`                                       | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
-| **Feature config**  | `featureConfig`                                  | Tuning for an enabled feature (zoom min/max, highlight palette, …).                                                          | None                          |
-| **Toolbar**         | `toolbar` (`ToolbarConfig`)                      | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons.                                | None                          |
-| **Slots + ref API** | `#side-panels`; template ref                     | Inject extra side panels; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …).               | None                          |
+| Lever               | Prop                         | Controls                                                                                                                     | Bundle impact                 |
+| ------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Features**        | `features`                   | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
+| **Feature config**  | `featureConfig`              | Tuning for an enabled feature (zoom min/max, highlight palette, …).                                                          | None                          |
+| **Toolbar**         | `toolbar` (`ToolbarConfig`)  | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons.                                | None                          |
+| **Slots + ref API** | `#side-panels`; template ref | Inject extra side panels; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …).               | None                          |
 
 Built-in toolbar buttons are intentionally **coupled** to `features`: a flag that's off means the plugin isn't registered, so the button would be dead — it's hidden rather than shown inert. When you want a button **without** the built-in behavior (e.g. a custom Print routed to your own handler), turn the feature off and add a `customButtons` entry. `toolbar.groups`/`toolbar.hide` can only further _hide_ built-in buttons, never re-show one for a disabled feature.
 
@@ -6438,7 +6505,20 @@ const toolbar: ToolbarConfig = {
 Reorders or restricts the toolbar groups. The canonical order (used when `groups` is omitted) is:
 
 ```ts
-;['pageNav', 'zoom', 'rotate', 'viewMode', 'interactionMode', 'search', 'panels', 'annotate', 'stamp', 'sign', 'redact', 'actions']
+;[
+  'pageNav',
+  'zoom',
+  'rotate',
+  'viewMode',
+  'interactionMode',
+  'search',
+  'panels',
+  'annotate',
+  'stamp',
+  'sign',
+  'redact',
+  'actions',
+]
 ```
 
 Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order. A group only renders if its underlying feature is enabled — listing `annotate` does nothing unless `features.annotations` is on.
@@ -6500,7 +6580,7 @@ const sidePanelOpen = ref(false)
 `<DocumentViewer>` exposes a single slot:
 
 | Slot          | Purpose                                                                                              |
-| ------------- | --------------------------------------------------------------------------------------------------- |
+| ------------- | ---------------------------------------------------------------------------------------------------- |
 | `side-panels` | Inject extra `ViewerSidePanel` panels next to the built-in outline / thumbnails / annotations panels |
 
 ## Replacing format renderers
@@ -6564,16 +6644,16 @@ const viewerKey = computed(() => JSON.stringify(features))
 
 ### Which inputs need a `:key`
 
-| Input                                       | Behavior                                                       | Needs `:key`? |
-| ------------------------------------------- | ------------------------------------------------------------- | ------------- |
-| `features`                                  | Mount-only — plugin batch registered once                     | ✅ yes        |
-| `featureConfig` (plugin-affecting parts)    | Mount-only — feeds the plugin registration                    | ✅ yes        |
-| `source` (same type) / `mimeType`           | Mount-only — the document is loaded at init                   | ✅ yes        |
-| `wasmUrl` / `worker`                        | Read once when the PDFium engine is created                   | ✅ yes        |
-| `toolbar`                                   | Reactive — the toolbar reads its config live                  | ❌ no         |
-| `downloadUrl`                               | Reactive — read at download time                              | ❌ no         |
-| document **type** switch (pdf↔image↔text↔md) | Already swaps the renderer internally                         | ❌ no         |
-| `initialAnnotations` / `initialThreads`     | Applied by internal watchers                                  | ❌ no         |
+| Input                                        | Behavior                                     | Needs `:key`? |
+| -------------------------------------------- | -------------------------------------------- | ------------- |
+| `features`                                   | Mount-only — plugin batch registered once    | ✅ yes        |
+| `featureConfig` (plugin-affecting parts)     | Mount-only — feeds the plugin registration   | ✅ yes        |
+| `source` (same type) / `mimeType`            | Mount-only — the document is loaded at init  | ✅ yes        |
+| `wasmUrl` / `worker`                         | Read once when the PDFium engine is created  | ✅ yes        |
+| `toolbar`                                    | Reactive — the toolbar reads its config live | ❌ no         |
+| `downloadUrl`                                | Reactive — read at download time             | ❌ no         |
+| document **type** switch (pdf↔image↔text↔md) | Already swaps the renderer internally        | ❌ no         |
+| `initialAnnotations` / `initialThreads`      | Applied by internal watchers                 | ❌ no         |
 
 > **A remount resets in-viewer state** — scroll position, current page, and zoom return to `initialPage` / `initialScale`, and any un-persisted in-session annotation edits are lost (persisted ones re-seed from `initialAnnotations`). Key **only** on inputs that genuinely require it, so toolbar tweaks, download-URL swaps, and annotation updates don't trigger needless remounts.
 
@@ -6703,6 +6783,14 @@ The `features` prop is a flat object of flags merged over sensible defaults. Dis
 | `keyboardShortcuts` | `true`  | Arrow keys (page nav), `+` / `-` (zoom), `R` (rotate), `Ctrl+F` (search), `F11` (fullscreen), `Esc` (close popovers), `C` / `O` / `T` (toggle comment / outline / thumbnails panel) |
 | `touchGestures`     | `true`  | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`)                                                                                                         |
 
+### Content protection
+
+| Flag                | Default | What it enables                                                                                                                                               |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `contentProtection` | `false` | Client-side capture **deterrents**: obscure-on-blur/tab-hide, best-effort PrintScreen clipboard clobber, and right-click / drag-out blocking. **Not** a guarantee — see [Content Protection](/docs/document-viewer/content-protection) for the full behaviour list and its limits |
+
+> **`contentProtection` is a deterrent, not a guarantee, and it does not block copy / print / download.** It deters casual capture only and is removable via browser DevTools. To actually prevent copying, printing, or downloading, turn off `selection`, `print`, and `download` respectively. Full details and caveats live on the [Content Protection](/docs/document-viewer/content-protection) page.
+
 ## Per-feature configuration: `featureConfig`
 
 `featureConfig` is keyed by feature name and lets you tune a plugin's behaviour without re-implementing it.
@@ -6720,20 +6808,20 @@ const featureConfig: FeatureConfig = {
 
 ### `zoom`
 
-| Option        | Type                                         | Default          | Notes                                                                 |
-| ------------- | -------------------------------------------- | ---------------- | --------------------------------------------------------------------- |
-| `min`         | `number`                                     | `0.25`           | Minimum scale factor (the zoom plugin's default when omitted)          |
-| `max`         | `number`                                     | `10`             | Maximum scale factor (the zoom plugin's default when omitted)          |
-| `step`        | `number`                                     | —                | Declared on the type but **not currently applied** — zoom-in/out use the plugin's built-in step |
-| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual-size'` | `'fit-width'`    | Initial zoom preset                                                   |
+| Option        | Type                                         | Default       | Notes                                                                                           |
+| ------------- | -------------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------- |
+| `min`         | `number`                                     | `0.25`        | Minimum scale factor (the zoom plugin's default when omitted)                                   |
+| `max`         | `number`                                     | `10`          | Maximum scale factor (the zoom plugin's default when omitted)                                   |
+| `step`        | `number`                                     | —             | Declared on the type but **not currently applied** — zoom-in/out use the plugin's built-in step |
+| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual-size'` | `'fit-width'` | Initial zoom preset                                                                             |
 
 ### `annotations`
 
-| Option              | Type                     | Default                                                              | Notes                                                                                                                                                                               |
-| ------------------- | ------------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `author`            | `string`                 | `undefined`                                                          | Attached to created annotations as the author. No automatic fallback to `currentUser` — pass it explicitly if you want authored annotations                                         |
-| `useAnnotationMode` | `boolean`                | `false`                                                              | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately                                                                             |
-| `defaultTools`      | `AnnotationToolConfig[]` | —                                                                   | Declared on the type but **not currently applied** — the highlight palette is fixed to `HIGHLIGHT_COLORS`. See the [Highlight colour palette](#highlight-colour-palette) section below |
+| Option              | Type                     | Default     | Notes                                                                                                                                                                                  |
+| ------------------- | ------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `author`            | `string`                 | `undefined` | Attached to created annotations as the author. No automatic fallback to `currentUser` — pass it explicitly if you want authored annotations                                            |
+| `useAnnotationMode` | `boolean`                | `false`     | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately                                                                                |
+| `defaultTools`      | `AnnotationToolConfig[]` | —           | Declared on the type but **not currently applied** — the highlight palette is fixed to `HIGHLIGHT_COLORS`. See the [Highlight colour palette](#highlight-colour-palette) section below |
 
 > **Phase 2 config (`stamps` / `signature` / `redaction`) is plumbed to the plugin but not yet driven by any UI/API.** These shapes pass through to `createPluginRegistration` so they're ready for when the editing UI lands; they have no visible effect today.
 
@@ -7332,13 +7420,13 @@ The viewer chrome adapts to dark mode via `dark:` Tailwind classes on every inte
 
 Every UI element inside `DocumentViewer` is composed from MeldUI primitives so styling overrides naturally inherit. The internals use:
 
-| Primitive      | Used by                                                          |
-| -------------- | --------------------------------------------------------------- |
+| Primitive      | Used by                                                                                    |
+| -------------- | ------------------------------------------------------------------------------------------ |
 | `Button`       | Every toolbar button, search case / whole-word toggles, comment form actions, reply submit |
-| `Popover`      | Search popover                                                  |
-| `DropdownMenu` | Zoom presets, mobile overflow menu                             |
-| `Tooltip`      | Highlight tooltip wrapper, button hover labels                 |
-| `Textarea`     | Reply form (the comment-create form uses a raw `<textarea>`)   |
+| `Popover`      | Search popover                                                                             |
+| `DropdownMenu` | Zoom presets, mobile overflow menu                                                         |
+| `Tooltip`      | Highlight tooltip wrapper, button hover labels                                             |
+| `Textarea`     | Reply form (the comment-create form uses a raw `<textarea>`)                               |
 
 Override the variants via your Tailwind theme — see [Theming guide (Getting Started)](/docs/getting-started/theming).
 
@@ -8358,22 +8446,22 @@ The **Hotkeys** plugin wires keyboard shortcuts that mirror desktop PDF reader c
 
 ## Bindings
 
-| Shortcut                            | Action                              |
-| ----------------------------------- | ----------------------------------- |
-| `←` / `→`                                          | Previous / next page                |
-| `Home` / `End`                                     | First / last page                   |
-| `+` / `=` / `-` / `_`                              | Zoom in / out                       |
-| `0`                                                | Reset zoom (fit page)               |
-| `R`                                                | Rotate CW                           |
-| `Shift + R`                                        | Rotate CCW                          |
-| `Ctrl/Cmd + F`                                     | Open search popover                 |
-| `Esc`                                              | Close search / panel / popover      |
-| `F11`                                              | Toggle fullscreen                   |
-| `Ctrl/Cmd + Z`                                     | Undo (requires `features.undoRedo`) |
-| `Ctrl/Cmd + Shift + Z` / `Ctrl/Cmd + Y`           | Redo                                |
-| `C`                                                | Toggle comments panel               |
-| `O`                                                | Toggle outline panel                |
-| `T`                                                | Toggle thumbnails panel             |
+| Shortcut                                | Action                              |
+| --------------------------------------- | ----------------------------------- |
+| `←` / `→`                               | Previous / next page                |
+| `Home` / `End`                          | First / last page                   |
+| `+` / `=` / `-` / `_`                   | Zoom in / out                       |
+| `0`                                     | Reset zoom (fit page)               |
+| `R`                                     | Rotate CW                           |
+| `Shift + R`                             | Rotate CCW                          |
+| `Ctrl/Cmd + F`                          | Open search popover                 |
+| `Esc`                                   | Close search / panel / popover      |
+| `F11`                                   | Toggle fullscreen                   |
+| `Ctrl/Cmd + Z`                          | Undo (requires `features.undoRedo`) |
+| `Ctrl/Cmd + Shift + Z` / `Ctrl/Cmd + Y` | Redo                                |
+| `C`                                     | Toggle comments panel               |
+| `O`                                     | Toggle outline panel                |
+| `T`                                     | Toggle thumbnails panel             |
 
 Bindings only fire when the focus is inside the viewer (so they don't fight with the host app's shortcuts).
 
@@ -8593,9 +8681,9 @@ The Rotate plugin is **always registered** — `useRotate` is always available. 
 The imperative methods live on `provides.value`:
 
 ```ts
-provides.value?.rotateForward()       // clockwise
-provides.value?.rotateBackward()      // counter-clockwise
-provides.value?.setRotation(1)        // 0 | 1 | 2 | 3
+provides.value?.rotateForward() // clockwise
+provides.value?.rotateBackward() // counter-clockwise
+provides.value?.setRotation(1) // 0 | 1 | 2 | 3
 ```
 
 ## Events
@@ -9017,7 +9105,7 @@ The Zoom plugin is **always registered** — `useZoom` and the zoom buttons are 
 The imperative methods live on `provides.value`:
 
 ```ts
-provides.value?.requestZoom(0.75)        // explicit scale or a ZoomMode
+provides.value?.requestZoom(0.75) // explicit scale or a ZoomMode
 provides.value?.zoomIn()
 provides.value?.zoomOut()
 ```

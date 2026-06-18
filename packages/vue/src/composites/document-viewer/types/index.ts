@@ -114,6 +114,20 @@ export interface ViewerFeatures {
   keyboardShortcuts?: boolean
   /** Touch gestures (swipe page-nav, double-tap zoom). */
   touchGestures?: boolean
+
+  // Content protection
+  /**
+   * Client-side capture deterrents against a casual viewer: obscures the
+   * document on window blur / tab-hide, best-effort clears the clipboard on
+   * the PrintScreen key, and blocks the right-click menu and drag-out.
+   *
+   * IMPORTANT: this is a deterrent, NOT a guarantee. Every behaviour is
+   * removable via browser DevTools / by disabling JavaScript, and it does
+   * NOT stop OS screenshots (e.g. macOS Cmd+Shift+4), screen recorders, or a
+   * phone photo of the screen. It also does not block copy, print, or
+   * download — use `selection`, `print`, and `download` for those.
+   */
+  contentProtection?: boolean
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
