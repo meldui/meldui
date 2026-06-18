@@ -6,12 +6,11 @@ import type { ViewerFeatures } from '@meldui/vue'
 
 const SAMPLE_PDF = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
 
-// `contentProtection` is read live (unlike plugin-gating flags), so toggling it
-// takes effect without a `:key` remount. `selection` / `print` / `download` ARE
-// mount-only — but here we keep them fixed and only toggle contentProtection so
-// the demo needs no remount.
+// `screenshotProtection` is additive and read live, so toggling it takes effect
+// without a `:key` remount. It does NOT change `selection` / `print` /
+// `download` — those are set independently here to also block copy/print.
 const features = reactive<ViewerFeatures>({
-  contentProtection: true,
+  screenshotProtection: true,
   selection: false,
   print: false,
   download: false,
@@ -22,8 +21,8 @@ import { reactive } from 'vue'
 import { DocumentViewer, type ViewerFeatures } from '@meldui/vue'
 
 const features = reactive<ViewerFeatures>({
-  contentProtection: true,
-  // contentProtection does NOT block these — lock them down yourself:
+  screenshotProtection: true,
+  // screenshotProtection is orthogonal — set these yourself to block copy/print:
   selection: false,
   print: false,
   download: false,
@@ -41,15 +40,17 @@ const features = reactive<ViewerFeatures>({
       <div class="flex flex-wrap items-center gap-4 rounded-md border bg-muted/40 p-3">
         <Label class="flex cursor-pointer items-center gap-2 text-sm font-medium">
           <Checkbox
-            :model-value="features.contentProtection ?? false"
-            @update:model-value="(v) => (features.contentProtection = !!v)"
+            :model-value="features.screenshotProtection ?? false"
+            @update:model-value="(v) => (features.screenshotProtection = !!v)"
           />
-          <span>contentProtection (toggles live — no remount)</span>
+          <span>screenshotProtection (toggles live — no remount)</span>
         </Label>
         <p class="text-xs text-muted-foreground">
           Try: <strong>right-click</strong> the page · <strong>drag</strong> the page ·
-          <strong>switch tab / click another window</strong> (overlay appears) ·
-          <strong>PrintScreen</strong> on Windows/Chromium (overlay + clipboard cleared).
+          <strong>switch tab / click another window</strong> (content blurs) ·
+          a screenshot/devtools <strong>hotkey</strong> the browser delivers, e.g.
+          <strong>F12</strong> ("Protected content" panel + "Back to document") ·
+          <strong>Ctrl+P</strong> (blank page).
         </p>
       </div>
       <div class="h-[600px] w-full overflow-hidden rounded-md border">

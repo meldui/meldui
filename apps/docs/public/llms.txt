@@ -155,12 +155,12 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Document Viewer](/docs/document-viewer): A Vue composite for viewing and annotating PDF, image, text, and markdown documents.
 - [Document Viewer: Annotations](/docs/document-viewer/annotations): The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
 - [Document Viewer: Bundle & Performance](/docs/document-viewer/bundle-and-perf): Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
-- [Document Viewer: Content Protection](/docs/document-viewer/content-protection): The contentProtection flag — a set of client-side capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
 - [Document Viewer: Customization](/docs/document-viewer/customization): Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
 - [Document Viewer: Features](/docs/document-viewer/features): Every capability flag on the features prop, plus per-feature configuration shapes.
 - [Document Viewer: Getting Started](/docs/document-viewer/getting-started): Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
 - [Document Viewer: Plugin Reference](/docs/document-viewer/plugins): One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
 - [Document Viewer: Programmatic API](/docs/document-viewer/programmatic-api): Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
+- [Document Viewer: Screenshot Protection](/docs/document-viewer/screenshot-protection): The screenshotProtection flag — client-side screen-capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
 - [Document Viewer: Theming](/docs/document-viewer/theming): Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
 - [Document Viewer: Troubleshooting](/docs/document-viewer/troubleshooting): Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
 - [Document Viewer: Use Cases](/docs/document-viewer/use-cases): Runnable demos for the common patterns — load saved annotations, AI citations, import / export, save-as-copy, threaded reviews, and more.

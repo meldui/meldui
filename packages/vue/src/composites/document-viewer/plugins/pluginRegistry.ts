@@ -93,7 +93,7 @@ export const DEFAULT_FEATURES: Required<ViewerFeatures> = {
   attachments: false,
   keyboardShortcuts: true,
   touchGestures: true,
-  contentProtection: false,
+  screenshotProtection: false,
 }
 
 /** Resolve user-provided features against defaults. */

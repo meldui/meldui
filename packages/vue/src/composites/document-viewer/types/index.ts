@@ -115,19 +115,25 @@ export interface ViewerFeatures {
   /** Touch gestures (swipe page-nav, double-tap zoom). */
   touchGestures?: boolean
 
-  // Content protection
+  // Screenshot protection
   /**
-   * Client-side capture deterrents against a casual viewer: obscures the
-   * document on window blur / tab-hide, best-effort clears the clipboard on
-   * the PrintScreen key, and blocks the right-click menu and drag-out.
+   * Client-side screen-capture deterrents against a casual viewer. When on, the
+   * viewer: blurs the document content on window blur / tab-hide, intercepts
+   * common screenshot/snip/devtools hotkeys (showing a persistent "Protected
+   * content" panel with a "Back to document" button), blanks the page on print
+   * (`@media print`), and blocks the right-click menu and drag-out.
+   *
+   * This is purely ADDITIVE and orthogonal: it does NOT change `selection`,
+   * `print`, or `download` — compose those flags yourself (e.g. set
+   * `selection: false` to also prevent copying). Reads live, so toggling at
+   * runtime takes effect without a `:key` remount.
    *
    * IMPORTANT: this is a deterrent, NOT a guarantee. Every behaviour is
-   * removable via browser DevTools / by disabling JavaScript, and it does
-   * NOT stop OS screenshots (e.g. macOS Cmd+Shift+4), screen recorders, or a
-   * phone photo of the screen. It also does not block copy, print, or
-   * download — use `selection`, `print`, and `download` for those.
+   * removable via browser DevTools / by disabling JavaScript, and it does NOT
+   * stop OS screenshots (Linux/macOS/Windows grab the key before the page),
+   * screen recorders, or a phone photo of the screen.
    */
-  contentProtection?: boolean
+  screenshotProtection?: boolean
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */

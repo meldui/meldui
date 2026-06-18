@@ -155,12 +155,12 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Document Viewer](/docs/document-viewer): A Vue composite for viewing and annotating PDF, image, text, and markdown documents.
 - [Document Viewer: Annotations](/docs/document-viewer/annotations): The annotation data model, how to seed and persist annotations, and how the threaded-comments overlay works.
 - [Document Viewer: Bundle & Performance](/docs/document-viewer/bundle-and-perf): Why DocumentViewer is built headless, the per-feature plugin set, expected bundle sizes, and WASM hosting strategy.
-- [Document Viewer: Content Protection](/docs/document-viewer/content-protection): The contentProtection flag — a set of client-side capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
 - [Document Viewer: Customization](/docs/document-viewer/customization): Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
 - [Document Viewer: Features](/docs/document-viewer/features): Every capability flag on the features prop, plus per-feature configuration shapes.
 - [Document Viewer: Getting Started](/docs/document-viewer/getting-started): Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
 - [Document Viewer: Plugin Reference](/docs/document-viewer/plugins): One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
 - [Document Viewer: Programmatic API](/docs/document-viewer/programmatic-api): Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
+- [Document Viewer: Screenshot Protection](/docs/document-viewer/screenshot-protection): The screenshotProtection flag — client-side screen-capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
 - [Document Viewer: Theming](/docs/document-viewer/theming): Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
 - [Document Viewer: Troubleshooting](/docs/document-viewer/troubleshooting): Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
 - [Document Viewer: Use Cases](/docs/document-viewer/use-cases): Runnable demos for the common patterns — load saved annotations, AI citations, import / export, save-as-copy, threaded reviews, and more.
@@ -6376,75 +6376,6 @@ All Phase 1 plugin chunks ship regardless of `features` flags (the flags gate UI
 
 ---
 
-## Document Viewer: Content Protection
-
-The contentProtection flag — a set of client-side capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
-
-`contentProtection` is an opt-in flag that applies a small bundle of **client-side capture deterrents** to the viewer, aimed at discouraging a casual reader from grabbing or exfiltrating a confidential document.
-
-```vue
-<DocumentViewer
-  source="/confidential.pdf"
-  wasm-url="/pdfium.wasm"
-  :features="{ contentProtection: true }"
-/>
-```
-
-It defaults to `false`, so existing viewers are unaffected.
-
-## Read this first — what "protection" can and can't mean
-
-> **This is a deterrent, not a guarantee.** No web page can stop a determined viewer from capturing what's on their own screen. Everything `contentProtection` does runs in the page's JavaScript and is **trivially removable** — a viewer can open browser DevTools, disable JavaScript, or delete the overlay node and it's all gone. Treat it as friction against casual capture, never as a security control for truly sensitive material.
-
-Specifically, `contentProtection` **does not** stop:
-
-- **OS screenshots** — macOS `Cmd+Shift+3/4`, Windows `Win+Shift+S` snipping, etc. These write to disk without notifying the page.
-- **Screen recorders** — OBS, QuickTime, Loom, the OS recorder, or a screen-share in a meeting.
-- **A phone photo** of the monitor.
-- **A technical user** with DevTools.
-
-The only browser technology that genuinely makes captures come out black is **DRM-protected media** (EME + Widevine / PlayReady / FairPlay with HDCP), which applies to `<video>`/`<audio>` streams — not arbitrary PDF / canvas / DOM content. That is out of scope for this component. If you have a hard "the viewer must not be able to screenshot this" requirement, a document viewer in a browser is the wrong delivery mechanism.
-
-## What it actually does
-
-When `contentProtection` is `true`, four deterrents are applied at the viewer root (so they cover PDF, image, text, and markdown sources alike):
-
-| Deterrent                | Behaviour                                                                                                                | Honest note                                                                                                                                  |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Obscure on leave**     | When the window loses focus or the tab is hidden, the document is covered by a "Protected content" overlay; it clears when focus returns | The closest thing to screen-record / snipping-tool deterrence. Expect **false positives** — a notification, an alt-tab, or opening DevTools also triggers it |
-| **PrintScreen deterrent**| On the `PrintScreen` key, the clipboard is best-effort cleared and the overlay shows briefly                              | **Windows / Chromium only** — macOS has no PrintScreen key and `Win+Shift+S` often doesn't emit one. It also **wipes whatever the user had on their clipboard** |
-| **Block context menu**   | Right-click is suppressed on the viewer                                                                                   | Stops the casual "Save image as…" / "Copy image". Not screenshot-related                                                                     |
-| **Block drag-out**       | Dragging images or text out of the viewer is cancelled                                                                    | Stops drag-to-desktop / drag-into-another-app exfiltration                                                                                   |
-
-The overlay sits above the toolbar and also covers the viewer in fullscreen.
-
-## It does not touch copy, print, or download
-
-`contentProtection` deliberately leaves text **copy/selection**, **printing**, and **downloading** alone — those already have their own flags, and bundling them here would hide that control. To lock them down, set the existing flags:
-
-```vue
-<DocumentViewer
-  source="/confidential.pdf"
-  wasm-url="/pdfium.wasm"
-  :features="{
-    contentProtection: true,
-    selection: false,  // no text selection / copy
-    print: false,      // no Print button / native print path
-    download: false,   // no Download button
-  }"
-/>
-```
-
-See [Features](/docs/document-viewer/features) for those flags.
-
-## Notes
-
-- **Runtime-toggleable.** Unlike most feature flags, `contentProtection` is read live — flipping it on or off on a mounted viewer takes effect without a `:key` remount.
-- **Programmatic API is not gated.** The `DocumentViewerInstance` methods (annotation CRUD, `saveAsCopy`, etc.) are unaffected; this flag only changes in-page interaction behaviour.
-- **No configuration object.** It's a single boolean by design. If you need to tune individual deterrents or the overlay copy, open an issue.
-
----
-
 ## Document Viewer: Customization
 
 Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
@@ -6783,13 +6714,13 @@ The `features` prop is a flat object of flags merged over sensible defaults. Dis
 | `keyboardShortcuts` | `true`  | Arrow keys (page nav), `+` / `-` (zoom), `R` (rotate), `Ctrl+F` (search), `F11` (fullscreen), `Esc` (close popovers), `C` / `O` / `T` (toggle comment / outline / thumbnails panel) |
 | `touchGestures`     | `true`  | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`)                                                                                                         |
 
-### Content protection
+### Screenshot protection
 
-| Flag                | Default | What it enables                                                                                                                                               |
-| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `contentProtection` | `false` | Client-side capture **deterrents**: obscure-on-blur/tab-hide, best-effort PrintScreen clipboard clobber, and right-click / drag-out blocking. **Not** a guarantee — see [Content Protection](/docs/document-viewer/content-protection) for the full behaviour list and its limits |
+| Flag                   | Default | What it enables                                                                                                                                                                                                                                                                                  |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `screenshotProtection` | `false` | Client-side screen-capture **deterrents**: obscure-on-blur/tab-hide overlay, screenshot/devtools hotkey block overlay, print-blank, and right-click / drag-out blocking. **Not** a guarantee — see [Screenshot Protection](/docs/document-viewer/screenshot-protection) for behaviour and limits |
 
-> **`contentProtection` is a deterrent, not a guarantee, and it does not block copy / print / download.** It deters casual capture only and is removable via browser DevTools. To actually prevent copying, printing, or downloading, turn off `selection`, `print`, and `download` respectively. Full details and caveats live on the [Content Protection](/docs/document-viewer/content-protection) page.
+> **`screenshotProtection` is a deterrent, not a guarantee, and it's purely additive.** It deters casual capture only and is removable via browser DevTools. It does **not** change `selection`, `print`, or `download` — to also block copying or downloading, set those flags yourself. Full details and caveats live on the [Screenshot Protection](/docs/document-viewer/screenshot-protection) page.
 
 ## Per-feature configuration: `featureConfig`
 
@@ -7383,6 +7314,82 @@ All public types are re-exported from `@meldui/vue`:
 
 - [Annotations](/docs/document-viewer/annotations) — the annotation data model in depth
 - [Use cases](/docs/document-viewer/use-cases) — runnable demos for every method above
+
+---
+
+## Document Viewer: Screenshot Protection
+
+The screenshotProtection flag — client-side screen-capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
+
+`screenshotProtection` is an opt-in flag that applies a bundle of **client-side screen-capture deterrents** to the viewer, aimed at discouraging a casual reader from grabbing or exfiltrating a confidential document. It mirrors the approach of tools like [Papermark](https://www.papermark.com/screenshot-protection).
+
+```vue
+<DocumentViewer
+  source="/confidential.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ screenshotProtection: true }"
+/>
+```
+
+It defaults to `false`, so existing viewers are unaffected.
+
+
+
+## Read this first — what "protection" can and can't mean
+
+> **This is a deterrent, not a guarantee.** No web page can stop a determined viewer from capturing what's on their own screen. Everything `screenshotProtection` does runs in the page's JavaScript and is **trivially removable** — a viewer can open browser DevTools, disable JavaScript, or delete the overlay node and it's all gone. Treat it as friction against casual capture, never as a security control for truly sensitive material. (Papermark, which works the same way, openly notes its screenshot protection "does not work in 100% of use cases.")
+
+Specifically, `screenshotProtection` **does not** stop:
+
+- **OS screenshots** — macOS `Cmd+Shift+3/4`, Windows `Win+Shift+S` snipping, and **Linux `PrintScreen`** (GNOME/KDE grab it as a global hotkey and save straight to `~/Pictures/`). These write to disk without notifying the page — the JS never even sees the key, so the hotkey overlay below can't fire.
+- **Screen recorders** — OBS, QuickTime, Loom, the OS recorder, or a screen-share in a meeting.
+- **A phone photo** of the monitor.
+- **A technical user** with DevTools.
+
+The only browser technology that genuinely makes captures come out black is **DRM-protected media** (EME + Widevine / PlayReady / FairPlay with HDCP), which applies to `<video>`/`<audio>` streams — not arbitrary PDF / canvas / DOM content. That is out of scope for this component. If you have a hard "the viewer must not be able to screenshot this" requirement, a document viewer in a browser is the wrong delivery mechanism.
+
+## What it actually does
+
+When `screenshotProtection` is `true`, these deterrents apply at the viewer root (covering PDF, image, text, and markdown sources alike):
+
+| Deterrent                       | Behaviour                                                                                                                                                                                                                                       | Honest note                                                                                                                                                                                                 |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frosted blur on leave** (Layer 1) | When the window loses focus or the tab is hidden, the document **content is blurred** (no message); it un-blurs when focus returns                                                                                                          | The closest thing to screen-record / snipping-tool deterrence. Expect **false positives** — a notification, an alt-tab, or opening DevTools also triggers it                                                |
+| **Capture-block panel** (Layer 2) | Common screenshot / snip / devtools combos (`PrintScreen`, `Win+Shift+S`, `Win+G`, `Cmd+Shift+3/4/5`, `F12`, `Ctrl/Cmd+Shift+I/C/J`) are intercepted, showing a **persistent "Protected content"** panel with a **"Back to document"** button + best-effort clipboard clear | Best-effort and largely cosmetic: **the OS grabs most of these before the page sees them** (Linux PrintScreen, macOS Cmd+Shift+4, Win+Shift+S). Only combos the browser actually delivers (e.g. `F12`) fire |
+| **Print-blank**                 | Printing / print-to-PDF blanks the viewer via an `@media print` rule, scoped so the rest of your page still prints                                                                                                                            | Defeats `Ctrl+P` capture. Does **not** touch the `print` feature — it works whether or not the in-app Print button is shown                                                                                 |
+| **Block context menu**          | Right-click is suppressed on the viewer                                                                                                                                                                                                        | Stops the casual "Save image as…" / "Copy image"                                                                                                                                                            |
+| **Block drag-out**              | Dragging images / text out of the viewer is cancelled (+ mobile long-press save hardening)                                                                                                                                                     | Stops drag-to-desktop / drag-into-another-app exfiltration                                                                                                                                                  |
+
+The Layer 1 blur is applied to the document content; the Layer 2 panel sits above the toolbar and also covers the viewer in fullscreen.
+
+## It is orthogonal to copy / print / download
+
+`screenshotProtection` is **purely additive** — it does **not** change text **selection/copy**, the **print** feature, or **download**. Those keep their own flags, so you compose exactly the lockdown you want. For a confidential share-link, combine them:
+
+```vue
+<DocumentViewer
+  source="/confidential.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    screenshotProtection: true,
+    selection: false, // no text selection / copy
+    print: false, // hide the in-app Print button
+    download: false, // no Download button
+  }"
+/>
+```
+
+See [Features](/docs/document-viewer/features) for those flags. Note that `selection: false` is what removes copyable text — `screenshotProtection` does not disable the text layer on its own (so it stays compatible with annotations when you want both).
+
+## How this compares to Papermark
+
+Papermark renders every page as a **server-side image**, so there is no text layer to select or inspect — its protection rides on top of "just pixels." MeldUI keeps EmbedPDF's live text layer (so search, selection, and annotations keep working), and layers the same class of deterrents on top. The deterrents are equivalent; the trade-off is that MeldUI has real DOM text unless you also set `selection: false`.
+
+## Notes
+
+- **Runtime-toggleable.** Because it's additive and touches no mount-only plugin, `screenshotProtection` is read live — flipping it on or off on a mounted viewer takes effect without a `:key` remount.
+- **Programmatic API is not gated.** The `DocumentViewerInstance` methods (annotation CRUD, `saveAsCopy`, etc.) are unaffected; this flag only changes in-page interaction behaviour.
+- **No configuration object.** It's a single boolean by design. If you need to tune individual deterrents or the overlay copy, open an issue.
 
 ---
 

@@ -166,7 +166,7 @@ export const componentsNav: NavItem[] = [
       { title: 'Features', href: '/docs/document-viewer/features' },
       { title: 'Programmatic API', href: '/docs/document-viewer/programmatic-api' },
       { title: 'Annotations', href: '/docs/document-viewer/annotations' },
-      { title: 'Content Protection', href: '/docs/document-viewer/content-protection' },
+      { title: 'Screenshot Protection', href: '/docs/document-viewer/screenshot-protection' },
       { title: 'Customization', href: '/docs/document-viewer/customization' },
       { title: 'Theming', href: '/docs/document-viewer/theming' },
       { title: 'Bundle & Perf', href: '/docs/document-viewer/bundle-and-perf' },

@@ -1,0 +1,79 @@
+---
+title: 'Document Viewer: Screenshot Protection'
+description: The screenshotProtection flag — client-side screen-capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
+category: composites
+order: 6
+package: '@meldui/vue'
+---
+
+import ScreenshotProtectionDemo from '../../../demos/document-viewer/ScreenshotProtectionDemo.vue'
+
+`screenshotProtection` is an opt-in flag that applies a bundle of **client-side screen-capture deterrents** to the viewer, aimed at discouraging a casual reader from grabbing or exfiltrating a confidential document.
+
+```vue
+<DocumentViewer
+  source="/confidential.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{ screenshotProtection: true }"
+/>
+```
+
+It defaults to `false`, so existing viewers are unaffected.
+
+<ScreenshotProtectionDemo client:only="vue" />
+
+## Read this first — what "protection" can and can't mean
+
+> **This is a deterrent, not a guarantee.** No web page can stop a determined viewer from capturing what's on their own screen. Everything `screenshotProtection` does runs in the page's JavaScript and is **trivially removable** — a viewer can open browser DevTools, disable JavaScript, or delete the overlay node and it's all gone. Treat it as friction against casual capture, never as a security control for truly sensitive material. No browser-based screenshot protection works in 100% of cases.
+
+Specifically, `screenshotProtection` **does not** stop:
+
+- **OS screenshots** — macOS `Cmd+Shift+3/4`, Windows `Win+Shift+S` snipping, and **Linux `PrintScreen`** (GNOME/KDE grab it as a global hotkey and save straight to `~/Pictures/`). These write to disk without notifying the page — the JS never even sees the key, so the hotkey overlay below can't fire.
+- **Screen recorders** — OBS, QuickTime, Loom, the OS recorder, or a screen-share in a meeting.
+- **A phone photo** of the monitor.
+- **A technical user** with DevTools.
+
+The only browser technology that genuinely makes captures come out black is **DRM-protected media** (EME + Widevine / PlayReady / FairPlay with HDCP), which applies to `<video>`/`<audio>` streams — not arbitrary PDF / canvas / DOM content. That is out of scope for this component. If you have a hard "the viewer must not be able to screenshot this" requirement, a document viewer in a browser is the wrong delivery mechanism.
+
+## What it actually does
+
+When `screenshotProtection` is `true`, these deterrents apply at the viewer root (covering PDF, image, text, and markdown sources alike):
+
+| Deterrent                           | Behaviour                                                                                                                                                                                                                                     | Honest note                                                                                                                                                                                                                                                                         |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frosted blur on leave** (Layer 1) | When the window loses focus or the tab is hidden, the document **content is blurred** (no message); it un-blurs when focus returns                                                                                                            | The closest thing to screen-record / snipping-tool deterrence. Expect **false positives** — a notification, an alt-tab, or opening DevTools also triggers it                                                                                                                        |
+| **Capture-block panel** (Layer 2)   | Common screenshot / snip / devtools combos (`PrintScreen`, `Win+Shift+S`, `Win+G`, `Cmd+Shift+3/4/5`, `F12`, `Ctrl/Cmd+Shift+I/C/J`) are intercepted, showing a **persistent "Protected content"** panel with a **"Back to document"** button | Best-effort and largely cosmetic: **the OS grabs most of these before the page sees them** (Linux PrintScreen, macOS Cmd+Shift+4, Win+Shift+S), and even when the panel fires the capture has usually already happened. Only combos the browser actually delivers (e.g. `F12`) fire |
+| **Print-blank**                     | Printing / print-to-PDF blanks the viewer via an `@media print` rule, scoped so the rest of your page still prints                                                                                                                            | Defeats `Ctrl+P` capture. Does **not** touch the `print` feature — it works whether or not the in-app Print button is shown                                                                                                                                                         |
+| **Block context menu**              | Right-click is suppressed on the viewer                                                                                                                                                                                                       | Stops the casual "Save image as…" / "Copy image"                                                                                                                                                                                                                                    |
+| **Block drag-out**                  | Dragging images / text out of the viewer is cancelled (+ mobile long-press save hardening)                                                                                                                                                    | Stops drag-to-desktop / drag-into-another-app exfiltration                                                                                                                                                                                                                          |
+
+The Layer 1 blur is applied to the document content; the Layer 2 panel sits above the toolbar and also covers the viewer in fullscreen.
+
+## It is orthogonal to copy / print / download
+
+`screenshotProtection` is **purely additive** — it does **not** change text **selection/copy**, the **print** feature, or **download**. Those keep their own flags, so you compose exactly the lockdown you want. For a confidential share-link, combine them:
+
+```vue
+<DocumentViewer
+  source="/confidential.pdf"
+  wasm-url="/pdfium.wasm"
+  :features="{
+    screenshotProtection: true,
+    selection: false, // no text selection / copy
+    print: false, // hide the in-app Print button
+    download: false, // no Download button
+  }"
+/>
+```
+
+See [Features](/docs/document-viewer/features) for those flags. Note that `selection: false` is what removes copyable text — `screenshotProtection` does not disable the text layer on its own (so it stays compatible with annotations when you want both).
+
+## A note on the text layer
+
+The DocumentViewer keeps a live text layer (so search, selection, and annotations keep working), and layers these deterrents on top of it. The trade-off is that real, selectable DOM text remains in the page unless you also set `selection: false` — so if "no copyable text" matters, enable both `screenshotProtection: true` and `selection: false`.
+
+## Notes
+
+- **Runtime-toggleable.** Because it's additive and touches no mount-only plugin, `screenshotProtection` is read live — flipping it on or off on a mounted viewer takes effect without a `:key` remount.
+- **Programmatic API is not gated.** The `DocumentViewerInstance` methods (annotation CRUD, `saveAsCopy`, etc.) are unaffected; this flag only changes in-page interaction behaviour.
+- **No configuration object.** It's a single boolean by design. If you need to tune individual deterrents or the overlay copy, open an issue.

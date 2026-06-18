@@ -32,7 +32,7 @@ import { detectDocumentType } from './utils/documentType'
 import { pageClickToPdfCoord } from './utils/pageCoords'
 import type { CommandCallbacks } from './composables/useCommands'
 import { useTouch } from './composables/useTouch'
-import { useContentProtection } from './composables/useContentProtection'
+import { useScreenshotProtection } from './composables/useScreenshotProtection'
 import { useAnnotationThreads } from './composables/useAnnotationThreads'
 import { printImage, printText, resolveSourceToText } from './composables/usePrint'
 import { sourceToUrl } from './utils/documentType'
@@ -918,9 +918,13 @@ useTouch(
   },
 )
 
-// Client-side capture deterrents (opt-in, casual deterrent only — see
-// `useContentProtection` for the honest caveats).
-const { isObscured } = useContentProtection(rootEl, () => resolvedFeatures.value.contentProtection)
+// Client-side screen-capture deterrents (opt-in, additive, casual deterrent
+// only — see `useScreenshotProtection` for the honest caveats).
+const {
+  isBlurred,
+  isCaptureBlocked,
+  dismiss: dismissCaptureBlock,
+} = useScreenshotProtection(rootEl, () => resolvedFeatures.value.screenshotProtection)
 
 // ─────────────────────────────────────────────────────────────────────────
 // Programmatic API — full implementation
@@ -1062,18 +1066,32 @@ defineExpose<DocumentViewerInstance>({
   <div
     ref="rootEl"
     :class="
-      cn('document-viewer relative flex h-full flex-col bg-background text-foreground', props.class)
+      cn(
+        'document-viewer relative flex h-full flex-col bg-background text-foreground',
+        resolvedFeatures.screenshotProtection && 'meld-screenshot-protected',
+        props.class,
+      )
     "
     data-document-viewer
+    :data-screenshot-protected="resolvedFeatures.screenshotProtection ? '' : undefined"
   >
-    <!-- Content-protection overlay: obscures the document on blur / tab-hide /
-         PrintScreen. Sits above the toolbar (z-30). Deterrent only. -->
+    <!-- Screenshot-protection Layer 2: persistent panel shown when a screenshot
+         hotkey is pressed; dismissed via "Back to document". Sits above the
+         toolbar (z-30). (Layer 1 — frosted blur on focus loss — is applied to
+         the content row below.) Deterrent only. -->
     <div
-      v-if="isObscured"
-      class="absolute inset-0 z-50 flex select-none items-center justify-center bg-background/95 text-sm font-medium text-muted-foreground backdrop-blur-md"
-      data-content-protection-overlay
+      v-if="isCaptureBlocked"
+      class="absolute inset-0 z-50 flex select-none flex-col items-center justify-center gap-4 bg-background/95 backdrop-blur-md"
+      data-screenshot-protection-overlay
     >
-      Protected content
+      <p class="text-sm font-medium text-muted-foreground">Protected content</p>
+      <button
+        type="button"
+        class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        @click="dismissCaptureBlock"
+      >
+        Back to document
+      </button>
     </div>
 
     <ViewerToolbar
@@ -1114,7 +1132,9 @@ defineExpose<DocumentViewerInstance>({
       @set-whole-word="handleSetWholeWord"
     />
 
-    <div class="flex flex-1 overflow-hidden">
+    <div
+      :class="['flex flex-1 overflow-hidden transition-all duration-300', isBlurred && 'blur-xl']"
+    >
       <div class="relative flex-1 overflow-hidden">
         <PdfViewer
           v-if="isPdf"
@@ -1225,5 +1245,16 @@ mark.search-highlight-current {
   background-color: rgba(255, 152, 0, 0.6);
   outline: 1px solid rgba(255, 152, 0, 0.9);
   outline-offset: -1px;
+}
+
+/*
+ * Screenshot-protection CSS hardening (applied when `screenshotProtection` is
+ * on). Deters mobile long-press "Save image" and drag-to-desktop of images.
+ * Deliberately does NOT set `user-select` — text-selection/copy is controlled
+ * independently by the `selection` feature flag.
+ */
+.meld-screenshot-protected img {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
 }
 </style>
