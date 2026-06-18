@@ -38,13 +38,13 @@ The viewer chrome adapts to dark mode via `dark:` Tailwind classes on every inte
 
 Every UI element inside `DocumentViewer` is composed from MeldUI primitives so styling overrides naturally inherit. The internals use:
 
-| Primitive  | Used by                                                  |
-| ---------- | -------------------------------------------------------- |
-| `Button`   | Every toolbar button, comment form actions, reply submit |
-| `Popover`  | Search popover, panel toggles on mobile                  |
-| `Tooltip`  | Highlight tooltip wrapper, button hover labels           |
-| `Textarea` | Comment form, reply form                                 |
-| `Toggle`   | Search case / whole-word toggles                         |
+| Primitive      | Used by                                                          |
+| -------------- | --------------------------------------------------------------- |
+| `Button`       | Every toolbar button, search case / whole-word toggles, comment form actions, reply submit |
+| `Popover`      | Search popover                                                  |
+| `DropdownMenu` | Zoom presets, mobile overflow menu                             |
+| `Tooltip`      | Highlight tooltip wrapper, button hover labels                 |
+| `Textarea`     | Reply form (the comment-create form uses a raw `<textarea>`)   |
 
 Override the variants via your Tailwind theme — see [Theming guide (Getting Started)](/docs/getting-started/theming).
 
@@ -83,23 +83,16 @@ For one-off styling, pass `class` directly:
 
 The prop merges onto the root via `cn()`, so Tailwind utility conflicts resolve in your favour.
 
-## Custom highlight palette
+## Highlight palette
 
-The 5 default highlight colours live in `HIGHLIGHT_COLORS`. Override them via `featureConfig.annotations.defaultTools` to match your brand:
+The 5 default highlight colours live in the exported `HIGHLIGHT_COLORS` constant, and the floating tooltip's swatches always render from it:
 
 ```ts
-const featureConfig = {
-  annotations: {
-    defaultTools: [
-      { id: 'brand-1', label: 'Brand Primary', color: '#0066FF', opacity: 0.35 },
-      { id: 'brand-2', label: 'Brand Secondary', color: '#FF6B35', opacity: 0.35 },
-      { id: 'brand-3', label: 'Brand Accent', color: '#A0E7E5', opacity: 0.35 },
-    ],
-  },
-}
+import { HIGHLIGHT_COLORS } from '@meldui/vue'
+// Yellow #FFCD45, Green #92E89E, Blue #8FCFEF, Pink #FFA0BD, Purple #C8A5DD
 ```
 
-The floating tooltip renders one swatch per tool; the first becomes the active default.
+`featureConfig.annotations.defaultTools` exists on the type as the intended palette-override hook, but it is **not yet applied** by the viewer — the swatch palette is currently fixed to `HIGHLIGHT_COLORS`.
 
 ## Dark-mode caveat: PDF page background
 

@@ -10,9 +10,7 @@ The **Selection** plugin enables text selection on PDF pages and provides the un
 
 ## Enabling flag
 
-`features.selection: true`
-
-Also auto-enabled by `features.annotations` (since highlights need to know what text was selected).
+The Selection plugin is **always registered** — `useSelection` is always available. `features.selection` controls whether the `SelectionLayer` (drag-to-select on the page) is rendered. It's also effectively required by `features.annotations`, since highlights need to know what text was selected.
 
 ## What it does
 
@@ -32,7 +30,7 @@ Also auto-enabled by `features.annotations` (since highlights need to know what 
 ## Dependencies
 
 - viewport
-- interaction-manager (auto-added)
+- interaction-manager (always registered)
 
 ## Configuration
 

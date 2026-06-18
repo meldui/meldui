@@ -10,9 +10,9 @@ The **Pan** plugin adds a hand-tool toggle that switches the viewport between te
 
 ## Enabling flag
 
-`features.pan: true`
+The Pan plugin is **always registered** — `usePan` is always available. `features.pan` controls whether the **hand-tool toolbar toggle** is shown.
 
-When enabled, `interaction-manager` is auto-registered if not already on.
+The `interaction-manager` plugin (which bridges pointer events to the pan handler) is also always registered.
 
 ## What it does
 
@@ -22,13 +22,21 @@ When enabled, `interaction-manager` is auto-registered if not already on.
 
 ## Composable
 
-`usePan(documentId)` from `@embedpdf/plugin-pan/vue`. Returns:
+`usePan(documentId)` from `@embedpdf/plugin-pan/vue`. Returns `{ isPanning, provides }`:
 
 ```ts
 {
   isPanning: Ref<boolean>,
-  setPanMode(enabled: boolean),
+  provides: ComputedRef<PanScope | null>,
 }
+```
+
+The mode-toggle methods live on `provides.value`:
+
+```ts
+provides.value?.enablePan()
+provides.value?.disablePan()
+provides.value?.togglePan()
 ```
 
 ## Events
@@ -38,7 +46,7 @@ When enabled, `interaction-manager` is auto-registered if not already on.
 ## Dependencies
 
 - viewport
-- interaction-manager (auto-added)
+- interaction-manager (always registered)
 
 ## Configuration
 

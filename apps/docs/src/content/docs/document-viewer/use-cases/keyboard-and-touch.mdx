@@ -48,17 +48,24 @@ Bindings only fire when focus is **inside** the viewer (the viewport, toolbar, o
 
 ### Adding custom shortcuts
 
-Use EmbedPDF's hotkeys capability directly:
+Shortcuts are built on EmbedPDF's **Commands** plugin (`@embedpdf/plugin-commands`), not a dedicated hotkeys plugin. Register additional commands — each carries its own `shortcuts` array — via `useCommandsCapability()`. Call this from inside the viewer's plugin context (e.g. a component slotted into `side-panels`):
 
 ```ts
-import { useHotkeysCapability } from '@embedpdf/plugin-hotkeys/vue'
+import { onMounted } from 'vue'
+import { useCommandsCapability } from '@embedpdf/plugin-commands/vue'
 
-const hot = useHotkeysCapability()
+const commands = useCommandsCapability()
 onMounted(() => {
-  hot.provides.value?.register('Ctrl+S', () => saveToBackend())
-  hot.provides.value?.register('Ctrl+Shift+P', () => openCommandPalette())
+  commands.provides.value?.registerCommand({
+    id: 'app.save',
+    label: 'Save to backend',
+    shortcuts: ['ctrl+s', 'meta+s'],
+    action: () => saveToBackend(),
+  })
 })
 ```
+
+Shortcut strings are lowercase and use `+` to combine modifiers (e.g. `'ctrl+shift+p'`), matching the built-in catalog.
 
 ## Touch gestures
 

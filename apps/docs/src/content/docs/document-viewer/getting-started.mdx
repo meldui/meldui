@@ -16,16 +16,26 @@ This guide walks through installing `DocumentViewer`, hosting the PDFium WebAsse
 ```bash
 pnpm add @meldui/vue @meldui/tabler-vue vue
 
-# EmbedPDF peer dependencies — install only what your features prop enables.
+# EmbedPDF peer dependencies. All Phase 1 plugins are always registered by the
+# viewer (the `features` prop gates UI, not registration), so the full Phase 1
+# set must be installed even if you only enable a few features.
 pnpm add @embedpdf/core @embedpdf/engines @embedpdf/models @embedpdf/pdfium \
-  @embedpdf/plugin-document-manager \
-  @embedpdf/plugin-viewport \
-  @embedpdf/plugin-scroll \
-  @embedpdf/plugin-render \
-  @embedpdf/plugin-tiling
+  @embedpdf/plugin-document-manager @embedpdf/plugin-viewport \
+  @embedpdf/plugin-scroll @embedpdf/plugin-render @embedpdf/plugin-tiling \
+  @embedpdf/plugin-zoom @embedpdf/plugin-rotate @embedpdf/plugin-spread \
+  @embedpdf/plugin-pan @embedpdf/plugin-fullscreen \
+  @embedpdf/plugin-interaction-manager @embedpdf/plugin-selection \
+  @embedpdf/plugin-search @embedpdf/plugin-bookmark @embedpdf/plugin-thumbnail \
+  @embedpdf/plugin-export @embedpdf/plugin-print @embedpdf/plugin-commands \
+  @embedpdf/plugin-history @embedpdf/plugin-annotation
+
+# Phase 2 plugins are only registered when their feature flag is on — install
+# them only if you enable stamps / signature / redaction / forms / attachments:
+# @embedpdf/plugin-stamp @embedpdf/plugin-signature @embedpdf/plugin-redaction
+# @embedpdf/plugin-form @embedpdf/plugin-attachment
 ```
 
-The five EmbedPDF plugins above are the **minimum** set for PDF rendering. Add others as you opt into `features` flags — see the [Bundle & Perf](/docs/document-viewer/bundle-and-perf) guide for the complete plugin → feature mapping.
+The first five plugins are the core rendering pipeline; the rest are the Phase 1 view-control, navigation, output, and annotation plugins that the viewer always registers. See the [Bundle & Perf](/docs/document-viewer/bundle-and-perf) guide for the complete plugin → feature mapping.
 
 ## Host the PDFium WASM binary
 
@@ -48,7 +58,7 @@ Then pass the URL to the component via `wasmUrl`:
 - Works in air-gapped or enterprise environments.
 - Cached independently of your JS bundle.
 
-A relative `wasmUrl` like `/pdfium.wasm` works in both worker and main-thread modes. If you opt to `worker={false}`, fully-qualified URLs (`https://...`) also work.
+A root-relative `wasmUrl` like `/pdfium.wasm` works in both worker and main-thread mode (it is resolved against `document.baseURI`). Only **bare relative** paths such as `pdfium.wasm` or `./pdfium.wasm` hit the worker-mode resolution issue (see [Troubleshooting](/docs/document-viewer/troubleshooting#worker-mode-relative-wasm-url-not-found)). To run on the main thread, pass `:worker="false"`.
 
 ## Render a PDF
 

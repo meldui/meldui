@@ -10,9 +10,9 @@ The **Annotation** plugin is the largest in the registry. It provides the native
 
 ## Enabling flag
 
-`features.annotations: true`
+The Annotation plugin is **always registered** — the programmatic CRUD API (`createAnnotation`, `getAnnotations`, etc.) is always available. `features.annotations` controls whether the **annotation toolbar tools** (highlight, comment) are shown.
 
-Auto-registers `interaction-manager`, `selection`, and `history` as dependencies. Set `features.commentThreads: true` to also enable the threaded overlay.
+Its runtime dependencies (`interaction-manager`, `selection`, `history`) are likewise always registered, so the plugin works regardless of which UI features are enabled. Set `features.commentThreads: true` to also enable the threaded overlay.
 
 ## What it does
 
@@ -41,9 +41,9 @@ All surface as `@annotation-*` and `@active-annotation-tool-change` on `Document
 
 - viewport
 - document-manager
-- interaction-manager (auto-added)
-- selection (auto-added)
-- history (auto-added when `features.undoRedo` is on — and it's on by default when annotations are)
+- interaction-manager (always registered)
+- selection (always registered)
+- history (always registered; undo/redo is surfaced via `features.undoRedo`, which auto-enables when annotations are on)
 
 ## Configuration: `featureConfig.annotations`
 
@@ -62,7 +62,7 @@ interface AnnotationToolConfig {
 }
 ```
 
-- `author` — display name attached to created annotations (defaults to `currentUser.displayName`)
+- `author` — author name passed to the annotation plugin (`annotationAuthor`) and attached to created annotations
 - `useAnnotationMode` — when `true`, redactions (Phase 2) are stored as pending PDF REDACT annotations rather than applied immediately
 - `defaultTools` — override the floating-tooltip colour palette. The 5 defaults are exported as `HIGHLIGHT_COLORS`
 

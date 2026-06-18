@@ -11,7 +11,7 @@ import BasicPdfDemo from '../../../demos/document-viewer/BasicPdfDemo.vue'
 
 `DocumentViewer` renders PDFs and other document formats (images, plain text, markdown) inside a Vue app, with built-in zoom, search, outline, thumbnails, and a full annotation system. The PDF path is powered by [EmbedPDF](https://www.embedpdf.com/) (PDFium compiled to WebAssembly); the other formats are native Vue renderers that share the same toolbar and side-panel chrome.
 
-It is built as a single composite with a `features` prop. Every capability is opt-in — disabled features do not register their EmbedPDF plugin, so the plugin packages are tree-shaken out of your bundle.
+It is built as a single composite with a `features` prop that toggles each capability's toolbar / UX. All Phase 1 plugins are always registered (the flags gate visibility, not registration); the Phase 2 editing plugins — stamps, signature, redaction, forms, attachments — are registered only when their flag is on, so those packages tree-shake out when unused. See [Bundle & Perf](/docs/document-viewer/bundle-and-perf) for the details.
 
 <BasicPdfDemo client:only="vue" />
 

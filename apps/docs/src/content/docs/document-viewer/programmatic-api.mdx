@@ -33,7 +33,7 @@ Returns metadata for the currently-loaded document, or `null` if still loading.
 
 ```ts
 const info = viewer.value?.getDocumentInfo()
-// { pageCount: 14, title: 'TraceMonkey' }
+// { pageCount: 14, title: null }  — `title` is currently always null (not yet read from PDF metadata)
 ```
 
 ### `getCurrentPage(): number`

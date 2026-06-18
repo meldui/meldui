@@ -170,7 +170,6 @@ export const componentsNav: NavItem[] = [
       { title: 'Theming', href: '/docs/document-viewer/theming' },
       { title: 'Bundle & Perf', href: '/docs/document-viewer/bundle-and-perf' },
       { title: 'Troubleshooting', href: '/docs/document-viewer/troubleshooting' },
-      { title: 'Migration', href: '/docs/document-viewer/migration' },
       { title: 'Use Cases', href: '/docs/document-viewer/use-cases' },
       { title: 'Plugin Reference', href: '/docs/document-viewer/plugins' },
     ],

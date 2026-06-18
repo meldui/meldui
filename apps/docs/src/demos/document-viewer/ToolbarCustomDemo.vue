@@ -9,16 +9,14 @@ const SAMPLE_PDF = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-
 const status = ref('')
 
 const toolbar: ToolbarConfig = {
-  // Only show 3 groups, reordered
-  groups: ['nav', 'zoom', 'panels'],
-  // Hide a couple of buttons inside the groups we kept
-  hide: ['rotate-cw', 'rotate-ccw', 'spread'],
+  // Show only these groups, in this order
+  groups: ['pageNav', 'zoom', 'panels'],
+  // Hide specific buttons inside the groups we kept (keep just the zoom preset dropdown)
+  hide: ['zoom-in', 'zoom-out'],
   customButtons: [
     {
       id: 'share',
       label: 'Share',
-      icon: 'IconShare',
-      position: 'panels',
       onClick: () => {
         status.value = 'Share clicked at ' + new Date().toLocaleTimeString()
       },
@@ -30,10 +28,10 @@ const code = `<script setup lang="ts">
 import { DocumentViewer, type ToolbarConfig } from '@meldui/vue'
 
 const toolbar: ToolbarConfig = {
-  groups: ['nav', 'zoom', 'panels'],   // only show these
-  hide: ['rotate-cw', 'rotate-ccw'],
+  groups: ['pageNav', 'zoom', 'panels'],   // only show these, in this order
+  hide: ['zoom-in', 'zoom-out'],           // keep just the zoom preset dropdown
   customButtons: [
-    { id: 'share', label: 'Share', icon: 'IconShare', position: 'panels', onClick: openShareDialog },
+    { id: 'share', label: 'Share', onClick: openShareDialog },
   ],
 }
 <\/script>

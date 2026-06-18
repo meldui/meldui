@@ -10,10 +10,10 @@ The **Export** plugin handles every "get the PDF out of the viewer" operation: p
 
 ## Enabling flag
 
-`features.print: true` — registers the print plugin and adds the Print toolbar button
-`features.download: true` — registers the export plugin and adds the Download toolbar button
+Both the Export and Print plugins are **always registered** — `useExportCapability` / `usePrint` and `saveAsCopy()` are always available. The flags only gate the toolbar buttons:
 
-Either flag triggers registration of the export plugin (it serves both).
+- `features.download` — shows the Download toolbar button
+- `features.print` — shows the Print toolbar button
 
 ## What it does
 
@@ -89,8 +89,8 @@ Both are wired into the toolbar internally.
 
 ```ts
 interface SaveAsCopyOptions {
-  applyRedactions?: boolean // burn in pending redactions before saving (Phase 2)
-  flatten?: boolean // flatten annotations into page contents (loses editability)
+  includeAnnotations?: boolean // include current annotations in the saved copy (default true)
+  flatten?: boolean // flatten editable annotations into fixed page content
 }
 
 const buffer = await viewer.value?.saveAsCopy()

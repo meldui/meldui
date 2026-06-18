@@ -19,19 +19,21 @@ Threads are **not stored in the PDF** — they live in a parallel `CommentThread
 ```ts
 interface CommentThread {
   annotationId: string
-  replies: CommentReply[]
-  resolved: boolean
-  resolvedAt?: string
+  isResolved: boolean
   resolvedByUserId?: string
+  resolvedAt?: string
+  replies: CommentReply[]
 }
 
 interface CommentReply {
   id: string
   annotationId: string
   authorUserId: string
-  authorDisplayName: string
+  authorName?: string
+  authorAvatarUrl?: string
   content: string
   createdAt: string
+  updatedAt?: string
 }
 ```
 
@@ -91,10 +93,10 @@ Both call `addReply()` internally and fire `thread-update` with `action: 'reply-
 
 ## Resolving threads
 
-Marking a thread resolved doesn't delete the annotation — it just changes the `resolved` flag and adds a `resolvedAt` / `resolvedByUserId`. The annotation still renders on the page (typically with a subtle visual difference, e.g. lower opacity). Filter resolved threads from your side panel UI if you want a "todo" view:
+Marking a thread resolved doesn't delete the annotation — it just changes the `isResolved` flag and adds a `resolvedAt` / `resolvedByUserId`. The annotation still renders on the page (typically with a subtle visual difference, e.g. lower opacity). Filter resolved threads from your side panel UI if you want a "todo" view:
 
 ```ts
-const unresolvedThreads = computed(() => allThreads.value.filter((t) => !t.resolved))
+const unresolvedThreads = computed(() => allThreads.value.filter((t) => !t.isResolved))
 ```
 
 ## Current user attribution
@@ -105,14 +107,14 @@ Set `currentUser` so replies are attributed correctly:
 <DocumentViewer
   :current-user="{
     id: 'u-42',
-    displayName: 'Alex Chen',
+    name: 'Alex Chen',
     avatarUrl: '/me.png',
   }"
   ...
 />
 ```
 
-`currentUser.displayName` flows into new replies' `authorDisplayName` and also into `featureConfig.annotations.author` as a default.
+`currentUser.name` flows into new replies' `authorName` and also into `featureConfig.annotations.author` as a default.
 
 ## See also
 

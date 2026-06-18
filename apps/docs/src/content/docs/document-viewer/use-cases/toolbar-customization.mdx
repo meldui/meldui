@@ -20,14 +20,12 @@ import { DocumentViewer } from '@meldui/vue'
 import type { ToolbarConfig } from '@meldui/vue'
 
 const toolbar: ToolbarConfig = {
-  groups: ['nav', 'zoom', 'panels'], // restrict + reorder
+  groups: ['pageNav', 'zoom', 'panels'], // restrict + reorder
   hide: ['rotate-cw', 'rotate-ccw'], // hide individual buttons
   customButtons: [
     {
       id: 'share',
       label: 'Share',
-      icon: 'IconShare',
-      position: 'panels',
       onClick: () => openShareDialog(),
     },
   ],
@@ -49,15 +47,28 @@ const toolbar: ToolbarConfig = {
 The default group order is:
 
 ```ts
-;['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+;[
+  'pageNav',
+  'zoom',
+  'rotate',
+  'viewMode',
+  'interactionMode',
+  'search',
+  'panels',
+  'annotate',
+  'stamp',
+  'sign',
+  'redact',
+  'actions',
+]
 ```
 
 Pass a subset to hide the rest entirely. Pass a reordered array to change visual order:
 
 ```ts
-// Tools-first layout
+// Annotation-first layout
 const toolbar: ToolbarConfig = {
-  groups: ['tools', 'nav', 'zoom', 'view', 'panels', 'search', 'export'],
+  groups: ['annotate', 'pageNav', 'zoom', 'panels', 'search', 'actions'],
 }
 ```
 
@@ -65,29 +76,31 @@ const toolbar: ToolbarConfig = {
 
 Hide individual buttons by id. The standard ids:
 
-- Nav: `page-prev`, `page-next`
-- Zoom: `zoom-in`, `zoom-out`, `fit-page`, `fit-width`, `actual-size`
-- View: `rotate-cw`, `rotate-ccw`, `spread`, `pan`, `fullscreen`
-- Tools: `highlight`, `comment`, `undo`, `redo`
-- Panels: `outline-toggle`, `thumbnails-toggle`, `annotations-toggle`
-- Search: `search-toggle`
-- Export: `print`, `download`
+- Page nav: `prev-page`, `next-page`
+- Zoom: `zoom-out`, `zoom-preset`, `zoom-in`
+- Rotate: `rotate-ccw`, `rotate-cw`
+- View / interaction: `view-mode`, `interaction-mode`
+- Search: `search`
+- Panels: `thumbnails`, `outline`, `comments`
+- Actions: `download`, `print`, `fullscreen`
 
 ```ts
 const toolbar: ToolbarConfig = {
-  hide: ['spread', 'pan', 'fullscreen', 'rotate-cw', 'rotate-ccw'],
+  hide: ['fullscreen', 'rotate-cw', 'rotate-ccw'],
 }
 ```
 
 ## `customButtons`
 
-Each entry needs:
+Each entry supports:
 
-- `id` — unique
-- `label` — shown in overflow menu and as `aria-label`
-- `icon` — name of a `@meldui/tabler-vue` icon component (e.g. `IconShare`, `IconCircleCheck`)
-- `position` — which group to attach to
-- `onClick` — handler
+- `id` — unique (required)
+- `label` — used as the button's `aria-label` and tooltip (required)
+- `onClick` — handler (required)
+- `isActive?` — optional predicate that drives `aria-pressed`
+- `isDisabled?` — optional predicate that disables the button
+
+Custom buttons render with a default icon and surface their `label` as a tooltip / `aria-label`; they are appended just before the `actions` group.
 
 ```ts
 const toolbar: ToolbarConfig = {
@@ -95,22 +108,19 @@ const toolbar: ToolbarConfig = {
     {
       id: 'approve',
       label: 'Approve',
-      icon: 'IconCircleCheck',
-      position: 'tools',
       onClick: () => approveDocument(),
     },
     {
       id: 'request-changes',
       label: 'Request changes',
-      icon: 'IconMessageCircle',
-      position: 'tools',
       onClick: () => openRequestChangesDialog(),
+      isDisabled: () => !canRequestChanges.value,
     },
   ],
 }
 ```
 
-The icon name maps directly to the export name in `@meldui/tabler-vue` — see the [Icons guide](/docs/getting-started/icons) for the full set.
+> The `CustomToolbarButton` type also declares `icon` and `group` fields, but these are **not applied by the current toolbar** — custom buttons render with a default icon and are always appended near the `actions` group regardless of `group`. Don't rely on `icon`/`group` until they're wired up.
 
 ## Hiding the toolbar entirely
 
@@ -128,7 +138,9 @@ Conditionally configure based on the current user:
 
 ```ts
 const toolbar = computed<ToolbarConfig>(() => ({
-  groups: isReviewer.value ? ['nav', 'zoom', 'tools', 'panels'] : ['nav', 'zoom', 'export'],
+  groups: isReviewer.value
+    ? ['pageNav', 'zoom', 'annotate', 'panels']
+    : ['pageNav', 'zoom', 'actions'],
   hide: isReviewer.value ? [] : ['print', 'download'],
 }))
 ```

@@ -10,7 +10,7 @@ import BasicPdfDemo from '../../../../demos/document-viewer/BasicPdfDemo.vue'
 
 When a document is shared via a public link, you typically want the recipient to be able to **read** but not **edit** — no annotation, no thread replies, no download. You express this entirely through the `features` flags: a flag that's off does not register its plugin **and** hides its toolbar button.
 
-There is **no separate `permissions` prop.** Because `DocumentViewer` reloads a new document only on remount (it has no `watch(source)`, and EmbedPDF freezes its plugin set at mount), per-document permissions map cleanly onto a per-document `features` object — bind `:key` to the document/share id so each document mounts with its own flags. See [Per-document permissions](/docs/document-viewer/customization#per-document-permissions-keyed-remount) for the mechanics.
+There is **no separate `permissions` prop.** Because `DocumentViewer` reloads a new document only on remount (it has no `watch(source)`, and EmbedPDF freezes its plugin set at mount), per-document permissions map cleanly onto a per-document `features` object — bind `:key` to the document/share id so each document mounts with its own flags. See [Per-document permissions](/docs/document-viewer/customization#per-document-permissions) for the mechanics.
 
 ## Pattern
 
@@ -111,5 +111,5 @@ The viewport renders without any toolbar. Users still get keyboard shortcuts if 
 
 ## See also
 
-- [Per-document permissions (keyed remount)](/docs/document-viewer/customization#per-document-permissions-keyed-remount)
+- [Per-document permissions (keyed remount)](/docs/document-viewer/customization#per-document-permissions)
 - [Features](/docs/document-viewer/features) — flag table
