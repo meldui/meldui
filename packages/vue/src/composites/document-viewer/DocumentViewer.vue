@@ -33,6 +33,7 @@ import { pageClickToPdfCoord } from './utils/pageCoords'
 import type { CommandCallbacks } from './composables/useCommands'
 import { useTouch } from './composables/useTouch'
 import { useScreenshotProtection } from './composables/useScreenshotProtection'
+import ScreenshotProtectionOverlay from './ScreenshotProtectionOverlay.vue'
 import { useAnnotationThreads } from './composables/useAnnotationThreads'
 import { printImage, printText, resolveSourceToText } from './composables/usePrint'
 import { sourceToUrl } from './utils/documentType'
@@ -1075,24 +1076,14 @@ defineExpose<DocumentViewerInstance>({
     data-document-viewer
     :data-screenshot-protected="resolvedFeatures.screenshotProtection ? '' : undefined"
   >
-    <!-- Screenshot-protection Layer 2: persistent panel shown when a screenshot
-         hotkey is pressed; dismissed via "Back to document". Sits above the
-         toolbar (z-30). (Layer 1 — frosted blur on focus loss — is applied to
-         the content row below.) Deterrent only. -->
-    <div
-      v-if="isCaptureBlocked"
-      class="absolute inset-0 z-50 flex select-none flex-col items-center justify-center gap-4 bg-background/95 backdrop-blur-md"
-      data-screenshot-protection-overlay
-    >
-      <p class="text-sm font-medium text-muted-foreground">Protected content</p>
-      <button
-        type="button"
-        class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        @click="dismissCaptureBlock"
-      >
-        Back to document
-      </button>
-    </div>
+    <!-- Screenshot-protection overlay layers (brand scrim on focus loss; the
+         persistent capture-block card on a screenshot hotkey). Content blur for
+         Layer 1 is applied to the content row below. Deterrent only. -->
+    <ScreenshotProtectionOverlay
+      :blurred="isBlurred"
+      :blocked="isCaptureBlocked"
+      @dismiss="dismissCaptureBlock"
+    />
 
     <ViewerToolbar
       :features="resolvedFeatures"
