@@ -32,6 +32,8 @@ import { detectDocumentType } from './utils/documentType'
 import { pageClickToPdfCoord } from './utils/pageCoords'
 import type { CommandCallbacks } from './composables/useCommands'
 import { useTouch } from './composables/useTouch'
+import { useScreenshotProtection } from './composables/useScreenshotProtection'
+import ScreenshotProtectionOverlay from './ScreenshotProtectionOverlay.vue'
 import { useAnnotationThreads } from './composables/useAnnotationThreads'
 import { printImage, printText, resolveSourceToText } from './composables/usePrint'
 import { sourceToUrl } from './utils/documentType'
@@ -917,6 +919,14 @@ useTouch(
   },
 )
 
+// Client-side screen-capture deterrents (opt-in, additive, casual deterrent
+// only — see `useScreenshotProtection` for the honest caveats).
+const {
+  isBlurred,
+  isCaptureBlocked,
+  dismiss: dismissCaptureBlock,
+} = useScreenshotProtection(rootEl, () => resolvedFeatures.value.screenshotProtection)
+
 // ─────────────────────────────────────────────────────────────────────────
 // Programmatic API — full implementation
 // ─────────────────────────────────────────────────────────────────────────
@@ -1056,9 +1066,25 @@ defineExpose<DocumentViewerInstance>({
 <template>
   <div
     ref="rootEl"
-    :class="cn('document-viewer flex h-full flex-col bg-background text-foreground', props.class)"
+    :class="
+      cn(
+        'document-viewer relative flex h-full flex-col bg-background text-foreground',
+        resolvedFeatures.screenshotProtection && 'meld-screenshot-protected',
+        props.class,
+      )
+    "
     data-document-viewer
+    :data-screenshot-protected="resolvedFeatures.screenshotProtection ? '' : undefined"
   >
+    <!-- Screenshot-protection overlay layers (brand scrim on focus loss; the
+         persistent capture-block card on a screenshot hotkey). Content blur for
+         Layer 1 is applied to the content row below. Deterrent only. -->
+    <ScreenshotProtectionOverlay
+      :blurred="isBlurred"
+      :blocked="isCaptureBlocked"
+      @dismiss="dismissCaptureBlock"
+    />
+
     <ViewerToolbar
       :features="resolvedFeatures"
       :document-type="documentType"
@@ -1097,7 +1123,9 @@ defineExpose<DocumentViewerInstance>({
       @set-whole-word="handleSetWholeWord"
     />
 
-    <div class="flex flex-1 overflow-hidden">
+    <div
+      :class="['flex flex-1 overflow-hidden transition-all duration-300', isBlurred && 'blur-xl']"
+    >
       <div class="relative flex-1 overflow-hidden">
         <PdfViewer
           v-if="isPdf"
@@ -1208,5 +1236,16 @@ mark.search-highlight-current {
   background-color: rgba(255, 152, 0, 0.6);
   outline: 1px solid rgba(255, 152, 0, 0.9);
   outline-offset: -1px;
+}
+
+/*
+ * Screenshot-protection CSS hardening (applied when `screenshotProtection` is
+ * on). Deters mobile long-press "Save image" and drag-to-desktop of images.
+ * Deliberately does NOT set `user-select` — text-selection/copy is controlled
+ * independently by the `selection` feature flag.
+ */
+.meld-screenshot-protected img {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
 }
 </style>

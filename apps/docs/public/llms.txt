@@ -160,6 +160,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Document Viewer: Getting Started](/docs/document-viewer/getting-started): Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
 - [Document Viewer: Plugin Reference](/docs/document-viewer/plugins): One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
 - [Document Viewer: Programmatic API](/docs/document-viewer/programmatic-api): Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
+- [Document Viewer: Screenshot Protection](/docs/document-viewer/screenshot-protection): The screenshotProtection flag — client-side screen-capture deterrents, what they do, and the hard limits on what any browser can actually prevent.
 - [Document Viewer: Theming](/docs/document-viewer/theming): Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
 - [Document Viewer: Troubleshooting](/docs/document-viewer/troubleshooting): Common issues — WASM 404, CORS, mixed content, large PDFs, browser support matrix, worker quirks.
 - [Document Viewer: Use Cases](/docs/document-viewer/use-cases): Runnable demos for the common patterns — load saved annotations, AI citations, import / export, save-as-copy, threaded reviews, and more.

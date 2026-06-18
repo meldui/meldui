@@ -84,6 +84,14 @@ The `features` prop is a flat object of flags merged over sensible defaults. Dis
 | `keyboardShortcuts` | `true`  | Arrow keys (page nav), `+` / `-` (zoom), `R` (rotate), `Ctrl+F` (search), `F11` (fullscreen), `Esc` (close popovers), `C` / `O` / `T` (toggle comment / outline / thumbnails panel) |
 | `touchGestures`     | `true`  | Swipe page-nav, double-tap to zoom, pinch zoom (in combination with `zoom`)                                                                                                         |
 
+### Screenshot protection
+
+| Flag                   | Default | What it enables                                                                                                                                                                                                                                                                                  |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `screenshotProtection` | `false` | Client-side screen-capture **deterrents**: obscure-on-blur/tab-hide overlay, screenshot/devtools hotkey block overlay, print-blank, and right-click / drag-out blocking. **Not** a guarantee — see [Screenshot Protection](/docs/document-viewer/screenshot-protection) for behaviour and limits |
+
+> **`screenshotProtection` is a deterrent, not a guarantee, and it's purely additive.** It deters casual capture only and is removable via browser DevTools. It does **not** change `selection`, `print`, or `download` — to also block copying or downloading, set those flags yourself. Full details and caveats live on the [Screenshot Protection](/docs/document-viewer/screenshot-protection) page.
+
 ## Per-feature configuration: `featureConfig`
 
 `featureConfig` is keyed by feature name and lets you tune a plugin's behaviour without re-implementing it.
