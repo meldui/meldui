@@ -49,9 +49,7 @@ defineEmits<{ (e: 'dismiss'): void }>()
       </div>
       <div class="space-y-1">
         <p class="text-base font-medium text-foreground">Protected content</p>
-        <p class="text-sm text-muted-foreground">
-          Screen capture is disabled for this document.
-        </p>
+        <p class="text-sm text-muted-foreground">Screen capture is disabled for this document.</p>
       </div>
       <Button type="button" @click="$emit('dismiss')">Back to document</Button>
     </div>
