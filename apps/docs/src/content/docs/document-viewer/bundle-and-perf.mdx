@@ -40,35 +40,35 @@ The minimum required set is always registered (zero opt-in needed):
 
 These plugins are registered unconditionally; the listed `features` flag toggles the corresponding toolbar / overlay, not whether the package ships:
 
-| Plugin package                                | Toolbar/UX gated by               |
-| --------------------------------------------- | --------------------------------- |
-| `@embedpdf/plugin-zoom`                       | `features.zoom`                   |
-| `@embedpdf/plugin-rotate`                     | `features.rotate`                 |
-| `@embedpdf/plugin-spread`                     | `features.spread`                 |
-| `@embedpdf/plugin-pan`                        | `features.pan`                    |
-| `@embedpdf/plugin-fullscreen`                 | `features.fullscreen`             |
-| `@embedpdf/plugin-interaction-manager`        | (always; bridges pointer events) |
-| `@embedpdf/plugin-selection`                  | `features.selection`              |
-| `@embedpdf/plugin-search`                     | `features.search`                 |
-| `@embedpdf/plugin-bookmark`                   | `features.outline`                |
-| `@embedpdf/plugin-thumbnail`                  | `features.thumbnails`             |
-| `@embedpdf/plugin-export`                     | `features.download` + `saveAsCopy()` |
-| `@embedpdf/plugin-print`                      | `features.print`                  |
-| `@embedpdf/plugin-commands`                   | `features.keyboardShortcuts`     |
-| `@embedpdf/plugin-history`                    | `features.undoRedo`              |
-| `@embedpdf/plugin-annotation`                 | `features.annotations`            |
+| Plugin package                         | Toolbar/UX gated by                  |
+| -------------------------------------- | ------------------------------------ |
+| `@embedpdf/plugin-zoom`                | `features.zoom`                      |
+| `@embedpdf/plugin-rotate`              | `features.rotate`                    |
+| `@embedpdf/plugin-spread`              | `features.spread`                    |
+| `@embedpdf/plugin-pan`                 | `features.pan`                       |
+| `@embedpdf/plugin-fullscreen`          | `features.fullscreen`                |
+| `@embedpdf/plugin-interaction-manager` | (always; bridges pointer events)     |
+| `@embedpdf/plugin-selection`           | `features.selection`                 |
+| `@embedpdf/plugin-search`              | `features.search`                    |
+| `@embedpdf/plugin-bookmark`            | `features.outline`                   |
+| `@embedpdf/plugin-thumbnail`           | `features.thumbnails`                |
+| `@embedpdf/plugin-export`              | `features.download` + `saveAsCopy()` |
+| `@embedpdf/plugin-print`               | `features.print`                     |
+| `@embedpdf/plugin-commands`            | `features.keyboardShortcuts`         |
+| `@embedpdf/plugin-history`             | `features.undoRedo`                  |
+| `@embedpdf/plugin-annotation`          | `features.annotations`               |
 
 `commentThreads` adds **no plugin** — it's a pure overlay keyed by annotation id and requires `features.annotations`. `touchGestures` is also plugin-free (pure DOM listeners).
 
 ### Phase 2 — conditionally registered (tree-shaken when off)
 
-| Feature flag            | Plugin package                  |
-| ----------------------- | ------------------------------- |
-| `stamps`                | `@embedpdf/plugin-stamp`        |
-| `signature`             | `@embedpdf/plugin-signature`    |
-| `redaction`             | `@embedpdf/plugin-redaction`    |
-| `forms`                 | `@embedpdf/plugin-form`         |
-| `attachments`           | `@embedpdf/plugin-attachment`   |
+| Feature flag  | Plugin package                |
+| ------------- | ----------------------------- |
+| `stamps`      | `@embedpdf/plugin-stamp`      |
+| `signature`   | `@embedpdf/plugin-signature`  |
+| `redaction`   | `@embedpdf/plugin-redaction`  |
+| `forms`       | `@embedpdf/plugin-form`       |
+| `attachments` | `@embedpdf/plugin-attachment` |
 
 See [Getting Started → Install](/docs/document-viewer/getting-started#install) for the install set.
 

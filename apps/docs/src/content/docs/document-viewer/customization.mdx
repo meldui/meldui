@@ -14,12 +14,12 @@ The default `DocumentViewer` chrome is configured to work out of the box, but ev
 
 `DocumentViewer` is controlled through four distinct, composable inputs:
 
-| Lever               | Prop                                             | Controls                                                                                                                     | Bundle impact                 |
-| ------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| **Features**        | `features`                                       | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
-| **Feature config**  | `featureConfig`                                  | Tuning for an enabled feature (zoom min/max, highlight palette, …).                                                          | None                          |
-| **Toolbar**         | `toolbar` (`ToolbarConfig`)                      | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons.                                | None                          |
-| **Slots + ref API** | `#side-panels`; template ref                     | Inject extra side panels; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …).               | None                          |
+| Lever               | Prop                         | Controls                                                                                                                     | Bundle impact                 |
+| ------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Features**        | `features`                   | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
+| **Feature config**  | `featureConfig`              | Tuning for an enabled feature (zoom min/max, highlight palette, …).                                                          | None                          |
+| **Toolbar**         | `toolbar` (`ToolbarConfig`)  | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons.                                | None                          |
+| **Slots + ref API** | `#side-panels`; template ref | Inject extra side panels; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …).               | None                          |
 
 Built-in toolbar buttons are intentionally **coupled** to `features`: a flag that's off means the plugin isn't registered, so the button would be dead — it's hidden rather than shown inert. When you want a button **without** the built-in behavior (e.g. a custom Print routed to your own handler), turn the feature off and add a `customButtons` entry. `toolbar.groups`/`toolbar.hide` can only further _hide_ built-in buttons, never re-show one for a disabled feature.
 
@@ -64,7 +64,20 @@ const toolbar: ToolbarConfig = {
 Reorders or restricts the toolbar groups. The canonical order (used when `groups` is omitted) is:
 
 ```ts
-;['pageNav', 'zoom', 'rotate', 'viewMode', 'interactionMode', 'search', 'panels', 'annotate', 'stamp', 'sign', 'redact', 'actions']
+;[
+  'pageNav',
+  'zoom',
+  'rotate',
+  'viewMode',
+  'interactionMode',
+  'search',
+  'panels',
+  'annotate',
+  'stamp',
+  'sign',
+  'redact',
+  'actions',
+]
 ```
 
 Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order. A group only renders if its underlying feature is enabled — listing `annotate` does nothing unless `features.annotations` is on.
@@ -126,7 +139,7 @@ const sidePanelOpen = ref(false)
 `<DocumentViewer>` exposes a single slot:
 
 | Slot          | Purpose                                                                                              |
-| ------------- | --------------------------------------------------------------------------------------------------- |
+| ------------- | ---------------------------------------------------------------------------------------------------- |
 | `side-panels` | Inject extra `ViewerSidePanel` panels next to the built-in outline / thumbnails / annotations panels |
 
 ## Replacing format renderers
@@ -190,16 +203,16 @@ const viewerKey = computed(() => JSON.stringify(features))
 
 ### Which inputs need a `:key`
 
-| Input                                       | Behavior                                                       | Needs `:key`? |
-| ------------------------------------------- | ------------------------------------------------------------- | ------------- |
-| `features`                                  | Mount-only — plugin batch registered once                     | ✅ yes        |
-| `featureConfig` (plugin-affecting parts)    | Mount-only — feeds the plugin registration                    | ✅ yes        |
-| `source` (same type) / `mimeType`           | Mount-only — the document is loaded at init                   | ✅ yes        |
-| `wasmUrl` / `worker`                        | Read once when the PDFium engine is created                   | ✅ yes        |
-| `toolbar`                                   | Reactive — the toolbar reads its config live                  | ❌ no         |
-| `downloadUrl`                               | Reactive — read at download time                              | ❌ no         |
-| document **type** switch (pdf↔image↔text↔md) | Already swaps the renderer internally                         | ❌ no         |
-| `initialAnnotations` / `initialThreads`     | Applied by internal watchers                                  | ❌ no         |
+| Input                                        | Behavior                                     | Needs `:key`? |
+| -------------------------------------------- | -------------------------------------------- | ------------- |
+| `features`                                   | Mount-only — plugin batch registered once    | ✅ yes        |
+| `featureConfig` (plugin-affecting parts)     | Mount-only — feeds the plugin registration   | ✅ yes        |
+| `source` (same type) / `mimeType`            | Mount-only — the document is loaded at init  | ✅ yes        |
+| `wasmUrl` / `worker`                         | Read once when the PDFium engine is created  | ✅ yes        |
+| `toolbar`                                    | Reactive — the toolbar reads its config live | ❌ no         |
+| `downloadUrl`                                | Reactive — read at download time             | ❌ no         |
+| document **type** switch (pdf↔image↔text↔md) | Already swaps the renderer internally        | ❌ no         |
+| `initialAnnotations` / `initialThreads`      | Applied by internal watchers                 | ❌ no         |
 
 > **A remount resets in-viewer state** — scroll position, current page, and zoom return to `initialPage` / `initialScale`, and any un-persisted in-session annotation edits are lost (persisted ones re-seed from `initialAnnotations`). Key **only** on inputs that genuinely require it, so toolbar tweaks, download-URL swaps, and annotation updates don't trigger needless remounts.
 

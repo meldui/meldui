@@ -101,20 +101,20 @@ const featureConfig: FeatureConfig = {
 
 ### `zoom`
 
-| Option        | Type                                         | Default          | Notes                                                                 |
-| ------------- | -------------------------------------------- | ---------------- | --------------------------------------------------------------------- |
-| `min`         | `number`                                     | `0.25`           | Minimum scale factor (the zoom plugin's default when omitted)          |
-| `max`         | `number`                                     | `10`             | Maximum scale factor (the zoom plugin's default when omitted)          |
-| `step`        | `number`                                     | —                | Declared on the type but **not currently applied** — zoom-in/out use the plugin's built-in step |
-| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual-size'` | `'fit-width'`    | Initial zoom preset                                                   |
+| Option        | Type                                         | Default       | Notes                                                                                           |
+| ------------- | -------------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------- |
+| `min`         | `number`                                     | `0.25`        | Minimum scale factor (the zoom plugin's default when omitted)                                   |
+| `max`         | `number`                                     | `10`          | Maximum scale factor (the zoom plugin's default when omitted)                                   |
+| `step`        | `number`                                     | —             | Declared on the type but **not currently applied** — zoom-in/out use the plugin's built-in step |
+| `defaultMode` | `'fit-page' \| 'fit-width' \| 'actual-size'` | `'fit-width'` | Initial zoom preset                                                                             |
 
 ### `annotations`
 
-| Option              | Type                     | Default                                                              | Notes                                                                                                                                                                               |
-| ------------------- | ------------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `author`            | `string`                 | `undefined`                                                          | Attached to created annotations as the author. No automatic fallback to `currentUser` — pass it explicitly if you want authored annotations                                         |
-| `useAnnotationMode` | `boolean`                | `false`                                                              | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately                                                                             |
-| `defaultTools`      | `AnnotationToolConfig[]` | —                                                                   | Declared on the type but **not currently applied** — the highlight palette is fixed to `HIGHLIGHT_COLORS`. See the [Highlight colour palette](#highlight-colour-palette) section below |
+| Option              | Type                     | Default     | Notes                                                                                                                                                                                  |
+| ------------------- | ------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `author`            | `string`                 | `undefined` | Attached to created annotations as the author. No automatic fallback to `currentUser` — pass it explicitly if you want authored annotations                                            |
+| `useAnnotationMode` | `boolean`                | `false`     | When `true`, new redactions are stored as pending PDF REDACT annotations instead of applied immediately                                                                                |
+| `defaultTools`      | `AnnotationToolConfig[]` | —           | Declared on the type but **not currently applied** — the highlight palette is fixed to `HIGHLIGHT_COLORS`. See the [Highlight colour palette](#highlight-colour-palette) section below |
 
 > **Phase 2 config (`stamps` / `signature` / `redaction`) is plumbed to the plugin but not yet driven by any UI/API.** These shapes pass through to `createPluginRegistration` so they're ready for when the editing UI lands; they have no visible effect today.
 

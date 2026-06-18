@@ -280,10 +280,7 @@ All three emit `thread-update` with `{ thread, action }` so you can persist:
 Set `currentUser` so replies are attributed correctly:
 
 ```vue
-<DocumentViewer
-  :current-user="{ id: 'u-42', name: 'Alex Chen', avatarUrl: '/me.png' }"
-  ...
-/>
+<DocumentViewer :current-user="{ id: 'u-42', name: 'Alex Chen', avatarUrl: '/me.png' }" ... />
 ```
 
 `currentUser.name` flows through to reply authorship (`CommentReply.authorName`) and to the `author` field on comment annotations the user creates, so new replies and comments carry the correct display name.

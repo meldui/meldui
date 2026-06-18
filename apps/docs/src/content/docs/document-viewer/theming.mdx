@@ -38,13 +38,13 @@ The viewer chrome adapts to dark mode via `dark:` Tailwind classes on every inte
 
 Every UI element inside `DocumentViewer` is composed from MeldUI primitives so styling overrides naturally inherit. The internals use:
 
-| Primitive      | Used by                                                          |
-| -------------- | --------------------------------------------------------------- |
+| Primitive      | Used by                                                                                    |
+| -------------- | ------------------------------------------------------------------------------------------ |
 | `Button`       | Every toolbar button, search case / whole-word toggles, comment form actions, reply submit |
-| `Popover`      | Search popover                                                  |
-| `DropdownMenu` | Zoom presets, mobile overflow menu                             |
-| `Tooltip`      | Highlight tooltip wrapper, button hover labels                 |
-| `Textarea`     | Reply form (the comment-create form uses a raw `<textarea>`)   |
+| `Popover`      | Search popover                                                                             |
+| `DropdownMenu` | Zoom presets, mobile overflow menu                                                         |
+| `Tooltip`      | Highlight tooltip wrapper, button hover labels                                             |
+| `Textarea`     | Reply form (the comment-create form uses a raw `<textarea>`)                               |
 
 Override the variants via your Tailwind theme — see [Theming guide (Getting Started)](/docs/getting-started/theming).
 
