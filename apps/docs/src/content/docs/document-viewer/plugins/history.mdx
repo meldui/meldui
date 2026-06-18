@@ -10,7 +10,7 @@ The **History** plugin tracks annotation mutations (create, update, delete) on a
 
 ## Enabling flag
 
-`features.undoRedo: true` — auto-enabled when `features.annotations` is on.
+The History plugin is **always registered**. `features.undoRedo` controls whether undo/redo is surfaced (toolbar buttons + keyboard shortcuts); it auto-enables when `features.annotations` is on.
 
 ## What it does
 
@@ -29,7 +29,7 @@ None surfaced externally — toolbar state observes `canUndo` / `canRedo` reacti
 
 ## Dependencies
 
-- annotation (the source of historical operations)
+None — History is registered before Annotation and the Annotation plugin records its mutations into it. (Annotation is the source of the operations History tracks, not the other way around.)
 
 ## Configuration
 

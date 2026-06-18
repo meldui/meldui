@@ -14,30 +14,32 @@ The **Hotkeys** plugin wires keyboard shortcuts that mirror desktop PDF reader c
 
 ## Bindings
 
-| Shortcut                            | Action                              |
-| ----------------------------------- | ----------------------------------- |
-| `←` / `→` / `PageUp` / `PageDown`   | Previous / next page                |
-| `Home` / `End`                      | First / last page                   |
-| `+` / `-`                           | Zoom in / out                       |
-| `0`                                 | Fit page                            |
-| `R`                                 | Rotate CW                           |
-| `Shift + R`                         | Rotate CCW                          |
-| `Ctrl/Cmd + F`                      | Open search popover                 |
-| `Esc`                               | Close search / panel / popover      |
-| `F11`                               | Toggle fullscreen                   |
-| `Ctrl/Cmd + Z`                      | Undo (requires `features.undoRedo`) |
-| `Ctrl/Cmd + Shift + Z` / `Ctrl + Y` | Redo                                |
-| `C`                                 | Toggle annotations panel            |
-| `O`                                 | Toggle outline panel                |
-| `T`                                 | Toggle thumbnails panel             |
-| `P`                                 | Print                               |
-| `D`                                 | Download                            |
+| Shortcut                                | Action                              |
+| --------------------------------------- | ----------------------------------- |
+| `←` / `→`                               | Previous / next page                |
+| `Home` / `End`                          | First / last page                   |
+| `+` / `=` / `-` / `_`                   | Zoom in / out                       |
+| `0`                                     | Reset zoom (fit page)               |
+| `R`                                     | Rotate CW                           |
+| `Shift + R`                             | Rotate CCW                          |
+| `Ctrl/Cmd + F`                          | Open search popover                 |
+| `Esc`                                   | Close search / panel / popover      |
+| `F11`                                   | Toggle fullscreen                   |
+| `Ctrl/Cmd + Z`                          | Undo (requires `features.undoRedo`) |
+| `Ctrl/Cmd + Shift + Z` / `Ctrl/Cmd + Y` | Redo                                |
+| `C`                                     | Toggle comments panel               |
+| `O`                                     | Toggle outline panel                |
+| `T`                                     | Toggle thumbnails panel             |
 
 Bindings only fire when the focus is inside the viewer (so they don't fight with the host app's shortcuts).
 
+## How it works
+
+Keyboard shortcuts are built on the EmbedPDF **Commands** plugin (`@embedpdf/plugin-commands`), not a dedicated hotkeys plugin. `DocumentViewer` registers a command catalog (each command carries its `shortcuts` and an `action`) via the Commands plugin, then a small internal keyboard bridge maps DOM key events to the matching command. `features.keyboardShortcuts` toggles that bridge.
+
 ## Composable
 
-`useCommandsCapability()` from `@embedpdf/plugin-commands/vue` plus `useHotkeysCapability()` from `@embedpdf/plugin-hotkeys/vue`. The viewer wires both internally.
+`useCommandsCapability()` from `@embedpdf/plugin-commands/vue` exposes the command registry. The viewer wires the catalog and the keyboard bridge internally.
 
 ## Events
 
@@ -45,15 +47,22 @@ None surfaced externally — bindings invoke the same imperative methods as the 
 
 ## Dependencies
 
-- viewport (focus tracking)
+- Commands plugin (`@embedpdf/plugin-commands`)
 
 ## Configuration
 
-No `featureConfig`. To override bindings or add your own, register additional shortcuts via `useHotkeysCapability()`:
+No `featureConfig`. To add your own shortcut, register a command (which carries its own `shortcuts`) via the Commands capability:
 
 ```ts
-const hot = useHotkeysCapability()
-hot.provides.value?.register('Ctrl+S', () => saveToBackend())
+import { useCommandsCapability } from '@embedpdf/plugin-commands/vue'
+
+const commands = useCommandsCapability()
+commands.provides.value?.registerCommand({
+  id: 'app.save',
+  label: 'Save to backend',
+  shortcuts: ['ctrl+s', 'meta+s'],
+  action: () => saveToBackend(),
+})
 ```
 
 ## See also

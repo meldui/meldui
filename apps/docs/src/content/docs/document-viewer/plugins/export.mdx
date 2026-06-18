@@ -10,16 +10,73 @@ The **Export** plugin handles every "get the PDF out of the viewer" operation: p
 
 ## Enabling flag
 
-`features.print: true` — registers the print plugin and adds the Print toolbar button
-`features.download: true` — registers the export plugin and adds the Download toolbar button
+Both the Export and Print plugins are **always registered** — `useExportCapability` / `usePrint` and `saveAsCopy()` are always available. The flags only gate the toolbar buttons:
 
-Either flag triggers registration of the export plugin (it serves both).
+- `features.download` — shows the Download toolbar button
+- `features.print` — shows the Print toolbar button
 
 ## What it does
 
 - Toolbar buttons: Print, Download
 - `saveAsCopy()` programmatic method that returns a baked PDF buffer
 - Optional `downloadUrl` prop on `DocumentViewer` — if set, the Download button serves that URL instead of the live source (useful for re-encoded archival copies)
+
+## Download behaviour
+
+The Download button is **always visible** when `features.download` is on, for **every** document type (PDF, image, text, markdown). What it actually downloads depends on whether `downloadUrl` is set and the document type, resolved in this order:
+
+| Condition                                     | What downloads                                              | How                                                                                                                                 |
+| --------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **`downloadUrl` set** (any type)              | The URL you provide                                         | Anchor download straight from `downloadUrl` — the live source is ignored. Use for a server-driven, re-encoded, or watermarked copy. |
+| **PDF**, no `downloadUrl`                     | A re-encoded copy of the open PDF, **annotations baked in** | EmbedPDF Export plugin (`useExportCapability().download()`)                                                                         |
+| **Image / text / markdown**, no `downloadUrl` | The original source bytes                                   | Built straight from the `source` prop (no plugin involved)                                                                          |
+
+### 1. With `downloadUrl` (any document type)
+
+`downloadUrl` takes precedence over everything else. The button downloads that URL verbatim, so it's the way to serve a backend-generated artifact (signed CDN link, flattened/watermarked PDF, etc.) instead of what's on screen.
+
+```vue
+<DocumentViewer
+  :source="previewUrl"
+  download-url="https://files.example.com/invoice-2026.pdf?signature=…"
+/>
+```
+
+This works identically for non-PDF documents — point `downloadUrl` at the canonical file:
+
+```vue
+<DocumentViewer :source="imageBlob" mime-type="image/png" download-url="/api/assets/diagram.png" />
+```
+
+### 2. PDF without `downloadUrl` (Export plugin)
+
+With no `downloadUrl`, PDFs go through the EmbedPDF Export plugin. The downloaded file is a **re-encoded copy** with the current annotations baked in — not necessarily a byte-for-byte copy of the original.
+
+```vue
+<!-- Download button downloads the live PDF (annotations included) via the Export plugin -->
+<DocumentViewer :source="pdfUrl" :features="{ download: true }" />
+```
+
+If you need the _pristine_ original instead of a re-encoded copy, set `downloadUrl` to the source URL.
+
+### 3. Non-PDF without `downloadUrl` (download from source)
+
+Image / text / markdown documents have no Export plugin, so the button builds the download directly from the `source` prop:
+
+- **String URL source** — fetched into a `Blob` first, then downloaded from a same-origin object URL. This is required because browsers ignore the `download` attribute on a cross-origin link (it would navigate/open instead of downloading). On a CORS or network failure it falls back to a best-effort download of the raw URL.
+- **`File` / `Blob` / `ArrayBuffer` source** — wrapped in an object URL directly.
+
+The filename is derived automatically: a `File`'s own `name`, else the URL's last path segment when it has an extension, else `image.<ext>` / `document.<ext>` from the resolved MIME type.
+
+```vue
+<!-- Remote markdown: fetched → Blob → downloaded as document.md -->
+<DocumentViewer :source="'https://example.com/notes.md'" mime-type="text/markdown" />
+
+<!-- Local File: downloads using the File's own name -->
+<DocumentViewer :source="userUploadedFile" />
+```
+
+> **Cross-origin note.** For a remote non-PDF source to download (rather than open in a new tab), the host must allow the cross-origin `fetch`. If CORS blocks it, the viewer falls back to the raw URL and the browser may navigate to it instead of downloading. Set `downloadUrl` to a same-origin endpoint to avoid this.
 
 ## Composables
 
@@ -32,8 +89,8 @@ Both are wired into the toolbar internally.
 
 ```ts
 interface SaveAsCopyOptions {
-  applyRedactions?: boolean // burn in pending redactions before saving (Phase 2)
-  flatten?: boolean // flatten annotations into page contents (loses editability)
+  includeAnnotations?: boolean // include current annotations in the saved copy (default true)
+  flatten?: boolean // flatten editable annotations into fixed page content
 }
 
 const buffer = await viewer.value?.saveAsCopy()

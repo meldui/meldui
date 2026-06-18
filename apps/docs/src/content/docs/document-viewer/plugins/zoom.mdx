@@ -10,7 +10,7 @@ The **Zoom** plugin handles all zoom interactions: explicit zoom buttons, fit pr
 
 ## Enabling flag
 
-`features.zoom: true`
+The Zoom plugin is **always registered** — `useZoom` and the zoom buttons are always wired up. `features.zoom` controls whether the **zoom toolbar group** is shown.
 
 ## What it does
 
@@ -21,16 +21,21 @@ The **Zoom** plugin handles all zoom interactions: explicit zoom buttons, fit pr
 
 ## Composable
 
-`useZoom(documentId)` from `@embedpdf/plugin-zoom/vue`. Returns:
+`useZoom(documentId)` from `@embedpdf/plugin-zoom/vue`. Returns `{ state, provides }`:
 
 ```ts
 {
-  state: { currentZoomLevel, zoomMode },
-  zoomIn(),
-  zoomOut(),
-  setZoom(level: number),
-  setZoomMode(mode: 'fit-page' | 'fit-width' | 'actual'),
+  state: Ref<{ zoomLevel, currentZoomLevel, isMarqueeZoomActive }>,
+  provides: ComputedRef<ZoomScope | null>, // null until the plugin is ready
 }
+```
+
+The imperative methods live on `provides.value`:
+
+```ts
+provides.value?.requestZoom(0.75) // explicit scale or a ZoomMode
+provides.value?.zoomIn()
+provides.value?.zoomOut()
 ```
 
 ## Events
@@ -45,12 +50,19 @@ The **Zoom** plugin handles all zoom interactions: explicit zoom buttons, fit pr
 
 ```ts
 interface ZoomFeatureConfig {
-  min?: number // default 0.25
-  max?: number // default 8
-  step?: number // default 0.1
-  defaultMode?: 'fit-page' | 'fit-width' | 'actual' // default 'fit-width'
+  min?: number // falls back to the zoom plugin default (0.25)
+  max?: number // falls back to the zoom plugin default (10)
+  defaultMode?: 'fit-page' | 'fit-width' | 'actual-size' // default 'fit-page'
+  step?: number // declared but NOT currently applied
 }
 ```
+
+> `step` is part of the type for forward-compatibility but is **not wired into the
+> zoom plugin yet** — setting it has no effect. `min` / `max` fall through to the
+> EmbedPDF zoom plugin's own defaults (0.25 / 10) when omitted.
+>
+> `defaultMode` maps to the zoom plugin's `defaultZoomLevel`: `'fit-page'` (the
+> default), `'fit-width'`, or `'actual-size'` (100%).
 
 ```vue
 <DocumentViewer
@@ -63,7 +75,7 @@ interface ZoomFeatureConfig {
 
 ## When you'd touch it directly
 
-For a "Zoom 75% / 100% / 150%" dropdown in your own toolbar — import `useZoom` and call `setZoom(0.75)`.
+For a "Zoom 75% / 100% / 150%" dropdown in your own toolbar — import `useZoom` and call `provides.value?.requestZoom(0.75)`.
 
 ## See also
 

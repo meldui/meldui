@@ -1,6 +1,6 @@
 ---
 title: 'Plugin: Scroll'
-description: Page-aware virtual scrolling for continuous, paged, and spread modes.
+description: Page-aware virtual scrolling for continuous and spread modes.
 category: composites
 order: 103
 package: '@meldui/vue'
@@ -16,7 +16,7 @@ Always registered. No `features` flag.
 
 - Reactive `currentPage` and `totalPages` state
 - Continuous scroll by default — pages flow one after another
-- Page-mode and spread-mode supported (the latter via `features.spread`)
+- Spread mode supported (via `features.spread`); Phase 1 has no single-page mode (`ViewMode` is `'continuous' | 'spread'` only)
 - Smooth scroll to a specific page (`goToPage` programmatic call)
 
 ## Composable

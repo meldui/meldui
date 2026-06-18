@@ -56,14 +56,14 @@ Browsers block `http://` PDF sources from `https://` pages. Always serve PDFs ov
 
 ## Worker mode: relative wasm-url not found
 
-If you set `wasm-url="/pdfium.wasm"` (a relative path) and the engine runs in a Web Worker, the worker is built from a blob URL whose base differs from the page's, so the relative path resolves against the blob origin and 404s.
+If you set a **bare relative** `wasm-url` (e.g. `wasm-url="pdfium.wasm"` or `"./pdfium.wasm"`) and the engine runs in a Web Worker, the worker is built from a blob URL whose base differs from the page's, so the relative path resolves against the blob origin and 404s.
+
+The viewer resolves `wasmUrl` against `document.baseURI` before handing it to the engine, so a **root-relative** path (`/pdfium.wasm`) and a fully-qualified URL both work with **either** mode. Only bare relative paths are affected.
 
 Two fixes:
 
-1. **Use a fully-qualified URL**: `wasm-url="https://your-app.com/pdfium.wasm"`
+1. **Use a root-relative or fully-qualified URL**: `wasm-url="/pdfium.wasm"` or `wasm-url="https://your-app.com/pdfium.wasm"`
 2. **Disable worker mode**: `:worker="false"` (PDFium runs on the main thread; OK for small/medium documents)
-
-Absolute paths starting with `/` work in **main thread** mode. Worker mode requires a fully-qualified URL.
 
 ## "DOMException: The user aborted a request" on rapid page switches
 
@@ -77,7 +77,7 @@ If you swap `source` rapidly (e.g. a thumbnail list of N PDFs), in-flight loads 
 
 Two checks:
 
-1. **Worker mode on?** Without `worker={true}` (the default), large documents block the main thread during initial decode.
+1. **Worker mode on?** With `:worker="false"` (the prop defaults to `true`), large documents block the main thread during initial decode.
 2. **Tiling enabled?** Tiling is always-on in the minimum plugin set, but a custom plugin registry that omits it will render every page at full resolution simultaneously — fatal on large docs.
 
 For 1000+ page documents, also confirm `features.thumbnails` is on (lets the user navigate via the panel instead of scrolling through every page).
@@ -103,7 +103,7 @@ See [Annotations → Persisting changes](/docs/document-viewer/annotations#persi
 
 Confirm:
 
-1. `features.annotations` is `true` — without the flag the annotation plugin isn't registered, so the data load is dropped.
+1. The source is a **PDF**. Programmatic annotation loading only renders on the PDF renderer; for image / text / markdown the annotations are stored but not painted.
 2. The `pageIndex` values are **0-based** (page 1 → `pageIndex: 0`).
 3. The `rect` coordinates are in **PDF points** (1/72 inch) measured from the **top-left** of the page (DOM convention, not the PDF spec's bottom-up). For a Letter page, `origin.y = 0` is the top and `origin.y = 792` is the bottom.
 4. For highlights, `segmentRects` must include at least one rect — the engine renders the highlight from `segmentRects`, not from `rect`.

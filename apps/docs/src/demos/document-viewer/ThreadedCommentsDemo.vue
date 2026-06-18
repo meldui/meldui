@@ -7,9 +7,15 @@ import type {
   CommentThread,
   DocumentViewerInstance,
   ThreadUpdatePayload,
+  ToolbarConfig,
 } from '@meldui/vue'
 
 const SAMPLE_PDF = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
+
+// Trim the chrome to the groups relevant to a comments demo.
+const toolbar: ToolbarConfig = {
+  groups: ['pageNav', 'zoom', 'search', 'panels', 'annotate'],
+}
 
 const viewer = ref<DocumentViewerInstance | null>(null)
 const log = ref<string[]>([])
@@ -41,13 +47,13 @@ const annotations: Annotation[] = [
 const threads: CommentThread[] = [
   {
     annotationId: 't-1',
-    resolved: false,
+    isResolved: false,
     replies: [
       {
         id: 'r-1',
         annotationId: 't-1',
         authorUserId: 'sam@example.com',
-        authorDisplayName: 'Sam',
+        authorName: 'Sam',
         content: 'Agreed — propose splitting into 2a and 2b',
         createdAt: new Date(Date.now() - 1800000).toISOString(),
       },
@@ -55,7 +61,7 @@ const threads: CommentThread[] = [
   },
   {
     annotationId: 't-2',
-    resolved: true,
+    isResolved: true,
     resolvedAt: new Date(Date.now() - 600000).toISOString(),
     resolvedByUserId: 'alex@example.com',
     replies: [],
@@ -86,7 +92,7 @@ function onThreadUpdate({ thread, action }: ThreadUpdatePayload) {
     source="/doc.pdf"
     wasm-url="/pdfium.wasm"
     :features="{ annotations: true, commentThreads: true }"
-    :current-user="{ id: 'u-42', displayName: 'You' }"
+    :current-user="{ id: 'u-42', name: 'You' }"
     @thread-update="onThreadUpdate"
   />
 </template>`
@@ -101,7 +107,8 @@ function onThreadUpdate({ thread, action }: ThreadUpdatePayload) {
           :source="SAMPLE_PDF"
           wasm-url="/pdfium.wasm"
           :features="{ zoom: true, annotations: true, commentThreads: true, undoRedo: true }"
-          :current-user="{ id: 'u-42', displayName: 'You', avatarUrl: '' }"
+          :toolbar="toolbar"
+          :current-user="{ id: 'u-42', name: 'You', avatarUrl: '' }"
           @thread-update="onThreadUpdate"
         />
       </div>

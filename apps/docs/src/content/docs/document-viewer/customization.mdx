@@ -10,6 +10,21 @@ import ToolbarCustomDemo from '../../../demos/document-viewer/ToolbarCustomDemo.
 
 The default `DocumentViewer` chrome is configured to work out of the box, but every part of the toolbar and side-panel layout is replaceable.
 
+## The four control levers
+
+`DocumentViewer` is controlled through four distinct, composable inputs:
+
+| Lever               | Prop                         | Controls                                                                                                                     | Bundle impact                 |
+| ------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Features**        | `features`                   | Which capabilities exist — registers the EmbedPDF plugin **and** shows its built-in toolbar button. All-or-nothing per flag. | Disabled → plugin tree-shaken |
+| **Feature config**  | `featureConfig`              | Tuning for an enabled feature (zoom min/max, highlight palette, …).                                                          | None                          |
+| **Toolbar**         | `toolbar` (`ToolbarConfig`)  | Chrome composition — reorder/restrict groups, hide individual buttons, inject custom buttons.                                | None                          |
+| **Slots + ref API** | `#side-panels`; template ref | Inject extra side panels; drive the viewer programmatically (`goToPage`, `createAnnotation`, `saveAsCopy`, …).               | None                          |
+
+Built-in toolbar buttons are intentionally **coupled** to `features`: a flag that's off means the plugin isn't registered, so the button would be dead — it's hidden rather than shown inert. When you want a button **without** the built-in behavior (e.g. a custom Print routed to your own handler), turn the feature off and add a `customButtons` entry. `toolbar.groups`/`toolbar.hide` can only further _hide_ built-in buttons, never re-show one for a disabled feature.
+
+For **per-document** capability/permission control, see [Per-document permissions](#per-document-permissions-keyed-remount) below — it rides on a per-document `features` object plus a `:key` remount.
+
 ## Toolbar customization
 
 Pass a `toolbar` prop typed as `ToolbarConfig`:
@@ -18,15 +33,21 @@ Pass a `toolbar` prop typed as `ToolbarConfig`:
 import type { ToolbarConfig } from '@meldui/vue'
 
 const toolbar: ToolbarConfig = {
-  groups: ['nav', 'zoom', 'tools', 'panels', 'export'],
-  hide: ['rotate', 'spread'],
+  // Restrict + reorder visible groups (omit `groups` entirely to show all, in
+  // canonical order). Valid groups: pageNav, zoom, rotate, viewMode,
+  // interactionMode, search, panels, annotate, stamp, sign, redact, actions.
+  groups: ['pageNav', 'zoom', 'search', 'panels', 'actions'],
+  // Hide individual built-in buttons by id (e.g. rotate-cw, rotate-ccw,
+  // view-mode, interaction-mode, thumbnails, outline, comments, download,
+  // print, fullscreen, zoom-in, zoom-out, zoom-preset, prev-page, next-page).
+  hide: ['rotate-cw', 'rotate-ccw'],
   customButtons: [
     {
       id: 'share',
-      label: 'Share',
-      icon: 'IconShare',
-      position: 'export',
+      label: 'Share', // tooltip + accessible label
       onClick: () => openShareDialog(),
+      // isActive?: () => boolean   // optional pressed state
+      // isDisabled?: () => boolean // optional disabled state
     },
   ],
 }
@@ -40,27 +61,44 @@ const toolbar: ToolbarConfig = {
 
 ### `groups`
 
-Reorders or restricts the toolbar groups. Default order is:
+Reorders or restricts the toolbar groups. The canonical order (used when `groups` is omitted) is:
 
 ```ts
-;['nav', 'zoom', 'view', 'tools', 'panels', 'search', 'export']
+;[
+  'pageNav',
+  'zoom',
+  'rotate',
+  'viewMode',
+  'interactionMode',
+  'search',
+  'panels',
+  'annotate',
+  'stamp',
+  'sign',
+  'redact',
+  'actions',
+]
 ```
 
-Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order.
+Pass a subset to hide other groups entirely. Pass a reordered array to change their visual order. A group only renders if its underlying feature is enabled — listing `annotate` does nothing unless `features.annotations` is on.
 
 ### `hide`
 
-Hides individual buttons by id. The default ids are: `zoom-in`, `zoom-out`, `fit-page`, `fit-width`, `rotate-cw`, `rotate-ccw`, `spread`, `pan`, `fullscreen`, `print`, `download`, `highlight`, `comment`, `undo`, `redo`, `search-toggle`, `outline-toggle`, `thumbnails-toggle`, `annotations-toggle`.
+Hides individual buttons by id, even when their group is visible. The built-in ids are:
+
+`prev-page`, `next-page`, `zoom-out`, `zoom-preset`, `zoom-in`, `rotate-ccw`, `rotate-cw`, `view-mode`, `interaction-mode`, `search`, `thumbnails`, `outline`, `comments`, `download`, `print`, `fullscreen`.
 
 ### `customButtons`
 
-Append your own buttons. Each requires:
+Append your own buttons. The `CustomToolbarButton` fields are:
 
-- `id` — unique within the toolbar
-- `label` — accessible label (visible in overflow menu)
-- `icon` — name of a `@meldui/tabler-vue` icon component
-- `position` — which group to attach to (`'nav' | 'zoom' | 'view' | 'tools' | 'panels' | 'search' | 'export'`)
-- `onClick` — handler
+- `id` — unique within the toolbar (required)
+- `label` — tooltip + accessible (`aria-label`) text (required)
+- `onClick` — click handler (required)
+- `isActive?` — `() => boolean` for a pressed/toggle state
+- `isDisabled?` — `() => boolean` to disable the button
+
+> **`icon` and `group` are not applied today.** The `CustomToolbarButton` type declares both, but via `<DocumentViewer>` custom buttons currently render with a default icon in a fixed toolbar position (after the annotation tools, before the actions group). Don't rely on `icon`/`group` for placement or glyph — use `label` for identification.
 
 ## Side panel customization
 
@@ -72,7 +110,7 @@ The three default panels are:
 
 Each is enabled by its corresponding `features` flag (`outline`, `thumbnails`, `commentThreads`) and toggled from the toolbar.
 
-To replace a panel, import the host (`ViewerSidePanel`) and compose your own:
+To add your own panel alongside the built-ins, import the host (`ViewerSidePanel`) and place it in the `#side-panels` slot:
 
 ```vue
 <script setup lang="ts">
@@ -85,7 +123,7 @@ const sidePanelOpen = ref(false)
 
 <template>
   <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm">
-    <template #side-panel>
+    <template #side-panels>
       <ViewerSidePanel v-if="sidePanelOpen" title="Custom Outline" @close="sidePanelOpen = false">
         <MyCustomOutline />
       </ViewerSidePanel>
@@ -94,16 +132,15 @@ const sidePanelOpen = ref(false)
 </template>
 ```
 
-`ViewerSidePanel` provides the host (header bar + close button + fixed width); your custom content fills its default slot.
+`ViewerSidePanel` provides the host (header bar + close button + fixed width); your custom content fills its default slot. The built-in panels still render — `#side-panels` is additive, not a replacement.
 
 ## Slot reference
 
-| Slot                | Purpose                                                                                            |
-| ------------------- | -------------------------------------------------------------------------------------------------- |
-| `default` (no slot) | None — the renderers fill the viewport                                                             |
-| `toolbar-extra`     | Append elements to the right side of the toolbar (before the overflow menu)                        |
-| `side-panel`        | Replace the side-panel host. Bypasses the built-in `outline` / `thumbnails` / `annotations` panels |
-| `empty`             | Override the empty state shown while the source is loading or null                                 |
+`<DocumentViewer>` exposes a single slot:
+
+| Slot          | Purpose                                                                                              |
+| ------------- | ---------------------------------------------------------------------------------------------------- |
+| `side-panels` | Inject extra `ViewerSidePanel` panels next to the built-in outline / thumbnails / annotations panels |
 
 ## Replacing format renderers
 
@@ -116,7 +153,7 @@ import { PdfViewer, ImageViewer, TextViewer, MarkdownViewer } from '@meldui/vue'
 You can also import the underlying composables and build a fully custom layout:
 
 ```ts
-import { useTouch, useCommands, useAnnotationThreads } from '@meldui/vue'
+import { useTouch, buildCommands, useAnnotationThreads } from '@meldui/vue'
 ```
 
 ## CSS class overrides
@@ -143,34 +180,82 @@ Override these in your global CSS or via Tailwind utilities. The `class` prop on
 <DocumentViewer class="rounded-xl border shadow-lg" source="/doc.pdf" wasm-url="/pdfium.wasm" />
 ```
 
-## Permissions
+## Reloading the viewer with `:key`
 
-The `permissions` prop on `ViewerToolbar` (when composing your own layout) accepts a `ViewerPermissions` object that gates user-facing actions:
+Some inputs are read **only once, at mount**. The PDF path is powered by EmbedPDF, whose Vue `<EmbedPDF>` registers its plugin batch a single time inside `onMounted` and never watches the prop afterwards. `DocumentViewer` likewise does not `watch(source)`. So changing one of these inputs at runtime is silently ignored — the recomputed plugin list never re-registers, and feature layers can end up half-wired.
 
-```ts
-interface ViewerPermissions {
-  canAnnotate?: boolean
-  canResolveThreads?: boolean
-  canDownload?: boolean
-  canPrint?: boolean
-  canSaveAsCopy?: boolean
-}
-```
-
-This is **separate** from `features` — `features` decides whether a plugin is registered at all (bundle impact); `permissions` decides whether the (already-registered) UI is shown to the current user.
-
-A read-only viewer for shared links:
+The fix is to **remount** the component by binding a `:key` derived from the inputs that changed. When the key changes, Vue tears the viewer down and builds a fresh one with the new plugin batch, engine, and document.
 
 ```vue
-<DocumentViewer
-  :features="{ zoom: true, search: true, download: true, annotations: true, commentThreads: true }"
-  :permissions="{ canAnnotate: false, canResolveThreads: false, canDownload: false }"
-  ...
-/>
+<script setup lang="ts">
+import { reactive, computed } from 'vue'
+import { DocumentViewer, type ViewerFeatures } from '@meldui/vue'
+
+const features = reactive<ViewerFeatures>({ zoom: true, search: true })
+// Remount whenever a mount-only input changes:
+const viewerKey = computed(() => JSON.stringify(features))
+</script>
+
+<template>
+  <DocumentViewer :key="viewerKey" source="/doc.pdf" wasm-url="/pdfium.wasm" :features="features" />
+</template>
 ```
+
+### Which inputs need a `:key`
+
+| Input                                        | Behavior                                     | Needs `:key`? |
+| -------------------------------------------- | -------------------------------------------- | ------------- |
+| `features`                                   | Mount-only — plugin batch registered once    | ✅ yes        |
+| `featureConfig` (plugin-affecting parts)     | Mount-only — feeds the plugin registration   | ✅ yes        |
+| `source` (same type) / `mimeType`            | Mount-only — the document is loaded at init  | ✅ yes        |
+| `wasmUrl` / `worker`                         | Read once when the PDFium engine is created  | ✅ yes        |
+| `toolbar`                                    | Reactive — the toolbar reads its config live | ❌ no         |
+| `downloadUrl`                                | Reactive — read at download time             | ❌ no         |
+| document **type** switch (pdf↔image↔text↔md) | Already swaps the renderer internally        | ❌ no         |
+| `initialAnnotations` / `initialThreads`      | Applied by internal watchers                 | ❌ no         |
+
+> **A remount resets in-viewer state** — scroll position, current page, and zoom return to `initialPage` / `initialScale`, and any un-persisted in-session annotation edits are lost (persisted ones re-seed from `initialAnnotations`). Key **only** on inputs that genuinely require it, so toolbar tweaks, download-URL swaps, and annotation updates don't trigger needless remounts.
+
+### Per-document permissions
+
+There is **no separate `permissions` prop**. Because `features` is a mount-only input, per-document capabilities and permissions ride directly on the `features` object, recomputed on each remount.
+
+This is the model to use when a left-hand tree/list swaps documents into one viewer: bind `:key` to the document id and compute `features` (and `downloadUrl`) from that document's backend permissions.
+
+```vue
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { DocumentViewer } from '@meldui/vue'
+
+const activeDoc = ref(docs[0]) // { id, url, can_download, can_print, downloadUrl? }
+
+// Capability + per-document permission collapse into one object. When the user
+// picks another document the :key changes, the viewer remounts, and these flags
+// (de)register the matching EmbedPDF plugins for the new document.
+const features = computed(() => ({
+  zoom: true,
+  search: true,
+  print: activeDoc.value.can_print,
+  download: activeDoc.value.can_download,
+  annotations: false,
+}))
+</script>
+
+<template>
+  <DocumentViewer
+    :key="activeDoc.id"
+    :source="activeDoc.url"
+    :download-url="activeDoc.downloadUrl /* server-driven / watermarked copy */"
+    :features="features"
+    wasm-url="/pdfium.wasm"
+  />
+</template>
+```
+
+If you only need to hide a button for a user who still has the capability (rather than disable the whole feature), use `toolbar.hide` or a `customButtons` replacement instead of toggling `features` — that avoids a remount.
 
 ## See also
 
 - [Theming](/docs/document-viewer/theming) — Tailwind dark mode, MeldUI primitives, CSS variable overrides
 - [Use case: toolbar customization](/docs/document-viewer/use-cases/toolbar-customization)
-- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer) — read-only via `permissions`
+- [Use case: share-link viewer](/docs/document-viewer/use-cases/share-link-viewer) — read-only via per-document `features`

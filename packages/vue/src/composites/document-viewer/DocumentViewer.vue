@@ -46,6 +46,7 @@ import type {
   AnnotationFilter,
   AnnotationTransferItem,
   CreateAnnotationInput,
+  DocumentSource,
   DocumentType,
   InteractionMode,
   Annotation,
@@ -75,12 +76,17 @@ const emit = defineEmits<{
   (e: 'zoom-change', payload: { scale: number }): void
   (e: 'rotation-change', payload: { rotation: number }): void
   (e: 'view-mode-change', payload: { viewMode: ViewMode }): void
+  (e: 'interaction-mode-change', payload: { mode: InteractionMode }): void
+  (e: 'fullscreen-change', payload: { isFullscreen: boolean }): void
   (e: 'document-loaded', payload: { pages: number; title: string | null }): void
   (e: 'document-error', payload: { error: string }): void
   (
     e: 'panel-toggle',
     payload: { panel: 'outline' | 'thumbnails' | 'comments' | 'search'; open: boolean },
   ): void
+  // Notify-only — the built-in download/print always runs; these cannot cancel it.
+  (e: 'download'): void
+  (e: 'print'): void
   (e: 'annotation-created', payload: { annotation: Annotation }): void
   (e: 'annotation-updated', payload: { annotation: Annotation; patch: Partial<Annotation> }): void
   (e: 'annotation-deleted', payload: { annotationId: string }): void
@@ -296,7 +302,10 @@ function handleZoomIn() {
   if (isPdf.value) {
     pdfRendererRef.value?.zoomIn()
   } else {
+    // PDFs emit `zoom-change` via the renderer callback; non-PDF scale is
+    // local state, so emit here to keep the event surface uniform.
     currentScale.value = Math.min(currentScale.value * 1.1, 5)
+    emit('zoom-change', { scale: currentScale.value })
   }
 }
 function handleZoomOut() {
@@ -304,6 +313,7 @@ function handleZoomOut() {
     pdfRendererRef.value?.zoomOut()
   } else {
     currentScale.value = Math.max(currentScale.value / 1.1, 0.25)
+    emit('zoom-change', { scale: currentScale.value })
   }
 }
 function handleRequestZoom(level: Scale) {
@@ -316,6 +326,7 @@ function handleRequestZoom(level: Scale) {
     return
   }
   currentScale.value = typeof level === 'number' ? level : 1
+  emit('zoom-change', { scale: currentScale.value })
 }
 function handleRotate(direction: 'cw' | 'ccw') {
   if (isPdf.value) {
@@ -324,6 +335,7 @@ function handleRotate(direction: 'cw' | 'ccw') {
   } else {
     const next = (currentRotation.value + (direction === 'cw' ? 90 : -90) + 360) % 360
     currentRotation.value = next
+    emit('rotation-change', { rotation: next })
   }
 }
 function handleViewModeChange(mode: ViewMode) {
@@ -386,17 +398,103 @@ function handleSetTool(tool: string | null) {
   activeAnnotationTool.value = tool
   if (isPdf.value) pdfRendererRef.value?.setActiveTool(tool)
 }
-function handleDownload() {
-  // Prefer a consumer-provided URL (e.g., re-encoded copy) before falling back
-  // to the EmbedPDF Export plugin.
+const MIME_EXT: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+  'image/svg+xml': 'svg',
+  'image/bmp': 'bmp',
+  'image/tiff': 'tiff',
+  'text/plain': 'txt',
+  'text/markdown': 'md',
+  'application/pdf': 'pdf',
+}
+
+// Derive a sensible download filename. Prefer a File's own name, then a URL's
+// last path segment *only if it looks like a filename* (has an extension —
+// `picsum.photos/.../1600` and `data:` URLs do not), otherwise build
+// `image|document.<ext>` from the resolved MIME type (falling back to the
+// detected document type).
+function deriveDownloadName(mimeType?: string): string {
+  if (typeof File !== 'undefined' && props.source instanceof File && props.source.name) {
+    return props.source.name
+  }
+  if (typeof props.source === 'string') {
+    const last = props.source.split('?')[0].split('#')[0].split('/').pop()
+    if (last && /\.[a-z0-9]{1,8}$/i.test(last)) return last
+  }
+  const base = documentType.value === 'image' ? 'image' : 'document'
+  const ext =
+    (mimeType && MIME_EXT[mimeType]) ??
+    { image: 'png', text: 'txt', markdown: 'md', pdf: 'pdf' }[documentType.value as string] ??
+    'bin'
+  return `${base}.${ext}`
+}
+
+function triggerAnchorDownload(url: string, filename: string) {
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+}
+
+// Resolve any source to a same-origin object URL suitable for a real download,
+// plus the resolved MIME type (for filename extension). For string sources we
+// fetch → Blob, because browsers ignore the `download` attribute on a
+// cross-origin href (the link just navigates / opens instead of downloading).
+// On a CORS / network failure we fall back to the raw URL as a best effort.
+// File / Blob / ArrayBuffer sources already become object URLs.
+async function sourceToDownloadUrl(
+  source: DocumentSource,
+): Promise<{ url: string; revoke: () => void; mimeType?: string }> {
+  if (typeof source === 'string') {
+    try {
+      const res = await fetch(source)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      return { url, revoke: () => URL.revokeObjectURL(url), mimeType: blob.type || undefined }
+    } catch {
+      return { url: source, revoke: () => {} }
+    }
+  }
+  const { url, revoke } = sourceToUrl(source)
+  const mimeType =
+    typeof Blob !== 'undefined' && source instanceof Blob ? source.type || undefined : undefined
+  return { url, revoke, mimeType }
+}
+
+async function handleDownload() {
+  // Prefer a consumer-provided URL (e.g., a re-encoded / watermarked copy).
   if (props.downloadUrl) {
-    const a = document.createElement('a')
-    a.href = props.downloadUrl
-    a.download = ''
-    a.click()
+    triggerAnchorDownload(props.downloadUrl, '')
+    emit('download')
     return
   }
-  if (isPdf.value) pdfRendererRef.value?.downloadDocument()
+  // PDFs go through the EmbedPDF Export plugin (re-encoded copy, annotations baked in).
+  if (isPdf.value) {
+    pdfRendererRef.value?.downloadDocument()
+    emit('download')
+    return
+  }
+  // Non-PDF fallback — build the download straight from the source so the
+  // (always-visible) download button works for image / text / markdown even
+  // without a `downloadUrl`. Resolving to a same-origin blob URL is what makes
+  // the `download` attribute honored for remote/cross-origin sources.
+  try {
+    const { url, revoke, mimeType } = await sourceToDownloadUrl(props.source)
+    triggerAnchorDownload(url, deriveDownloadName(mimeType))
+    // Defer revoke so the browser can start the download first.
+    setTimeout(revoke, 0)
+    emit('download')
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to download document'
+    // eslint-disable-next-line no-console
+    console.error('[DocumentViewer] download failed:', message)
+  }
 }
 async function handlePrint() {
   // PDF prints go through the EmbedPDF print plugin, which auto-injects a
@@ -406,6 +504,7 @@ async function handlePrint() {
   try {
     if (isPdf.value && pdfRendererRef.value) {
       await pdfRendererRef.value.printDocument()
+      emit('print')
       return
     }
     if (documentType.value === 'image') {
@@ -415,16 +514,19 @@ async function handlePrint() {
       } finally {
         revoke()
       }
+      emit('print')
       return
     }
     if (documentType.value === 'text') {
       const text = await resolveSourceToText(props.source)
       await printText(text)
+      emit('print')
       return
     }
     if (documentType.value === 'markdown') {
       if (markdownRendererRef.value) {
         await markdownRendererRef.value.printDocument()
+        emit('print')
       }
       return
     }
@@ -494,16 +596,25 @@ function handleRendererViewModeChange(payload: { viewMode: ViewMode }) {
 }
 function handleRendererInteractionModeChange(payload: { mode: InteractionMode }) {
   interactionMode.value = payload.mode
+  emit('interaction-mode-change', { mode: payload.mode })
+}
+// Single source of truth for fullscreen state. Emits `fullscreen-change` only
+// on an actual transition so the native listener and the EmbedPDF plugin
+// callback (which can both fire for PDFs) don't double-emit.
+function setFullscreen(next: boolean) {
+  if (isFullscreen.value === next) return
+  isFullscreen.value = next
+  emit('fullscreen-change', { isFullscreen: next })
 }
 function handleRendererFullscreenChange(payload: { isFullscreen: boolean }) {
-  isFullscreen.value = payload.isFullscreen
+  setFullscreen(payload.isFullscreen)
 }
 
 // Non-PDF document types don't have the EmbedPDF Fullscreen plugin, so we
 // listen to the native event directly. For PDFs this is harmless — the
 // plugin's event fires first and both sources agree on the final state.
 const onFullscreenChange = () => {
-  isFullscreen.value = !!document.fullscreenElement
+  setFullscreen(!!document.fullscreenElement)
 }
 onMounted(() => document.addEventListener('fullscreenchange', onFullscreenChange))
 onUnmounted(() => document.removeEventListener('fullscreenchange', onFullscreenChange))

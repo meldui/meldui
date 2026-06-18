@@ -158,7 +158,6 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Document Viewer: Customization](/docs/document-viewer/customization): Customize the toolbar, side panels, and viewer chrome via ToolbarConfig, slots, and CSS class overrides.
 - [Document Viewer: Features](/docs/document-viewer/features): Every capability flag on the features prop, plus per-feature configuration shapes.
 - [Document Viewer: Getting Started](/docs/document-viewer/getting-started): Install peer dependencies, copy pdfium.wasm to your public dir, and render your first PDF, image, text, or markdown document.
-- [Document Viewer: Migration](/docs/document-viewer/migration): Migration guides from @tato30/vue-pdf, vue-pdf-embed, raw pdfjs-dist, and PDFTron Web Viewer.
 - [Document Viewer: Plugin Reference](/docs/document-viewer/plugins): One-page summary of every EmbedPDF plugin used by DocumentViewer, organized by purpose.
 - [Document Viewer: Programmatic API](/docs/document-viewer/programmatic-api): Every method exposed on DocumentViewerInstance via defineExpose, plus the events DocumentViewer emits.
 - [Document Viewer: Theming](/docs/document-viewer/theming): Tailwind dark mode integration, MeldUI primitives used internally, and CSS class override points.
@@ -178,7 +177,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Plugin: Pan](/docs/document-viewer/plugins/pan): Hand-tool interaction mode for drag-to-pan when zoomed in.
 - [Plugin: Render](/docs/document-viewer/plugins/render): Paints PDF pages to canvas via PDFium.
 - [Plugin: Rotate](/docs/document-viewer/plugins/rotate): Rotate the document clockwise or counter-clockwise in 90° increments.
-- [Plugin: Scroll](/docs/document-viewer/plugins/scroll): Page-aware virtual scrolling for continuous, paged, and spread modes.
+- [Plugin: Scroll](/docs/document-viewer/plugins/scroll): Page-aware virtual scrolling for continuous and spread modes.
 - [Plugin: Search](/docs/document-viewer/plugins/search): Full-text search with case / whole-word toggles, prev / next, and match counter.
 - [Plugin: Selection](/docs/document-viewer/plugins/selection): Text selection on the page and copy-to-clipboard.
 - [Plugin: Spread](/docs/document-viewer/plugins/spread): Two-page spread view mode for book-style reading.

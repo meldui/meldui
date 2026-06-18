@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
 import { Checkbox, DocumentViewer, Label } from '@meldui/vue'
 import type { ViewerFeatures } from '@meldui/vue'
@@ -34,17 +34,25 @@ const flagGroups = [
   { label: 'Input',    keys: ['keyboardShortcuts', 'touchGestures'] as const },
 ]
 
+// `features` is a mount-only input: EmbedPDF registers its plugin batch once, on
+// mount. Changing a flag therefore needs a fresh viewer — bind a `:key` derived
+// from the feature set so toggling a checkbox remounts and re-registers plugins.
+const viewerKey = computed(() => JSON.stringify(features))
+
 const code = `<script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { DocumentViewer, type ViewerFeatures } from '@meldui/vue'
 
 const features = reactive<ViewerFeatures>({
   zoom: true, search: true, annotations: true, /* ... */
 })
+
+// features is read once, at mount — remount via :key to apply runtime changes
+const viewerKey = computed(() => JSON.stringify(features))
 <\/script>
 
 <template>
-  <DocumentViewer source="/doc.pdf" wasm-url="/pdfium.wasm" :features="features" />
+  <DocumentViewer :key="viewerKey" source="/doc.pdf" wasm-url="/pdfium.wasm" :features="features" />
 </template>`
 </script>
 
@@ -61,7 +69,12 @@ const features = reactive<ViewerFeatures>({
         </div>
       </div>
       <div class="h-[600px] w-full overflow-hidden rounded-md border">
-        <DocumentViewer :source="SAMPLE_PDF" wasm-url="/pdfium.wasm" :features="features" />
+        <DocumentViewer
+          :key="viewerKey"
+          :source="SAMPLE_PDF"
+          wasm-url="/pdfium.wasm"
+          :features="features"
+        />
       </div>
     </div>
   </DemoBlock>

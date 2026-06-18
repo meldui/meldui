@@ -142,7 +142,7 @@ import { HIGHLIGHT_COLORS } from '@meldui/vue'
 // Yellow #FFCD45, Green #92E89E, Blue #8FCFEF, Pink #FFA0BD, Purple #C8A5DD
 ```
 
-Override the palette via `featureConfig.annotations.defaultTools`.
+The floating tooltip's swatches always render from this exported `HIGHLIGHT_COLORS` constant. `featureConfig.annotations.defaultTools` exists on the type but is **not yet applied** by the viewer — the palette is currently fixed.
 
 ### Programmatically
 
@@ -232,19 +232,21 @@ The threaded-comments overlay (`features.commentThreads`) is a layer on top of a
 ```ts
 interface CommentThread {
   annotationId: string
-  replies: CommentReply[]
-  resolved: boolean
-  resolvedAt?: string
+  isResolved: boolean
   resolvedByUserId?: string
+  resolvedAt?: string
+  replies: CommentReply[]
 }
 
 interface CommentReply {
   id: string
   annotationId: string
   authorUserId: string
-  authorDisplayName: string
+  authorName?: string
+  authorAvatarUrl?: string
   content: string
   createdAt: string
+  updatedAt?: string
 }
 ```
 
@@ -278,13 +280,10 @@ All three emit `thread-update` with `{ thread, action }` so you can persist:
 Set `currentUser` so replies are attributed correctly:
 
 ```vue
-<DocumentViewer
-  :current-user="{ id: 'u-42', displayName: 'Alex Chen', avatarUrl: '/me.png' }"
-  ...
-/>
+<DocumentViewer :current-user="{ id: 'u-42', name: 'Alex Chen', avatarUrl: '/me.png' }" ... />
 ```
 
-`currentUser.displayName` also flows to `featureConfig.annotations.author` as a default, so newly-created annotations carry an author string.
+`currentUser.name` flows through to reply authorship (`CommentReply.authorName`) and to the `author` field on comment annotations the user creates, so new replies and comments carry the correct display name.
 
 ## Round-tripping with `saveAsCopy`
 

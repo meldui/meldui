@@ -2,9 +2,15 @@
 import { ref } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
 import { Button, DocumentViewer } from '@meldui/vue'
-import type { Annotation, DocumentViewerInstance } from '@meldui/vue'
+import type { Annotation, DocumentViewerInstance, ToolbarConfig } from '@meldui/vue'
 
 const SAMPLE_PDF = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
+
+// This demo drives annotations through the programmatic API, so the chrome is
+// trimmed to the relevant groups — no rotate / view-mode / thumbnails / outline.
+const toolbar: ToolbarConfig = {
+  groups: ['pageNav', 'zoom', 'search', 'annotate', 'actions'],
+}
 
 const viewer = ref<DocumentViewerInstance | null>(null)
 const lastId = ref<string | null>(null)
@@ -99,6 +105,7 @@ async function addHighlight() {
           :source="SAMPLE_PDF"
           wasm-url="/pdfium.wasm"
           :features="{ zoom: true, annotations: true, undoRedo: true }"
+          :toolbar="toolbar"
           @annotation-created="onCreate"
         />
       </div>

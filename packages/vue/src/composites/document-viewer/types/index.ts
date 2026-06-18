@@ -381,9 +381,22 @@ export type Annotation =
   | SignatureAnnotation
   | RedactionAnnotation
 
-/** Input for `createAnnotation` — `id` is optional; the viewer assigns one if omitted. */
-export type CreateAnnotationInput = Omit<Annotation, 'id' | 'createdAt' | 'modifiedAt'> &
-  Partial<Pick<Annotation, 'id'>>
+/**
+ * Input for `createAnnotation`.
+ *
+ * Distributes over the `Annotation` union (via the naked `T` in the
+ * conditional) so each variant keeps its own discriminated fields — e.g.
+ * `contents` for `comment`, `segmentRects`/`color`/`opacity` for `highlight`.
+ * A non-distributive `Omit<Annotation, …>` would collapse the union to its
+ * common base keys and silently drop those fields. `id`, `createdAt`, and
+ * `modifiedAt` are auto-assigned by the viewer; `id` may be supplied to pin a
+ * stable id.
+ */
+type CreateAnnotationInputFor<T> = T extends Annotation
+  ? Omit<T, 'id' | 'createdAt' | 'modifiedAt'> & Partial<Pick<T, 'id'>>
+  : never
+
+export type CreateAnnotationInput = CreateAnnotationInputFor<Annotation>
 
 /** Item passed to `importAnnotations`. Includes optional binary context for stamps/signatures. */
 export interface AnnotationTransferItem {
@@ -438,15 +451,6 @@ export interface CommentAuthor {
 /* ────────────────────────────────────────────────────────────────────────── */
 /* DocumentViewer component props                                                 */
 /* ────────────────────────────────────────────────────────────────────────── */
-
-/** Permissions shape applied to the viewer (typically computed per-route by the consumer). */
-export interface ViewerPermissions {
-  allowAnnotations?: boolean
-  allowDownload?: boolean
-  allowPrint?: boolean
-  allowRedaction?: boolean
-  allowSignature?: boolean
-}
 
 /**
  * Props for the top-level `DocumentViewer` component.
@@ -609,10 +613,21 @@ export interface DocumentViewerEmits {
   (e: 'zoom-change', payload: { scale: number }): void
   (e: 'rotation-change', payload: { rotation: number }): void
   (e: 'view-mode-change', payload: { viewMode: ViewMode }): void
+  (e: 'interaction-mode-change', payload: { mode: InteractionMode }): void
+  (e: 'fullscreen-change', payload: { isFullscreen: boolean }): void
   (
     e: 'panel-toggle',
     payload: { panel: 'outline' | 'thumbnails' | 'comments' | 'search'; open: boolean },
   ): void
+
+  /**
+   * The user invoked download. Notify-only — the built-in download (consumer
+   * `downloadUrl`, PDF Export plugin, or non-PDF source fallback) always runs;
+   * this event cannot cancel it. Use for analytics / side-effects.
+   */
+  (e: 'download'): void
+  /** The user invoked print. Notify-only — the built-in print always runs. */
+  (e: 'print'): void
 
   (e: 'annotation-created', payload: { annotation: Annotation }): void
   (e: 'annotation-updated', payload: AnnotationUpdatePayload): void
@@ -620,4 +635,15 @@ export interface DocumentViewerEmits {
   (e: 'annotation-selected', payload: { annotation: Annotation | null }): void
 
   (e: 'thread-update', payload: ThreadUpdatePayload): void
+  /**
+   * The user asked to open the conversation for an annotation — from a
+   * sticky-note pin (`source: 'comment-marker'`) or a highlight tooltip's
+   * view-thread icon (`source: 'highlight-tooltip'`). Emitted regardless of
+   * `features.commentThreads` so consumers hosting their own annotation panel
+   * can react even when the built-in panel is disabled.
+   */
+  (
+    e: 'thread-open-requested',
+    payload: { annotationId: string; source: 'highlight-tooltip' | 'comment-marker' },
+  ): void
 }

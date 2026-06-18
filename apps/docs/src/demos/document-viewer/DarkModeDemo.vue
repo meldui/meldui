@@ -2,10 +2,17 @@
 import { ref } from 'vue'
 import DemoBlock from '../../components/DemoBlock.vue'
 import { Button, DocumentViewer } from '@meldui/vue'
+import type { ToolbarConfig } from '@meldui/vue'
 
 const SAMPLE_PDF = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
 
 const dark = ref(false)
+
+// Trim the chrome so the toolbar doesn't overflow the demo width — dark mode
+// only needs a representative set of themed buttons.
+const toolbar: ToolbarConfig = {
+  groups: ['pageNav', 'zoom', 'search', 'panels', 'annotate'],
+}
 
 const code = `<script setup lang="ts">
 import { ref } from 'vue'
@@ -39,6 +46,7 @@ const dark = ref(false)
             :source="SAMPLE_PDF"
             wasm-url="/pdfium.wasm"
             :features="{ zoom: true, search: true, outline: true, thumbnails: true, annotations: true }"
+            :toolbar="toolbar"
           />
         </div>
       </div>

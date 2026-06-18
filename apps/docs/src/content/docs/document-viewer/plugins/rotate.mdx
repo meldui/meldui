@@ -10,26 +10,32 @@ The **Rotate** plugin adds CW / CCW rotation. Every page is re-rendered at the n
 
 ## Enabling flag
 
-`features.rotate: true`
+The Rotate plugin is **always registered** — `useRotate` is always available. `features.rotate` controls whether the **rotate toolbar group** is shown.
 
 ## What it does
 
 - Toolbar buttons: Rotate CW, Rotate CCW
-- `R` keyboard shortcut (when `features.keyboardShortcuts` is on)
+- `R` (CW) / `Shift + R` (CCW) keyboard shortcuts (when `features.keyboardShortcuts` is on)
 - Rotates all pages together (no per-page rotation in Phase 1)
-- Coordinates with annotations: highlight rects are transformed to match the rotation
+- All page layers (render, search, selection, annotations) are wrapped in the `<Rotate>` component, so highlights and other overlays rotate together with the page content
 
 ## Composable
 
-`useRotate(documentId)` from `@embedpdf/plugin-rotate/vue`. Returns:
+`useRotate(documentId)` from `@embedpdf/plugin-rotate/vue`. Returns `{ rotation, provides }`:
 
 ```ts
 {
-  rotation: Ref<number>,   // 0 | 1 | 2 | 3 (×90°)
-  rotateCW(),
-  rotateCCW(),
-  setRotation(r: number),
+  rotation: Ref<Rotation>,            // 0 | 1 | 2 | 3 (×90°)
+  provides: ComputedRef<RotateScope | null>,
 }
+```
+
+The imperative methods live on `provides.value`:
+
+```ts
+provides.value?.rotateForward() // clockwise
+provides.value?.rotateBackward() // counter-clockwise
+provides.value?.setRotation(1) // 0 | 1 | 2 | 3
 ```
 
 ## Events
@@ -46,7 +52,7 @@ No `featureConfig`.
 
 ## When you'd touch it directly
 
-To pre-set a rotation for documents you know are landscape-stored-as-portrait, call `setRotation(1)` after `document-loaded`.
+To pre-set a rotation for documents you know are landscape-stored-as-portrait, call `provides.value?.setRotation(1)` after `document-loaded`.
 
 ## See also
 

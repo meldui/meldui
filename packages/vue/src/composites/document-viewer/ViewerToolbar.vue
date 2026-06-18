@@ -135,6 +135,9 @@ const emit = defineEmits<{
 }>()
 
 const isPdfType = computed(() => props.documentType === 'pdf')
+// Rotation is meaningful for PDFs and images (ImageViewer applies a CSS
+// `rotate()` transform). Text/markdown renderers don't take a rotation prop.
+const canRotate = computed(() => props.documentType === 'pdf' || props.documentType === 'image')
 const isSearchableType = computed(
   () =>
     props.documentType === 'pdf' ||
@@ -328,7 +331,7 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
 
       <!-- Rotation (desktop only) -->
       <div
-        v-if="features.rotate && isPdfType"
+        v-if="features.rotate && canRotate"
         v-show="isGroupVisible('rotate')"
         class="hidden items-center gap-0.5 lg:flex"
       >
@@ -659,11 +662,11 @@ const ZOOM_PRESETS: ReadonlyArray<ZoomPresetItem> = [
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-56">
           <!-- Rotation -->
-          <DropdownMenuItem v-if="features.rotate && isPdfType" @click="emit('rotate', 'ccw')">
+          <DropdownMenuItem v-if="features.rotate && canRotate" @click="emit('rotate', 'ccw')">
             <IconRotate :size="16" />
             <span class="flex-1">Rotate left</span>
           </DropdownMenuItem>
-          <DropdownMenuItem v-if="features.rotate && isPdfType" @click="emit('rotate', 'cw')">
+          <DropdownMenuItem v-if="features.rotate && canRotate" @click="emit('rotate', 'cw')">
             <IconRotateClockwise :size="16" />
             <span class="flex-1">Rotate right</span>
           </DropdownMenuItem>

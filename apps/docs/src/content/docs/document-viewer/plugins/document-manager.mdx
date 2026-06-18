@@ -16,20 +16,12 @@ Always registered — required for any PDF rendering. No `features` flag needed.
 
 - Wraps the PDFium engine's document handle for use by other plugins
 - Fires the `loaded` event once the PDF is parsed and ready for rendering
-- Exposes the loaded document via `useDocumentState()` composable from `@embedpdf/core/vue`
+- Exposes the loaded document via the `useDocumentState(documentId)` composable from `@embedpdf/core/vue`
 - Coordinates document switching when `source` prop changes
 
 ## Composable
 
-`useDocumentState()` from `@embedpdf/core/vue` returns reactive state including:
-
-```ts
-{
-  document: { pageCount, title, metadata } | null,
-  loading: boolean,
-  error: string | null,
-}
-```
+`useDocumentState(documentId)` from `@embedpdf/core/vue` returns a `ComputedRef<DocumentState | null>` for the given document id — the reactive core-store state for that document, or `null` if it isn't loaded yet.
 
 ## Events
 

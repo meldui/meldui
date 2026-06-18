@@ -46,14 +46,16 @@ await fetch('/api/documents/reviewed', {
 
 ## Compliance burn-in (Phase 2: redactions)
 
-When `features.redaction` ships in Phase 2, `saveAsCopy({ applyRedactions: true })` permanently removes the redacted content from the PDF (not just covers it with a black box). This is the correct compliance workflow:
+Today `SaveAsCopyOptions` exposes `includeAnnotations` and `flatten`:
 
 ```ts
-// Phase 2 — once redaction lands
-const buffer = await viewer.value?.saveAsCopy({ applyRedactions: true })
-// the buffer has the redacted text completely removed from the page contents,
-// not just hidden behind a rectangle.
+const buffer = await viewer.value?.saveAsCopy({
+  includeAnnotations: true, // default — bake annotations into the copy
+  flatten: true, // flatten editable annotations to fixed content
+})
 ```
+
+When `features.redaction` ships in Phase 2, `saveAsCopy` will gain an option to permanently remove redacted content from the PDF (not just cover it with a black box) — the correct compliance workflow. The exact option name is not finalized yet, so don't rely on a specific flag until redaction lands.
 
 ## Threads are not embedded
 
