@@ -1,5 +1,15 @@
 # @meldui/a2ui
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [ab6255e]
+- Updated dependencies [bef9a70]
+- Updated dependencies [2d56b56]
+  - @meldui/vue@0.3.5
+  - @meldui/charts-vue@0.3.5
+
 ## 0.1.1
 
 ### Patch Changes
