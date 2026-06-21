@@ -5,7 +5,6 @@
 ### Patch Changes
 
 - ab6255e: DocumentViewer: uniform toolbar events + non-PDF download fallback
-
   - Every feature action now emits a notify-only event. Added `download`, `print`, `fullscreen-change`, and `interaction-mode-change`, and `zoom-change`/`rotation-change` now also fire for non-PDF document types (image/text/markdown). Events are add-on only — they never override the built-in behavior. The `DocumentViewerEmits` type now also includes `thread-open-requested` (previously emitted but undeclared).
   - The download button now works for image/text/markdown sources without a `downloadUrl`: it resolves the `source` to a same-origin `blob:` URL (fetching remote/cross-origin sources into a Blob first, since browsers ignore the `download` attribute on cross-origin hrefs) and downloads it with a smart-derived filename. PDFs and `downloadUrl` behavior are unchanged.
   - Removed the unused, never-wired `ViewerPermissions` type. Per-document permissions are expressed via a per-document `features` object plus a `:key` remount (see the updated share-link-viewer guide). This is the only breaking surface, though the type had no runtime effect.
@@ -14,7 +13,6 @@
 - 2d56b56: DocumentViewer: add opt-in `screenshotProtection` feature flag
 
   A new `features.screenshotProtection` boolean (default `false`) applies a bundle of client-side screen-capture deterrents at the viewer root, covering PDF, image, text, and markdown sources alike:
-
   - **Frosted blur on leave** — content is blurred behind a brand scrim when the window loses focus or the tab is hidden, and un-blurs when focus returns.
   - **Capture-block panel** — common screenshot/snip/devtools combos (`PrintScreen`, `Win+Shift+S`, `Win+G`, `Cmd+Shift+3/4/5`, `F12`, `Ctrl/Cmd+Shift+I/C/J`) are intercepted, showing a persistent "Protected content" panel with a "Back to document" button.
   - **Print-blank** — printing / print-to-PDF blanks the viewer via a scoped `@media print` rule, so the rest of the host page still prints.
@@ -65,14 +63,12 @@
 - 9ce91ca: Extract the filter system from `<DataTable>` into a standalone `<Filters>` component and `useFilters` composable so the same structured filter UX can drive grid, card, list, or any other view of the same dataset. Filter state is owned by `useFilters` exclusively — TanStack Table's `columnFilters` is no longer touched by the data-table pipeline.
 
   **New public API**
-
   - `<Filters>` — standalone component rendering the search input, filter pills, add-filter command, and reset button. Accepts `fields`, `plugins`, `advancedMode`, `searchField`, `initialValues`, `loading`, and an optional pre-instantiated `state` from `useFilters`. Slots: `#start`, `#right`. Emits: `update:filterValues`, `change`, `reset`.
   - `useFilters` — composable owning `filterInstances`, aggregated `filterValues`, debounced `searchValue`, and imperative `addFilter` / `removeInstance` / `setInstanceValue` / `resetAll` methods. Independent of TanStack Table; usable with any view.
   - `<DataTable :enable-filter="true">` — opt-in filter UI in the toolbar; the DataTable hoists `useFilters` internally and exposes `filtersState` via `defineExpose`.
   - `DataTableFilterState` type — record-shaped filter values keyed by field id.
 
   **Breaking changes**
-
   - `<DataTable>`'s `enableFilter` prop now defaults to **`false`** (was implicitly true). To preserve the previous behavior, set `:enable-filter="true"` explicitly. Without it, the toolbar renders no search/filter UI; the parent owns filter state via a separate `<Filters>` instance and feeds pre-filtered `data`.
   - `onServerSideChange.filters` is now a `Record<fieldId, FilterInstanceValue>` (was `ColumnFiltersState`, an array of `{id, value}`). Same for `<DataTable :initial-filters>` and the new `change` event payload on `<Filters>`. Migration: `Object.fromEntries(filters.map(f => [f.id, f.value]))` ↔ `Object.entries(filters).map(([id, value]) => ({ id, value }))`.
   - `tableStateToServerParams` accepts the record shape as its `tableState.filters` input (no longer the TanStack array).
@@ -82,7 +78,6 @@
   - TanStack `column.getFilterValue()` and `column.getIsFiltered()` always return `undefined` / `false`; filter state is no longer mirrored to TanStack columns. Any third-party code (custom column headers, plugin filters) consulting these accessors should source filter state from `useFilters` instead.
 
   **Internal architecture**
-
   - Filter primitives (8 per-type components, plugin registry, operators, types) moved to `composites/filters/`. The `composites/data-table/` index no longer re-exports filter symbols — import them from `@meldui/vue` (the package barrel forwards everything from `composites/filters`).
   - `MultiSelectFilter` decoupled from TanStack: now uses an `initialValue` prop and emits only `valueChange`. The unused facet-count UI (`getFacetedUniqueValues` badges) was removed; it was non-functional since `getFacetedRowModel` was never registered.
   - `<DataTable>` instantiates `useFilters` directly when `enableFilter: true` and passes it down to `<DataTableToolbar>` via prop. The toolbar is a pure renderer with no filter state of its own.
@@ -109,34 +104,33 @@
   // Plugin filter migration: drop column reads, accept initialValue + emit valueChange
   // Before
   defineFilter({
-    type: "currency",
+    type: 'currency',
     component: defineComponent({
-      props: ["column", "title"],
+      props: ['column', 'title'],
       setup({ column }) {
-        const value = column.getFilterValue();
+        const value = column.getFilterValue()
         // ...
       },
     }),
-  });
+  })
 
   // After
   defineFilter({
-    type: "currency",
+    type: 'currency',
     component: defineComponent({
-      props: ["initialValue", "title"],
-      emits: ["valueChange"],
+      props: ['initialValue', 'title'],
+      emits: ['valueChange'],
       setup(props, { emit }) {
-        const value = ref(props.initialValue);
+        const value = ref(props.initialValue)
         // ... emit('valueChange', newValue) on change
       },
     }),
-  });
+  })
   ```
 
 - 0ca50aa: Make `<DataTable>` a stateless, controlled component for sorting, filtering, and pagination. Parents now own all three state pieces via Vue `v-model:*` bindings and trigger data fetches when a merged state computed changes. A new `useDataTableController` composable bundles the three refs, applies the `flush: 'sync'` page-reset rule, and exposes a single merged `state` for fetch watchers. A new standalone `<DataPagination>` composite replaces `<DataTablePagination>` and can be rendered inside or outside the DataTable — same component, same prop shape.
 
   ### Breaking changes
-
   - **`onServerSideChange` callback prop is removed.** Migrate to three v-model emits (`update:sorting`, `update:filters`, `update:pagination`) or watch the merged state from `useDataTableController`.
   - **`initialFilters`, `initialSorting`, `initialPagination` props are removed.** Seed the parent's refs at construction time, typically via `useDataTableController({ initialSorting, initialFilters, initialPagination })`.
   - **`showPagination` prop is removed.** Replaced by `enablePagination` (default `false`, was always-on). Explicit opt-in.
@@ -147,11 +141,9 @@
   - **`<Filters>`'s `change` event is removed.** It duplicated `update:filterValues` exactly (same data, just wrapped in `{ filterValues: ... }`). Migrate `@change="handler"` to `@update:filter-values="handler"` and unwrap: payload changes from `{ filterValues: {...} }` to `{...}` directly. Or use `v-model:filterValues` for the standard Vue idiom.
 
   ### Behavioural change
-
   - Pagination now resets to page 0 on **sort change** in addition to filter change. Matches industry behaviour (MUI DataGrid, AG Grid, PrimeVue). Opt out via `useDataTableController({ resetPageOnSortChange: false })`.
 
   ### Additions
-
   - `enableSorting` prop on `<DataTable>` (default `false`). Renders column-header sort dropdown.
   - `enablePagination` prop on `<DataTable>` (default `false`). Renders the new `<DataPagination>` footer.
   - `sorting`, `filters`, `pagination` v-model targets on `<DataTable>`.
@@ -184,15 +176,15 @@
 
   ```vue
   <script setup>
-  import { DataTable, useDataTableController } from "@meldui/vue";
+  import { DataTable, useDataTableController } from '@meldui/vue'
 
   const { sorting, filters, pagination, state } = useDataTableController({
     pageSize: 20,
     initialSorting,
     initialFilters,
-  });
+  })
 
-  watch(state, fetchPage, { deep: true });
+  watch(state, fetchPage, { deep: true })
   </script>
 
   <template>
