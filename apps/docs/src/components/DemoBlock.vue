@@ -7,8 +7,15 @@ const props = withDefaults(
   defineProps<{
     code: string
     lang?: string
+    /**
+     * Vertical alignment of the example content within the preview box.
+     * Defaults to `center`. Use `start` for demos whose height changes as the
+     * user interacts (e.g. the editor) — centering re-centers on every height
+     * change, making content appear to jump.
+     */
+    align?: 'center' | 'start'
   }>(),
-  { lang: 'vue' },
+  { lang: 'vue', align: 'center' },
 )
 
 const highlightedHtml = ref('')
@@ -52,7 +59,11 @@ watch(
       </div>
 
       <TabsContent value="example" class="mt-0 p-6">
-        <div data-demo-example class="flex min-h-[120px] items-center justify-center">
+        <div
+          data-demo-example
+          class="flex min-h-[120px] justify-center"
+          :class="align === 'start' ? 'items-start' : 'items-center'"
+        >
           <slot />
         </div>
       </TabsContent>

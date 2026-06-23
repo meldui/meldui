@@ -78,6 +78,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Accordion](/docs/components/accordion): A vertically stacked set of interactive headings that reveal or hide sections of content.
 - [Alert](/docs/components/alert): Displays a callout message for important information with color variants.
 - [Alert Dialog](/docs/components/alert-dialog): A modal confirmation dialog that interrupts the user for important decisions.
+- [API](/docs/editor/api): Full props, events, slots, and exposed-instance reference for MeldEditor.
 - [Aspect Ratio](/docs/components/aspect-ratio): Displays content within a desired aspect ratio.
 - [Avatar](/docs/components/avatar): An image element with a fallback for representing the user.
 - [Badge](/docs/components/badge): A small label for status indicators, categories, or counts.
@@ -99,10 +100,14 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Dot](/docs/components/dot): A small status indicator dot with color variants and animation effects.
 - [Drawer](/docs/components/drawer): A touch-friendly drawer component that slides from the bottom of the screen.
 - [Dropdown Menu](/docs/components/dropdown-menu): A menu that appears on trigger click with items, groups, checkboxes, and nested sub-menus.
+- [Editor](/docs/editor): A Vue 3 rich-text editor built on TipTap, with slash commands, a bubble menu, tables, images, mentions, columns, and chart blocks.
 - [Empty](/docs/components/empty): An empty state placeholder for when there is no content to display.
+- [Extensions](/docs/editor/extensions): Opt out of default extensions, add your own TipTap extensions, customize slash commands, and register custom block components.
+- [Features](/docs/editor/features): A tour of the MeldEditor editing experience — slash menu, bubble menu, toolbar, tables, images, mentions, columns, and charts.
 - [Field](/docs/components/field): A form field layout component with label, content, description, and error display.
 - [File Upload](/docs/components/file-upload): A file upload component with drag and drop, previews, and progress tracking.
 - [Form](/docs/components/form): Form components with vee-validate integration for validation and error handling.
+- [Getting Started](/docs/editor/getting-started): Install @meldui/editor, wire up its peer dependencies and styles, and render your first editor.
 - [Hover Card](/docs/components/hover-card): A rich content card that appears when hovering over a trigger element.
 - [Input](/docs/components/input): A text input field for capturing user input.
 - [Input Group](/docs/components/input-group): Groups an input with addons, buttons, and text elements.

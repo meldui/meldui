@@ -1,0 +1,60 @@
+---
+title: Editor
+description: A Vue 3 rich-text editor built on TipTap, with slash commands, a bubble menu, tables, images, mentions, columns, and chart blocks.
+category: components
+order: 1
+package: '@meldui/editor'
+componentName: MeldEditor
+storybookUrl: '/?path=/docs/components-editor-meldeditor--documentation'
+keywords:
+  - editor
+  - rich text
+  - tiptap
+  - prosemirror
+  - wysiwyg
+---
+
+import BasicEditorDemo from '../../../demos/editor/BasicEditorDemo.vue'
+
+`MeldEditor` is a Vue 3 rich-text editor built on [TipTap](https://tiptap.dev) v3 and styled with MeldUI components and icons. It ships a curated default extension set — headings, lists, tables, resizable images, mentions, multi-column layouts, a table-of-contents, and chart blocks — plus a `/` slash-command menu, a selection bubble menu, an optional toolbar, and a Notion-style drag handle.
+
+It is **callback-driven and self-contained**: there is no coupling to app stores, routing, or the network. Host applications integrate through props and callbacks (`onImageUpload`, `onMentionSearch`, `customComponents`).
+
+<BasicEditorDemo client:only="vue" />
+
+## When to use
+
+- You need an in-app **WYSIWYG editor** for documents, notes, comments, or descriptions.
+- You want a **Notion-like** editing experience (slash menu, drag handle, block selection) out of the box.
+- You need to **extend the editor** with your own block components without forking it.
+- You want the editor to **match the MeldUI design system** (components, icons, theme tokens).
+
+## When not to use
+
+- You only need a plain multi-line text field — use [Textarea](/docs/components/textarea).
+- You need an `@`-mention input bound to a form value (not a document) — use the [Mention](/docs/composites/mention) composite.
+- You need collaborative real-time editing — that is out of scope here (bring your own TipTap collaboration extensions via `extraExtensions`).
+
+## What's in the box
+
+| Capability                                    | How it's enabled                                       |
+| --------------------------------------------- | ------------------------------------------------------ |
+| Headings, lists, blockquote, code, task lists | Default extensions                                     |
+| Slash-command menu (`/`)                      | Default; customizable via `*SlashCommands` props       |
+| Selection bubble menu                         | `showBubbleMenu` (default `true`)                      |
+| Formatting toolbar                            | `showToolbar` (default `false`)                        |
+| Tables with hover row/column controls         | Default extension                                      |
+| Resizable images with captions                | `onImageUpload` callback (falls back to data URL)      |
+| `@` mentions                                  | `onMentionSearch` callback (extension loads on demand) |
+| Multi-column layouts                          | Slash menu                                             |
+| Table of contents                             | Slash menu                                             |
+| Chart blocks                                  | Slash menu — renders via `@meldui/charts-vue`          |
+| Block drag handle + cross-block selection     | Default when `editable`                                |
+| Custom block components                       | `customComponents` prop                                |
+
+## Next steps
+
+- **[Getting Started](/docs/editor/getting-started)** — install, peer dependencies, styles, and your first editor.
+- **[Features](/docs/editor/features)** — a tour of the editing experience with live demos.
+- **[Extensions](/docs/editor/extensions)** — opt out of defaults, add TipTap extensions, register custom blocks.
+- **[API](/docs/editor/api)** — full props, events, and exposed reference.

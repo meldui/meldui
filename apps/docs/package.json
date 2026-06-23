@@ -22,6 +22,7 @@
     "@internationalized/date": "^3.10.0",
     "@meldui/a2ui": "workspace:*",
     "@meldui/charts-vue": "workspace:*",
+    "@meldui/editor": "workspace:*",
     "@meldui/tabler-vue": "workspace:*",
     "@meldui/vue": "workspace:*",
     "@tanstack/vue-table": "^8.21.3",

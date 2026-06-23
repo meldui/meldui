@@ -1,0 +1,155 @@
+---
+title: API
+description: Full props, events, slots, and exposed-instance reference for MeldEditor.
+category: components
+order: 5
+package: '@meldui/editor'
+componentName: MeldEditor
+props:
+  - name: showToolbar
+    type: boolean
+    default: 'false'
+    description: Show the persistent formatting toolbar above the document.
+  - name: showBubbleMenu
+    type: boolean
+    default: 'true'
+    description: Show the selection bubble menu for inline formatting.
+  - name: editable
+    type: boolean
+    default: 'true'
+    description: Whether the document can be edited. When false, all editing affordances are suppressed.
+  - name: placeholder
+    type: string
+    default: "Write, type '/' for commands…"
+    description: Placeholder text shown in an empty document.
+  - name: editorClass
+    type: string
+    default: "''"
+    description: Extra CSS classes applied to the editor's outer container.
+  - name: onImageUpload
+    type: '(file: File) => Promise<string>'
+    description: Called with a selected image file; resolve the uploaded image URL. Falls back to an inline data URL when omitted.
+  - name: onMentionSearch
+    type: '(query: string) => Promise<MentionItem[]>'
+    description: Resolve mention candidates for a query. The mention extension only loads when this is provided.
+  - name: customComponents
+    type: 'CustomComponentRegistration[]'
+    description: Register custom Vue components as document block nodes.
+  - name: defaultExtensions
+    type: DefaultExtensionOptions
+    description: Opt out of (or configure) individual built-in extensions.
+  - name: extraExtensions
+    type: '(Extension | Mark | Node)[]'
+    description: Append additional TipTap extensions to the default set.
+  - name: overrideExtensions
+    type: '(Extension | Mark | Node)[]'
+    description: Replace the entire default extension set. Custom components are still appended.
+  - name: extraSlashCommands
+    type: 'SlashCommandItem[]'
+    description: Append commands to the slash menu.
+  - name: disableSlashCommands
+    type: 'string[]'
+    description: Hide built-in slash commands by title.
+  - name: overrideSlashCommands
+    type: 'SlashCommandItem[]'
+    description: Replace the entire slash-command list.
+  - name: toolbarItems
+    type: 'ToolbarItem[]'
+    description: Override the toolbar's contents.
+events:
+  - name: 'created'
+    payload: 'editor: Editor'
+    description: Fired with the underlying TipTap editor instance. Use it to set initial content.
+  - name: 'update:json'
+    payload: 'json: Record<string, unknown>'
+    description: The document JSON, emitted on every change.
+  - name: 'focus'
+    payload: 'event: FocusEvent'
+    description: The editor gained focus.
+  - name: 'blur'
+    payload: 'event: FocusEvent'
+    description: The editor lost focus.
+slots:
+  - name: header
+    props: '{ editor, editable }'
+    description: App-level action bar rendered above the toolbar.
+  - name: toolbar
+    props: '{ editor, items }'
+    description: Replaces the default toolbar. Receives the resolved toolbar items.
+  - name: before-content
+    props: '{ editor }'
+    description: Rendered just above the editable content area.
+  - name: bubble-menu
+    props: '{ editor }'
+    description: Replaces the default selection bubble menu.
+  - name: after-content
+    props: '{ editor }'
+    description: Rendered just below the editable content area.
+---
+
+## Types
+
+```ts
+interface MentionItem {
+  id: string
+  label: string
+}
+
+interface SlashCommandItem {
+  title: string
+  description: string
+  icon: Component | string
+  category?: string
+  keywords?: string[]
+  command: (editor: Editor) => void
+}
+
+interface ToolbarItem {
+  key: string
+  icon: Component
+  label: string
+  action: (editor: Editor) => void
+  isActive?: (editor: Editor) => boolean
+  shortcut?: string
+  separator?: 'before' | 'after'
+}
+
+interface DefaultExtensionOptions {
+  taskList?: boolean | Record<string, unknown>
+  image?: boolean | Record<string, unknown>
+  table?: boolean | Record<string, unknown>
+  textAlign?: boolean | Record<string, unknown>
+  placeholder?: boolean | string
+  slashCommands?: boolean
+  mention?: boolean
+  chart?: boolean
+  columns?: boolean
+}
+```
+
+See [Extensions](/docs/editor/extensions#custom-block-components) for the full `CustomComponentRegistration` shape.
+
+## Exposed instance
+
+`MeldEditor` exposes the live TipTap `Editor` through a template ref:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MeldEditor } from '@meldui/editor'
+
+const editorRef = ref<InstanceType<typeof MeldEditor>>()
+
+function save() {
+  const json = editorRef.value?.editor?.getJSON()
+  const html = editorRef.value?.editor?.getHTML()
+  // persist json / html
+}
+</script>
+
+<template>
+  <MeldEditor ref="editorRef" />
+</template>
+```
+
+The exposed `editor` is the standard TipTap instance, so its full [commands and API](https://tiptap.dev/docs/editor/api/editor) are available (`getJSON()`, `getHTML()`, `getText()`, `chain()`, `setEditable()`, and so on). The `created` event provides the same instance if you prefer to capture it on mount.

@@ -1,0 +1,97 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Components/Editor/Overview" />
+
+# Editor Overview
+
+`@meldui/editor` provides **MeldEditor**, a Vue 3 rich-text editor built on
+[TipTap](https://tiptap.dev) v3 and styled with MeldUI components and icons. It is
+callback-driven and self-contained: no app stores, routing, or network coupling — host
+applications integrate through props and callbacks.
+
+## Installation
+
+```bash
+pnpm add @meldui/editor @meldui/vue @meldui/tabler-vue @meldui/charts-vue vue
+```
+
+`@meldui/vue`, `@meldui/tabler-vue`, `@meldui/charts-vue`, and `vue` are **peer
+dependencies**. The TipTap engine (`@tiptap/*`) and `tippy.js` ship as bundled dependencies.
+
+> The chart block renders via `@meldui/charts-vue`, which is a **required** peer.
+
+Import the editor's styles once at your app root (alongside `@meldui/vue`'s theme):
+
+```ts
+import '@meldui/vue/themes/default'
+import '@meldui/editor/styles'
+```
+
+## Basic usage
+
+```vue
+<script setup lang="ts">
+import { MeldEditor } from '@meldui/editor'
+import type { Editor } from '@tiptap/core'
+
+function onCreated(editor: Editor) {
+  // Seed initial content (the editor has no `content` prop — set it here).
+  editor.commands.setContent({ type: 'doc', content: [] })
+}
+
+async function onImageUpload(file: File): Promise<string> {
+  // Upload `file` and return its URL.
+  return URL.createObjectURL(file)
+}
+</script>
+
+<template>
+  <MeldEditor
+    :show-toolbar="true"
+    :on-image-upload="onImageUpload"
+    @created="onCreated"
+    @update:json="(json) => console.log(json)"
+  />
+</template>
+```
+
+## Features
+
+- **Slash menu** — type `/` to insert headings, lists, tables, images, columns, a
+  table-of-contents, and chart blocks.
+- **Bubble menu** — select text for inline formatting and alignment.
+- **Optional toolbar** — enable with `show-toolbar`.
+- **Tables** with hover row/column controls.
+- **Resizable images** with captions and alignment, inserted via the `onImageUpload` callback
+  (falls back to an inline data URL when no callback is given).
+- **Mentions** — provide `onMentionSearch` to enable the `@` mention extension.
+- **Custom blocks** — register your own Vue components through `customComponents`.
+- **Drag handle** for Notion-style block reordering, plus cross-block selection.
+
+## Props
+
+| Prop                                                                    | Type                                        | Default                         | Description                                   |
+| ----------------------------------------------------------------------- | ------------------------------------------- | ------------------------------- | --------------------------------------------- |
+| `showToolbar`                                                           | `boolean`                                   | `false`                         | Show the formatting toolbar                   |
+| `showBubbleMenu`                                                        | `boolean`                                   | `true`                          | Show the selection bubble menu                |
+| `editable`                                                              | `boolean`                                   | `true`                          | Whether the document can be edited            |
+| `placeholder`                                                           | `string`                                    | `Write, type '/' for commands…` | Empty-document placeholder                    |
+| `editorClass`                                                           | `string`                                    | `''`                            | Extra classes on the editor container         |
+| `onImageUpload`                                                         | `(file: File) => Promise<string>`           | —                               | Resolve an uploaded image URL                 |
+| `onMentionSearch`                                                       | `(query: string) => Promise<MentionItem[]>` | —                               | Resolve mention candidates (enables mentions) |
+| `customComponents`                                                      | `CustomComponentRegistration[]`             | —                               | Register custom node components               |
+| `defaultExtensions`                                                     | `DefaultExtensionOptions`                   | —                               | Opt out of individual built-in extensions     |
+| `extraExtensions` / `overrideExtensions`                                | `Extension[]`                               | —                               | Add to / replace the extension set            |
+| `extraSlashCommands` / `disableSlashCommands` / `overrideSlashCommands` | —                                           | —                               | Customize the slash menu                      |
+| `toolbarItems`                                                          | `ToolbarItem[]`                             | defaults                        | Override the toolbar contents                 |
+
+## Emits
+
+| Event            | Payload                   | Description                                                        |
+| ---------------- | ------------------------- | ------------------------------------------------------------------ |
+| `created`        | `Editor`                  | Fired with the TipTap editor instance — use to set initial content |
+| `update:json`    | `Record<string, unknown>` | The document JSON on every change                                  |
+| `focus` / `blur` | `FocusEvent`              | Editor focus changes                                               |
+
+See the **MeldEditor** stories for interactive examples, and `src/docs/architecture.md` in
+the package for the extension architecture.

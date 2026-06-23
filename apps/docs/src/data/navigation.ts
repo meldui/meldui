@@ -9,21 +9,24 @@ export interface NavItem {
 export const SECTIONS = [
   { id: 'components', label: 'Components', href: '/docs/components' },
   { id: 'charts', label: 'Charts', href: '/docs/charts' },
+  { id: 'editor', label: 'Editor', href: '/docs/editor' },
   { id: 'a2ui', label: 'A2UI', href: '/docs/a2ui' },
 ] as const
 
 export type DocsSection = (typeof SECTIONS)[number]['id']
 
-/** Which section a docs path belongs to. Charts and A2UI live under their own roots. */
+/** Which section a docs path belongs to. Charts, Editor, and A2UI live under their own roots. */
 export function sectionForPath(pathname: string): DocsSection {
   if (pathname.startsWith('/docs/a2ui')) return 'a2ui'
   if (pathname.startsWith('/docs/charts')) return 'charts'
+  if (pathname.startsWith('/docs/editor')) return 'editor'
   return 'components'
 }
 
 export function navForSection(section: DocsSection): NavItem[] {
   if (section === 'a2ui') return a2uiNav
   if (section === 'charts') return chartsNav
+  if (section === 'editor') return editorNav
   return componentsNav
 }
 
@@ -214,6 +217,20 @@ export const chartsNav: NavItem[] = [
       { title: 'Mixed Chart', href: '/docs/charts/mixed-chart' },
       { title: 'Theme Customization', href: '/docs/charts/theme-customization' },
       { title: 'Events', href: '/docs/charts/events' },
+    ],
+  },
+]
+
+// Editor — its own top-level section.
+export const editorNav: NavItem[] = [
+  {
+    title: 'Editor',
+    items: [
+      { title: 'Overview', href: '/docs/editor' },
+      { title: 'Getting Started', href: '/docs/editor/getting-started' },
+      { title: 'Features', href: '/docs/editor/features' },
+      { title: 'Extensions', href: '/docs/editor/extensions' },
+      { title: 'API', href: '/docs/editor/api' },
     ],
   },
 ]
