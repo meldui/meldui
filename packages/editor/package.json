@@ -1,6 +1,6 @@
 {
   "name": "@meldui/editor",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "MeldUI Vue rich-text editor built on TipTap",
   "keywords": [
     "design-system",

@@ -1,5 +1,12 @@
 # docs
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [3442e20]
+  - @meldui/editor@0.1.0
+
 ## 0.1.5
 
 ### Patch Changes
