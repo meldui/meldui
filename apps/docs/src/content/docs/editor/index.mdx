@@ -14,13 +14,15 @@ keywords:
   - wysiwyg
 ---
 
-import BasicEditorDemo from '../../../demos/editor/BasicEditorDemo.vue'
+import ShowcaseEditorDemo from '../../../demos/editor/ShowcaseEditorDemo.vue'
 
 `MeldEditor` is a Vue 3 rich-text editor built on [TipTap](https://tiptap.dev) v3 and styled with MeldUI components and icons. It ships a curated default extension set — headings, lists, tables, resizable images, mentions, multi-column layouts, a table-of-contents, and chart blocks — plus a `/` slash-command menu, a selection bubble menu, an optional toolbar, and a Notion-style drag handle.
 
 It is **callback-driven and self-contained**: there is no coupling to app stores, routing, or the network. Host applications integrate through props and callbacks (`onImageUpload`, `onMentionSearch`, `customComponents`).
 
-<BasicEditorDemo client:only="vue" />
+The editor below is fully interactive and seeded with every built-in feature — edit it, select text for the bubble menu, hover a block for the drag handle, or type `/` for the command menu.
+
+<ShowcaseEditorDemo client:only="vue" />
 
 ## When to use
 

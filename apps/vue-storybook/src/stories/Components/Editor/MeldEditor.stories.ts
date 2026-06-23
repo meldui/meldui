@@ -7,7 +7,7 @@
 import { MeldEditor } from '@meldui/editor'
 import type { Editor } from '@tiptap/core'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { SAMPLE_DOC, searchPeople, uploadImage } from './_shared'
+import { SAMPLE_DOC, SHOWCASE_DOC, searchPeople, uploadImage } from './_shared'
 
 const meta: Meta<typeof MeldEditor> = {
   title: 'Components/Editor/MeldEditor',
@@ -53,6 +53,11 @@ function seed(editor: Editor) {
   editor.commands.setContent(SAMPLE_DOC)
 }
 
+/** Seeds the editor with the extensive Notion-like showcase document. */
+function seedShowcase(editor: Editor) {
+  editor.commands.setContent(SHOWCASE_DOC)
+}
+
 /** Wraps the editor in a centered, scrollable canvas so it fills the frame. */
 const FRAME = `
   <div style="height: 100vh; padding: 24px; overflow: auto; background: var(--background);">
@@ -61,6 +66,30 @@ const FRAME = `
     </div>
   </div>
 `
+
+/**
+ * Showcase — an extensive, Notion-like document exercising every built-in
+ * feature in one editor: headings, formatting marks, a mention, a centered
+ * line, lists and tasks, a table, columns, a chart, an image, a table of
+ * contents, and a divider. No toolbar — it's driven by the slash menu, bubble
+ * menu, and drag handle. Mentions and image upload are wired via callbacks.
+ */
+export const Showcase: Story = {
+  render: () => ({
+    components: { MeldEditor },
+    setup() {
+      return { seedShowcase, searchPeople, uploadImage }
+    },
+    template: FRAME.replace(
+      '<slot />',
+      `<MeldEditor
+        :on-mention-search="searchPeople"
+        :on-image-upload="uploadImage"
+        @created="seedShowcase"
+      />`,
+    ),
+  }),
+}
 
 /** Default editing experience — bubble menu and slash commands, no toolbar. */
 export const Default: Story = {
@@ -120,9 +149,9 @@ export const Mentions: Story = {
 }
 
 /**
- * Image upload — use the `/` slash menu (or toolbar) to insert an image. The
- * `onImageUpload` callback receives the `File`; here it returns a local object
- * URL instead of hitting a server.
+ * Image upload — use the `/` slash menu to insert an image. The `onImageUpload`
+ * callback receives the `File`; here it returns a local object URL instead of
+ * hitting a server.
  */
 export const ImageUpload: Story = {
   render: () => ({
@@ -132,29 +161,7 @@ export const ImageUpload: Story = {
     },
     template: FRAME.replace(
       '<slot />',
-      `<MeldEditor :show-toolbar="true" placeholder="Insert an image via the / menu…" :on-image-upload="uploadImage" />`,
-    ),
-  }),
-}
-
-/**
- * Kitchen sink — toolbar, bubble menu, mentions, and image upload all enabled.
- * Insert tables, columns, and chart blocks from the `/` slash menu.
- */
-export const KitchenSink: Story = {
-  render: () => ({
-    components: { MeldEditor },
-    setup() {
-      return { seed, searchPeople, uploadImage }
-    },
-    template: FRAME.replace(
-      '<slot />',
-      `<MeldEditor
-        :show-toolbar="true"
-        :on-image-upload="uploadImage"
-        :on-mention-search="searchPeople"
-        @created="seed"
-      />`,
+      `<MeldEditor placeholder="Insert an image via the / menu…" :on-image-upload="uploadImage" />`,
     ),
   }),
 }

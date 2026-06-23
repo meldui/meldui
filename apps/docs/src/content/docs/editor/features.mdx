@@ -7,12 +7,22 @@ package: '@meldui/editor'
 componentName: MeldEditor
 ---
 
+import FormattingEditorDemo from '../../../demos/editor/FormattingEditorDemo.vue'
 import ToolbarEditorDemo from '../../../demos/editor/ToolbarEditorDemo.vue'
+import TableEditorDemo from '../../../demos/editor/TableEditorDemo.vue'
+import ImageEditorDemo from '../../../demos/editor/ImageEditorDemo.vue'
 import MentionEditorDemo from '../../../demos/editor/MentionEditorDemo.vue'
+import ColumnsEditorDemo from '../../../demos/editor/ColumnsEditorDemo.vue'
+import TocEditorDemo from '../../../demos/editor/TocEditorDemo.vue'
+import ChartEditorDemo from '../../../demos/editor/ChartEditorDemo.vue'
 
 ## Slash commands
 
 Type `/` anywhere in an empty block to open the command menu. It lists text and headings, lists, blockquote, code, table, table-of-contents, image, mention, columns, and chart blocks. The menu is keyboard-navigable (arrows + Enter) and filters as you type.
+
+The demo below is seeded with the basic text and block formatting you can insert from the menu — headings, bullet/ordered/task lists, blockquote, code block, and a horizontal rule. Type `/` on a new line to try the rest.
+
+<FormattingEditorDemo client:only="vue" />
 
 You can add, remove, or replace commands with the `extraSlashCommands`, `disableSlashCommands`, and `overrideSlashCommands` props — see [Extensions](/docs/editor/extensions#slash-commands).
 
@@ -30,6 +40,8 @@ Set `:show-toolbar="true"` to render a persistent formatting toolbar above the d
 
 Insert a table from the slash menu. Hovering a table reveals row and column controls for inserting and deleting rows/columns. Table cells support inline formatting and the bubble menu.
 
+<TableEditorDemo client:only="vue" />
+
 ## Images
 
 Insert an image from the slash menu (or toolbar). The editor calls your `onImageUpload` callback with the selected `File` and inserts the returned URL:
@@ -42,6 +54,8 @@ async function onImageUpload(file: File): Promise<string> {
 ```
 
 When no callback is provided, the editor falls back to an inline data URL so images still work locally. Inserted images are **resizable**, support alignment, and have an optional caption.
+
+<ImageEditorDemo client:only="vue" />
 
 ## Mentions
 
@@ -59,13 +73,19 @@ async function onMentionSearch(query: string) {
 
 Insert a multi-column layout from the slash menu to place blocks side by side. A column block's controls let you add or remove columns and flatten the layout back to a single column.
 
+<ColumnsEditorDemo client:only="vue" />
+
 ## Table of contents
 
 The table-of-contents block lists the document's headings and scrolls to them on click. It stays in sync as you edit headings.
 
+<TocEditorDemo client:only="vue" />
+
 ## Charts
 
 Insert a chart block from the slash menu. Charts render via [`@meldui/charts-vue`](/docs/charts) and offer a picker (series vs. slice) plus a configuration dialog for the chart type, data, and title.
+
+<ChartEditorDemo client:only="vue" />
 
 ## Drag handle & block selection
 

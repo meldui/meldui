@@ -1,51 +1,29 @@
-/**
- * Shared fixtures for the MeldEditor stories.
- */
+<script setup lang="ts">
+import DemoBlock from '../../components/DemoBlock.vue'
+import { MeldEditor } from '@meldui/editor'
 import type { MentionItem } from '@meldui/editor'
+import type { Editor } from '@tiptap/core'
+import '@meldui/editor/styles'
 
-/** A small ProseMirror/TipTap JSON document used to seed editor stories. */
-export const SAMPLE_DOC = {
-  type: 'doc',
-  content: [
-    { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'MeldEditor' }] },
-    {
-      type: 'paragraph',
-      content: [
-        { type: 'text', text: 'A TipTap-based rich-text editor. Type ' },
-        { type: 'text', marks: [{ type: 'code' }], text: '/' },
-        {
-          type: 'text',
-          text: ' to open the slash menu, or select text to reveal the bubble menu.',
-        },
-      ],
-    },
-    {
-      type: 'bulletList',
-      content: [
-        {
-          type: 'listItem',
-          content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Tables and images' }] }],
-        },
-        {
-          type: 'listItem',
-          content: [
-            { type: 'paragraph', content: [{ type: 'text', text: 'Mentions and columns' }] },
-          ],
-        },
-        {
-          type: 'listItem',
-          content: [
-            { type: 'paragraph', content: [{ type: 'text', text: 'Charts and a drag handle' }] },
-          ],
-        },
-      ],
-    },
-  ],
+// --- Callbacks ---------------------------------------------------------------
+const PEOPLE: MentionItem[] = [
+  { id: 'user-1', label: 'Alice Johnson' },
+  { id: 'user-2', label: 'Bob Smith' },
+  { id: 'user-3', label: 'Carol Williams' },
+  { id: 'user-4', label: 'David Brown' },
+  { id: 'user-5', label: 'Eve Davis' },
+]
+
+async function searchPeople(query: string): Promise<MentionItem[]> {
+  const q = query.toLowerCase()
+  return PEOPLE.filter((p) => p.label.toLowerCase().includes(q))
 }
 
-// --- Notion-like showcase document -----------------------------------------
+async function uploadImage(file: File): Promise<string> {
+  return URL.createObjectURL(file)
+}
 
-/** A self-contained sample image (inline SVG data URL — no network needed). */
+// A self-contained sample image (inline SVG data URL — no network needed).
 const SAMPLE_IMAGE =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
@@ -62,6 +40,7 @@ const SAMPLE_IMAGE =
      </svg>`,
   )
 
+// --- Helpers -----------------------------------------------------------------
 type J = Record<string, unknown>
 const text = (t: string, marks?: string[]): J => ({
   type: 'text',
@@ -82,11 +61,8 @@ const cell = (t: string, header = false): J => ({
 })
 const column = (...content: J[]): J => ({ type: 'column', content })
 
-/**
- * An extensive Notion-like document exercising every built-in feature — used by
- * the Showcase story. Seed it from the `created` handler.
- */
-export const SHOWCASE_DOC: J = {
+// --- The showcase document ---------------------------------------------------
+const SAMPLE: J = {
   type: 'doc',
   content: [
     h(1, text('Welcome to MeldEditor ✨')),
@@ -96,7 +72,7 @@ export const SHOWCASE_DOC: J = {
     {
       type: 'blockquote',
       content: [
-        p(text('💡 This whole document is editable.', ['bold'])),
+        p(text('💡 This whole page is editable.', ['bold'])),
         p(
           text('Select any text for the bubble menu, hover a block for the drag handle, or type '),
           text('/', ['code']),
@@ -123,17 +99,10 @@ export const SHOWCASE_DOC: J = {
       text('@', ['code']),
       text('.'),
     ),
-    {
-      type: 'paragraph',
-      attrs: { textAlign: 'center' },
-      content: [text('Text can be aligned, too — this line is centered.')],
-    },
+    { type: 'paragraph', attrs: { textAlign: 'center' }, content: [text('Text can be aligned, too — this line is centered.')] },
 
     p(text('Try some Markdown shortcuts:', ['bold'])),
-    {
-      type: 'codeBlock',
-      content: [text('# Heading\n- Bullet list\n1. Ordered list\n> Blockquote\n`inline code`')],
-    },
+    { type: 'codeBlock', content: [text('# Heading\n- Bullet list\n1. Ordered list\n> Blockquote\n`inline code`')] },
 
     h(2, text('Lists & tasks')),
     {
@@ -156,10 +125,7 @@ export const SHOWCASE_DOC: J = {
     {
       type: 'table',
       content: [
-        {
-          type: 'tableRow',
-          content: [cell('Quarter', true), cell('Revenue', true), cell('Growth', true)],
-        },
+        { type: 'tableRow', content: [cell('Quarter', true), cell('Revenue', true), cell('Growth', true)] },
         { type: 'tableRow', content: [cell('Q1'), cell('$120k'), cell('+8%')] },
         { type: 'tableRow', content: [cell('Q2'), cell('$200k'), cell('+12%')] },
       ],
@@ -170,10 +136,7 @@ export const SHOWCASE_DOC: J = {
       type: 'columnBlock',
       content: [
         column(h(3, text('Side by side')), p(text('Place any blocks next to each other.'))),
-        column(
-          h(3, text('2 or 3 wide')),
-          p(text('Add, remove, or flatten columns from the block controls.')),
-        ),
+        column(h(3, text('2 or 3 wide')), p(text('Add, remove, or flatten columns from the block controls.'))),
       ],
     },
 
@@ -194,30 +157,52 @@ export const SHOWCASE_DOC: J = {
     { type: 'image', attrs: { src: SAMPLE_IMAGE } },
 
     { type: 'horizontalRule' },
-    p(
-      text("That's the tour — start editing above, or type "),
-      text('/', ['code']),
-      text(' to insert more.'),
-    ),
+    p(text("That's the tour — start editing above, or type "), text('/', ['code']), text(' to insert more.')),
   ],
 }
 
-/** A static directory used by the mention-search story. */
-const PEOPLE: MentionItem[] = [
-  { id: 'user-1', label: 'Alice Johnson' },
-  { id: 'user-2', label: 'Bob Smith' },
-  { id: 'user-3', label: 'Carol Williams' },
-  { id: 'user-4', label: 'David Brown' },
-  { id: 'user-5', label: 'Eve Davis' },
-]
-
-/** Resolves mention candidates from the static directory (case-insensitive). */
-export async function searchPeople(query: string): Promise<MentionItem[]> {
-  const q = query.toLowerCase()
-  return PEOPLE.filter((p) => p.label.toLowerCase().includes(q))
+function seed(editor: Editor) {
+  editor.commands.setContent(SAMPLE)
 }
 
-/** Image-upload stub — returns a local object URL instead of hitting a server. */
-export async function uploadImage(file: File): Promise<string> {
-  return URL.createObjectURL(file)
+const code = `<script setup lang="ts">
+import { MeldEditor } from '@meldui/editor'
+import type { Editor, MentionItem } from '@meldui/editor'
+import '@meldui/editor/styles'
+
+async function searchPeople(query: string): Promise<MentionItem[]> {
+  // Return mention candidates: { id, label }[]
+  return await fetchPeople(query)
 }
+
+async function uploadImage(file: File): Promise<string> {
+  // Upload the file and return its URL.
+  return await uploadToStorage(file)
+}
+
+// Seed the document from the created handler (TipTap JSON).
+function seed(editor: Editor) {
+  editor.commands.setContent(richDocument)
+}
+<\/script>
+
+<template>
+  <MeldEditor
+    :on-mention-search="searchPeople"
+    :on-image-upload="uploadImage"
+    @created="seed"
+  />
+</template>`
+</script>
+
+<template>
+  <DemoBlock :code="code" align="start">
+    <div class="w-full">
+      <MeldEditor
+        :on-mention-search="searchPeople"
+        :on-image-upload="uploadImage"
+        @created="seed"
+      />
+    </div>
+  </DemoBlock>
+</template>
