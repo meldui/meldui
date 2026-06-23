@@ -63,7 +63,7 @@ const config: StorybookConfig = {
         // Pre-bundle the heavy workspace UI libs so dev doesn't serve thousands
         // of individual module requests (icons/components) and hit the browser's
         // concurrent-connection limit.
-        include: ['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue'],
+        include: ['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue', '@meldui/editor'],
       },
       define: {
         __VUE_OPTIONS_API__: 'true',

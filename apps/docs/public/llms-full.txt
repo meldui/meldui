@@ -78,6 +78,7 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Accordion](/docs/components/accordion): A vertically stacked set of interactive headings that reveal or hide sections of content.
 - [Alert](/docs/components/alert): Displays a callout message for important information with color variants.
 - [Alert Dialog](/docs/components/alert-dialog): A modal confirmation dialog that interrupts the user for important decisions.
+- [API](/docs/editor/api): Full props, events, slots, and exposed-instance reference for MeldEditor.
 - [Aspect Ratio](/docs/components/aspect-ratio): Displays content within a desired aspect ratio.
 - [Avatar](/docs/components/avatar): An image element with a fallback for representing the user.
 - [Badge](/docs/components/badge): A small label for status indicators, categories, or counts.
@@ -99,10 +100,14 @@ MeldUI is a design system monorepo that re-exports and customizes shadcn compone
 - [Dot](/docs/components/dot): A small status indicator dot with color variants and animation effects.
 - [Drawer](/docs/components/drawer): A touch-friendly drawer component that slides from the bottom of the screen.
 - [Dropdown Menu](/docs/components/dropdown-menu): A menu that appears on trigger click with items, groups, checkboxes, and nested sub-menus.
+- [Editor](/docs/editor): A Vue 3 rich-text editor built on TipTap, with slash commands, a bubble menu, tables, images, mentions, columns, and chart blocks.
 - [Empty](/docs/components/empty): An empty state placeholder for when there is no content to display.
+- [Extensions](/docs/editor/extensions): Opt out of default extensions, add your own TipTap extensions, customize slash commands, and register custom block components.
+- [Features](/docs/editor/features): A tour of the MeldEditor editing experience — slash menu, bubble menu, toolbar, tables, images, mentions, columns, and charts.
 - [Field](/docs/components/field): A form field layout component with label, content, description, and error display.
 - [File Upload](/docs/components/file-upload): A file upload component with drag and drop, previews, and progress tracking.
 - [Form](/docs/components/form): Form components with vee-validate integration for validation and error handling.
+- [Getting Started](/docs/editor/getting-started): Install @meldui/editor, wire up its peer dependencies and styles, and render your first editor.
 - [Hover Card](/docs/components/hover-card): A rich content card that appears when hovering over a trigger element.
 - [Input](/docs/components/input): A text input field for capturing user input.
 - [Input Group](/docs/components/input-group): Groups an input with addons, buttons, and text elements.
@@ -1956,6 +1961,118 @@ Element that opens the alert dialog.
 
 ---
 
+## API
+
+Full props, events, slots, and exposed-instance reference for MeldEditor.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `showToolbar` | `boolean` | `false` | Show the persistent formatting toolbar above the document. |
+| `showBubbleMenu` | `boolean` | `true` | Show the selection bubble menu for inline formatting. |
+| `editable` | `boolean` | `true` | Whether the document can be edited. When false, all editing affordances are suppressed. |
+| `placeholder` | `string` | `Write, type '/' for commands…` | Placeholder text shown in an empty document. |
+| `editorClass` | `string` | `''` | Extra CSS classes applied to the editor's outer container. |
+| `onImageUpload` | `(file: File) => Promise<string>` | - | Called with a selected image file; resolve the uploaded image URL. Falls back to an inline data URL when omitted. |
+| `onMentionSearch` | `(query: string) => Promise<MentionItem[]>` | - | Resolve mention candidates for a query. The mention extension only loads when this is provided. |
+| `customComponents` | `CustomComponentRegistration[]` | - | Register custom Vue components as document block nodes. |
+| `defaultExtensions` | `DefaultExtensionOptions` | - | Opt out of (or configure) individual built-in extensions. |
+| `extraExtensions` | `(Extension | Mark | Node)[]` | - | Append additional TipTap extensions to the default set. |
+| `overrideExtensions` | `(Extension | Mark | Node)[]` | - | Replace the entire default extension set. Custom components are still appended. |
+| `extraSlashCommands` | `SlashCommandItem[]` | - | Append commands to the slash menu. |
+| `disableSlashCommands` | `string[]` | - | Hide built-in slash commands by title. |
+| `overrideSlashCommands` | `SlashCommandItem[]` | - | Replace the entire slash-command list. |
+| `toolbarItems` | `ToolbarItem[]` | - | Override the toolbar's contents. |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `'created'` | `'editor: Editor'` | Fired with the underlying TipTap editor instance. Use it to set initial content. |
+| `'update:json'` | `'json: Record<string, unknown>'` | The document JSON, emitted on every change. |
+| `'focus'` | `'event: FocusEvent'` | The editor gained focus. |
+| `'blur'` | `'event: FocusEvent'` | The editor lost focus. |
+
+### Slots
+
+| Slot | Description |
+|------|-------------|
+| `header` | App-level action bar rendered above the toolbar. |
+| `toolbar` | Replaces the default toolbar. Receives the resolved toolbar items. |
+| `before-content` | Rendered just above the editable content area. |
+| `bubble-menu` | Replaces the default selection bubble menu. |
+| `after-content` | Rendered just below the editable content area. |
+
+## Types
+
+```ts
+interface MentionItem {
+  id: string
+  label: string
+}
+
+interface SlashCommandItem {
+  title: string
+  description: string
+  icon: Component | string
+  category?: string
+  keywords?: string[]
+  command: (editor: Editor) => void
+}
+
+interface ToolbarItem {
+  key: string
+  icon: Component
+  label: string
+  action: (editor: Editor) => void
+  isActive?: (editor: Editor) => boolean
+  shortcut?: string
+  separator?: 'before' | 'after'
+}
+
+interface DefaultExtensionOptions {
+  taskList?: boolean | Record<string, unknown>
+  image?: boolean | Record<string, unknown>
+  table?: boolean | Record<string, unknown>
+  textAlign?: boolean | Record<string, unknown>
+  placeholder?: boolean | string
+  slashCommands?: boolean
+  mention?: boolean
+  chart?: boolean
+  columns?: boolean
+}
+```
+
+See [Extensions](/docs/editor/extensions#custom-block-components) for the full `CustomComponentRegistration` shape.
+
+## Exposed instance
+
+`MeldEditor` exposes the live TipTap `Editor` through a template ref:
+
+```vue
+<script setup lang="ts">
+
+
+
+const editorRef = ref<InstanceType<typeof MeldEditor>>()
+
+function save() {
+  const json = editorRef.value?.editor?.getJSON()
+  const html = editorRef.value?.editor?.getHTML()
+  // persist json / html
+}
+</script>
+
+<template>
+  <MeldEditor ref="editorRef" />
+</template>
+```
+
+The exposed `editor` is the standard TipTap instance, so its full [commands and API](https://tiptap.dev/docs/editor/api/editor) are available (`getJSON()`, `getHTML()`, `getText()`, `chain()`, `setEditable()`, and so on). The `created` event provides the same instance if you prefer to capture it on mount.
+
+---
+
 ## Aspect Ratio
 
 Displays content within a desired aspect ratio.
@@ -3003,6 +3120,55 @@ Use `DropdownMenuCheckboxItem` for toggleable options.
 
 ---
 
+## Editor
+
+A Vue 3 rich-text editor built on TipTap, with slash commands, a bubble menu, tables, images, mentions, columns, and chart blocks.
+
+`MeldEditor` is a Vue 3 rich-text editor built on [TipTap](https://tiptap.dev) v3 and styled with MeldUI components and icons. It ships a curated default extension set — headings, lists, tables, resizable images, mentions, multi-column layouts, a table-of-contents, and chart blocks — plus a `/` slash-command menu, a selection bubble menu, an optional toolbar, and a Notion-style drag handle.
+
+It is **callback-driven and self-contained**: there is no coupling to app stores, routing, or the network. Host applications integrate through props and callbacks (`onImageUpload`, `onMentionSearch`, `customComponents`).
+
+
+
+## When to use
+
+- You need an in-app **WYSIWYG editor** for documents, notes, comments, or descriptions.
+- You want a **Notion-like** editing experience (slash menu, drag handle, block selection) out of the box.
+- You need to **extend the editor** with your own block components without forking it.
+- You want the editor to **match the MeldUI design system** (components, icons, theme tokens).
+
+## When not to use
+
+- You only need a plain multi-line text field — use [Textarea](/docs/components/textarea).
+- You need an `@`-mention input bound to a form value (not a document) — use the [Mention](/docs/composites/mention) composite.
+- You need collaborative real-time editing — that is out of scope here (bring your own TipTap collaboration extensions via `extraExtensions`).
+
+## What's in the box
+
+| Capability                                    | How it's enabled                                       |
+| --------------------------------------------- | ------------------------------------------------------ |
+| Headings, lists, blockquote, code, task lists | Default extensions                                     |
+| Slash-command menu (`/`)                      | Default; customizable via `*SlashCommands` props       |
+| Selection bubble menu                         | `showBubbleMenu` (default `true`)                      |
+| Formatting toolbar                            | `showToolbar` (default `false`)                        |
+| Tables with hover row/column controls         | Default extension                                      |
+| Resizable images with captions                | `onImageUpload` callback (falls back to data URL)      |
+| `@` mentions                                  | `onMentionSearch` callback (extension loads on demand) |
+| Multi-column layouts                          | Slash menu                                             |
+| Table of contents                             | Slash menu                                             |
+| Chart blocks                                  | Slash menu — renders via `@meldui/charts-vue`          |
+| Block drag handle + cross-block selection     | Default when `editable`                                |
+| Custom block components                       | `customComponents` prop                                |
+
+## Next steps
+
+- **[Getting Started](/docs/editor/getting-started)** — install, peer dependencies, styles, and your first editor.
+- **[Features](/docs/editor/features)** — a tour of the editing experience with live demos.
+- **[Extensions](/docs/editor/extensions)** — opt out of defaults, add TipTap extensions, register custom blocks.
+- **[API](/docs/editor/api)** — full props, events, and exposed reference.
+
+---
+
 ## Empty
 
 An empty state placeholder for when there is no content to display.
@@ -3034,6 +3200,216 @@ Title text
 Description text
 
 ## Usage
+
+---
+
+## Extensions
+
+Opt out of default extensions, add your own TipTap extensions, customize slash commands, and register custom block components.
+
+`MeldEditor` is built on TipTap, so its capabilities are composed from extensions. You can opt out of defaults, add more, replace the whole set, or register your own Vue components as document blocks — all through props, without forking the package.
+
+## Opting out of defaults
+
+Pass `defaultExtensions` to disable individual built-ins. Each key accepts `false` to turn it off (or a config object to tweak it):
+
+```vue
+<template>
+  <!-- Drop the chart block (and its @meldui/charts-vue dependency from your bundle) -->
+  <MeldEditor :default-extensions="{ chart: false }" />
+</template>
+```
+
+Supported keys: `taskList`, `image`, `table`, `textAlign`, `placeholder`, `slashCommands`, `mention`, `chart`, `columns`.
+
+## Adding extensions
+
+Use `extraExtensions` to append any TipTap extension, mark, or node to the default set:
+
+```vue
+<script setup lang="ts">
+
+
+</script>
+
+<template>
+  <MeldEditor :extra-extensions="[Highlight]" />
+</template>
+```
+
+To replace the default set entirely, use `overrideExtensions` (custom components are still appended):
+
+```vue
+<template>
+  <MeldEditor :override-extensions="[StarterKit, MyExtension]" />
+</template>
+```
+
+## Slash commands
+
+Customize the `/` menu with three props:
+
+- `extraSlashCommands` — append commands to the defaults.
+- `disableSlashCommands` — hide built-in commands by title.
+- `overrideSlashCommands` — replace the whole list.
+
+```vue
+<script setup lang="ts">
+
+
+
+const extraSlashCommands: SlashCommandItem[] = [
+  {
+    title: 'Callout',
+    description: 'Insert a highlighted callout block',
+    icon: IconSparkles,
+    command: (editor) => editor.chain().focus().insertContent('<blockquote></blockquote>').run(),
+  },
+]
+</script>
+
+<template>
+  <MeldEditor :extra-slash-commands="extraSlashCommands" />
+</template>
+```
+
+## Custom block components
+
+Register your own Vue components as document nodes with `customComponents`. Each registration wraps a component as a TipTap node and can add its own slash command and delete behavior.
+
+```vue
+<script setup lang="ts">
+
+
+
+
+
+const customComponents: CustomComponentRegistration[] = [
+  {
+    name: 'kpiCard',
+    component: KpiCard,
+    attrs: { value: { default: 0 }, label: { default: '' } },
+    slashCommand: {
+      title: 'KPI Card',
+      description: 'Insert a key-metric card',
+      icon: IconLayoutGrid,
+      defaultAttrs: { value: 0, label: 'Revenue' },
+    },
+    confirmDelete: true,
+    onDelete: (attrs) => console.log('removed', attrs),
+  },
+]
+</script>
+
+<template>
+  <MeldEditor :custom-components="customComponents" />
+</template>
+```
+
+Registration fields:
+
+| Field                                     | Type                          | Description                                                       |
+| ----------------------------------------- | ----------------------------- | ----------------------------------------------------------------- |
+| `name`                                    | `string`                      | Unique node name                                                  |
+| `component`                               | `Component`                   | The Vue component rendered as the node view                       |
+| `attrs`                                   | `Record<string, { default }>` | Node attributes and their defaults                                |
+| `group` / `atom` / `inline` / `draggable` | —                             | TipTap node-spec options                                          |
+| `slashCommand`                            | `object`                      | Adds a `/` menu entry that inserts the node (with `defaultAttrs`) |
+| `confirmDelete`                           | `boolean`                     | Show a confirmation dialog before deletion                        |
+| `onDelete`                                | `(attrs) => void`             | Called after deletion — use for external cleanup                  |
+
+See `src/docs/architecture.md` in the package for the full extension architecture.
+
+---
+
+## Features
+
+A tour of the MeldEditor editing experience — slash menu, bubble menu, toolbar, tables, images, mentions, columns, and charts.
+
+## Slash commands
+
+Type `/` anywhere in an empty block to open the command menu. It lists text and headings, lists, blockquote, code, table, table-of-contents, image, mention, columns, and chart blocks. The menu is keyboard-navigable (arrows + Enter) and filters as you type.
+
+The demo below is seeded with the basic text and block formatting you can insert from the menu — headings, bullet/ordered/task lists, blockquote, code block, and a horizontal rule. Type `/` on a new line to try the rest.
+
+
+
+You can add, remove, or replace commands with the `extraSlashCommands`, `disableSlashCommands`, and `overrideSlashCommands` props — see [Extensions](/docs/editor/extensions#slash-commands).
+
+## Bubble menu
+
+Select inline text to reveal the bubble menu for bold, italic, underline, strikethrough, inline code, and text alignment. It is on by default; hide it with `:show-bubble-menu="false"`.
+
+## Toolbar
+
+Set `:show-toolbar="true"` to render a persistent formatting toolbar above the document. Override its contents with the `toolbarItems` prop.
+
+
+
+## Tables
+
+Insert a table from the slash menu. Hovering a table reveals row and column controls for inserting and deleting rows/columns. Table cells support inline formatting and the bubble menu.
+
+
+
+## Images
+
+Insert an image from the slash menu (or toolbar). The editor calls your `onImageUpload` callback with the selected `File` and inserts the returned URL:
+
+```ts
+async function onImageUpload(file: File): Promise<string> {
+  const url = await uploadToStorage(file)
+  return url
+}
+```
+
+When no callback is provided, the editor falls back to an inline data URL so images still work locally. Inserted images are **resizable**, support alignment, and have an optional caption.
+
+
+
+## Mentions
+
+Provide an `onMentionSearch` callback to enable `@` mentions. The extension only loads when the callback is present. The callback receives the current query and returns the candidate list:
+
+```ts
+async function onMentionSearch(query: string) {
+  return await searchPeople(query) // -> { id: string; label: string }[]
+}
+```
+
+
+
+## Columns
+
+Insert a multi-column layout from the slash menu to place blocks side by side. A column block's controls let you add or remove columns and flatten the layout back to a single column.
+
+
+
+## Table of contents
+
+The table-of-contents block lists the document's headings and scrolls to them on click. It stays in sync as you edit headings.
+
+
+
+## Charts
+
+Insert a chart block from the slash menu. Charts render via [`@meldui/charts-vue`](/docs/charts) and offer a picker (series vs. slice) plus a configuration dialog for the chart type, data, and title.
+
+
+
+## Drag handle & block selection
+
+When the editor is `editable`, each block shows a Notion-style drag handle on hover (a plus button to insert below and a grip to reorder). Click-and-drag across blocks to select multiple blocks at once, then format or delete them together.
+
+## Read-only mode
+
+Set `:editable="false"` to render a document without editing affordances — the drag handle, table controls, resize handles, and interactive task checkboxes are all suppressed.
+
+```vue
+<template>
+  <MeldEditor :editable="false" @created="(e) => e.commands.setContent(doc)" />
+</template>
+```
 
 ---
 
@@ -3230,6 +3606,100 @@ Validation error message (auto-populated by vee-validate).
 ## Composable
 
 `useFormField()` — provides access to field error state, IDs, and name within a FormItem context.
+
+---
+
+## Getting Started
+
+Install @meldui/editor, wire up its peer dependencies and styles, and render your first editor.
+
+## Install
+
+```bash
+pnpm add @meldui/editor @meldui/vue @meldui/tabler-vue @meldui/charts-vue vue
+```
+
+`@meldui/vue`, `@meldui/tabler-vue`, `@meldui/charts-vue`, and `vue` are **peer dependencies**. The TipTap engine (`@tiptap/*`) and `tippy.js` ship as bundled dependencies and install automatically.
+
+> The chart block renders via `@meldui/charts-vue`, so it is a **required** peer even if you do not insert charts. To drop the dependency entirely, disable the chart extension — see [Extensions](/docs/editor/extensions#opting-out-of-defaults).
+
+## Import styles
+
+Import the MeldUI theme and the editor's component styles once, at your app's entry point:
+
+```ts
+// main.ts
+
+
+```
+
+`@meldui/editor/styles` carries the editor's scoped component CSS (the `.tiptap` content styles, menus, and node views). The theme tokens come from `@meldui/vue` — the editor inherits your design system's colors and radius.
+
+Because the editor's layout uses Tailwind utility classes, add it to your Tailwind v4 content sources so those utilities are generated (alongside the MeldUI theme you already import):
+
+```css
+/* app.css */
+@import 'tailwindcss';
+@import '@meldui/vue/themes/default';
+
+@source "../node_modules/@meldui/editor/dist/**/*.mjs";
+```
+
+## Your first editor
+
+`MeldEditor` has no `content` / `v-model` prop. Listen for the `created` event and seed the document through the TipTap `Editor` instance:
+
+```vue
+<script setup lang="ts">
+
+
+
+function onCreated(editor: Editor) {
+  editor.commands.setContent({
+    type: 'doc',
+    content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Start writing…' }] }],
+  })
+}
+</script>
+
+<template>
+  <MeldEditor @created="onCreated" @update:json="(json) => console.log(json)" />
+</template>
+```
+
+
+
+## Reading and saving content
+
+The editor emits `update:json` with the document JSON on every change. Persist that JSON and pass it back through `setContent` on `created` to restore a document:
+
+```vue
+<script setup lang="ts">
+
+
+
+const saved = JSON.parse(localStorage.getItem('doc') ?? 'null')
+
+function onCreated(editor: Editor) {
+  if (saved) editor.commands.setContent(saved)
+}
+
+function onUpdate(json: Record<string, unknown>) {
+  localStorage.setItem('doc', JSON.stringify(json))
+}
+</script>
+
+<template>
+  <MeldEditor @created="onCreated" @update:json="onUpdate" />
+</template>
+```
+
+You can also grab HTML or text from the exposed editor instance (`editor.getHTML()`, `editor.getText()`) — see the [API](/docs/editor/api) page.
+
+## Next steps
+
+- **[Features](/docs/editor/features)** — slash menu, bubble menu, toolbar, tables, images, mentions.
+- **[Extensions](/docs/editor/extensions)** — customize the default set and register your own blocks.
 
 ---
 

@@ -4,6 +4,7 @@
 
 @source "../**/*.{vue,ts,tsx,js,jsx,astro,mdx}";
 @source "../../../../packages/vue/dist/**/*.mjs";
+@source "../../../../packages/editor/dist/**/*.mjs";
 
 @theme inline {
   --font-sans:

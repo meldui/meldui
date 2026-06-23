@@ -1,0 +1,13 @@
+/**
+ * MeldUI Editor Styles
+ *
+ * The editor's visual styling is component-scoped (`:deep()` on `.tiptap`) and relies on
+ * Tailwind utility classes that resolve against the consumer's theme tokens (typically
+ * `@meldui/vue/themes/default`). This file exists so the package can build/typecheck
+ * standalone; it ships no theme of its own.
+ */
+
+@import 'tailwindcss';
+
+/* Configure Tailwind CSS v4 content sources (for MeldUI build only) */
+@source "../**/*.{vue,ts,tsx,js,jsx}";

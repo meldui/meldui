@@ -29,7 +29,13 @@ const docs = defineCollection({
     category: z.enum(['getting-started', 'components', 'composites', 'charts', 'examples', 'a2ui']),
     subcategory: z.string().optional(),
     package: z
-      .enum(['@meldui/vue', '@meldui/charts-vue', '@meldui/tabler-vue', '@meldui/a2ui'])
+      .enum([
+        '@meldui/vue',
+        '@meldui/charts-vue',
+        '@meldui/editor',
+        '@meldui/tabler-vue',
+        '@meldui/a2ui',
+      ])
       .optional(),
     componentName: z.string().optional(),
     // Hide the docs sidebar and render full-width (used by the catalog overview pages).

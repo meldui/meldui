@@ -1,0 +1,98 @@
+---
+title: Getting Started
+description: Install @meldui/editor, wire up its peer dependencies and styles, and render your first editor.
+category: components
+order: 2
+package: '@meldui/editor'
+componentName: MeldEditor
+---
+
+import BasicEditorDemo from '../../../demos/editor/BasicEditorDemo.vue'
+
+## Install
+
+```bash
+pnpm add @meldui/editor @meldui/vue @meldui/tabler-vue @meldui/charts-vue vue
+```
+
+`@meldui/vue`, `@meldui/tabler-vue`, `@meldui/charts-vue`, and `vue` are **peer dependencies**. The TipTap engine (`@tiptap/*`) and `tippy.js` ship as bundled dependencies and install automatically.
+
+> The chart block renders via `@meldui/charts-vue`, so it is a **required** peer even if you do not insert charts. To drop the dependency entirely, disable the chart extension — see [Extensions](/docs/editor/extensions#opting-out-of-defaults).
+
+## Import styles
+
+Import the MeldUI theme and the editor's component styles once, at your app's entry point:
+
+```ts
+// main.ts
+import '@meldui/vue/themes/default'
+import '@meldui/editor/styles'
+```
+
+`@meldui/editor/styles` carries the editor's scoped component CSS (the `.tiptap` content styles, menus, and node views). The theme tokens come from `@meldui/vue` — the editor inherits your design system's colors and radius.
+
+Because the editor's layout uses Tailwind utility classes, add it to your Tailwind v4 content sources so those utilities are generated (alongside the MeldUI theme you already import):
+
+```css
+/* app.css */
+@import 'tailwindcss';
+@import '@meldui/vue/themes/default';
+
+@source "../node_modules/@meldui/editor/dist/**/*.mjs";
+```
+
+## Your first editor
+
+`MeldEditor` has no `content` / `v-model` prop. Listen for the `created` event and seed the document through the TipTap `Editor` instance:
+
+```vue
+<script setup lang="ts">
+import { MeldEditor } from '@meldui/editor'
+import type { Editor } from '@tiptap/core'
+
+function onCreated(editor: Editor) {
+  editor.commands.setContent({
+    type: 'doc',
+    content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Start writing…' }] }],
+  })
+}
+</script>
+
+<template>
+  <MeldEditor @created="onCreated" @update:json="(json) => console.log(json)" />
+</template>
+```
+
+<BasicEditorDemo client:only="vue" />
+
+## Reading and saving content
+
+The editor emits `update:json` with the document JSON on every change. Persist that JSON and pass it back through `setContent` on `created` to restore a document:
+
+```vue
+<script setup lang="ts">
+import { MeldEditor } from '@meldui/editor'
+import type { Editor } from '@tiptap/core'
+
+const saved = JSON.parse(localStorage.getItem('doc') ?? 'null')
+
+function onCreated(editor: Editor) {
+  if (saved) editor.commands.setContent(saved)
+}
+
+function onUpdate(json: Record<string, unknown>) {
+  localStorage.setItem('doc', JSON.stringify(json))
+}
+</script>
+
+<template>
+  <MeldEditor @created="onCreated" @update:json="onUpdate" />
+</template>
+```
+
+You can also grab HTML or text from the exposed editor instance (`editor.getHTML()`, `editor.getText()`) — see the [API](/docs/editor/api) page.
+
+## Next steps
+
+- **[Features](/docs/editor/features)** — slash menu, bubble menu, toolbar, tables, images, mentions.
+- **[Extensions](/docs/editor/extensions)** — customize the default set and register your own blocks.

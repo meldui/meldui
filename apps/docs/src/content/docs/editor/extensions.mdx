@@ -1,0 +1,121 @@
+---
+title: Extensions
+description: Opt out of default extensions, add your own TipTap extensions, customize slash commands, and register custom block components.
+category: components
+order: 4
+package: '@meldui/editor'
+componentName: MeldEditor
+---
+
+`MeldEditor` is built on TipTap, so its capabilities are composed from extensions. You can opt out of defaults, add more, replace the whole set, or register your own Vue components as document blocks — all through props, without forking the package.
+
+## Opting out of defaults
+
+Pass `defaultExtensions` to disable individual built-ins. Each key accepts `false` to turn it off (or a config object to tweak it):
+
+```vue
+<template>
+  <!-- Drop the chart block (and its @meldui/charts-vue dependency from your bundle) -->
+  <MeldEditor :default-extensions="{ chart: false }" />
+</template>
+```
+
+Supported keys: `taskList`, `image`, `table`, `textAlign`, `placeholder`, `slashCommands`, `mention`, `chart`, `columns`.
+
+## Adding extensions
+
+Use `extraExtensions` to append any TipTap extension, mark, or node to the default set:
+
+```vue
+<script setup lang="ts">
+import { MeldEditor } from '@meldui/editor'
+import Highlight from '@tiptap/extension-highlight'
+</script>
+
+<template>
+  <MeldEditor :extra-extensions="[Highlight]" />
+</template>
+```
+
+To replace the default set entirely, use `overrideExtensions` (custom components are still appended):
+
+```vue
+<template>
+  <MeldEditor :override-extensions="[StarterKit, MyExtension]" />
+</template>
+```
+
+## Slash commands
+
+Customize the `/` menu with three props:
+
+- `extraSlashCommands` — append commands to the defaults.
+- `disableSlashCommands` — hide built-in commands by title.
+- `overrideSlashCommands` — replace the whole list.
+
+```vue
+<script setup lang="ts">
+import type { SlashCommandItem } from '@meldui/editor'
+import { IconSparkles } from '@meldui/tabler-vue'
+
+const extraSlashCommands: SlashCommandItem[] = [
+  {
+    title: 'Callout',
+    description: 'Insert a highlighted callout block',
+    icon: IconSparkles,
+    command: (editor) => editor.chain().focus().insertContent('<blockquote></blockquote>').run(),
+  },
+]
+</script>
+
+<template>
+  <MeldEditor :extra-slash-commands="extraSlashCommands" />
+</template>
+```
+
+## Custom block components
+
+Register your own Vue components as document nodes with `customComponents`. Each registration wraps a component as a TipTap node and can add its own slash command and delete behavior.
+
+```vue
+<script setup lang="ts">
+import { MeldEditor } from '@meldui/editor'
+import type { CustomComponentRegistration } from '@meldui/editor'
+import { IconLayoutGrid } from '@meldui/tabler-vue'
+import KpiCard from './KpiCard.vue'
+
+const customComponents: CustomComponentRegistration[] = [
+  {
+    name: 'kpiCard',
+    component: KpiCard,
+    attrs: { value: { default: 0 }, label: { default: '' } },
+    slashCommand: {
+      title: 'KPI Card',
+      description: 'Insert a key-metric card',
+      icon: IconLayoutGrid,
+      defaultAttrs: { value: 0, label: 'Revenue' },
+    },
+    confirmDelete: true,
+    onDelete: (attrs) => console.log('removed', attrs),
+  },
+]
+</script>
+
+<template>
+  <MeldEditor :custom-components="customComponents" />
+</template>
+```
+
+Registration fields:
+
+| Field                                     | Type                          | Description                                                       |
+| ----------------------------------------- | ----------------------------- | ----------------------------------------------------------------- |
+| `name`                                    | `string`                      | Unique node name                                                  |
+| `component`                               | `Component`                   | The Vue component rendered as the node view                       |
+| `attrs`                                   | `Record<string, { default }>` | Node attributes and their defaults                                |
+| `group` / `atom` / `inline` / `draggable` | —                             | TipTap node-spec options                                          |
+| `slashCommand`                            | `object`                      | Adds a `/` menu entry that inserts the node (with `defaultAttrs`) |
+| `confirmDelete`                           | `boolean`                     | Show a confirmation dialog before deletion                        |
+| `onDelete`                                | `(attrs) => void`             | Called after deletion — use for external cleanup                  |
+
+See `src/docs/architecture.md` in the package for the full extension architecture.

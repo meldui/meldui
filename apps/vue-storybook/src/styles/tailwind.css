@@ -15,6 +15,7 @@
 /* Content sources for Storybook stories and MeldUI components */
 @source "../**/*.{vue,js,ts,jsx,tsx,mdx}";
 @source "../../../../packages/vue/src/**/*.{vue,ts,tsx,js,jsx}";
+@source "../../../../packages/editor/src/**/*.{vue,ts,tsx,js,jsx}";
 
 /* Storybook-specific: Override font to use Manrope */
 @theme inline {

@@ -1,7 +1,12 @@
 import { Toaster } from '@meldui/vue'
 import type { Preview } from '@storybook/vue3-vite'
-import '../src/styles/tailwind.css' // Import Tailwind CSS
-import '@meldui/vue/styles' // Scoped component styles bundled by @meldui/vue
+// Order matters: load the prebuilt library bundles FIRST, then Storybook's own
+// Tailwind LAST so consumer utility overrides (e.g. the editor's `sm:max-w-md`
+// on a dialog) win the cascade over the library's base utilities. This mirrors
+// the single-pipeline order the docs site uses.
+import '@meldui/vue/styles' // Component styles bundled by @meldui/vue
+import '@meldui/editor/styles' // Component styles bundled by @meldui/editor
+import '../src/styles/tailwind.css' // Tailwind (theme + utilities) — last to win
 import 'vue-sonner/style.css' // Import Sonner styles
 
 const preview: Preview = {
