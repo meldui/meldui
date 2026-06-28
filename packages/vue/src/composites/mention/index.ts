@@ -27,6 +27,9 @@ export type {
   MentionRootProps,
   MentionTrigger,
 } from './types'
+// Context (for advanced integrations that drive the primitives directly,
+// e.g. wiring the dropdown into an external editor like @meldui/editor)
+export { MENTION_INJECTION_KEY } from './types'
 // Composable
 export { useMention } from './useMention'
 // Utilities
