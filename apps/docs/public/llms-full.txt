@@ -3128,6 +3128,8 @@ A Vue 3 rich-text editor built on TipTap, with slash commands, a bubble menu, ta
 
 It is **callback-driven and self-contained**: there is no coupling to app stores, routing, or the network. Host applications integrate through props and callbacks (`onImageUpload`, `onMentionSearch`, `customComponents`).
 
+The editor below is fully interactive and seeded with every built-in feature — edit it, select text for the bubble menu, hover a block for the drag handle, or type `/` for the command menu.
+
 
 
 ## When to use
